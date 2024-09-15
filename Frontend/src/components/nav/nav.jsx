@@ -10,7 +10,7 @@ import HomeGrupoEstudiante from '../../pages/Estudiante/homeGrupoEstudiante/home
 function nav() {
   return (
     <Routes>
-        <Route path='' element={<Home/>}/>
+        <Route path='/' element={<Home/>}/>
 
         <Route path='/homeDocente' element={<HomeDocente/>}/>
         <Route path='/homeDocente/homeGrupoDocente' element={<HomeGrupoDocente/>}/>
