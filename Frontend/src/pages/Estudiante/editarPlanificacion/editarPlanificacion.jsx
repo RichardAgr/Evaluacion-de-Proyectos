@@ -1,8 +1,11 @@
+import { Fragment } from 'react';
 
 function editarPlanificacion() {
   return (
-    <div>editarPlanificacion</div>
-  )
+    <Fragment>
+      
+    </Fragment>
+  );
 }
 
-export default editarPlanificacion
+export default editarPlanificacion;

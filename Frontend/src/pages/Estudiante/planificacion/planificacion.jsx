@@ -1,8 +1,11 @@
+import { Fragment } from 'react';
 
 function planificacion() {
   return (
-    <div>planificacion</div>
-  )
+    <Fragment>
+      
+    </Fragment>
+  );
 }
 
-export default planificacion
+export default planificacion;

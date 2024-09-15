@@ -1,8 +1,11 @@
+import { Fragment } from 'react';
 
 function homeEstudiante() {
   return (
-    <div>homeEstudiante</div>
-  )
+    <Fragment>
+      
+    </Fragment>
+  );
 }
 
-export default homeEstudiante
+export default homeEstudiante;
