@@ -1,6 +1,6 @@
 <?php
 /*
-esto es un prueba de subir al git 
+esto es un prueba de subir al git 2
 */
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
