@@ -1,7 +1,7 @@
-import Nav from '../nav/nav.jsx'
+
 function home() {
   return (
-    <Nav></Nav>
+    <div>home</div>
   )
 }
 
