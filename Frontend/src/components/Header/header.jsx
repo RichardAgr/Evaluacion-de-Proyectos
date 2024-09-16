@@ -9,8 +9,23 @@ import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
-
-
+import { styled } from '@mui/system'; 
+const GradientAppBar = styled(AppBar)({
+  background: 'linear-gradient(45deg, #114093, #4066a8, #708cbe, #9ab4ff)',
+  backgroundSize: '400% 400%',
+  animation: 'gradient 12s ease-in-out infinite',
+  '@keyframes gradient': {
+    '0%': {
+      backgroundPosition: '0% 50%',
+    },
+    '50%': {
+      backgroundPosition: '100% 50%',
+    },
+    '100%': {
+      backgroundPosition: '0% 50%',
+    },
+  },
+});
 function Header() {
   const [auth] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -26,8 +41,7 @@ function Header() {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      {/* Utiliza CustomAppBar en lugar de AppBar */}
-      <AppBar position="static">
+      <GradientAppBar position="sticky">
         <Toolbar>
           {grupo ? (
             <IconButton
@@ -83,7 +97,7 @@ function Header() {
             </div>
           ) : null}
         </Toolbar>
-      </AppBar>
+      </GradientAppBar>
     </Box>
   );
 }
