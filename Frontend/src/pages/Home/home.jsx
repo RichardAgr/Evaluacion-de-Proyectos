@@ -9,9 +9,11 @@ function home() {
     <Fragment>
       <Header></Header>
         <div className='container'>
-          <Link to={'/homeDocente/homeGrupoEstudiante/planificacion'}>
+          <Link to={'/homeEstudiante/homeGrupoEstudiante/verPlanificacion'}>
             <Button variant="contained">Ver Planificacion</Button>
-            <Button variant="contained" color='secondary'>Ver Planificacion</Button>
+          </Link>          
+          <Link to={'/homeEstudiante/homeGrupoEstudiante/editarPlanificacion'}>
+            <Button variant="contained" color='secondary'>Editar Planificacion</Button>
           </Link>
         </div>
       <Footer></Footer>

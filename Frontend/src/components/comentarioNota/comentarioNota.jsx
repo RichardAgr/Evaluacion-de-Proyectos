@@ -1,8 +1,13 @@
 import { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import Button from '@mui/material/Button';
+import { useNavigate } from 'react-router-dom';
+function ComentarioNota({ comentario, nota}) {
+  const navigate = useNavigate();
+  const handleEdit = () => {
+    navigate('/homeEstudiante/homeGrupoEstudiante/editarPlanificacion');  // funcion para llevar a Editar
+  };
 
-function ComentarioNota({ comentario, nota }) {
   return (
     <Fragment>
       <div className='calificar'>
@@ -24,7 +29,9 @@ function ComentarioNota({ comentario, nota }) {
                 {nota}
               </p>
             </div>
-            <Button variant='contained'>Editar</Button>
+            <Button variant="contained" onClick={handleEdit} className="mb-2">
+              Editar
+            </Button>
           </div>
         </div>
       </div>

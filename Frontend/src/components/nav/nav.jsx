@@ -7,6 +7,7 @@ import HomeGrupoDocente from '../../pages/Docente/homeGrupoDocente/homeGrupoDoce
 import HomeEstudiante from '../../pages/Estudiante/homeEstudiante/homeEstudiante.jsx'
 import HomeGrupoEstudiante from '../../pages/Estudiante/homeGrupoEstudiante/homeGrupoEstudiante.jsx'
 import EstudiantePlanificacion from '../../pages/Estudiante/planificacion/planificacion.jsx'
+import EditarPlanificacion from '../../pages/Estudiante/editarPlanificacion/editarPlanificacion.jsx'
 function nav() {
   return (
     <Routes>
@@ -17,7 +18,8 @@ function nav() {
 
         <Route path='/homeDocente' element={<HomeEstudiante/>}/>
         <Route path='/homeDocente/homeGrupoEstudiante' element={<HomeGrupoEstudiante/>}/>
-        <Route path='/homeDocente/homeGrupoEstudiante/planificacion' element={<EstudiantePlanificacion/>}/>
+        <Route path='/homeEstudiante/homeGrupoEstudiante/verPlanificacion' element={<EstudiantePlanificacion/>}/>
+        <Route path='/homeEstudiante/homeGrupoEstudiante/editarPlanificacion' element={<EditarPlanificacion/>}/>
     </Routes>
   )
 }
