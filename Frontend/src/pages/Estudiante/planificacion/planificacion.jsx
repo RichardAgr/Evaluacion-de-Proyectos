@@ -10,6 +10,8 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import ComentarioNota from '../../../components/comentarioNota/comentarioNota.jsx';
+import BackButtonAndTitle from '../../../components/Buttons/BackButtonAndTitle.jsx';
+
 function planificacion() {
   function createData(hito, fechaIni, fechaFin, cobro, fechaEntrega, entregables) {
     return { hito, fechaIni, fechaFin, cobro, fechaEntrega, entregables };
@@ -27,8 +29,7 @@ function planificacion() {
     <Fragment>
       <Header></Header>
         <div className='container'>
-          <Button variant='contained'>Atras</Button>
-          <h1>Planificacion</h1>
+          <BackButtonAndTitle title="Visualizar Planificación" />
           <div className='pageBorder'>
             <TableContainer component={Paper}>
               <Table sx={{ minWidth: 650 }} aria-label="simple table">
