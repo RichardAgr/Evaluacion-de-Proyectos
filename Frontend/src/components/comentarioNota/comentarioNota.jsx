@@ -8,8 +8,7 @@ function ComentarioNota({ comentario, nota }) {
       <div className='calificar'>
         <div>
           <h3>Comentario</h3>
-          <p 
-            className='calificar_inputText' 
+          <p className='calificar_inputText' 
             readOnly 
           >
             {comentario}
