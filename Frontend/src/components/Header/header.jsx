@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { styled } from '@mui/system';  // Usa el styled de MUI
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -28,7 +27,7 @@ function Header() {
   return (
     <Box sx={{ flexGrow: 1 }}>
       {/* Utiliza CustomAppBar en lugar de AppBar */}
-      <CustomAppBar position="static">
+      <AppBar position="static">
         <Toolbar>
           {grupo ? (
             <IconButton
@@ -84,13 +83,10 @@ function Header() {
             </div>
           ) : null}
         </Toolbar>
-      </CustomAppBar>
+      </AppBar>
     </Box>
   );
 }
 
 export default Header;
 
-const CustomAppBar = styled(AppBar)(() => ({
-  backgroundColor: '#114093',  // Cambia el color aquí
-}));

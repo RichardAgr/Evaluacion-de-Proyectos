@@ -1,11 +1,10 @@
 import styled from '@emotion/styled'
 import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
 
 function footer() {
   return (
     <FooterContainer >
-        <Box>
+        <div>
             <footer className='footer'>
                 <div className='footer_links'>
                     <h6 className='links'>Politica de Privacidad</h6>
@@ -20,7 +19,7 @@ function footer() {
                 </div>              
             </footer>
             <p>© 2024 CREATIVE HARBOR S.R.L. All rights reserved.</p>
-        </Box>        
+        </div>        
     </FooterContainer>
   );
 }
@@ -32,6 +31,7 @@ let FooterContainer = styled.footer`
     display: flex;
     color: white;
     background-color: #114093;
+    
     .footer{
         display: flex;
         justify-content: space-between;
