@@ -11,7 +11,7 @@ import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import AddIcon from '@mui/icons-material/Add';
-import ComentarioNota from '../../../components/comentarioNota/comentarioNota.jsx';
+import DeleteIcon from '@mui/icons-material/Delete';
 import BackButtonAndTitle from '../../../components/Buttons/BackButtonAndTitle.jsx';
 
 function EditarPlanificacion() {
@@ -29,20 +29,32 @@ function EditarPlanificacion() {
     setRows([...rows, newRow]);
   };
 
+  const deleteRow = (index) => {
+    const newRows = rows.filter((_, i) => i !== index);
+    setRows(newRows);
+  };
+
   const handleCellChange = (index, field, value) => {
     const newRows = [...rows];
     newRows[index][field] = value;
     setRows(newRows);
   };
 
-  const comentario = 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis dolore doloribus iusto suscipit reiciendis autem libero quae, voluptates, iste dignissimos, nihil quos architecto. At sapiente deleniti, molestias assumenda omnis hic!';
-  const nota = 50;
+  const handleSave = () => {
+    // Implement save functionality here
+    console.log('Saving changes:', rows);
+  };
+
+  const handleCancel = () => {
+    // Implement cancel functionality here
+    console.log('Changes discarded');
+  };
 
   return (
     <Fragment>
       <Header />
       <div className='container'>
-        <BackButtonAndTitle title="Planificación" />
+        <BackButtonAndTitle title="Editar Planificación" />
         <div className='pageBorder'>
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="tabla de planificación">
@@ -54,6 +66,7 @@ function EditarPlanificacion() {
                   <TableCell align="left">Cobro</TableCell>
                   <TableCell align="left">Fecha Entrega</TableCell>
                   <TableCell align="left">Entregables</TableCell>
+                  <TableCell align="left">Acciones</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -73,6 +86,16 @@ function EditarPlanificacion() {
                         />
                       </TableCell>
                     ))}
+                    <TableCell align="left">
+                      <Button
+                        variant="contained"
+                        color="secondary"
+                        startIcon={<DeleteIcon />}
+                        onClick={() => deleteRow(index)}
+                      >
+                        Eliminar
+                      </Button>
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -87,7 +110,22 @@ function EditarPlanificacion() {
           >
             Añadir Fila
           </Button>
-          <ComentarioNota comentario={comentario} nota={nota} />
+          <div style={{ marginTop: '40px', display: 'flex', justifyContent: 'flex-end', gap: '20px' }}>
+            <Button 
+              variant="contained" 
+              color="primary" 
+              onClick={handleSave}
+            >
+              Guardar
+            </Button>
+            <Button 
+              variant="contained" 
+              color="secondary" 
+              onClick={handleCancel}
+            >
+              No Guardar
+            </Button>
+          </div>
         </div>
       </div>  
       <Footer />
