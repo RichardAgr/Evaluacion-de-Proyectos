@@ -18,7 +18,7 @@ function PlanificacionDeDesarollo() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   useEffect(() => {
-    console.log(idEmpresa)
+    //console.log(idEmpresa)
     const fetchData = async () => {
       try {
         const data = await getEmpresaData(idEmpresa);
@@ -30,7 +30,7 @@ function PlanificacionDeDesarollo() {
         setLoading(false);
       }
     };
-    console.log(empresaData)
+    //console.log(empresaData)
     fetchData();
   }, [idEmpresa]);
 
