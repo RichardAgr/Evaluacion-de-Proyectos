@@ -10,7 +10,6 @@ import PlanificacionDeDesarollo from '../../pages/Estudiante/planificacionDeDesa
 import EstudiantePlanificacion from '../../pages/Estudiante/planificacion/planificacion.jsx'
 
 function nav() {
-  
   return (
     <Routes>
         <Route path='/' element={<PlanificacionDeDesarollo/>}/>
