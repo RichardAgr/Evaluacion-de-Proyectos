@@ -1,20 +1,32 @@
 import React, { Fragment, useState } from 'react';
-import Footer from '../../../components/Footer/footer.jsx';
-import Header from '../../../components/Header/header.jsx';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
+import Footer from '../../../components/Footer/footer';
+import Header from '../../../components/Header/header';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Button,
+  TextField,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Snackbar,
+  Box
+} from '@mui/material';
+
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
-import BackButtonAndTitle from '../../../components/Buttons/BackButtonAndTitle.jsx';
+import BackButtonAndTitle from '../../../components/Buttons/BackButtonAndTitle';
 
-function EditarPlanificacion() {
+import Alert from '@mui/material/Alert';
+
+export default function EditarPlanificacion() {
   const [rows, setRows] = useState([
     { hito: 'Sprint 1', fechaIni: '2023-01-01', fechaFin: '2023-01-15', cobro: '1000', fechaEntrega: '2023-01-16', entregables: 'Modelo ER' },
     { hito: 'Sprint 2', fechaIni: '2023-01-16', fechaFin: '2023-01-31', cobro: '1500', fechaEntrega: '2023-02-01', entregables: 'Diseño UI' },
@@ -22,6 +34,10 @@ function EditarPlanificacion() {
     { hito: 'Sprint 4', fechaIni: '2023-02-16', fechaFin: '2023-02-28', cobro: '1800', fechaEntrega: '2023-03-01', entregables: 'Frontend' },
     { hito: 'Sprint 5', fechaIni: '2023-03-01', fechaFin: '2023-03-15', cobro: '1200', fechaEntrega: '2023-03-16', entregables: 'Testing' },
   ]);
+
+  const [openSaveDialog, setOpenSaveDialog] = useState(false);
+  const [openCancelDialog, setOpenCancelDialog] = useState(false);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
 
   const addRow = () => {
     const newSprint = rows.length + 1;
@@ -41,21 +57,44 @@ function EditarPlanificacion() {
   };
 
   const handleSave = () => {
-    // implementar funcionalidad de guardado
+    setOpenSaveDialog(true);
+  };
+
+  const handleConfirmSave = () => {
+    // Implementar funcionalidad de guardado
     console.log('Saving changes:', rows);
+    setOpenSaveDialog(false);
+    setOpenSnackbar(true);
   };
 
   const handleCancel = () => {
-    // Implementar funcionalidad de cancelar, probablemente solo navegar a la anterior pagina, necesita una doble confirmacion
+    setOpenCancelDialog(true);
+  };
+
+  const handleConfirmCancel = () => {
+    // Implementar funcionalidad de cancelar, probablemente solo navegar a la anterior pagina
     console.log('Changes discarded');
+    setOpenCancelDialog(false);
+  };
+
+  const handleCloseDialog = () => {
+    setOpenSaveDialog(false);
+    setOpenCancelDialog(false);
+  };
+
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpenSnackbar(false);
   };
 
   return (
     <Fragment>
       <Header />
-      <div className='container'>
+      <main className='container'>
         <BackButtonAndTitle title="Editar Planificación" />
-        <div className='pageBorder'>
+        <Box className='pageBorder' sx={{ padding: 3 }}>
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="tabla de planificación">
               <TableHead>
@@ -83,6 +122,9 @@ function EditarPlanificacion() {
                           type={field.includes('fecha') ? 'date' : 'text'}
                           fullWidth
                           variant="standard"
+                          inputProps={{
+                            'aria-label': `${field} for ${row.hito}`,
+                          }}
                         />
                       </TableCell>
                     ))}
@@ -92,6 +134,7 @@ function EditarPlanificacion() {
                         color="secondary"
                         startIcon={<DeleteIcon />}
                         onClick={() => deleteRow(index)}
+                        aria-label={`Eliminar ${row.hito}`}
                       >
                         Eliminar
                       </Button>
@@ -107,6 +150,7 @@ function EditarPlanificacion() {
             startIcon={<AddIcon />} 
             onClick={addRow}
             style={{ marginTop: '20px' }}
+            aria-label="Añadir nueva fila"
           >
             Añadir Fila
           </Button>
@@ -115,6 +159,7 @@ function EditarPlanificacion() {
               variant="contained" 
               color="primary" 
               onClick={handleSave}
+              aria-label="Guardar cambios"
             >
               Guardar
             </Button>
@@ -122,15 +167,69 @@ function EditarPlanificacion() {
               variant="contained" 
               color="secondary" 
               onClick={handleCancel}
+              aria-label="Descartar cambios"
             >
               No Guardar
             </Button>
           </div>
-        </div>
-      </div>  
+        </Box>
+      </main>  
       <Footer />
+
+      <Dialog
+        open={openSaveDialog}
+        onClose={handleCloseDialog}
+        aria-labelledby="save-dialog-title"
+        aria-describedby="save-dialog-description"
+      >
+        <DialogTitle id="save-dialog-title">
+          {"¿Estás seguro de que quieres guardar los cambios?"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="save-dialog-description">
+            Esta acción guardará todos los cambios realizados en la planificación.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog}>Cancelar</Button>
+          <Button onClick={handleConfirmSave} autoFocus>
+            Confirmar
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog
+        open={openCancelDialog}
+        onClose={handleCloseDialog}
+        aria-labelledby="cancel-dialog-title"
+        aria-describedby="cancel-dialog-description"
+      >
+        <DialogTitle id="cancel-dialog-title">
+          {"¿Estás seguro de que quieres descartar los cambios?"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="cancel-dialog-description">
+            Esta acción no se puede deshacer. Todos los cambios realizados se perderán.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog}>Cancelar</Button>
+          <Button onClick={handleConfirmCancel} autoFocus>
+            Confirmar
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Snackbar 
+        open={openSnackbar} 
+        autoHideDuration={6000} 
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+      >
+        <Alert onClose={handleCloseSnackbar} severity="success" sx={{ width: '100%' }}>
+          Los cambios se han guardado con éxito!
+        </Alert>
+      </Snackbar>
     </Fragment>
   );
 }
-
-export default EditarPlanificacion;
