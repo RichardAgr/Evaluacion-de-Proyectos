@@ -8,6 +8,8 @@ import HomeEstudiante from '../../pages/Estudiante/homeEstudiante/homeEstudiante
 import HomeGrupoEstudiante from '../../pages/Estudiante/homeGrupoEstudiante/homeGrupoEstudiante.jsx'
 import EstudiantePlanificacion from '../../pages/Estudiante/planificacion/planificacion.jsx'
 import EditarPlanificacion from '../../pages/Estudiante/editarPlanificacion/editarPlanificacion.jsx'
+import ValidarPlanificacion from '../../pages/Docente/gestionGrupo/validarPlanificacion.jsx'
+
 function nav() {
   return (
     <Routes>
@@ -20,6 +22,7 @@ function nav() {
         <Route path='/homeDocente/homeGrupoEstudiante' element={<HomeGrupoEstudiante/>}/>
         <Route path='/homeEstudiante/homeGrupoEstudiante/verPlanificacion' element={<EstudiantePlanificacion/>}/>
         <Route path='/homeEstudiante/homeGrupoEstudiante/editarPlanificacion' element={<EditarPlanificacion/>}/>
+        <Route path='/homeDocente/homeGrupoEstudiante/validarPlanificacion' element={<ValidarPlanificacion/>}/>
     </Routes>
   )
 }

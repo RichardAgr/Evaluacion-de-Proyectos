@@ -41,12 +41,12 @@ function EditarPlanificacion() {
   };
 
   const handleSave = () => {
-    // Implement save functionality here
+    // implementar funcionalidad de guardado
     console.log('Saving changes:', rows);
   };
 
   const handleCancel = () => {
-    // Implement cancel functionality here
+    // Implementar funcionalidad de cancelar, probablemente solo navegar a la anterior pagina, necesita una doble confirmacion
     console.log('Changes discarded');
   };
 

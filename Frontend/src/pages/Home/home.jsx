@@ -15,6 +15,9 @@ function home() {
           <Link to={'/homeEstudiante/homeGrupoEstudiante/editarPlanificacion'}>
             <Button variant="contained" color='secondary'>Editar Planificacion</Button>
           </Link>
+          <Link to={'/homeDocente/homeGrupoEstudiante/validarPlanificacion'}>
+            <Button variant="contained" color='secondary'>Validar Planificacion</Button>
+          </Link>
         </div>
       <Footer></Footer>
     </Fragment>
