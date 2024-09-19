@@ -1,0 +1,67 @@
+@font-face {
+  font-family: 'Montserrat';
+  src: url('./assets/Fonts/Montserrat-VariableFont_wght.ttf') format('truetype');
+}
+:root {
+  font-family: 'Montserrat', sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  
+}
+.box{
+  display: flex;
+  justify-content: center;
+  width: 98.5vw; 
+  margin-top: 1vh;
+  min-height: calc(87vh);
+}
+.container{
+  width: 90vw;
+  display: block;
+}
+.pageBorder{
+  display: flex;
+  justify-content: center;
+  min-height: calc(74vh);
+  border: 0.3rem solid black;
+  margin-bottom: 1rem;
+}
+.pageBorder_interior{
+  width: 90%;
+  
+}
+h1,h2,h3{
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.calificar{
+  margin: 2rem;
+  display: flex;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+} 
+.calificar_inputText{
+  display: block;
+  min-height: 10vw;
+  width: 50vw;
+  border: 0.3rem solid black;
+}
+.notaOrden{
+  display: flex;
+  margin-top: 1rem;
+  justify-content: space-between;
+}
+.calificar_inputNota{
+  display: inline;
+  border: 0.3rem solid black
+}
+.divContainerPlani{
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+  min-height: 50vh;
+}
