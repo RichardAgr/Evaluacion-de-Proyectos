@@ -10,6 +10,7 @@ import PlanificacionDeDesarollo from '../../pages/Estudiante/planificacionDeDesa
 import EstudiantePlanificacion from '../../pages/Estudiante/planificacion/planificacion.jsx'
 
 function nav() {
+  
   return (
     <Routes>
         <Route path='/' element={<PlanificacionDeDesarollo/>}/>
@@ -19,7 +20,7 @@ function nav() {
 
         <Route path='/homeEstudiante' element={<HomeEstudiante/>}/>
         <Route path='/homeEstudiante/homeGrupoEstudiante' element={<HomeGrupoEstudiante/>}/>
-        <Route path='/homeEstudiante/homeGrupoEstudiante/Empresa' element={<PlanificacionDeDesarollo/>}/>
+        <Route path='/homeEstudiante/homeGrupoEstudiante/Empresa/:idEmpresa' element={<PlanificacionDeDesarollo/>}/>
         <Route path='/homeEstudiante/homeGrupoEstudiante/Empresa/planificacion' element={<EstudiantePlanificacion/>}/>
     </Routes>
   )

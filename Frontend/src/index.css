@@ -29,7 +29,8 @@
   margin-bottom: 1rem;
 }
 .pageBorder_interior{
-  width: 94%;
+  width: 90%;
+  
 }
 h1,h2,h3{
   margin-top: 0;
@@ -56,4 +57,11 @@ h1,h2,h3{
 .calificar_inputNota{
   display: inline;
   border: 0.3rem solid black
+}
+.divContainerPlani{
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+  min-height: 50vh;
 }
