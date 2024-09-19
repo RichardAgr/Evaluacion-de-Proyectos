@@ -14,6 +14,10 @@ function infoEmpresa() {
                     <p>Jhon</p>
                     <p>Jhon</p>
             </div>
+            <div className= 'docente'>
+                <h3>Docente:</h3>
+                    <p>LETI God</p>
+            </div>
         </ContainerInfoEmpresa>
     </Fragment>
   );
@@ -32,6 +36,10 @@ let ContainerInfoEmpresa = styled.div`
     .integrantes{
         margin: calc(3vw + 1rem);
         display: block;
+    }
+    .docente{
+        margin: calc(3vw + 1rem);
+        display: block;        
     }
     p{
         margin-left: calc(2vw + 8rem);

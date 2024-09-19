@@ -1,5 +1,5 @@
 import {Routes, Route} from 'react-router-dom';
-import Home from '../../pages/Home/home.jsx';
+//import Home from '../../pages/Home/home.jsx';
 
 import HomeDocente from '../../pages/Docente/homeDocente/homeDocente.jsx'
 import HomeGrupoDocente from '../../pages/Docente/homeGrupoDocente/homeGrupoDocente.jsx'
@@ -16,6 +16,7 @@ function nav() {
 
         <Route path='/homeDocente' element={<HomeDocente/>}/>
         <Route path='/homeDocente/homeGrupoDocente' element={<HomeGrupoDocente/>}/>
+
 
         <Route path='/homeEstudiante' element={<HomeEstudiante/>}/>
         <Route path='/homeEstudiante/homeGrupoEstudiante' element={<HomeGrupoEstudiante/>}/>
