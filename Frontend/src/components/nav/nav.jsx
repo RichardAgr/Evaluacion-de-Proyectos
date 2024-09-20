@@ -1,5 +1,5 @@
 import {Routes, Route} from 'react-router-dom';
-import Home from '../../pages/Home/home.jsx';
+//import Home from '../../pages/Home/home.jsx';
 
 import HomeDocente from '../../pages/Docente/homeDocente/homeDocente.jsx'
 import HomeGrupoDocente from '../../pages/Docente/homeGrupoDocente/homeGrupoDocente.jsx'
@@ -12,7 +12,7 @@ import EstudiantePlanificacion from '../../pages/Estudiante/planificacion/planif
 function nav() {
   return (
     <Routes>
-        <Route path='/' element={<PlanificacionDeDesarollo/>}/>
+        <Route path='/:idEmpresa' element={<PlanificacionDeDesarollo/>}/>
 
         <Route path='/homeDocente' element={<HomeDocente/>}/>
         <Route path='/homeDocente/homeGrupoDocente' element={<HomeGrupoDocente/>}/>

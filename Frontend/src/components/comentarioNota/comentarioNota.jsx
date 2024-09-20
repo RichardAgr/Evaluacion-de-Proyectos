@@ -1,8 +1,8 @@
 import { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import Button from '@mui/material/Button';
-
-function ComentarioNota({ comentario, nota }) {
+import { Link } from 'react-router-dom';
+function ComentarioNota({ comentario, nota, linkDir }) {
   return (
     <Fragment>
       <div className='calificar'>
@@ -23,7 +23,13 @@ function ComentarioNota({ comentario, nota }) {
                 {nota}
               </p>
             </div>
-            <Button variant='contained'>Editar</Button>
+            {linkDir=='ocultar'?
+              <></>
+              :
+              <Link to={linkDir}>
+                <Button variant='contained'>Editar</Button>
+              </Link>  
+            }
           </div>
         </div>
       </div>
