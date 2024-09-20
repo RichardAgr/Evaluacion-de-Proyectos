@@ -7,17 +7,16 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
-function tablaPlanificacion() {
-    function createData(hito, fechaIni, fechaFin, cobro, fechaEntrega, entregables) {
-        return { hito, fechaIni, fechaFin, cobro, fechaEntrega, entregables };
-      }
-      const rows = [
-        createData('Sprint 1', 159, 6.0, 24, 4.0, 'Modelo ER'),
-        createData('Sprint 2', 237, 9.0, 37, 4.3, 'Modelo ER'),
-        createData('Sprint 3', 262, 16.0, 24, 6.0, 'Modelo ER'),
-        createData('Sprint 4', 305, 3.7, 67, 4.3, 'Modelo ER'),
-        createData('Sprint 5', 356, 16.0, 49, 3.9, 'Modelo ER'),
-      ];
+function tablaPlanificacion({sprints}) {
+  function createData(hito, fechaIni, fechaFin, cobro, fechaEntrega, entregables) {
+      return { hito, fechaIni, fechaFin, cobro, fechaEntrega, entregables };
+  }
+  let contador = 0;
+  const sprints2 = [
+    sprints.map((sprint)=>{
+      createData('SPRINT '+contador+1, sprint.fechaIni, sprint.fechaFin, sprint.cobro, sprint.fechaEntrega)
+    })
+  ];
   return (
     <Fragment>
       <TableContainer component={Paper}>
@@ -35,21 +34,22 @@ function tablaPlanificacion() {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {rows.map((row) => (
+                      {sprints2.map((sprint) => (
                         <TableRow
-                          key={row.name}
+                          key={sprint.hito}
                           sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                         >
                           <TableCell component="th" scope="row">
-                            {row.hito}
+                            {sprint.hito}
                           </TableCell>
-                          <TableCell align="left">{row.fechaIni}</TableCell>
-                          <TableCell align="left">{row.fechaFin}</TableCell>
-                          <TableCell align="left">{row.cobro}</TableCell>
-                          <TableCell align="lefts">{row.fechaEntrega}</TableCell>
-                          <TableCell align="lefts">{row.entregables}</TableCell>
-                          <TableCell align="lefts"><Button variant='contained'>Ver</Button></TableCell>
-                          <TableCell align="left">{row.cobro}</TableCell>
+                          <TableCell align="left">{sprint.fechaIni}</TableCell>
+                          <TableCell align="left">{sprint.fechaFin}</TableCell>
+                          <TableCell align="left">{sprint.cobro}</TableCell>
+                          <TableCell align="left">{sprint.fechaEntrega}</TableCell>
+                          <TableCell align="left">{sprint.entregables}</TableCell>
+                          <TableCell align="left">{sprint.cobro}</TableCell>
+                          <TableCell align="left"><Button variant='contained'>Ver</Button></TableCell>
+                          <TableCell align="left"> </TableCell>
                         </TableRow>
                       ))}
                     </TableBody>

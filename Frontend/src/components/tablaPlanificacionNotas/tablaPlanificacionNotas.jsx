@@ -8,13 +8,13 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import styled from '@emotion/styled'
 function tablaPlanificacionNotas() {
-    function createData(hito, fechaIni, fechaFin, cobro, fechaEntrega, entregables) {
-    return { hito, fechaIni, fechaFin, cobro, fechaEntrega, entregables };
+    function createData(titulo, nota) {
+    return { titulo, nota};
   }
   const rows = [
-    createData('FALTAS DEL GRUPO', 159, 6.0, 24, 4.0, 'Modelo ER'),
-    createData('NOTA SUMATORIA SPRINTS', 237, 9.0, 37, 4.3, 'Modelo ER'),
-    createData('NOTA PRODUCTO TERMINADO', 262, 16.0, 24, 6.0, 'Modelo ER'),
+    createData('FALTAS DEL GRUPO', 0),
+    createData('NOTA SUMATORIA SPRINTS', ),
+    createData('NOTA PRODUCTO TERMINADO', ),
   ];
   return (
     <Fragment>
@@ -24,13 +24,13 @@ function tablaPlanificacionNotas() {
             <TableBody>
                 {rows.map((row) => (
                 <TableRow
-                    key={row.name}
+                    key={row.titulo}
                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                 >
                     <TableCell component="th" scope="row">
-                    {row.hito}
+                    {row.titulo}
                     </TableCell>
-                    <TableCell align="left">{row.fechaIni}</TableCell>
+                    <TableCell align="left">{row.nota}</TableCell>
                 </TableRow>
                 ))}
             </TableBody>
@@ -47,5 +47,10 @@ let ContainerTablaNotas = styled.div`
     width: 100%;
     margin-top: 1rem;
     margin-bottom: 1rem;
-    border: 0.3rem solid black;
+    border-radius: 0.3rem;
+      -webkit-border-radius: 0.3rem;
+      -moz-border-radius: 0.3rem;
+      -ms-border-radius: 0.3rem;
+      -o-border-radius: 0.3rem;
+    border: 0.3rem solid black
 `
