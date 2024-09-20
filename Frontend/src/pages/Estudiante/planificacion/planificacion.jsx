@@ -34,6 +34,7 @@ function planificacion() {
               <Button variant='contained' onClick={goBack}>Atras</Button>
               <h1>Planificacion</h1>
               <div className='pageBorder'>
+              <div className='pageBorder_interior'>
                 <TableContainer component={Paper}>
                   <Table sx={{ minWidth: 650 }} aria-label="simple table">
                     <TableHead>
@@ -65,7 +66,8 @@ function planificacion() {
                     </TableBody>
                   </Table>
                 </TableContainer>
-                <ComentarioNota comentario={comentario} nota = {nota}></ComentarioNota>
+                <ComentarioNota comentario={comentario} nota = {nota} linkDir={ '/homeEstudiante/homeGrupoEstudiante/Empresa/planificacion/editar' }></ComentarioNota>
+                </div>
               </div>
             </div>
         </div>  
