@@ -8,7 +8,6 @@ import HomeEstudiante from '../../pages/Estudiante/homeEstudiante/homeEstudiante
 import HomeGrupoEstudiante from '../../pages/Estudiante/homeGrupoEstudiante/homeGrupoEstudiante.jsx'
 import PlanificacionDeDesarollo from '../../pages/Estudiante/planificacionDeDesarollo/PlanifacionDeDesarollo.jsx';
 import EstudiantePlanificacion from '../../pages/Estudiante/planificacion/planificacion.jsx'
-import EditarPlanificacion from '../../pages/Estudiante/editarPlanificacion/editarPlanificacion.jsx';
 
 function nav() {
   
@@ -23,7 +22,6 @@ function nav() {
         <Route path='/homeEstudiante/homeGrupoEstudiante' element={<HomeGrupoEstudiante/>}/>
         <Route path='/homeEstudiante/homeGrupoEstudiante/Empresa/:idEmpresa' element={<PlanificacionDeDesarollo/>}/>
         <Route path='/homeEstudiante/homeGrupoEstudiante/Empresa/planificacion' element={<EstudiantePlanificacion/>}/>
-        <Route path='/homeEstudiante/homeGrupoEstudiante/Empresa/planificacion/editar' element={<EditarPlanificacion/>}/>
     </Routes>
   )
 }
