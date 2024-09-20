@@ -17,4 +17,3 @@ class Planificacion extends Model
         return $this->hasMany(Sprint::class, 'idPlanificacion', 'idPlanificacion');
     }
 }
-

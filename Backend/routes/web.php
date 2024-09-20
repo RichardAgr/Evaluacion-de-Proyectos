@@ -10,7 +10,6 @@ Route::get('/', function () {
 });
 
 
-
 Route::get('/empresa/{id}', [EmpresaController::class, 'getEmpresaData']);
 
 Route::get('/planificacion/{idEmpresa}', [PlanificacionController::class, 'show']);
