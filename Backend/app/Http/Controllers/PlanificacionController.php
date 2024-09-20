@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Planificacion;
+use App\Models\Sprint;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 
