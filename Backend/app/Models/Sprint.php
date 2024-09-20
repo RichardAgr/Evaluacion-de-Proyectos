@@ -9,6 +9,7 @@ class Sprint extends Model
 
     public function planificacion()
     {
-        return $this->belongsTo(Planificacion::class, 'idPlanificacion');
+        return $this->belongsTo(Planificacion::class, 'idPlanificacion', 'idPlanificacion');
     }
 }
+

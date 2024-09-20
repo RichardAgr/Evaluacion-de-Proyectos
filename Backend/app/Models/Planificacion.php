@@ -9,11 +9,12 @@ class Planificacion extends Model
 
     public function empresa()
     {
-        return $this->belongsTo(Empresa::class, 'idEmpresa');
+        return $this->belongsTo(Empresa::class, 'idEmpresa', 'idEmpresa');
     }
 
     public function sprints()
     {
-        return $this->hasMany(Sprint::class, 'idPlanificacion');
+        return $this->hasMany(Sprint::class, 'idPlanificacion', 'idPlanificacion');
     }
 }
+
