@@ -1,7 +1,7 @@
 
 import { Fragment, useEffect } from 'react';
 import { useState } from 'react';
-import { useParams,Link } from "react-router-dom";
+import { useParams} from "react-router-dom";
 import { Button } from '@mui/material';
 import Header from '../../../components/Header/header.jsx';
 import Footer from '../../../components/Footer/footer.jsx';
@@ -16,7 +16,6 @@ function PlanificacionDeDesarollo() {
   let { idEmpresa } = useParams();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [sprints, setSprints] = useState(null);
   const [planificacionData, setPlanificacionData] = useState({aceptada:false})
 
   useEffect(() => {
@@ -37,9 +36,6 @@ function PlanificacionDeDesarollo() {
     };
     fetchData();
   }, [idEmpresa])
-  useEffect(() => {
-    setSprints(planificacionData.sprints);
-  }, [planificacionData])
   if (loading) return <p>Cargando datos...</p>;
   if (error) return <p>Error: {error}</p>;
   return (
@@ -54,24 +50,10 @@ function PlanificacionDeDesarollo() {
               <InfoEmpresa nombreLargo= {empresaData.nombreLargo} nombreCorto = {empresaData.nombreEmpresa} integrantes={empresaData.integrantes}></InfoEmpresa>
               {!planificacionData.aceptada?
                 <div className='divContainerPlani'>
-                    <Link
-                      to={`/homeEstudiante/homeGrupoEstudiante/Empresa/planificacion`}
-                      state={{
-                        sprints
-                      }}
-                    >
-                    <Button variant="contained">Crear Planificación</Button>
-                  </Link>
+                  <h1>TODAVIA NO SE FUE ACEPTADA</h1>
                 </div>
               :
-              (
-                <div>
-                  <Link>
-                    <Button variant="contained" color="secondary">Ver Antigua Planificacion</Button>
-                  </Link>
                   <TablaPlanificacion sprints = {planificacionData.sprints}></TablaPlanificacion>
-                </div>
-              )
               }
               <TablaNotasPlanificacion ></TablaNotasPlanificacion>
             </div>
