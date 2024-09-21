@@ -1,28 +1,28 @@
 import {Routes, Route} from 'react-router-dom';
-import Home from '../../pages/Home/home.jsx'
+import Home from '../../pages/Home/home.jsx';
 
 import HomeDocente from '../../pages/Docente/homeDocente/homeDocente.jsx'
 import HomeGrupoDocente from '../../pages/Docente/homeGrupoDocente/homeGrupoDocente.jsx'
+import VerPlanificacionDeDesarolloD from '../../pages/Docente/verPlanificacionDeDesarolloEmpresa/VerPlanificacionDeDesarolloD.jsx'
 
 import HomeEstudiante from '../../pages/Estudiante/homeEstudiante/homeEstudiante.jsx'
 import HomeGrupoEstudiante from '../../pages/Estudiante/homeGrupoEstudiante/homeGrupoEstudiante.jsx'
-import EstudiantePlanificacion from '../../pages/Estudiante/planificacion/planificacion.jsx'
-import EditarPlanificacion from '../../pages/Estudiante/editarPlanificacion/editarPlanificacion.jsx'
-import ValidarPlanificacion from '../../pages/Docente/gestionGrupo/validarPlanificacion.jsx'
-
+import VerPlanficacionDeDesarollo from '../../pages/Estudiante/verPlanificacionDeDesarollo/VerPlanifacionDeDesarolloE.jsx';
+import EditarPlanificacion from '../../pages/Estudiante/editarPlanificacion/editarPlanificacion.jsx';
 function nav() {
+  
   return (
     <Routes>
         <Route path='/' element={<Home/>}/>
 
         <Route path='/homeDocente' element={<HomeDocente/>}/>
         <Route path='/homeDocente/homeGrupoDocente' element={<HomeGrupoDocente/>}/>
+        <Route path='/homeDocente/homeGrupoDocente/Empresa/:idEmpresa/PlanificacionDeDesarollo' element={<VerPlanificacionDeDesarolloD/>}/>
 
-        <Route path='/homeDocente' element={<HomeEstudiante/>}/>
-        <Route path='/homeDocente/homeGrupoEstudiante' element={<HomeGrupoEstudiante/>}/>
-        <Route path='/homeEstudiante/homeGrupoEstudiante/verPlanificacion' element={<EstudiantePlanificacion/>}/>
-        <Route path='/homeEstudiante/homeGrupoEstudiante/editarPlanificacion' element={<EditarPlanificacion/>}/>
-        <Route path='/homeDocente/homeGrupoEstudiante/validarPlanificacion' element={<ValidarPlanificacion/>}/>
+        <Route path='/homeEstudiante' element={<HomeEstudiante/>}/>
+        <Route path='/homeEstudiante/homeGrupoEstudiante' element={<HomeGrupoEstudiante/>}/>
+        <Route path='/homeEstudiante/homeGrupoEstudiante/Empresa/:idEmpresa/PlanificacionDeDesarollo' element={<VerPlanficacionDeDesarollo/>}/>
+        <Route path='/homeEstudiante/homeGrupoEstudiante/Empresa/:idEmpresa/PlanificacionInicial' element={<EditarPlanificacion/>}/>
     </Routes>
   )
 }
