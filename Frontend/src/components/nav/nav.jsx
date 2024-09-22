@@ -1,5 +1,5 @@
 import {Routes, Route} from 'react-router-dom';
-import Home from '../../pages/Home/home.jsx';
+//import Home from '../../pages/Home/home.jsx';
 
 import HomeDocente from '../../pages/Docente/homeDocente/homeDocente.jsx'
 import HomeGrupoDocente from '../../pages/Docente/homeGrupoDocente/homeGrupoDocente.jsx'
@@ -10,7 +10,6 @@ import HomeGrupoEstudiante from '../../pages/Estudiante/homeGrupoEstudiante/home
 import VerPlanficacionDeDesarollo from '../../pages/Estudiante/verPlanificacionDeDesarollo/VerPlanifacionDeDesarolloE.jsx';
 import EditarPlanificacion from '../../pages/Estudiante/editarPlanificacion/editarPlanificacion.jsx';
 function nav() {
-  
   return (
     <Routes>
         <Route path='/' element={<Home/>}/>

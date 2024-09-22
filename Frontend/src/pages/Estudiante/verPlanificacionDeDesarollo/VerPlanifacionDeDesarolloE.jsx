@@ -1,4 +1,5 @@
 
+
 import { Fragment, useEffect } from 'react';
 import { useState } from 'react';
 import { useParams} from "react-router-dom";
@@ -8,9 +9,12 @@ import Footer from '../../../components/Footer/footer.jsx';
 import InfoEmpresa from '../../../components/infoEmpresa/infoEmpresa.jsx'
 import TablaNotasPlanificacion from '../../../components/tablaPlanificacionNotas/tablaPlanificacionNotas.jsx';
 import TablaPlanificacion from '../../../components/tablaPlanificacionDeDesarollo/tablaPlanificacion.jsx';
+import TablaPlanificacion from '../../../components/tablaPlanificacionDeDesarollo/tablaPlanificacion.jsx';
 import { getEmpresaData } from '../../../endPoints/getEmpresa.jsx';
 import { getPlanificacion} from '../../../endPoints/getPlanificacion.jsx'
+import { getPlanificacion} from '../../../endPoints/getPlanificacion.jsx'
 function PlanificacionDeDesarollo() {
+  
   
   const [empresaData, setEmpresaData] = useState(null);
   let { idEmpresa } = useParams();
@@ -27,9 +31,16 @@ function PlanificacionDeDesarollo() {
         ]);
         setEmpresaData(empresa);
         setPlanificacionData(planificacion);
+        const [empresa, planificacion] = await Promise.all([
+          getEmpresaData(idEmpresa),
+          getPlanificacion(idEmpresa),
+        ]);
+        setEmpresaData(empresa);
+        setPlanificacionData(planificacion);
       } catch (error) {
         console.error('Error en la solicitud:', error.message);
         setError(`Error en la solicitud: ${error.message}`);
+      } finally {
       } finally {
         setLoading(false);
       }
@@ -49,12 +60,15 @@ function PlanificacionDeDesarollo() {
             <div className='pageBorder_interior'>
               <InfoEmpresa nombreLargo= {empresaData.nombreLargo} nombreCorto = {empresaData.nombreEmpresa} integrantes={empresaData.integrantes}></InfoEmpresa>
               {!planificacionData.aceptada?
+              <InfoEmpresa nombreLargo= {empresaData.nombreLargo} nombreCorto = {empresaData.nombreEmpresa} integrantes={empresaData.integrantes}></InfoEmpresa>
+              {!planificacionData.aceptada?
                 <div className='divContainerPlani'>
                   <h1>TODAVIA NO SE FUE ACEPTADA</h1>
                 </div>
               :
                   <TablaPlanificacion sprints = {planificacionData.sprints}></TablaPlanificacion>
               }
+              <TablaNotasPlanificacion ></TablaNotasPlanificacion>
               <TablaNotasPlanificacion ></TablaNotasPlanificacion>
             </div>
           </div>
