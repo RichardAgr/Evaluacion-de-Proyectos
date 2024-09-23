@@ -23,9 +23,13 @@ function ComentarioNota({ comentario, nota, linkDir }) {
                 {nota}
               </p>
             </div>
-            <Link to={linkDir}>
-              <Button variant='contained'>Editar</Button>
-            </Link>
+            {linkDir=='ocultar'?
+              <></>
+              :
+              <Link to={linkDir}>
+                <Button variant='contained'>Editar</Button>
+              </Link>  
+            }
           </div>
         </div>
       </div>

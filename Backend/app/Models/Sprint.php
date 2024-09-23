@@ -12,4 +12,3 @@ class Sprint extends Model
         return $this->belongsTo(Planificacion::class, 'idPlanificacion', 'idPlanificacion');
     }
 }
-

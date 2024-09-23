@@ -1,12 +1,13 @@
+
 import { Fragment, useEffect } from 'react';
 import { useState } from 'react';
-import { useParams,Link } from "react-router-dom";
+import { useParams} from "react-router-dom";
 import { Button } from '@mui/material';
 import Header from '../../../components/Header/header.jsx';
 import Footer from '../../../components/Footer/footer.jsx';
 import InfoEmpresa from '../../../components/infoEmpresa/infoEmpresa.jsx'
 import TablaNotasPlanificacion from '../../../components/tablaPlanificacionNotas/tablaPlanificacionNotas.jsx';
-import TablaPlanificacion from '../../../components/tablaPlanificacion/tablaPlanificacion.jsx';
+import TablaPlanificacion from '../../../components/tablaPlanificacionDeDesarollo/tablaPlanificacion.jsx';
 import { getEmpresaData } from '../../../endPoints/getEmpresa.jsx';
 import { getPlanificacion} from '../../../endPoints/getPlanificacion.jsx'
 function PlanificacionDeDesarollo() {
@@ -15,36 +16,26 @@ function PlanificacionDeDesarollo() {
   let { idEmpresa } = useParams();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
   const [planificacionData, setPlanificacionData] = useState({aceptada:false})
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await getEmpresaData(idEmpresa);
-        setEmpresaData(data);
-        setLoading(false);
+        const [empresa, planificacion] = await Promise.all([
+          getEmpresaData(idEmpresa),
+          getPlanificacion(idEmpresa),
+        ]);
+        setEmpresaData(empresa);
+        setPlanificacionData(planificacion);
       } catch (error) {
         console.error('Error en la solicitud:', error.message);
         setError(`Error en la solicitud: ${error.message}`);
+      } finally {
         setLoading(false);
       }
     };
     fetchData();
-    const fetchDataPlani = async () => {
-      try {
-        const data = await getPlanificacion(idEmpresa);
-        setPlanificacionData(data);
-        setLoading(false);
-      } catch (error) {
-        console.error('Error en la solicitud:', error.message);
-        setError(`Error en la solicitud: ${error.message}`);
-        setLoading(false);
-      }
-    };
-    fetchDataPlani();
-    
-  }, [idEmpresa]);
+  }, [idEmpresa])
   if (loading) return <p>Cargando datos...</p>;
   if (error) return <p>Error: {error}</p>;
   return (
@@ -59,14 +50,10 @@ function PlanificacionDeDesarollo() {
               <InfoEmpresa nombreLargo= {empresaData.nombreLargo} nombreCorto = {empresaData.nombreEmpresa} integrantes={empresaData.integrantes}></InfoEmpresa>
               {!planificacionData.aceptada?
                 <div className='divContainerPlani'>
-                  <Link to={'/homeEstudiante/homeGrupoEstudiante/Empresa/planificacion'}>
-                    <Button variant='contained'>Crear Planificacion</Button>
-                  </Link>
+                  <h1>TODAVIA NO SE FUE ACEPTADA</h1>
                 </div>
               :
-              (
-                <TablaPlanificacion sprints = {planificacionData.sprints}></TablaPlanificacion>
-              )
+                  <TablaPlanificacion sprints = {planificacionData.sprints}></TablaPlanificacion>
               }
               <TablaNotasPlanificacion ></TablaNotasPlanificacion>
             </div>
