@@ -5,10 +5,17 @@ import Header from '../../components/Header/header.jsx'
 function home() {
   return (
     <Fragment>
-      <Header></Header>
+    <Header></Header>
+      <div className='box'>
         <div className='container'>
+          <div className='pageBorder'>
+            <div className='pageBorder_interior'>
+            
+            </div>
+          </div>
         </div>
-      <Footer></Footer>
+      </div>
+    <Footer></Footer>
     </Fragment>
   );
 }

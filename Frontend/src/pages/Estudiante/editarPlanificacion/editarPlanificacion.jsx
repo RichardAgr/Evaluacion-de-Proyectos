@@ -82,7 +82,11 @@ function Planificacion() {
                     :
                     <>
                       <VistaTablaPlanificacion sprints={planificacionData.sprints}></VistaTablaPlanificacion>        
-                      <Button variant='contained'onClick={changeTable}>Editar</Button>
+                      {planificacionData.aceptada?
+                        <></>
+                        :
+                        <Button variant='contained'onClick={changeTable}>Editar</Button>
+                      }
                     </>
                   )
                   :

@@ -9,12 +9,11 @@ import HomeEstudiante from '../../pages/Estudiante/homeEstudiante/homeEstudiante
 import HomeGrupoEstudiante from '../../pages/Estudiante/homeGrupoEstudiante/homeGrupoEstudiante.jsx'
 import VerPlanficacionDeDesarollo from '../../pages/Estudiante/verPlanificacionDeDesarollo/VerPlanifacionDeDesarolloE.jsx';
 import EditarPlanificacion from '../../pages/Estudiante/editarPlanificacion/editarPlanificacion.jsx';
-function nav() {
+function Nav() {
   
   return (
     <Routes>
         <Route path='/' element={<Home/>}/>
-
         <Route path='/homeDocente' element={<HomeDocente/>}/>
         <Route path='/homeDocente/homeGrupoDocente' element={<HomeGrupoDocente/>}/>
         <Route path='/homeDocente/homeGrupoDocente/Empresa/:idEmpresa/PlanificacionDeDesarollo' element={<VerPlanificacionDeDesarolloD/>}/>
@@ -27,4 +26,4 @@ function nav() {
   )
 }
 
-export default nav
+export default Nav
