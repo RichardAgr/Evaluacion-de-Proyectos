@@ -1,4 +1,4 @@
-import Nav from './components/nav/nav.jsx'
+import Nav from './components/nav/Nav.jsx'
 import './App.css'
 
 function App() {
