@@ -107,6 +107,8 @@ class PlanificacionController extends Controller
             'idEmpresa' => $planificacion->idEmpresa,
             'aceptada' => $planificacion->aceptada,
             'fechaEntrega' => $planificacion->fechaEntrega,
+            'notaPlanificacion' => $planificacion->notaplanificacion,
+            'comentarioDocente' => $planificacion->comentariodocente,
             'sprints' => $planificacion->sprints->map(function ($sprint) {
                 return [
                     'idSprint' => $sprint->idSprint,

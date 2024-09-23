@@ -8,8 +8,8 @@ import Footer from '../../../components/Footer/footer.jsx';
 import InfoEmpresa from '../../../components/infoEmpresa/infoEmpresa.jsx'
 import TablaNotasPlanificacion from '../../../components/tablaPlanificacionNotas/tablaPlanificacionNotas.jsx';
 import TablaPlanificacion from '../../../components/tablaPlanificacionDeDesarollo/tablaPlanificacion.jsx';
-import { getEmpresaData } from '../../../endPoints/getEmpresa.jsx';
-import { getPlanificacion} from '../../../endPoints/getPlanificacion.jsx'
+import { getEmpresaData } from '../../../api/getEmpresa.jsx';
+import { getPlanificacion} from '../../../api/getPlanificacion.jsx'
 function VerPlanificacionDeDesarolloD() {
   
   const [empresaData, setEmpresaData] = useState(null);
@@ -55,7 +55,11 @@ function VerPlanificacionDeDesarolloD() {
               :
                   <TablaPlanificacion sprints = {planificacionData.sprints}></TablaPlanificacion>
               }
-              <TablaNotasPlanificacion ></TablaNotasPlanificacion>
+              <TablaNotasPlanificacion 
+                numeroDeFaltas={empresaData.numeroDeFaltas} 
+                sprints={planificacionData.sprints}
+                notaProductoFinal= {empresaData.notaProductoFinal}
+              ></TablaNotasPlanificacion>
             </div>
           </div>
         </div>

@@ -7,7 +7,7 @@ import Footer from '../../../components/Footer/footer.jsx';
 import InfoEmpresa from '../../../components/infoEmpresa/infoEmpresa.jsx'
 import TablaNotasPlanificacion from '../../../components/tablaPlanificacionNotas/tablaPlanificacionNotas.jsx';
 import TablaPlanificacion from '../../../components/tablaPlanificacion/tablaPlanificacion.jsx';
-import { getEmpresaData } from '../../../endPoints/getEmpresa.jsx';
+import { getEmpresaData } from '../../../api/getEmpresa.jsx';
 
 function PlanificacionDeDesarollo() {
   const [tienePlani] = useState(false);
