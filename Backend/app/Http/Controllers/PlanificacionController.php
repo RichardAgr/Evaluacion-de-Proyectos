@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request; // Asegúrate de importar la clase Request
 use Illuminate\Http\JsonResponse; // Para las respuestas JSON
 use App\Models\Planificacion; // Importa tu modelo Planificacion
@@ -123,6 +124,25 @@ class PlanificacionController extends Controller
         // Retornar la respuesta JSON
         return response()->json($data);
     }
+    public function notaComentario($idPlanificacion): JsonResponse{
+        $planificacion = Planificacion::find($idPlanificacion);
+            
+        if (!$planificacion) {
+            return response()->json(['error' => 'Planificación no encontrada para esta empresa'], 404);
+        }
+
+ 
+        $data = [
+
+            'notaPlanificacion' => $planificacion->notaPlanificacion ?? null,
+            'comentarioDocente' => $planificacion->comentarioDocente ?? null,
+            'fechaEntrega' => $planificacion->fechaEntrega
+        ];
+
+        // Retornar la respuesta JSON
+        return response()->json($data);
+    }
+    
 
     public function showP($idPlanificacion): JsonResponse
     {
@@ -193,8 +213,4 @@ public function modificarSprint(Request $request, $idPlanificacion, $idSprint): 
         return response()->json(['message' => 'Error al modificar el sprint', 'error' => $e->getMessage()], 500);
     }
 }
-
-    
-
-
 }
