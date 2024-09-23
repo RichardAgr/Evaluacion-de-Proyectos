@@ -165,35 +165,55 @@ class PlanificacionController extends Controller
         return response()->json(['message' => 'Sprint agregado exitosamente', 'sprint' => $sprint], 201);
     }
 
-public function modificarSprint(Request $request, $idPlanificacion, $idSprint): JsonResponse
-{
-    // Validar la solicitud
-    $validatedData = $request->validate([
-        'fechaIni' => 'required|date',
-        'fechaFin' => 'required|date|after:fechaIni',
-        'cobro' => 'nullable|integer',
-        'notasprint' => 'nullable|integer',
-        'comentariodocente' => 'nullable|string',
-    ]);
+    public function modificarSprint(Request $request, $idPlanificacion, $idSprint): JsonResponse
+    {
+        // Validar la solicitud
+        $validatedData = $request->validate([
+            'fechaIni' => 'required|date',
+            'fechaFin' => 'required|date|after:fechaIni',
+            'cobro' => 'nullable|integer',
+            'notasprint' => 'nullable|integer',
+            'comentariodocente' => 'nullable|string',
+        ]);
 
-    try {
-        // Buscar el sprint que pertenezca a la planificación correspondiente
-        $sprint = Sprint::where('idSprint', $idSprint)
-                        ->where('idPlanificacion', $idPlanificacion)
-                        ->firstOrFail();
-        
-        // Actualizar el sprint
-        $sprint->update($validatedData);
+        try {
+            // Buscar el sprint que pertenezca a la planificación correspondiente
+            $sprint = Sprint::where('idSprint', $idSprint)
+                            ->where('idPlanificacion', $idPlanificacion)
+                            ->firstOrFail();
+            
+            // Actualizar el sprint
+            $sprint->update($validatedData);
 
-        return response()->json(['message' => 'Sprint modificado exitosamente', 'sprint' => $sprint], 200);
-    } catch (ModelNotFoundException $e) {
-        return response()->json(['message' => 'Sprint no encontrado o no pertenece a la planificación con id ' . $idPlanificacion], 404);
-    } catch (\Exception $e) {
-        return response()->json(['message' => 'Error al modificar el sprint', 'error' => $e->getMessage()], 500);
+            return response()->json(['message' => 'Sprint modificado exitosamente', 'sprint' => $sprint], 200);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['message' => 'Sprint no encontrado o no pertenece a la planificación con id ' . $idPlanificacion], 404);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Error al modificar el sprint', 'error' => $e->getMessage()], 500);
+        }
     }
-}
+
+    public function notaComentario($idPlanificacion): JsonResponse{
+
+
+        $planificacion = Planificacion::find($idPlanificacion);
+            
+        if (!$planificacion) {
+            return response()->json(['error' => 'Planificación no encontrada para esta empresa'], 404);
+        }
+
+ 
+        $data = [
+
+            'notaplanificacion' => $planificacion->notaplanificacion ?? null,
+            'comentariodocente' => $planificacion->comentariodocente ?? null,
+            'fechaEntrega' => $planificacion->fechaEntrega
+        ];
+
+        // Retornar la respuesta JSON
+        return response()->json($data);
+    }
 
     
-
 
 }
