@@ -10,6 +10,10 @@ import TablaNotasPlanificacion from '../../../components/tablaPlanificacionNotas
 import TablaPlanificacion from '../../../components/tablaPlanificacionDeDesarollo/tablaPlanificacion.jsx';
 import { getEmpresaData } from '../../../endPoints/getEmpresa.jsx';
 import { getPlanificacion} from '../../../endPoints/getPlanificacion.jsx'
+
+import BackButtonAndTitle from '../../../components/Buttons/BackButtonAndTitle.jsx';
+
+
 function PlanificacionDeDesarollo() {
   
   const [empresaData, setEmpresaData] = useState(null);
@@ -43,8 +47,7 @@ function PlanificacionDeDesarollo() {
       <Header></Header>
       <div className='box'>
         <div className='container'>
-          <Button variant='contained' >Atras</Button>
-          <h1>PLANIFICACION DE DESAROLLO</h1>
+        <BackButtonAndTitle title="Visualizar Planificacion" />
           <div className='pageBorder'>
             <div className='pageBorder_interior'>
               <InfoEmpresa nombreLargo= {empresaData.nombreLargo} nombreCorto = {empresaData.nombreEmpresa} integrantes={empresaData.integrantes}></InfoEmpresa>
