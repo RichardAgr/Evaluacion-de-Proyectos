@@ -1,41 +1,39 @@
-
 import { Fragment, useEffect } from 'react';
 import { useState } from 'react';
-import { useParams} from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { Button } from '@mui/material';
 import Header from '../../../components/Header/header.jsx';
 import Footer from '../../../components/Footer/footer.jsx';
 import InfoEmpresa from '../../../components/infoEmpresa/infoEmpresa.jsx'
 import TablaNotasPlanificacion from '../../../components/tablaPlanificacionNotas/tablaPlanificacionNotas.jsx';
-import TablaPlanificacion from '../../../components/tablaPlanificacionDeDesarollo/tablaPlanificacion.jsx';
+import TablaPlanificacion from '../../../components/tablaPlanificacion/tablaPlanificacion.jsx';
 import { getEmpresaData } from '../../../api/getEmpresa.jsx';
-import { getPlanificacion} from '../../../api/getPlanificacion.jsx'
-function VerPlanificacionDeDesarolloD() {
-  
+
+function PlanificacionDeDesarollo() {
+  const [tienePlani] = useState(false);
   const [empresaData, setEmpresaData] = useState(null);
   let { idEmpresa } = useParams();
+
+  
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [planificacionData, setPlanificacionData] = useState({aceptada:false})
-
   useEffect(() => {
+    //console.log(idEmpresa)
     const fetchData = async () => {
       try {
-        const [empresa, planificacion] = await Promise.all([
-          getEmpresaData(idEmpresa),
-          getPlanificacion(idEmpresa),
-        ]);
-        setEmpresaData(empresa);
-        setPlanificacionData(planificacion);
+        const data = await getEmpresaData(idEmpresa);
+        setEmpresaData(data);
+        setLoading(false);
       } catch (error) {
         console.error('Error en la solicitud:', error.message);
         setError(`Error en la solicitud: ${error.message}`);
-      } finally {
         setLoading(false);
       }
     };
+    //console.log(empresaData)
     fetchData();
-  }, [idEmpresa])
+  }, [idEmpresa]);
+
   if (loading) return <p>Cargando datos...</p>;
   if (error) return <p>Error: {error}</p>;
   return (
@@ -47,19 +45,17 @@ function VerPlanificacionDeDesarolloD() {
           <h1>PLANIFICACION DE DESAROLLO</h1>
           <div className='pageBorder'>
             <div className='pageBorder_interior'>
-              <InfoEmpresa nombreLargo= {empresaData.nombreLargo} nombreCorto = {empresaData.nombreEmpresa} integrantes={empresaData.integrantes}></InfoEmpresa>
-              {!planificacionData.aceptada?
+              <InfoEmpresa></InfoEmpresa>
+              {!tienePlani?
                 <div className='divContainerPlani'>
-                  <h1>TODAVIA NO SE FUE ACEPTADA</h1>
+                  <Button variant='contained'>Crear Planificacion</Button>
                 </div>
               :
-                  <TablaPlanificacion sprints = {planificacionData.sprints}></TablaPlanificacion>
+              (
+                <TablaPlanificacion></TablaPlanificacion>
+              )
               }
-              <TablaNotasPlanificacion 
-                numeroDeFaltas={empresaData.numeroDeFaltas} 
-                sprints={planificacionData.sprints}
-                notaProductoFinal= {empresaData.notaProductoFinal}
-              ></TablaNotasPlanificacion>
+              <TablaNotasPlanificacion></TablaNotasPlanificacion>
             </div>
           </div>
         </div>
@@ -69,4 +65,4 @@ function VerPlanificacionDeDesarolloD() {
   );
 }
 
-export default VerPlanificacionDeDesarolloD;
+export default PlanificacionDeDesarollo;

@@ -6,10 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Planificacion extends Model
 {
+
     protected $table = 'planificacion'; // Nombre de la tabla
     protected $primaryKey = 'idPlanificacion'; // Clave primaria
     public $timestamps = false; // Cambia a true si usas created_at y updated_at
-
     protected $fillable = [
         'idEmpresa', // ID de la empresa
         'aceptada', // Estado de aceptación
@@ -19,11 +19,11 @@ class Planificacion extends Model
     ];
     public function empresa()
     {
-        return $this->belongsTo(Empresa::class, 'idEmpresa', 'idEmpresa');
+        return $this->belongsTo(Empresa::class, 'idEmpresa');
     }
 
     public function sprints()
     {
-        return $this->hasMany(Sprint::class, 'idPlanificacion', 'idPlanificacion');
+        return $this->hasMany(Sprint::class, 'idPlanificacion');
     }
 }

@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request; // Asegúrate de importar la clase Request
 use Illuminate\Http\JsonResponse; // Para las respuestas JSON
 use App\Models\Planificacion; // Importa tu modelo Planificacion
@@ -106,6 +107,8 @@ class PlanificacionController extends Controller
             'idEmpresa' => $planificacion->idEmpresa,
             'aceptada' => $planificacion->aceptada,
             'fechaEntrega' => $planificacion->fechaEntrega,
+            'notaPlanificacion' => $planificacion->notaplanificacion,
+            'comentarioDocente' => $planificacion->comentariodocente,
             'sprints' => $planificacion->sprints->map(function ($sprint) {
                 return [
                     'idSprint' => $sprint->idSprint,
@@ -113,6 +116,7 @@ class PlanificacionController extends Controller
                     'fechaFin' => $sprint->fechaFin,
                     'cobro' => $sprint->cobro,
                     'fechaEntrega' => $sprint->fechaEntrega,
+                    'entregables' => $sprint->entregables,
                     'notasprint' => $sprint->notasprint,
                     'comentariodocente' => $sprint -> comentariodocente
                 ];
@@ -122,6 +126,25 @@ class PlanificacionController extends Controller
         // Retornar la respuesta JSON
         return response()->json($data);
     }
+    public function notaComentario($idPlanificacion): JsonResponse{
+        $planificacion = Planificacion::find($idPlanificacion);
+            
+        if (!$planificacion) {
+            return response()->json(['error' => 'Planificación no encontrada para esta empresa'], 404);
+        }
+
+ 
+        $data = [
+
+            'notaPlanificacion' => $planificacion->notaPlanificacion ?? null,
+            'comentarioDocente' => $planificacion->comentarioDocente ?? null,
+            'fechaEntrega' => $planificacion->fechaEntrega
+        ];
+
+        // Retornar la respuesta JSON
+        return response()->json($data);
+    }
+    
 
     public function showP($idPlanificacion): JsonResponse
     {
@@ -185,35 +208,11 @@ class PlanificacionController extends Controller
             // Actualizar el sprint
             $sprint->update($validatedData);
 
-            return response()->json(['message' => 'Sprint modificado exitosamente', 'sprint' => $sprint], 200);
-        } catch (ModelNotFoundException $e) {
-            return response()->json(['message' => 'Sprint no encontrado o no pertenece a la planificación con id ' . $idPlanificacion], 404);
-        } catch (\Exception $e) {
-            return response()->json(['message' => 'Error al modificar el sprint', 'error' => $e->getMessage()], 500);
-        }
+        return response()->json(['message' => 'Sprint modificado exitosamente', 'sprint' => $sprint], 200);
+    } catch (ModelNotFoundException $e) {
+        return response()->json(['message' => 'Sprint no encontrado o no pertenece a la planificación con id ' . $idPlanificacion], 404);
+    } catch (\Exception $e) {
+        return response()->json(['message' => 'Error al modificar el sprint', 'error' => $e->getMessage()], 500);
     }
-
-    public function notaComentario($idPlanificacion): JsonResponse{
-
-
-        $planificacion = Planificacion::find($idPlanificacion);
-            
-        if (!$planificacion) {
-            return response()->json(['error' => 'Planificación no encontrada para esta empresa'], 404);
-        }
-
- 
-        $data = [
-
-            'notaplanificacion' => $planificacion->notaplanificacion ?? null,
-            'comentariodocente' => $planificacion->comentariodocente ?? null,
-            'fechaEntrega' => $planificacion->fechaEntrega
-        ];
-
-        // Retornar la respuesta JSON
-        return response()->json($data);
-    }
-
-    
-
+}
 }
