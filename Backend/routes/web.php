@@ -10,6 +10,12 @@ Route::get('/', function () {
 });
 
 
-Route::get('/empresa/{id}', [EmpresaController::class, 'getEmpresaData']);
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+    return $request->user();
+});
 
+
+
+
+Route::get('/empresa/{id}', [EmpresaController::class, 'getEmpresaData']);
 Route::get('/planificacion/{idEmpresa}', [PlanificacionController::class, 'show']);

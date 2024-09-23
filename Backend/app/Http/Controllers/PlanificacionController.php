@@ -2,7 +2,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Planificacion;
-use App\Models\Sprint;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 
@@ -43,4 +42,23 @@ class PlanificacionController extends Controller
         // Retornar la respuesta JSON
         return response()->json($data);
     }
+    public function notaComentario($idPlanificacion): JsonResponse{
+        $planificacion = Planificacion::find($idPlanificacion);
+            
+        if (!$planificacion) {
+            return response()->json(['error' => 'Planificación no encontrada para esta empresa'], 404);
+        }
+
+ 
+        $data = [
+
+            'notaPlanificacion' => $planificacion->notaPlanificacion ?? null,
+            'comentarioDocente' => $planificacion->comentarioDocente ?? null,
+            'fechaEntrega' => $planificacion->fechaEntrega
+        ];
+
+        // Retornar la respuesta JSON
+        return response()->json($data);
+    }
+    
 }
