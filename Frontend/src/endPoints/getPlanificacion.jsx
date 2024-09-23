@@ -19,5 +19,5 @@ export const getPlanificacion = async (idEmpresa) => {
       console.error('Error en la solicitud:', error);
       throw error;
     }
-  };
+};
   
