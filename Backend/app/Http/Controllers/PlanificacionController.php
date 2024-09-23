@@ -113,6 +113,7 @@ class PlanificacionController extends Controller
                     'fechaFin' => $sprint->fechaFin,
                     'cobro' => $sprint->cobro,
                     'fechaEntrega' => $sprint->fechaEntrega,
+                    'entregables' => $sprint->entregables,
                     'notasprint' => $sprint->notasprint,
                     'comentariodocente' => $sprint -> comentariodocente
                 ];
