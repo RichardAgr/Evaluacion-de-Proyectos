@@ -27,7 +27,6 @@ function Planificacion() {
           ocultarAtras: true
         } 
       );
-      console.log('true')
     }else{
       setDatosTitleBack(
         {
@@ -35,7 +34,6 @@ function Planificacion() {
           ocultarAtras: false
         } 
       );
-      console.log('false')
     }
   }
   
