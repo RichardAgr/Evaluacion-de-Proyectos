@@ -31,5 +31,5 @@ Route::get('/planificacionAceptadas}', [PlanificacionController::class, 'planifi
 Route::get('/planificacionRechazadas}', [PlanificacionController::class, 'planificacionRechazadas']);
 Route::get('/notas1/{idPlanificacion}', [PlanificacionController::class, 'notaComentario']);
 Route::get('/planificaciones/{idPlanificacion}/sprints', [PlanificacionController::class, 'showP']);
-Route::post('/planificacion1/{idPlanificacion}/sprints', [PlanificacionController::class, 'agregarSprint']);
-Route::put('/planificacion2/{idPlanificacion}/{idSprint}', [PlanificacionController::class, 'modificarSprint']);
+Route::post('/planificacion/gestionar', [PlanificacionController::class, 'gestionarPlanificacion']);
+

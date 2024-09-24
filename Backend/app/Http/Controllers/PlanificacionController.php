@@ -91,7 +91,10 @@ class PlanificacionController extends Controller
                 // Si no hay planificación, devolver datos por defecto
                 return response()->json([
                     'idEmpresa' => $empresa->idEmpresa,
-                    'aceptada' => 0,  // Valor predeterminado
+                    'idPlanificacion' => -1,
+                    'aceptada' => 0,
+                    'notaPlanificacion' => 0,
+                    'comentarioDocente' => 'Comentario Docente',
                     'sprints' => [
                         ['idSprint' => null, 'fechaIni' => null, 'fechaFin' => null, 'cobro' => null, 'fechaEntrega' => null],
                         ['idSprint' => null, 'fechaIni' => null, 'fechaFin' => null, 'cobro' => null, 'fechaEntrega' => null],
@@ -161,58 +164,107 @@ class PlanificacionController extends Controller
     }
 
 
-    public function agregarSprint(Request $request, $idPlanificacion): JsonResponse
+    public function gestionarPlanificacion(Request $request): JsonResponse
     {
         // Validar la solicitud
         $validatedData = $request->validate([
-            'fechaIni' => 'required|date',
-            'fechaFin' => 'required|date',
-            'cobro' => 'nullable|integer',
-            'notasprint' => 'nullable|integer',
-            'comentariodocente' => 'nullable|string',
-        ]);
-
-        // Verificar si la planificación existe
-        $planificacion = Planificacion::findOrFail($idPlanificacion);
-
-        // Crear el nuevo sprint
-        $sprint = Sprint::create([
-            'idPlanificacion' => $planificacion->idPlanificacion,
-            'fechaIni' => $validatedData['fechaIni'],
-            'fechaFin' => $validatedData['fechaFin'],
-            'cobro' => $validatedData['cobro'],
-            'notasprint' => $validatedData['notasprint'],
-            'comentariodocente' => $validatedData['comentariodocente'],
-        ]);
-
-        return response()->json(['message' => 'Sprint agregado exitosamente', 'sprint' => $sprint], 201);
-    }
-
-    public function modificarSprint(Request $request, $idPlanificacion, $idSprint): JsonResponse
-    {
-        // Validar la solicitud
-        $validatedData = $request->validate([
-            'fechaIni' => 'required|date',
-            'fechaFin' => 'required|date|after:fechaIni',
-            'cobro' => 'nullable|integer',
-            'notasprint' => 'nullable|integer',
-            'comentariodocente' => 'nullable|string',
+            'idEmpresa' => 'required|integer',
+            'idPlanificacion' => 'required|integer',
+            'sprintsAntiguos' => 'required|array',
+            'sprintsNuevos' => 'required|array',
         ]);
 
         try {
-            // Buscar el sprint que pertenezca a la planificación correspondiente
-            $sprint = Sprint::where('idSprint', $idSprint)
-                            ->where('idPlanificacion', $idPlanificacion)
-                            ->firstOrFail();
-            
-            // Actualizar el sprint
-            $sprint->update($validatedData);
+            \Log::info('Creando planificación', ['data' => $validatedData]);
+            // Verificar si es necesario crear una nueva planificación o modificar una existente
+            if ($validatedData['idPlanificacion'] == -1) {
+                \Log::info('Creando planificación', ['data' => $validatedData]);
 
-        return response()->json(['message' => 'Sprint modificado exitosamente', 'sprint' => $sprint], 200);
-        } catch (ModelNotFoundException $e) {
-            return response()->json(['message' => 'Sprint no encontrado o no pertenece a la planificación con id ' . $idPlanificacion], 404);
+                // Crear nueva planificación
+                $planificacion = Planificacion::create([
+                    'idEmpresa' => $validatedData['idEmpresa'],
+                    // Puedes agregar más campos si tu tabla Planificacion tiene más atributos
+                ]);
+                \Log::info('Creando planificación', ['data' => $validatedData]);
+
+                // Crear los nuevos sprints
+                foreach ($validatedData['sprintsNuevos'] as $nuevoSprint) {
+                    Sprint::create([
+                        'idPlanificacion' => $planificacion->idPlanificacion,
+                        'fechaIni' => $nuevoSprint['fechaIni'],
+                        'fechaFin' => $nuevoSprint['fechaFin'],
+                        'cobro' => $nuevoSprint['cobro'],
+                        'fechaEntrega' => $nuevoSprint['fechaEntrega'],
+                        'entragables' => $nuevoSprint['entragables'],
+                        'notasprint' => $nuevoSprint['notasprint'],
+                        'comentariodocente' => $nuevoSprint['comentariodocente'],
+                    ]);
+                }
+                \Log::info('Creando planificación', ['data' => $validatedData]);
+
+                return response()->json(['message' => 'Planificación y sprints creados exitosamente'], 201);
+
+            } else {
+                \Log::info('Creando planificación', ['data' => $validatedData]);
+
+                // Modificar la planificación existente
+                $planificacion = Planificacion::findOrFail($validatedData['idPlanificacion']);
+                \Log::info('Creando planificación', ['data' => $validatedData]);
+
+                // Actualizar sprints antiguos
+                foreach ($validatedData['sprintsAntiguos'] as $sprintAntiguo) {
+                    $sprint = Sprint::where('idSprint', $sprintAntiguo['idSprint'])
+                                    ->where('idPlanificacion', $planificacion->idPlanificacion)
+                                    ->first();
+
+                    if ($sprint) {
+                        // Si el sprint existe, actualizarlo
+                        $sprint->update([
+                            'fechaIni' => $sprintAntiguo['fechaIni'] ?? $sprint->fechaIni,
+                            'fechaFin' => $sprintAntiguo['fechaFin'] ?? $sprint->fechaFin,
+                            'cobro' => $sprintAntiguo['cobro'] ?? $sprint->cobro,
+                            'fechaEntrega' => $sprintAntiguo['fechaEntrega'] ?? $sprint->fechaEntrega,
+                            'entragables' => $sprintAntiguo['entragables'] ?? $sprint->entragables,
+                            'notasprint' => $sprintAntiguo['notasprint'] ?? $sprint->notasprint,
+                            'comentariodocente' => $sprintAntiguo['comentariodocente'] ?? $sprint->comentariodocente,
+                        ]);
+                    }
+                }
+                \Log::info('Creando planificación', ['data' => $validatedData]);
+
+                // Crear nuevos sprints
+                foreach ($validatedData['sprintsNuevos'] as $nuevoSprint) {
+                    if ($nuevoSprint['idSprint'] == -1) {
+                        // Crear nuevo sprint si el idSprint es -1
+                        Sprint::create([
+                            'idPlanificacion' => $planificacion->idPlanificacion,
+                            'fechaIni' => $nuevoSprint['fechaIni'],
+                            'fechaFin' => $nuevoSprint['fechaFin'],
+                            'cobro' => $nuevoSprint['cobro'],
+                            'fechaEntrega' => $nuevoSprint['fechaEntrega'],
+                            'entragables' => $nuevoSprint['entragables'],
+                            'notasprint' => $nuevoSprint['notasprint'],
+                            'comentariodocente' => $nuevoSprint['comentariodocente'],
+                        ]);
+                    }
+                }
+                \Log::info('Creando planificación', ['data' => $validatedData]);
+
+                // Eliminar sprints que no estén en la lista de sprints antiguos
+                $idsSprintsAntiguos = array_column($validatedData['sprintsAntiguos'], 'idSprint');
+                Sprint::where('idPlanificacion', $planificacion->idPlanificacion)
+                    ->whereNotIn('idSprint', $idsSprintsAntiguos)
+                    ->delete();
+
+                return response()->json(['message' => 'Planificación y sprints actualizados exitosamente'], 200);
+            }
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Error al modificar el sprint', 'error' => $e->getMessage()], 500);
+            \Log::error('Error en gestionarPlanificacion: ' . $e->getMessage(), [
+                'request' => $request->all(), // Guarda la solicitud que causó el error
+                'stack' => $e->getTraceAsString(), // Guarda la traza del error
+            ]);
+            return response()->json(['message' => 'Error al gestionar la planificación', 'error' => $e->getMessage()], 500);
         }
+        
     }
 }
