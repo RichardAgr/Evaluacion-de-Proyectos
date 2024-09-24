@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import Home from "../../pages/Home/home.jsx";
 
 import HomeDocente from "../../pages/Docente/homeDocente/homeDocente.jsx";
@@ -15,7 +15,7 @@ function nav() {
   return (
     <Routes>
       {/* Ruta para manejar rutas no encontradas */}
-      <Route path="*" element={<Error404 />} />
+      <Route path="*" element={<Navigate to="/" />} />
       
       <Route path="/" element={<Home />} />
       {/* Rutas para el docente */}
