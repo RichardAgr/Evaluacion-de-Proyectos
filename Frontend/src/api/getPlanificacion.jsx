@@ -8,13 +8,11 @@ export const getPlanificacion = async (idEmpresa) => {
     });
     if (response.status === 200) {
       const data = await response.json();
-      console.log('Planificación obtenida:', data);
       return data;
     } else if (response.status === 204) {
       console.log('La empresa existe, pero no tiene planificación registrada.');
       return null;
     } else if (response.status === 404) {
-      console.error('Empresa no encontrada.');
       throw new Error('Empresa no encontrada.');
     } else {
       throw new Error(`Error inesperado, código de estado: ${response.status}`);
