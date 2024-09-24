@@ -136,8 +136,8 @@ class PlanificacionController extends Controller
  
         $data = [
 
-            'notaPlanificacion' => $planificacion->notaPlanificacion ?? null,
-            'comentarioDocente' => $planificacion->comentarioDocente ?? null,
+            'notaplanificacion' => $planificacion->notaplanificacion ?? null,
+            'comentarioocente' => $planificacion->comentariodocente ?? null,
             'fechaEntrega' => $planificacion->fechaEntrega
         ];
 
@@ -209,10 +209,10 @@ class PlanificacionController extends Controller
             $sprint->update($validatedData);
 
         return response()->json(['message' => 'Sprint modificado exitosamente', 'sprint' => $sprint], 200);
-    } catch (ModelNotFoundException $e) {
-        return response()->json(['message' => 'Sprint no encontrado o no pertenece a la planificación con id ' . $idPlanificacion], 404);
-    } catch (\Exception $e) {
-        return response()->json(['message' => 'Error al modificar el sprint', 'error' => $e->getMessage()], 500);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['message' => 'Sprint no encontrado o no pertenece a la planificación con id ' . $idPlanificacion], 404);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Error al modificar el sprint', 'error' => $e->getMessage()], 500);
+        }
     }
-}
 }
