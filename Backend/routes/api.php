@@ -23,5 +23,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::get('/empresa/{id}', [EmpresaController::class, 'getEmpresaData']);
+Route::get('/empresas/', [EmpresaController::class, 'getListaEmpresas']);
 
 Route::get('/planificacion/{idEmpresa}', [PlanificacionController::class, 'show']);
