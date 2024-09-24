@@ -172,13 +172,6 @@ class PlanificacionController extends Controller
         'idPlanificacion' => 'required|integer',
         'sprintsAntiguos' => 'required|array',
         'sprintsNuevos' => 'required|array',
-        'sprintsNuevos.*.fechaIni' => 'required|date',
-        'sprintsNuevos.*.fechaFin' => 'required|date',
-        'sprintsNuevos.*.cobro' => 'required|integer',
-        'sprintsNuevos.*.fechaEntrega' => 'required|date',
-        'sprintsNuevos.*.entragables' => 'required|string',
-        'sprintsNuevos.*.notasprint' => 'nullable|integer',
-        'sprintsNuevos.*.comentariodocente' => 'nullable|string',
     ]);
 
     try {

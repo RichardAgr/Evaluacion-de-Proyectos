@@ -26,6 +26,9 @@ Route::get('/planificaciones/{idPlanificacion}/sprints', [PlanificacionControlle
 Route::post('/planificaciones1/{idPlanificacion}/sprints', [PlanificacionController::class, 'agregarSprint']);
 Route::put('/planificacion2/{idPlanificacion}/{idSprint}', [PlanificacionController::class, 'modificarSprint']);
 
+Route::post('/planificacionGestion', [PlanificacionController::class, 'gestionarPlanificacion']);
+
+
 Route::get('/token', function () {
     return csrf_token(); 
 });
