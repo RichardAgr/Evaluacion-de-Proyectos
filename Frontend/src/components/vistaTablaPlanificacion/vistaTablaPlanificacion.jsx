@@ -24,7 +24,7 @@ function vistaTablaPlanificacion({sprints}) {
                     <TableBody>
                     {sprints.map((sprint,index) => (
                         <TableRow
-                        key={sprint.fechaIni}
+                        key={index}
                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                         >
                         <TableCell component="th" scope="row">

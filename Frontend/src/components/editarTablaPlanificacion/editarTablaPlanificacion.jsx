@@ -16,7 +16,7 @@ import PopUpDialog from '../popUPDialog/popUpDialog';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-export default function EditarPlanificacion({sprints, changeTable}) {
+export default function EditarPlanificacion({sprints, changeTable, idPlanificacion, idEmpresa}) {
   const [rows, setRows] = useState([]);
   const [openCancelDialog, setOpenCancelDialog] = useState(false);
   const handleCancel = () => {
@@ -29,20 +29,27 @@ export default function EditarPlanificacion({sprints, changeTable}) {
 
   useEffect(()=>{
       const newRows= sprints.map((sprint, index)=>{
-          return { 
+          return {
               hito: `SPRINT `+(index+1), 
               fechaIni: sprint.fechaIni, 
               fechaFin: sprint.fechaFin, 
               cobro: sprint.cobro, 
               fechaEntrega: sprint.fechaEntrega, 
-              entregables: sprint.entregables 
+              entregables: sprint.entregables,
           };
       })
       setRows(newRows);
   },[sprints])
   const addRow = () => {
     const newSprint = rows.length + 1;
-    const newRow = { hito: `SPRINT ${newSprint}`, fechaIni: '', fechaFin: '', cobro: '', fechaEntrega: '', entregables: '' };
+    const newRow = {
+      hito: `SPRINT ${newSprint}`, 
+      fechaIni: '', 
+      fechaFin: '', 
+      cobro: '', 
+      fechaEntrega: '', 
+      entregables: ''
+    };
     setRows([...rows, newRow]);
   };
 
@@ -57,7 +64,45 @@ export default function EditarPlanificacion({sprints, changeTable}) {
     setRows(newRows);
   };
 
+ const subir = async () => {
+  const data = {
+    idEmpresa: 2,
+    idPlanificacion: -1,
+    sprintsAntiguos: [],
+    sprintsNuevos: [{
+        fechaIni: "2024-01-01",
+        fechaFin: "2024-01-07",
+        cobro: 1000,
+        fechaEntrega: "2024-01-08",
+        entregables: "Entregable 1",
+        notasprint: 0,
+        comentariodocente: "Comentario Docente"
+    }],
+  };
+
   
+  
+    try {
+      const response = await fetch('http://localhost:8000/api/planificacion/gestionar', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data),
+      });
+  
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+  
+      const responseData = await response.json();
+      console.log(data);
+      console.log('Respuesta del servidor:', responseData);
+    } catch (error) {
+      console.log(data);
+      console.error('Error en la solicitud:', error);
+    }
+  }; 
 
   return (
     <Fragment>
@@ -83,16 +128,16 @@ export default function EditarPlanificacion({sprints, changeTable}) {
                 >
                     {Object.keys(row).map((field) => (
                         <TableCell key={field} align="left">
-                        <TextField
-                            value={row[field]}
-                            onChange={(e) => handleCellChange(index, field, e.target.value)}
-                            type={field.includes('fecha') ? 'date' : 'text'}
-                            fullWidth
-                            variant="standard"
-                            inputProps={{
-                            'aria-label': `${field} for ${row.hito}`,
-                            }}
-                        />
+                          <TextField
+                              value={row[field] ?? ""}
+                              onChange={(e) => handleCellChange(index, field, e.target.value)}
+                              type={field.includes('fecha') ? 'date' : 'text'}
+                              fullWidth
+                              variant="standard"
+                              inputProps={{
+                                  'aria-label': `${field} for ${row.hito}`,
+                              }}
+                          />
                         </TableCell>
                     ))}
                     <TableCell align="left">
@@ -142,7 +187,7 @@ export default function EditarPlanificacion({sprints, changeTable}) {
       <PopUpDialog 
         openDialog= {openSaveDialog} 
         setOpenDialog= {setOpenSaveDialog}
-        especial = {changeTable}
+        especial = {subir}
         titleDialog={'¿Estás seguro de que quieres guardar los cambios?'}
         textDialog={'Esta acción guardará todos los cambios realizados en la planificación.'}
       ></PopUpDialog>

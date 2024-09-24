@@ -66,7 +66,7 @@ function ListaVerPlanificacion() {
                                                 sx={{
                                                     cursor: 'pointer',
                                                     '&:hover': {
-                                                        backgroundColor: '#e0e0e0', // Color plomo al hacer hover
+                                                        backgroundColor: '#e0e0e0'
                                                     },
                                                     '&:last-child td, &:last-child th': { border: 0 }
                                                 }}
