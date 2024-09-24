@@ -1,4 +1,5 @@
-import { Fragment } from 'react';
+/* eslint-disable react/prop-types */
+import { Fragment, useEffect, useState } from 'react';
 
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -7,14 +8,22 @@ import TableContainer from '@mui/material/TableContainer';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import styled from '@emotion/styled'
-function tablaPlanificacionNotas() {
-    function createData(hito, fechaIni, fechaFin, cobro, fechaEntrega, entregables) {
-    return { hito, fechaIni, fechaFin, cobro, fechaEntrega, entregables };
+function TablaPlanificacionNotas( {numeroDeFaltas, sprints, notaProductoFinal} ) {
+  function createData(titulo, nota) {
+    return { titulo, nota};
   }
+  const [sumatoriaSprints, setSumatoriaSprints] = useState(0);
+  useEffect(()=>{
+
+    if(sprints != null){
+      const tam = sprints.length;
+      setSumatoriaSprints (Math.round(sprints.reduce((acumulador,sprint)=> acumulador+sprint.notasprint, 0)/tam))
+    }
+  },[sprints])
   const rows = [
-    createData('FALTAS DEL GRUPO', 159, 6.0, 24, 4.0, 'Modelo ER'),
-    createData('NOTA SUMATORIA SPRINTS', 237, 9.0, 37, 4.3, 'Modelo ER'),
-    createData('NOTA PRODUCTO TERMINADO', 262, 16.0, 24, 6.0, 'Modelo ER'),
+    createData('FALTAS DEL GRUPO', numeroDeFaltas),
+    createData('NOTA SUMATORIA SPRINTS', sumatoriaSprints),
+    createData('NOTA PRODUCTO TERMINADO', notaProductoFinal),
   ];
   return (
     <Fragment>
@@ -24,13 +33,13 @@ function tablaPlanificacionNotas() {
             <TableBody>
                 {rows.map((row) => (
                 <TableRow
-                    key={row.name}
+                    key={row.titulo}
                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                 >
                     <TableCell component="th" scope="row">
-                    {row.hito}
+                    {row.titulo}
                     </TableCell>
-                    <TableCell align="left">{row.fechaIni}</TableCell>
+                    <TableCell align="left">{row.nota}</TableCell>
                 </TableRow>
                 ))}
             </TableBody>
@@ -41,11 +50,16 @@ function tablaPlanificacionNotas() {
   );
 }
 
-export default tablaPlanificacionNotas;
+export default TablaPlanificacionNotas;
 
 let ContainerTablaNotas = styled.div`
     width: 100%;
     margin-top: 1rem;
     margin-bottom: 1rem;
-    border: 0.3rem solid black;
+    border-radius: 0.3rem;
+      -webkit-border-radius: 0.3rem;
+      -moz-border-radius: 0.3rem;
+      -ms-border-radius: 0.3rem;
+      -o-border-radius: 0.3rem;
+    border: 0.3rem solid black
 `

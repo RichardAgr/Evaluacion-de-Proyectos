@@ -31,7 +31,7 @@ let FooterContainer = styled.footer`
     display: flex;
     color: white;
     background-color: #114093;
-    
+    margin-top: 1rem;
     .footer{
         display: flex;
         justify-content: space-between;

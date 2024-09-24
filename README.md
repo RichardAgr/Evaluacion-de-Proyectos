@@ -1,57 +1,94 @@
 # Evaluacion-de-Proyectos
 El sistema que se construirá tiene como objetivo la evaluación de proyectos que contara con funciones de seguimiento, observaciones, generar notificaciones y asignar a cada integrante de acuerdo su rol una funcion
 
-# Readme para poder ejecutar la base de datos.
-Tutorial.
-Entrar al C:\xampp\php\php.ini y buscar zip
-y cambiar el ;extension=zip a extension=zip
+## Tabla de Contenidos
+1. [Requisitos Previos](#requisitos-previos)
+2. [Instalación](#instalación)
+3. [Uso](#uso)
+4. [Cuentas](#Cuentas)
+## Requisitos Previos
 
-Ir a phpmyadmin y dar a importar: Importar la la base.
+Lista de las dependencias y software necesario para correr tu proyecto.
 
-Instalar composer. bash: 
-cd backend
-composer install
-composer touch .env
-
--- Se crea el .env y pegar
-APP_NAME=Laravel
-APP_ENV=local
-APP_KEY=base64:YOUR_APP_KEY_HERE
-APP_DEBUG=true
-APP_URL=http://localhost
-
-LOG_CHANNEL=stack
-
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=basededatos
-DB_USERNAME=root
-DB_PASSWORD=
-
-BROADCAST_DRIVER=log
-CACHE_DRIVER=file
-QUEUE_CONNECTION=sync
-SESSION_DRIVER=file
-SESSION_LIFETIME=120
-
-REDIS_HOST=127.0.0.1
-REDIS_PASSWORD=null
-REDIS_PORT=6379
-
-MAIL_MAILER=smtp
-MAIL_HOST=smtp.mailtrap.io
-MAIL_PORT=2525
-MAIL_USERNAME=null
-MAIL_PASSWORD=null
-MAIL_ENCRYPTION=null
-MAIL_FROM_ADDRESS=null
-MAIL_FROM_NAME="${APP_NAME}"
+- [Git](https://git-scm.com/) 
+- [Node.js](https://nodejs.org/) v21.7.3 o superior
+- [Composer](https://getcomposer.org/download/) v2.7.9 o superior
+- [Mysql Workbech](https://dev.mysql.com/downloads/workbench/) v8.0 CE
+- [XAMPP](https://sourceforge.net/projects/xampp/files/)  v8.2.12
 
 
-php artisan key:generate
-php artisan migrate
 
-artisan serve
-cd frontend
-npm start
+## Instalación
+
+Pasos detallados sobre cómo instalar y configurar el proyecto.
+
+1. Elige un direccion para clonar el repositorio
+2.  Clona el repositorio:
+    ```bash
+    git clone https://github.com/RichardAgr/Evaluacion-de-Proyectos.git
+    ```
+3. Abre bash si no tienes abre powershell si instalaste para poder usar bash en terminal, son los mismos comandos
+4. Navega al directorio del proyecto:
+    ```bash
+    cd Evaluacion-de-
+    ```
+5. Navega al directorio del FrontEnd:
+    ```bash
+    cd frontend 
+    ```
+6. Instala las dependencias:
+    ```bash
+    npm install
+    ```
+7. Regresa a la direccion raiz del proyecto
+   ```bash
+    cd ..
+   ```
+8. Navega al directorio del backend en el proyecto
+   ```bash
+    cd backend
+   ``` 
+9. Instalacion dependencias Backend
+   ```bash
+    composer install
+   ``` 
+10. Configura las variables de entorno:
+    -en la carpeta backend crea un archivo `.env`
+    -abre el archivo .env
+    -abre el archivo .env.example
+    -copia todo de el contenido de .enx.example
+    -pega lo copiado en .env
+    -revisa si los puertos son correctos DB_HOST Y DB_PORT
+    -pon el DB_USERNAME
+    -pon el DB_PASSWORD
+    -abre el bash
+    ```bash
+    php artisan key:generate
+     ```
+    
+    ```bash
+    php artisan migrate
+     ```
+## Uso
+
+Instrucciones básicas sobre cómo ejecutar el proyecto.
+
+1. Para iniciar la coneccion con la Backend-frontend-BD
+   -Navegamos a la direccion del proyecto
+    ```bash
+    cd backend
+    ```
+    ```bash
+    php artisan serv
+    ```
+3. Para iniciar el servidor de desarrollo:
+   -Navegamos a la direccion del proyecto
+   ```bash
+    cd frontend
+    ```
+    ```bash
+    npm start
+    ```
+5. Abre tu navegador en `http://localhost:5173`
+
+## Cuentas
