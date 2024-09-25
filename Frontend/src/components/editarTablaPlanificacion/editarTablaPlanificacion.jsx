@@ -84,10 +84,10 @@ export default function EditarPlanificacion({sprints, changeTable, idPlanificaci
       sprintsAntiguos: sprints,
       sprintsNuevos: rows.map((row) => ({
         idSprint: -1,  
-        fechaIni: new Date(row.fechaIni), // Convertir a Date
-        fechaFin: new Date(row.fechaFin), // Convertir a Date
-        cobro: Number(row.cobro), 
-        fechaEntrega: new Date(row.fechaEntrega), // Convertir a Date
+        fechaIni: row.fechaIni, // Convertir a Date
+        fechaFin: row.fechaFin, // Convertir a Date
+        cobro: row.cobro, 
+        fechaEntrega: row.fechaEntrega, // Convertir a Date
         entregables: row.entregables,
         notasprint: 0,
         comentariodocente: 'Comentario Docente'  
@@ -95,7 +95,7 @@ export default function EditarPlanificacion({sprints, changeTable, idPlanificaci
     };
   
     try {
-      const response = await fetch('http://localhost:8000/api/planificacion/gestionar', {
+      const response = await fetch('http://localhost:8000/api/planificacion/guardar', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -215,7 +215,7 @@ export default function EditarPlanificacion({sprints, changeTable, idPlanificaci
       ></PopUpDialog>
       {openAlert?
         <Alert 
-          severity="error" 
+          severity="warning" 
           onClose={handleCloseAlert} 
           role="alert" // Asegúrate de que tiene el rol correcto
         >
