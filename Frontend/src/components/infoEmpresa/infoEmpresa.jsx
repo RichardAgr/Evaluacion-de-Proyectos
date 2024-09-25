@@ -11,7 +11,7 @@ function infoEmpresa({nombreLargo, nombreCorto, integrantes}) {
                     {integrantes.map((integrante) => (
                         <p key={`${integrante.nombreEstudiante}-${integrante.primerApellido}`}>
                             {integrante.nombreEstudiante} {integrante.primerApellido} {integrante.segundoApellido}
-                            <span> ROL: Desarollador </span>
+                            <span> {' ROL: '+ integrante.rol} </span>
                         </p>
                     ))}
             </div>

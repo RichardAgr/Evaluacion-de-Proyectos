@@ -54,7 +54,7 @@ function tablaPlanificacion({sprints}) {
                                 <></>
                               }
                             </TableCell>
-                            <TableCell align="left"> </TableCell>
+                            <TableCell align="left">{sprint.notasprint} </TableCell>
                           </TableRow>
                         )})}
                     </TableBody>

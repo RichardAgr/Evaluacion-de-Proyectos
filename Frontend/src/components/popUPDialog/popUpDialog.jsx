@@ -1,13 +1,11 @@
 /* eslint-disable react/prop-types */
-import { Fragment,useState } from 'react';
+import { Fragment} from 'react';
 import  { 
             Dialog,
             DialogTitle,
             DialogContent,
             DialogContentText,
             DialogActions,
-            Alert,
-            Snackbar, 
             Button 
         } from '@mui/material';
 function PopUpDialog({openDialog, setOpenDialog, especial, titleDialog, textDialog}) {

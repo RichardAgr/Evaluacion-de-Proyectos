@@ -10,15 +10,20 @@ import {
   Paper,
   Button,
   TextField,
-  Box
+  Box,
+  Alert,
+  AlertTitle
 } from '@mui/material';
 import PopUpDialog from '../popUPDialog/popUpDialog';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-export default function EditarPlanificacion({sprints, changeTable}) {
+export default function EditarPlanificacion({sprints, changeTable, idPlanificacion, idEmpresa}) {
   const [rows, setRows] = useState([]);
   const [openCancelDialog, setOpenCancelDialog] = useState(false);
+  const [openAlert, setOpenAlert] = useState(false);
+  const [openAlertS, setOpenAlertS] = useState(false);
+  const [openAlertE, setOpenAlertE] = useState(false);
   const handleCancel = () => {
     setOpenCancelDialog(true);
   };
@@ -29,20 +34,27 @@ export default function EditarPlanificacion({sprints, changeTable}) {
 
   useEffect(()=>{
       const newRows= sprints.map((sprint, index)=>{
-          return { 
+          return {
               hito: `SPRINT `+(index+1), 
               fechaIni: sprint.fechaIni, 
               fechaFin: sprint.fechaFin, 
               cobro: sprint.cobro, 
               fechaEntrega: sprint.fechaEntrega, 
-              entregables: sprint.entregables 
+              entregables: sprint.entregables,
           };
       })
       setRows(newRows);
   },[sprints])
   const addRow = () => {
     const newSprint = rows.length + 1;
-    const newRow = { hito: `SPRINT ${newSprint}`, fechaIni: '', fechaFin: '', cobro: '', fechaEntrega: '', entregables: '' };
+    const newRow = {
+      hito: `SPRINT ${newSprint}`, 
+      fechaIni: '', 
+      fechaFin: '', 
+      cobro: '', 
+      fechaEntrega: '', 
+      entregables: ''
+    };
     setRows([...rows, newRow]);
   };
 
@@ -57,8 +69,63 @@ export default function EditarPlanificacion({sprints, changeTable}) {
     setRows(newRows);
   };
 
+  const subir = async () => {
+    for (const row of rows) {
+      if (Object.values(row).some(value => value === "" || value === null || value === '')) {
+        console.error("Hay campos vacíos en uno de los sprints.");
+        setOpenAlert(true)
+        return;
+      }
+    }
   
-
+    const data = {
+      idEmpresa: idEmpresa,
+      idPlanificacion: idPlanificacion,
+      sprintsAntiguos: sprints,
+      sprintsNuevos: rows.map((row) => ({
+        idSprint: -1,  
+        fechaIni: new Date(row.fechaIni), // Convertir a Date
+        fechaFin: new Date(row.fechaFin), // Convertir a Date
+        cobro: Number(row.cobro), 
+        fechaEntrega: new Date(row.fechaEntrega), // Convertir a Date
+        entregables: row.entregables,
+        notasprint: 0,
+        comentariodocente: 'Comentario Docente'  
+      })),
+    };
+  
+    try {
+      const response = await fetch('http://localhost:8000/api/planificacion/gestionar', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data),
+      });
+  
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+  
+      const responseData = await response.json();
+      if (responseData.success) {
+        console.log('Los datos se subieron correctamente.');
+        setOpenAlertS(false);
+      } else {
+        setOpenAlertE(true);
+        console.error('Hubo un problema al subir los datos:', responseData.message);
+      }
+      console.log('Respuesta del servidor:', responseData);
+    } catch (error) {
+      setOpenAlertE(true);
+      console.error('Error en la solicitud:', error);
+    }
+  };
+  const handleCloseAlert = () => {
+    setOpenAlert(false);
+    setOpenAlertS(false);
+    setOpenAlertE(false);
+  };
   return (
     <Fragment>
       <Box sx={{ padding: 3 }}>
@@ -83,16 +150,16 @@ export default function EditarPlanificacion({sprints, changeTable}) {
                 >
                     {Object.keys(row).map((field) => (
                         <TableCell key={field} align="left">
-                        <TextField
-                            value={row[field]}
-                            onChange={(e) => handleCellChange(index, field, e.target.value)}
-                            type={field.includes('fecha') ? 'date' : 'text'}
-                            fullWidth
-                            variant="standard"
-                            inputProps={{
-                            'aria-label': `${field} for ${row.hito}`,
-                            }}
-                        />
+                          <TextField
+                              value={row[field] ?? ""}
+                              onChange={(e) => handleCellChange(index, field, e.target.value)}
+                              type={field.includes('fecha') ? 'date' : 'text'}
+                              fullWidth
+                              variant="standard"
+                              inputProps={{
+                                  'aria-label': `${field} for ${row.hito}`,
+                              }}
+                          />
                         </TableCell>
                     ))}
                     <TableCell align="left">
@@ -142,10 +209,45 @@ export default function EditarPlanificacion({sprints, changeTable}) {
       <PopUpDialog 
         openDialog= {openSaveDialog} 
         setOpenDialog= {setOpenSaveDialog}
-        especial = {changeTable}
+        especial = {subir}
         titleDialog={'¿Estás seguro de que quieres guardar los cambios?'}
         textDialog={'Esta acción guardará todos los cambios realizados en la planificación.'}
       ></PopUpDialog>
+      {openAlert?
+        <Alert 
+          severity="error" 
+          onClose={handleCloseAlert} 
+          role="alert" // Asegúrate de que tiene el rol correcto
+        >
+          <AlertTitle>Error</AlertTitle>
+          Ninguno de los campos debe estar vacío
+        </Alert>
+        :
+        <></>
+      }
+      {openAlertS?
+        <Alert severity="success"
+        role="alert"
+        onClose={handleCloseAlert} 
+        >
+          <AlertTitle>Success</AlertTitle>
+          Se subio los datos correctamente.
+        </Alert>
+        :
+        <></>
+      }
+      {openAlertE?
+        <Alert 
+          severity="error" 
+          onClose={handleCloseAlert} 
+          role="alert" // Asegúrate de que tiene el rol correcto
+        >
+          <AlertTitle>Error</AlertTitle>
+          Hubo un Error al subir los datos, pruebe mas tarde.
+        </Alert>
+        :
+        <></>
+      }      
     </Fragment>
   );
 }
