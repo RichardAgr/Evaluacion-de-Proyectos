@@ -18,7 +18,7 @@ import PopUpDialog from '../popUPDialog/popUpDialog';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-export default function EditarPlanificacion({sprints, changeTable, idPlanificacion, idEmpresa}) {
+export default function EditarPlanificacion({planificacionData, changeTable, idEmpresa}) {
   const [rows, setRows] = useState([]);
   const [openCancelDialog, setOpenCancelDialog] = useState(false);
   const [openAlert, setOpenAlert] = useState(false);
@@ -33,7 +33,7 @@ export default function EditarPlanificacion({sprints, changeTable, idPlanificaci
   };
 
   useEffect(()=>{
-      const newRows= sprints.map((sprint, index)=>{
+      const newRows= planificacionData.sprints.map((sprint, index)=>{
           return {
               hito: `SPRINT `+(index+1), 
               fechaIni: sprint.fechaIni, 
@@ -44,7 +44,8 @@ export default function EditarPlanificacion({sprints, changeTable, idPlanificaci
           };
       })
       setRows(newRows);
-  },[sprints])
+      console.log(planificacionData)
+  },[planificacionData])
   const addRow = () => {
     const newSprint = rows.length + 1;
     const newRow = {
@@ -80,9 +81,11 @@ export default function EditarPlanificacion({sprints, changeTable, idPlanificaci
   
     const data = {
       idEmpresa: idEmpresa,
-      idPlanificacion: idPlanificacion,
-      sprintsAntiguos: sprints,
-      sprintsNuevos: rows.map((row) => ({
+      comentarioDocente: planificacionData.comentarioDocente,
+      notaPlanificacion: planificacionData.notaPlanificacion,
+      aceptada: planificacionData.aceptada,
+      fechaEntrega: new Date(), 
+      sprints: rows.map((row) => ({
         idSprint: -1,  
         fechaIni: row.fechaIni, // Convertir a Date
         fechaFin: row.fechaFin, // Convertir a Date

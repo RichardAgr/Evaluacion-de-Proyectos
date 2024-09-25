@@ -77,9 +77,8 @@ function Planificacion() {
                   <>
                     {change?
                       <EditarPlanificacion 
-                        sprints={planificacionData.sprints} 
+                        planificacionData={planificacionData} 
                         changeTable={changeTable}
-                        idPlanificacion={planificacionData.idPlanificacion}
                         idEmpresa={planificacionData.idEmpresa}
                       ></EditarPlanificacion>
                       :
