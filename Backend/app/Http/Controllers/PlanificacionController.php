@@ -23,7 +23,7 @@ class PlanificacionController extends Controller
             // Obtener la planificación de la empresa
             $planificacion = Planificacion::with('sprints')
                 ->where('idEmpresa', $empresa->idEmpresa)
-                ->first();
+                ->lastest();
 
             // Verificar si la planificación existe y está aceptada
             if ($planificacion && $planificacion->aceptada) {
@@ -54,7 +54,7 @@ class PlanificacionController extends Controller
             // Obtener la planificación de la empresa
             $planificacion = Planificacion::with('sprints')
                 ->where('idEmpresa', $empresa->idEmpresa)
-                ->first();
+                ->lastest();
 
             // Verificar si la planificación existe y está aceptada
             if ($planificacion && !$planificacion->aceptada) {
@@ -85,7 +85,7 @@ class PlanificacionController extends Controller
         // Obtener la planificación de la empresa si existe
         $planificacion = Planificacion::with(['empresa', 'sprints'])
             ->where('idEmpresa', $idEmpresa)
-            ->first();
+            ->latest();
 
             if (!$planificacion) {
                 // Si no hay planificación, devolver datos por defecto
@@ -147,13 +147,6 @@ class PlanificacionController extends Controller
         // Retornar la respuesta JSON
         return response()->json($data);
     }
-    
-
-    public function showP($idPlanificacion): JsonResponse
-    {
-        // Buscar la planificación por ID
-        $planificacion = Planificacion::find($idPlanificacion);
-
         // Verificar si la planificación existe
         if (!$planificacion) {
             return response()->json(['message' => 'Planificación no encontrada'], 404);
@@ -249,6 +242,4 @@ class PlanificacionController extends Controller
         
         
     }
-    
-    
 }
