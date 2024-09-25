@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Planificacion;
@@ -10,16 +11,15 @@ class PlanificacionController extends Controller
 {
     public function show($idEmpresa): JsonResponse
     {
-        
+
         $planificacion = Planificacion::with(['empresa', 'sprints'])
             ->where('idEmpresa', $idEmpresa)
             ->first();
-            
+
         if (!$planificacion) {
             return response()->json(['error' => 'Planificación no encontrada para esta empresa'], 404);
         }
 
- 
         $data = [
             'idPlanificacion' => $planificacion->idPlanificacion,
             'idEmpresa' => $planificacion->idEmpresa,
@@ -42,5 +42,21 @@ class PlanificacionController extends Controller
 
         // Retornar la respuesta JSON
         return response()->json($data);
+    }
+    public function validar($idPlanificacion)
+    {
+        $planificacion = Planificacion::findOrFail($idPlanificacion);
+
+        if (!$planificacion) {
+            return response()->json(['error' => 'Planificación no encontrada para esta empresa'], 404);
+        } else {
+            $planificacion->aceptada = 1;
+            $planificacion->save();
+        }
+
+        return response()->json([
+            'message' => 'Planificación aceptada con éxito',
+            'planificacion' => $planificacion
+        ]);
     }
 }
