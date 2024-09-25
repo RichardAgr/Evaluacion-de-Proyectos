@@ -27,7 +27,6 @@ function Planificacion() {
           ocultarAtras: true
         } 
       );
-      console.log('true')
     }else{
       setDatosTitleBack(
         {
@@ -35,9 +34,10 @@ function Planificacion() {
           ocultarAtras: false
         } 
       );
-      console.log('false')
     }
   }
+  
+  
   const [empresaData, setEmpresaData] = useState(null);
   let { idEmpresa } = useParams();
   const [loading, setLoading] = useState(true);
@@ -76,7 +76,11 @@ function Planificacion() {
                 {planificacionData != null?
                   <>
                     {change?
-                      <EditarPlanificacion sprints={planificacionData.sprints} changeTable={changeTable}></EditarPlanificacion>
+                      <EditarPlanificacion 
+                        planificacionData={planificacionData} 
+                        changeTable={changeTable}
+                        idEmpresa={planificacionData.idEmpresa}
+                      ></EditarPlanificacion>
                       :
                       <>
                         <VistaTablaPlanificacion sprints={planificacionData.sprints}></VistaTablaPlanificacion>        
@@ -87,7 +91,11 @@ function Planificacion() {
                         }
                       </>
                     }
-                    <ComentarioNota comentario={planificacionData.comentarioDocente} nota = {planificacionData.notaPlanificacion} linkDir={ 'ocultar' }></ComentarioNota>
+                    <ComentarioNota 
+                      comentario={planificacionData.comentarioDocente} 
+                      nota = {planificacionData.notaPlanificacion} 
+                      linkDir={ 'ocultar' }
+                    ></ComentarioNota>
                     </>
                   :
                   <h1>CARGANDO...</h1>
