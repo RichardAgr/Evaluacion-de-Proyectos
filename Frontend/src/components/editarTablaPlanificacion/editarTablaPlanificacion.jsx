@@ -44,7 +44,6 @@ export default function EditarPlanificacion({planificacionData, changeTable, idE
           };
       })
       setRows(newRows);
-      console.log(planificacionData)
   },[planificacionData])
   const addRow = () => {
     const newSprint = rows.length + 1;
@@ -78,25 +77,28 @@ export default function EditarPlanificacion({planificacionData, changeTable, idE
         return;
       }
     }
-  
+    const date = new Date();
+    const dia = String(date.getDate()).padStart(2, '0');
+    const mes = String(date.getMonth() + 1).padStart(2, '0'); // Los meses en JavaScript van de 0 a 11
+    const anio = date.getFullYear();
     const data = {
-      idEmpresa: idEmpresa,
-      comentarioDocente: planificacionData.comentarioDocente,
-      notaPlanificacion: planificacionData.notaPlanificacion,
-      aceptada: planificacionData.aceptada,
-      fechaEntrega: new Date(), 
+      idEmpresa: ""+idEmpresa,
+      comentarioDocente: ""+planificacionData.comentarioDocente,
+      notaPlanificacion: ""+planificacionData.notaPlanificacion,
+      aceptada: ""+planificacionData.aceptada,
+      fechaEntrega: `${anio}-${mes}-${dia}`, 
       sprints: rows.map((row) => ({
         idSprint: -1,  
-        fechaIni: row.fechaIni, // Convertir a Date
-        fechaFin: row.fechaFin, // Convertir a Date
-        cobro: row.cobro, 
-        fechaEntrega: row.fechaEntrega, // Convertir a Date
-        entregables: row.entregables,
-        notasprint: 0,
+        fechaIni: ""+row.fechaIni, // Convertir a Date
+        fechaFin: ""+row.fechaFin, // Convertir a Date
+        cobro: ""+row.cobro, 
+        fechaEntrega: ""+row.fechaEntrega, // Convertir a Date
+        entregables: ""+row.entregables,
+        notasprint: ""+0,
         comentariodocente: 'Comentario Docente'  
       })),
     };
-  
+    console.log(data);
     try {
       const response = await fetch('http://localhost:8000/api/planificacion/guardar', {
         method: 'POST',
