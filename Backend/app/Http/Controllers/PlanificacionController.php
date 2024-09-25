@@ -23,7 +23,7 @@ class PlanificacionController extends Controller
             // Obtener la planificación de la empresa
             $planificacion = Planificacion::with('sprints')
                 ->where('idEmpresa', $empresa->idEmpresa)
-                ->first();
+                ->lastest();
 
             // Verificar si la planificación existe y está aceptada
             if ($planificacion && $planificacion->aceptada) {
@@ -54,7 +54,7 @@ class PlanificacionController extends Controller
             // Obtener la planificación de la empresa
             $planificacion = Planificacion::with('sprints')
                 ->where('idEmpresa', $empresa->idEmpresa)
-                ->first();
+                ->lastest();
 
             // Verificar si la planificación existe y está aceptada
             if ($planificacion && !$planificacion->aceptada) {
@@ -143,6 +143,87 @@ class PlanificacionController extends Controller
 
         // Retornar la respuesta JSON
         return response()->json($data);
+    }
+
+    
+    public function guardarPlanificacion(Request $request): JsonResponse
+    {
+        $data = $request->validate([
+            'idEmpresa' => 'required|integer',
+            'fechaEntrega' => 'required|date',
+            'comentarioDocente' => 'required|string',
+            'notaPlanificacion' => 'required|integer',
+            'aceptada' => 'required|boolean',
+            'sprints' => 'required|array|min:1',
+            'sprints.*.fechaIni' => 'required|date',
+            'sprints.*.fechaFin' => 'required|date',
+            'sprints.*.cobro' => 'required|integer',
+            'sprints.*.fechaEntrega' => 'required|date',
+            'sprints.*.entregables' => 'nullable|string',
+            'sprints.*.notasprint' => 'required|integer',
+            'sprints.*.comentarioDocente' => 'nullable|string',
+        ]);
+
+        $idEmpresa = $data['idEmpresa'];
+
+        // Intentamos encontrar una planificación existente para esta empresa
+        $planificacionExistente = Planificacion::where('idEmpresa', $idEmpresa)->lastest();
+
+        if ($planificacionExistente) {
+            // Si existe una planificación, se sobrescribirá creando una nueva
+            $nuevaPlanificacion = new Planificacion();
+            $nuevaPlanificacion->idEmpresa = $idEmpresa;
+            $nuevaPlanificacion->fechaEntrega = $data['fechaEntrega'];
+            $nuevaPlanificacion->comentarioDocente = $data['comentarioDocente'];
+            $nuevaPlanificacion->notaPlanificacion = $data['notaPlanificacion'];
+            $nuevaPlanificacion->aceptada = $data['aceptada'];
+            $nuevaPlanificacion->save(); // Guardamos la nueva planificación
+
+            // Eliminamos los sprints antiguos asociados a la planificación existente
+            Sprint::where('idPlanificacion', $planificacionExistente->idPlanificacion)->delete();
+
+            // Creamos los nuevos sprints
+            foreach ($data['sprints'] as $sprintData) {
+                $nuevoSprint = new Sprint();
+                $nuevoSprint->idPlanificacion = $nuevaPlanificacion->idPlanificacion;
+                $nuevoSprint->fechaIni = $sprintData['fechaIni'];
+                $nuevoSprint->fechaFin = $sprintData['fechaFin'];
+                $nuevoSprint->cobro = $sprintData['cobro'];
+                $nuevoSprint->fechaEntrega = $sprintData['fechaEntrega'];
+                $nuevoSprint->entregables = $sprintData['entregables'];
+                $nuevoSprint->notasprint = $sprintData['notasprint'];
+                $nuevoSprint->comentarioDocente = $sprintData['comentarioDocente'];
+                $nuevoSprint->save();
+            }
+
+            return response()->json(['message' => 'Planificación actualizada y sobrescrita con éxito'], 200);
+        } else {
+            // Si no existe una planificación, se crea una nueva
+            $nuevaPlanificacion = Planificacion::create([
+                'idEmpresa' => $idEmpresa,
+                'fechaEntrega' => $data['fechaEntrega'],
+                'comentarioDocente' => $data['comentarioDocente'],
+                'notaPlanificacion' => $data['notaPlanificacion'],
+                'aceptada' => $data['aceptada'],
+            ]);
+
+            // Creamos los nuevos sprints
+            foreach ($data['sprints'] as $sprintData) {
+                Sprint::create([
+                    'idPlanificacion' => $nuevaPlanificacion->idPlanificacion,
+                    'fechaIni' => $sprintData['fechaIni'],
+                    'fechaFin' => $sprintData['fechaFin'],
+                    'cobro' => $sprintData['cobro'],
+                    'fechaEntrega' => $sprintData['fechaEntrega'],
+                    'entregables' => $sprintData['entregables'],
+                    'notasprint' => $sprintData['notasprint'],
+                    'comentarioDocente' => $sprintData['comentarioDocente'],
+                ]);
+            }
+
+
+            return response()->json(['message' => 'Planificación creada con éxito'], 201);
+        }
     }
     
 
