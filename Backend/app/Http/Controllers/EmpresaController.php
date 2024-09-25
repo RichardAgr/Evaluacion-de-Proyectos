@@ -22,11 +22,14 @@ class EmpresaController extends Controller
         $data = [
             'nombreEmpresa' => $empresa->nombreEmpresa,
             'nombreLargo' => $empresa->nombreLargo,
+            'numeroDeFaltas' => $empresa->numerodefaltasempresa,
+            'notaProductoFinal' => $empresa->notaproductofinal,
             'integrantes' => $empresa->estudiantes->map(function ($estudiante) {
                 return [
                     'nombreEstudiante' => $estudiante->nombreEstudiante,
                     'primerApellido' => $estudiante->primerApellido,
                     'segundoApellido' => $estudiante->segundoApellido,
+                    'rol' => $estudiante->rol,
                 ];
             }),
         ];

@@ -8,8 +8,8 @@ import VistaTablaPlanificacion from '../../../components/vistaTablaPlanificacion
 import { Button } from '@mui/material';
 import EditarPlanificacion from '../../../components/editarTablaPlanificacion/editarTablaPlanificacion.jsx';
 import InfoEmpresa from '../../../components/infoEmpresa/infoEmpresa.jsx';
-import { getEmpresaData } from '../../../endPoints/getEmpresa.jsx';
-import { getPlanificacion} from '../../../endPoints/getPlanificacion.jsx';
+import { getEmpresaData } from '../../../api/getEmpresa.jsx';
+import { getPlanificacion} from '../../../api/getPlanificacion.jsx';
 function Planificacion() {
   let [change, setChange] = useState(false);
   const [datosTitleBack, setDatosTitleBack] = useState(
@@ -18,9 +18,6 @@ function Planificacion() {
       ocultarAtras: false
     }
   );
-  const comentario = 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis dolore doloribus iusto suscipit reiciendis autem libero quae, voluptates, iste dignissimos, nihil quos architecto. At sapiente deleniti, molestias assumenda omnis hic!';
-  const nota = 50;
-  
   function changeTable(){
     setChange(!change)
     if(!datosTitleBack.ocultarAtras){
@@ -30,7 +27,6 @@ function Planificacion() {
           ocultarAtras: true
         } 
       );
-      console.log('true')
     }else{
       setDatosTitleBack(
         {
@@ -38,9 +34,10 @@ function Planificacion() {
           ocultarAtras: false
         } 
       );
-      console.log('false')
     }
   }
+  
+  
   const [empresaData, setEmpresaData] = useState(null);
   let { idEmpresa } = useParams();
   const [loading, setLoading] = useState(true);
@@ -77,18 +74,33 @@ function Planificacion() {
               <div className='pageBorder_interior'>
                 <InfoEmpresa nombreLargo= {empresaData.nombreLargo} nombreCorto = {empresaData.nombreEmpresa} integrantes={empresaData.integrantes}></InfoEmpresa>
                 {planificacionData != null?
-                  (change?
-                    <EditarPlanificacion sprints={planificacionData.sprints} changeTable={changeTable}></EditarPlanificacion>
-                    :
-                    <>
-                      <VistaTablaPlanificacion sprints={planificacionData.sprints}></VistaTablaPlanificacion>        
-                      <Button variant='contained'onClick={changeTable}>Editar</Button>
+                  <>
+                    {change?
+                      <EditarPlanificacion 
+                        sprints={planificacionData.sprints} 
+                        changeTable={changeTable}
+                        idPlanificacion={planificacionData.idPlanificacion}
+                        idEmpresa={planificacionData.idEmpresa}
+                      ></EditarPlanificacion>
+                      :
+                      <>
+                        <VistaTablaPlanificacion sprints={planificacionData.sprints}></VistaTablaPlanificacion>        
+                        {planificacionData.aceptada?
+                          <></>
+                          :
+                          <Button variant='contained'onClick={changeTable}>Editar</Button>
+                        }
+                      </>
+                    }
+                    <ComentarioNota 
+                      comentario={planificacionData.comentarioDocente} 
+                      nota = {planificacionData.notaPlanificacion} 
+                      linkDir={ 'ocultar' }
+                    ></ComentarioNota>
                     </>
-                  )
                   :
                   <h1>CARGANDO...</h1>
                 }
-                  <ComentarioNota comentario={comentario} nota = {nota} linkDir={ 'ocultar' }></ComentarioNota>
                 </div>
               </div>
             </div>

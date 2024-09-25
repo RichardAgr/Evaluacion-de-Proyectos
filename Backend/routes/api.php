@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\PlanificacionController;
 
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -26,3 +27,9 @@ Route::get('/empresa/{id}', [EmpresaController::class, 'getEmpresaData']);
 Route::get('/empresas/', [EmpresaController::class, 'getListaEmpresas']);
 
 Route::get('/planificacion/{idEmpresa}', [PlanificacionController::class, 'show']);
+Route::get('/planificacion/notaComentario/{idPlanificacion}', [PlanificacionController::class, 'notaComentario']);
+Route::get('/planificacionAceptadas}', [PlanificacionController::class, 'planificacionAceptadas']);
+Route::get('/planificacionRechazadas}', [PlanificacionController::class, 'planificacionRechazadas']);
+Route::get('/planificaciones/{idPlanificacion}/sprints', [PlanificacionController::class, 'showP']);
+Route::post('/planificacion/gestionar', [PlanificacionController::class, 'gestionarPlanificacion']);
+
