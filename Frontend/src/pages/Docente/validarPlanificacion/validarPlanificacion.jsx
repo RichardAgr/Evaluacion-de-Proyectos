@@ -24,8 +24,8 @@ import Footer from "../../../components/Footer/footer.jsx";
 import BackButtonAndTitle from "../../../components/Buttons/BackButtonAndTitle.jsx";
 
 import TablaPlanificacion from "../../../components/tablaPlanificacionDeDesarollo/tablaPlanificacion.jsx";
-import { getEmpresaData } from "../../../endPoints/getEmpresa.jsx";
-import { getPlanificacion } from "../../../endPoints/getPlanificacion.jsx";
+import { getEmpresaData } from "../../../api/getEmpresa.jsx";
+import { getPlanificacion } from "../../../api/getPlanificacion.jsx";
 
 function ValidarPlanificacion() {
   const [openValidateDialog, setOpenValidateDialog] = useState(false);
@@ -69,10 +69,33 @@ function ValidarPlanificacion() {
     setOpenRejectDialog(true);
   };
 
-  const confirmValidate = () => {
+  const confirmValidate = async () => {
     setOpenValidateDialog(false);
-    setSnackbar({ open: true, message: "Planificación validada con éxito" });
-    // Here you would typically send the validation to your backend
+    try {
+      const data = {
+        idPlanificacion: 1,
+        nota: 32,
+        comentario: "groupComment",
+        idDocente: 2  // Asume que tienes una forma de obtener el ID del docente actual
+      };
+      const response = await fetch('http://127.0.0.1:8000/api/addRevision', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+      const result = await response.json();
+      if (response.ok) {
+        setSnackbar({ open: true, message: result.message });
+        setPlanificacionData(prevState => ({...prevState, aceptada: true}));
+      } else {
+        throw new Error(result.message || 'Error al procesar la solicitud.');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      setSnackbar({ open: true, message: error.message });
+    }
   };
 
   const confirmReject = () => {

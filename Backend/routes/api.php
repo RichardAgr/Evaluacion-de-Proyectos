@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\PlanificacionController;
-
+use App\Http\Controllers\RevisionPlaniController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,9 +27,8 @@ Route::get('/empresa/{id}', [EmpresaController::class, 'getEmpresaData']);
 Route::get('/empresas/', [EmpresaController::class, 'getListaEmpresas']);
 
 Route::get('/planificacion/{idEmpresa}', [PlanificacionController::class, 'show']);
-Route::get('/planificacion/notaComentario/{idPlanificacion}', [PlanificacionController::class, 'notaComentario']);
-Route::get('/planificacionAceptadas}', [PlanificacionController::class, 'planificacionAceptadas']);
-Route::get('/planificacionRechazadas}', [PlanificacionController::class, 'planificacionRechazadas']);
-Route::get('/planificaciones/{idPlanificacion}/sprints', [PlanificacionController::class, 'showP']);
-Route::post('/planificacion/gestionar', [PlanificacionController::class, 'gestionarPlanificacion']);
+Route::get('/planificacion/validar/{idPlanificacion}', [PlanificacionController::class, 'validar']);
+
+Route::put('/validar', [PlanificacionController::class, 'validar']);
+Route::put('/addRevision', [RevisionPlaniController::class, 'addRevision']);
 

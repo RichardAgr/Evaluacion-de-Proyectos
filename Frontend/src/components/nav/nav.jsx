@@ -5,7 +5,7 @@ import HomeDocente from "../../pages/Docente/homeDocente/homeDocente.jsx";
 import HomeGrupoDocente from "../../pages/Docente/homeGrupoDocente/homeGrupoDocente.jsx";
 import VerPlanificacionDeDesarolloD from "../../pages/Docente/verPlanificacionDeDesarolloEmpresa/VerPlanificacionDeDesarolloD.jsx";
 import ValidarPlanificacion from "../../pages/Docente/validarPlanificacion/validarPlanificacion.jsx";
-import ListarEmpresas from "../../pages/Docente/listaEmpresas/listaEmpresas.jsx";
+import ListaEmpresas from "../../pages/Docente/listaEmpresas/listaEmpresas.jsx";
 import ListaVerPlanificacion from '../../pages/Docente/listas/listaVerPlanificacion/listaVerPlanificacion.jsx';
 
 import HomeEstudiante from '../../pages/Estudiante/homeEstudiante/homeEstudiante.jsx'
@@ -19,8 +19,11 @@ function Nav() {
         <Route path='/' element={<Home/>}/>
         <Route path='/homeDocente' element={<HomeDocente/>}/>
         <Route path='/homeDocente/homeGrupoDocente' element={<HomeGrupoDocente/>}/>
-        <Route path='/homeDocente/homeGrupoDocente/verPlanificacionDeEmpresas' element={<ListaVerPlanificacion/>}/>
-        <Route path='/homeDocente/homeGrupoDocente/verPlanificacionDeEmpresas/Empresa/:idEmpresa' element={<VerPlanificacionDeDesarolloD/>}/>
+        <Route path='/homeDocente/homeGrupoDocente/verPlanificacion' element={<ListaVerPlanificacion/>}/>
+        <Route path='/homeDocente/homeGrupoDocente/verPlanificacion/Empresa/:idEmpresa' element={<VerPlanificacionDeDesarolloD/>}/>
+        
+        <Route path='/homeDocente/homeGrupoDocente/validarPlanificacion/' element={<ListaEmpresas/>}/>
+        <Route path='/homeDocente/homeGrupoDocente/validarPlanificacion/Empresa/:idEmpresa' element={<ValidarPlanificacion/>}/>
 
         <Route path='/homeEstudiante' element={<HomeEstudiante/>}/>
         <Route path='/homeEstudiante/homeGrupoEstudiante' element={<HomeGrupoEstudiante/>}/>

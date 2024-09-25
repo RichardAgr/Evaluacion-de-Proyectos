@@ -38,7 +38,7 @@ function ListaVerPlanificacion() {
     if (error) return <p>Error: {error}</p>;
 
     const handleRowClick = (idEmpresa) => {
-        navigate(`/homeDocente/homeGrupoDocente/verPlanificacionDeEmpresas/Empresa/${idEmpresa}`);
+        navigate(`/homeDocente/homeGrupoDocente/verPlanificacion/Empresa/${idEmpresa}`);
     };
 
     return (

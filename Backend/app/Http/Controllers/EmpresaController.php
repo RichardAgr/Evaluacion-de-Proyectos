@@ -22,14 +22,11 @@ class EmpresaController extends Controller
         $data = [
             'nombreEmpresa' => $empresa->nombreEmpresa,
             'nombreLargo' => $empresa->nombreLargo,
-            'numeroDeFaltas' => $empresa->numerodefaltasempresa,
-            'notaProductoFinal' => $empresa->notaproductofinal,
             'integrantes' => $empresa->estudiantes->map(function ($estudiante) {
                 return [
                     'nombreEstudiante' => $estudiante->nombreEstudiante,
                     'primerApellido' => $estudiante->primerApellido,
                     'segundoApellido' => $estudiante->segundoApellido,
-                    'rol' => $estudiante->rol,
                 ];
             }),
         ];
@@ -69,4 +66,6 @@ class EmpresaController extends Controller
         //return response()->json($data);
         return $data;
     }
+    //debe haber una funcion que accede de Empresa a Planificacion y cambia el valor de aceptada de 0 a 1
+    //public function aceptarPlanificacion
 }

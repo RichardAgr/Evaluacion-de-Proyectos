@@ -1,20 +1,23 @@
 import { Fragment } from "react";
-import { useNavigate } from "react-router-dom";
 import Footer from "../../components/Footer/footer.jsx";
 import Header from "../../components/Header/header.jsx";
+
+import { useNavigate } from "react-router-dom";
 import { Button } from "@mui/material";
 
 function Home() {
   const navigate = useNavigate();
 
-  const handleNavigateToListaEmpresas = () => {
-    navigate("/homeDocente/homeGrupoDocente/ListaEmpresas");
-  };
   const handleNavigateToVerPlanificacion = () => {
-    navigate("/homeEstudiante/homeGrupoEstudiante/Empresa/1/PlanificacionDeDesarollo");
-  };  
+    navigate("/homeDocente/homeGrupoDocente/verPlanificacion");
+  };
   const handleNavigateToEditarPlanificacion = () => {
-    navigate("/homeEstudiante/homeGrupoEstudiante/Empresa/1/PlanificacionInicial");
+    navigate(
+      "/homeEstudiante/homeGrupoEstudiante/PlanificacionInicial/Empresa/1"
+    );
+  };
+  const handleNavigateToValidarEmpresas = () => {
+    navigate("/homeDocente/homeGrupoDocente/validarPlanificacion/");
   };
   return (
     <Fragment>
@@ -28,7 +31,6 @@ function Home() {
           minHeight: "calc(100vh - 200px)", // Adjust this value based on your header and footer height
         }}
       >
-
         <Button
           variant="contained"
           color="primary"
@@ -57,13 +59,13 @@ function Home() {
           variant="contained"
           color="primary"
           size="large"
-          onClick={handleNavigateToListaEmpresas}
+          onClick={handleNavigateToValidarEmpresas}
           style={{
             padding: "15px 30px",
             fontSize: "1.2rem",
           }}
         >
-          Go to Lista Empresas
+          Go to ValidarEmpresas
         </Button>
       </div>
       <Footer />

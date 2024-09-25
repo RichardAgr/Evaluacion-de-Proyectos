@@ -38,7 +38,7 @@ function EmpresasTable() {
 
   const handleEmpresaClick = (idEmpresa) => {
     navigate(
-      `/homeDocente/homeGrupoDocente/Empresa/ValidarPlanificacion/${idEmpresa}`
+      `/homeDocente/homeGrupoDocente/validarPlanificacion/Empresa/${idEmpresa}`
     );
   };
 
