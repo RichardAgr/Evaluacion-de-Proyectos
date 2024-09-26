@@ -27,12 +27,8 @@ Route::get('/empresa/{id}', [EmpresaController::class, 'getEmpresaData']);
 
 Route::get('/planificacion/{idEmpresa}', [PlanificacionController::class, 'show']);
 Route::get('/planificacion/notaComentario/{idPlanificacion}', [PlanificacionController::class, 'notaComentario']);
-Route::get('/planificacionAceptadas}', [PlanificacionController::class, 'planificacionAceptadas']);
-Route::get('/planificacionRechazadas}', [PlanificacionController::class, 'planificacionRechazadas']);
-Route::get('/notas1/{idPlanificacion}', [PlanificacionController::class, 'notaComentario']);
-Route::get('/planificaciones/{idPlanificacion}/sprints', [PlanificacionController::class, 'showP']);
+Route::get('/planificacionAceptadas', [PlanificacionController::class, 'planificacionAceptadas']);
+Route::get('/planificacionRechazadas', [PlanificacionController::class, 'planificacionRechazadas']);
 
-
-Route::post('/planificacionGestion', [PlanificacionController::class, 'gestionarPlanificacion']);
-
-
+//Para crear la planificacion o modificarla
+Route::post('/planificacion/guardar', [PlanificacionController::class, 'crearPlanificacion']);
