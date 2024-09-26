@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\PlanificacionController;
 
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -25,3 +26,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::get('/empresa/{id}', [EmpresaController::class, 'getEmpresaData']);
 
 Route::get('/planificacion/{idEmpresa}', [PlanificacionController::class, 'show']);
+Route::get('/planificacion/notaComentario/{idPlanificacion}', [PlanificacionController::class, 'notaComentario']);
+Route::get('/planificacionAceptadas', [PlanificacionController::class, 'planificacionAceptadas']);
+Route::get('/planificacionRechazadas', [PlanificacionController::class, 'planificacionRechazadas']);
+
+//Para crear la planificacion o modificarla
+Route::post('/planificacion/guardar', [PlanificacionController::class, 'crearPlanificacion']);
