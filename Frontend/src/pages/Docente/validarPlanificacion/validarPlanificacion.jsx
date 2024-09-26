@@ -72,7 +72,12 @@ function ValidarPlanificacion() {
     try {
       const validarResponse = await validar(idEmpresa);
       setSnackbar({ open: true, message: validarResponse.message });
-      const revisionResult = await addRevision(idEmpresa, nota, groupComment, 2);
+      const revisionResult = await addRevision(
+        idEmpresa,
+        nota,
+        groupComment,
+        2
+      );
       setSnackbar({ open: true, message: revisionResult.message });
       setPlanificacionData((prevState) => ({ ...prevState, aceptada: true }));
     } catch (error) {
@@ -84,9 +89,14 @@ function ValidarPlanificacion() {
   const confirmReject = async () => {
     setOpenRejectDialog(false);
     try {
-      const revisionResult = await addRevision(idEmpresa, nota, groupComment, 2);
+      const revisionResult = await addRevision(
+        idEmpresa,
+        nota,
+        groupComment,
+        2
+      );
       setSnackbar({ open: true, message: revisionResult.message });
-      setPlanificacionData((prevState) => ({ ...prevState, aceptada: true }));
+      setPlanificacionData((prevState) => ({ ...prevState, aceptada: false }));
     } catch (error) {
       console.error("Error:", error);
       setSnackbar({ open: true, message: error.message });
