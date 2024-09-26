@@ -5,6 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 class Tarea extends Model
 {
     protected $table = 'tarea'; // Nombre de la tabla
+    protected $primaryKey = 'idTarea'; // Especificar la clave primaria
 
     // Relación con los estudiantes (muchos a muchos)
     public function estudiantes()
