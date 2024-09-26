@@ -27,7 +27,6 @@
   min-height: calc(74vh);
   border: 0.3rem solid black;
   border-radius: 0.3rem;
-  margin-bottom: 1rem;
   -webkit-border-radius: 0.3rem;
   -moz-border-radius: 0.3rem;
   -ms-border-radius: 0.3rem;
@@ -106,4 +105,11 @@ h1,h2,h3{
 }
  .iconsSec:hover{
    background-color: #0e316d;
+ }
+
+ .buttonIzq{
+  display: flex;
+  width: 100%;
+
+  justify-content: end;
  }
