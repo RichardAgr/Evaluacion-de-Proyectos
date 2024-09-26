@@ -41,7 +41,7 @@ class TareaController extends Controller
         // Devolver la respuesta en formato JSON
         return response()->json($response, 200);
     }*/
-    public function obtenerTareaPorId($idTarea)
+    public function obtenerTarea($idTarea)
     {
         // Obtener la tarea específica
         $tarea = DB::table('tarea')
