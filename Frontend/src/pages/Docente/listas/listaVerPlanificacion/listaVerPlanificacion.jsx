@@ -9,7 +9,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { getPlanificacionesAceptadas } from '../../../../api/getEmpreasasPlanisAceptadas';
+import { getPlanificacionesAceptadas } from '../../../../api/getPlanificacionesAceptadas';
 import { useNavigate } from 'react-router-dom';
 
 function ListaVerPlanificacion() {

@@ -11,7 +11,10 @@ function ComentarioNota({ comentario, nota, linkDir }) {
           <p className='calificar_inputText' 
             readOnly 
           >
-            {comentario
+            {comentario?
+              comentario
+              :
+              'Sin Comentario'
             }
           </p>
           <div className='notaOrden'>
@@ -24,7 +27,7 @@ function ComentarioNota({ comentario, nota, linkDir }) {
                 {nota?
                   nota
                   :
-                  '?'
+                  'Sin Calificar'
                 }
               </p>
             </div>
