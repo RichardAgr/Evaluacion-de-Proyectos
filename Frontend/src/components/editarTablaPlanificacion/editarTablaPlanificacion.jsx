@@ -68,9 +68,7 @@ export default function EditarPlanificacion({planificacionData, changeTable, idE
     newRows[index][field] = value;
     setRows(newRows);
   };
-
   const subir = async () => {
-    // Validación de campos vacíos en los sprints
     for (const row of rows) {
       if (Object.values(row).some(value => value === "" || value === null)) {
         console.error("Hay campos vacíos en uno de los sprints.");
@@ -81,24 +79,26 @@ export default function EditarPlanificacion({planificacionData, changeTable, idE
 
     const date = new Date();
     const dia = String(date.getDate()).padStart(2, '0');
-    const mes = String(date.getMonth() + 1).padStart(2, '0'); // Los meses en JavaScript van de 0 a 11
+    const mes = String(date.getMonth() + 1).padStart(2, '0');
     const anio = date.getFullYear();
+    const horas = String(date.getHours()).padStart(2, '0');
+    const minutos = String(date.getMinutes()).padStart(2, '0');
+    const segundos = String(date.getSeconds()).padStart(2, '0');
     
     const data = {
-      idEmpresa: Number(idEmpresa), // Convertir a string
-      comentarioDocente: String(planificacionData.comentarioDocente),
-      notaPlanificacion: Number(planificacionData.notaPlanificacion), // Suponiendo que es un número
-      aceptada: Boolean(planificacionData.aceptada), // Convertir a booleano
-      fechaEntrega: `${anio}-${mes}-${dia}`, 
+      idEmpresa: Number(idEmpresa),
+      comentarioDocente: String(planificacionData.comentarioDocente ? planificacionData.comentarioDocente : 'Falta que comente el docente'),
+      notaPlanificacion: Number(planificacionData.notaPlanificacion),
+      aceptada: Boolean(planificacionData.aceptada), 
+      fechaEntrega: `${anio}-${mes}-${dia} ${horas}:${minutos}:${segundos}`, 
       sprints: rows.map((row) => ({
-        // idSprint puede omitirse si es -1 y no es necesario para crear
-        fechaIni: row.fechaIni, // Ya debería ser un string si es ISO
+        fechaIni: row.fechaIni,
         fechaFin: row.fechaFin,
         cobro: Number(row.cobro),
         fechaEntrega: row.fechaEntrega,
         entregables: row.entregables,
-        notasprint: 0, // Mantener como número
-        comentariodocente: 'Comentario Docente'
+        notasprint: null,
+        comentariodocente: null
       })),
     };
 
@@ -121,20 +121,24 @@ export default function EditarPlanificacion({planificacionData, changeTable, idE
       if (responseData.success) {
         console.log('Los datos se subieron correctamente.');
         setOpenAlertS(false);
-      } else {
-        setOpenAlertE(true);
-        console.error('Hubo un problema al subir los datos:', responseData.message);
+      }else{
+        setOpenAlertS(false);
       }
       console.log('Respuesta del servidor:', responseData);
     } catch (error) {
       setOpenAlertE(true);
       console.error('Error en la solicitud:', error);
     }
-};
+  };
 
   const handleCloseAlert = () => {
     setOpenAlert(false);
+  };
+  const handleCloseAlertS = () => {
     setOpenAlertS(false);
+  };
+  
+  const handleCloseAlertE= () => {
     setOpenAlertE(false);
   };
   return (
@@ -192,14 +196,7 @@ export default function EditarPlanificacion({planificacionData, changeTable, idE
         aria-label="Añadir nueva fila"
         ></AddIcon>
         <div style={{ marginTop: '40px', display: 'flex', justifyContent: 'flex-end', gap: '20px' }}>
-        <Button 
-            variant="contained" 
-            color="primary" 
-            onClick={handleSave}
-            aria-label="Guardar cambios"
-        >
-            Guardar
-        </Button>
+          
         <Button 
             variant="contained" 
             color="secondary" 
@@ -207,6 +204,14 @@ export default function EditarPlanificacion({planificacionData, changeTable, idE
             aria-label="Descartar cambios"
         >
             No Guardar
+        </Button>
+        <Button 
+            variant="contained" 
+            color="primary" 
+            onClick={handleSave}
+            aria-label="Guardar cambios"
+        >
+            Guardar
         </Button>
         </div>
       </Box>
@@ -239,7 +244,7 @@ export default function EditarPlanificacion({planificacionData, changeTable, idE
       {openAlertS?
         <Alert severity="success"
         role="alert"
-        onClose={handleCloseAlert} 
+        onClose={handleCloseAlertS} 
         >
           <AlertTitle>Success</AlertTitle>
           Se subio los datos correctamente.
@@ -250,7 +255,7 @@ export default function EditarPlanificacion({planificacionData, changeTable, idE
       {openAlertE?
         <Alert 
           severity="error" 
-          onClose={handleCloseAlert} 
+          onClose={handleCloseAlertE} 
           role="alert" // Asegúrate de que tiene el rol correcto
         >
           <AlertTitle>Error</AlertTitle>

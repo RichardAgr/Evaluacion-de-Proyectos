@@ -87,7 +87,10 @@ function Planificacion() {
                         {planificacionData.aceptada?
                           <></>
                           :
-                          <Button variant='contained'onClick={changeTable}>Editar</Button>
+                          <div className='buttonIzq'>
+                            <Button variant='contained'onClick={changeTable} >Editar</Button>
+                          </div>
+                          
                         }
                       </>
                     }

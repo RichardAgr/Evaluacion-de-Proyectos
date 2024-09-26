@@ -17,6 +17,8 @@ class Sprint extends Model
         'cobro',
         'notasprint',
         'comentariodocente',
+        'entregables',
+        'fechaEntrega'
     ];
 
     public function planificacion()

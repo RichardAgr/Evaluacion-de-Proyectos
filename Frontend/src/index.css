@@ -106,3 +106,10 @@ h1,h2,h3{
  .iconsSec:hover{
    background-color: #0e316d;
  }
+
+ .buttonIzq{
+  display: flex;
+  width: 100%;
+
+  justify-content: end;
+ }
