@@ -55,9 +55,9 @@ class TareaController extends Controller
         }
 
         // Obtener los estudiantes relacionados con la tarea
-        $estudiantes = DB::table('estudiantesestudiantes')
+        $estudiantes = DB::table('estudiante')
             ->join('estudiante', 'tareasestudiantes.idEstudiante', '=', 'estudiante.idEstudiante')
-            ->select('nombreEstudiante', 'primerApellido', 'fotoEstudiante') // Asumiendo que tienes la columna 'fotoEstudiante' en la tabla 'estudiante'
+            ->select('nombreEstudiante', 'primerApellido') // Asumiendo que tienes la columna 'fotoEstudiante' en la tabla 'estudiante'
             ->where('tareasestudiantes.idTarea', $idTarea)
             ->get();
 
