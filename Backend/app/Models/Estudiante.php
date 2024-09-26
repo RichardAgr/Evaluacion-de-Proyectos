@@ -13,6 +13,10 @@ class Estudiante extends Model
     {
         return $this->belongsToMany(Grupo::class, 'estudiantes_grupos', 'idEstudiante', 'idGrupo');
     }
+    public function tareas()
+    {
+        return $this->belongsToMany(Tarea::class, 'tareas_estudiantes', 'idEstudiante', 'idTarea');
+    }
 }
 
     
