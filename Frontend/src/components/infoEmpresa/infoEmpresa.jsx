@@ -15,7 +15,7 @@ function infoEmpresa({nombreLargo, nombreCorto, integrantes}) {
                         </p>
                     ))}
                 <h3>Docente:</h3>
-                    <p>Ing. Leticia Blanco Coca </p>
+                    <p>Ing. Leticia Blanco Coca</p>
             </div>
         </ContainerInfoEmpresa>
     </Fragment>
