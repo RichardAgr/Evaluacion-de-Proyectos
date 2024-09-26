@@ -18,7 +18,7 @@ import PopUpDialog from '../popUPDialog/popUpDialog';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-export default function EditarPlanificacion({sprints, changeTable, idPlanificacion, idEmpresa}) {
+export default function EditarPlanificacion({planificacionData, changeTable, idEmpresa}) {
   const [rows, setRows] = useState([]);
   const [openCancelDialog, setOpenCancelDialog] = useState(false);
   const [openAlert, setOpenAlert] = useState(false);
@@ -33,7 +33,7 @@ export default function EditarPlanificacion({sprints, changeTable, idPlanificaci
   };
 
   useEffect(()=>{
-      const newRows= sprints.map((sprint, index)=>{
+      const newRows= planificacionData.sprints.map((sprint, index)=>{
           return {
               hito: `SPRINT `+(index+1), 
               fechaIni: sprint.fechaIni, 
@@ -44,7 +44,7 @@ export default function EditarPlanificacion({sprints, changeTable, idPlanificaci
           };
       })
       setRows(newRows);
-  },[sprints])
+  },[planificacionData])
   const addRow = () => {
     const newSprint = rows.length + 1;
     const newRow = {
@@ -68,52 +68,61 @@ export default function EditarPlanificacion({sprints, changeTable, idPlanificaci
     newRows[index][field] = value;
     setRows(newRows);
   };
-
   const subir = async () => {
     for (const row of rows) {
-      if (Object.values(row).some(value => value === "" || value === null || value === '')) {
+      if (Object.values(row).some(value => value === "" || value === null)) {
         console.error("Hay campos vacíos en uno de los sprints.");
-        setOpenAlert(true)
+        setOpenAlert(true);
         return;
       }
     }
-  
+
+    const date = new Date();
+    const dia = String(date.getDate()).padStart(2, '0');
+    const mes = String(date.getMonth() + 1).padStart(2, '0');
+    const anio = date.getFullYear();
+    const horas = String(date.getHours()).padStart(2, '0');
+    const minutos = String(date.getMinutes()).padStart(2, '0');
+    const segundos = String(date.getSeconds()).padStart(2, '0');
+    
     const data = {
-      idEmpresa: idEmpresa,
-      idPlanificacion: idPlanificacion,
-      sprintsAntiguos: sprints,
-      sprintsNuevos: rows.map((row) => ({
-        idSprint: -1,  
-        fechaIni: new Date(row.fechaIni), // Convertir a Date
-        fechaFin: new Date(row.fechaFin), // Convertir a Date
-        cobro: Number(row.cobro), 
-        fechaEntrega: new Date(row.fechaEntrega), // Convertir a Date
+      idEmpresa: Number(idEmpresa),
+      comentarioDocente: String(planificacionData.comentarioDocente ? planificacionData.comentarioDocente : 'Falta que comente el docente'),
+      notaPlanificacion: Number(planificacionData.notaPlanificacion),
+      aceptada: Boolean(planificacionData.aceptada), 
+      fechaEntrega: `${anio}-${mes}-${dia} ${horas}:${minutos}:${segundos}`, 
+      sprints: rows.map((row) => ({
+        fechaIni: row.fechaIni,
+        fechaFin: row.fechaFin,
+        cobro: Number(row.cobro),
+        fechaEntrega: row.fechaEntrega,
         entregables: row.entregables,
-        notasprint: 0,
-        comentariodocente: 'Comentario Docente'  
+        notasprint: null,
+        comentariodocente: null
       })),
     };
-  
+
+    console.log(data);
+
     try {
-      const response = await fetch('http://localhost:8000/api/planificacion/gestionar', {
+      const response = await fetch('http://localhost:8000/api/planificacion/guardar', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(data),
       });
-  
+
       if (!response.ok) {
         throw new Error(`Error: ${response.status}`);
       }
-  
+
       const responseData = await response.json();
       if (responseData.success) {
         console.log('Los datos se subieron correctamente.');
         setOpenAlertS(false);
-      } else {
-        setOpenAlertE(true);
-        console.error('Hubo un problema al subir los datos:', responseData.message);
+      }else{
+        setOpenAlertS(false);
       }
       console.log('Respuesta del servidor:', responseData);
     } catch (error) {
@@ -121,9 +130,15 @@ export default function EditarPlanificacion({sprints, changeTable, idPlanificaci
       console.error('Error en la solicitud:', error);
     }
   };
+
   const handleCloseAlert = () => {
     setOpenAlert(false);
+  };
+  const handleCloseAlertS = () => {
     setOpenAlertS(false);
+  };
+  
+  const handleCloseAlertE= () => {
     setOpenAlertE(false);
   };
   return (
@@ -181,14 +196,7 @@ export default function EditarPlanificacion({sprints, changeTable, idPlanificaci
         aria-label="Añadir nueva fila"
         ></AddIcon>
         <div style={{ marginTop: '40px', display: 'flex', justifyContent: 'flex-end', gap: '20px' }}>
-        <Button 
-            variant="contained" 
-            color="primary" 
-            onClick={handleSave}
-            aria-label="Guardar cambios"
-        >
-            Guardar
-        </Button>
+          
         <Button 
             variant="contained" 
             color="secondary" 
@@ -196,6 +204,14 @@ export default function EditarPlanificacion({sprints, changeTable, idPlanificaci
             aria-label="Descartar cambios"
         >
             No Guardar
+        </Button>
+        <Button 
+            variant="contained" 
+            color="primary" 
+            onClick={handleSave}
+            aria-label="Guardar cambios"
+        >
+            Guardar
         </Button>
         </div>
       </Box>
@@ -215,7 +231,7 @@ export default function EditarPlanificacion({sprints, changeTable, idPlanificaci
       ></PopUpDialog>
       {openAlert?
         <Alert 
-          severity="error" 
+          severity="warning" 
           onClose={handleCloseAlert} 
           role="alert" // Asegúrate de que tiene el rol correcto
         >
@@ -228,7 +244,7 @@ export default function EditarPlanificacion({sprints, changeTable, idPlanificaci
       {openAlertS?
         <Alert severity="success"
         role="alert"
-        onClose={handleCloseAlert} 
+        onClose={handleCloseAlertS} 
         >
           <AlertTitle>Success</AlertTitle>
           Se subio los datos correctamente.
@@ -239,7 +255,7 @@ export default function EditarPlanificacion({sprints, changeTable, idPlanificaci
       {openAlertE?
         <Alert 
           severity="error" 
-          onClose={handleCloseAlert} 
+          onClose={handleCloseAlertE} 
           role="alert" // Asegúrate de que tiene el rol correcto
         >
           <AlertTitle>Error</AlertTitle>

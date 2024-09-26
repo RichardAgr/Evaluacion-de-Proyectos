@@ -1,5 +1,13 @@
+<<<<<<< HEAD
 import { Fragment, useEffect, useState } from 'react';
 import { useParams } from "react-router-dom";
+=======
+
+
+import { Fragment, useEffect } from 'react';
+import { useState } from 'react';
+import { useParams} from "react-router-dom";
+>>>>>>> c615931500e8fc26170b99855f789c17902a168d
 import Header from '../../../components/Header/header.jsx';
 import Footer from '../../../components/Footer/footer.jsx';
 import InfoEmpresa from '../../../components/infoEmpresa/infoEmpresa.jsx';
@@ -10,6 +18,11 @@ import { getPlanificacion } from '../../../api/getPlanificacion.jsx';
 import ButtonBackAndTitle from '../../../components/buttonBackAndTitle/buttonBackAndTitle.jsx';
 
 function PlanificacionDeDesarollo() {
+<<<<<<< HEAD
+=======
+  
+  
+>>>>>>> c615931500e8fc26170b99855f789c17902a168d
   const [empresaData, setEmpresaData] = useState(null);
   const [planificacionData, setPlanificacionData] = useState({ aceptada: false });
   const [loading, setLoading] = useState(true);
@@ -26,9 +39,16 @@ function PlanificacionDeDesarollo() {
         ]);
         setEmpresaData(empresa);
         setPlanificacionData(planificacion);
+        const [empresa, planificacion] = await Promise.all([
+          getEmpresaData(idEmpresa),
+          getPlanificacion(idEmpresa),
+        ]);
+        setEmpresaData(empresa);
+        setPlanificacionData(planificacion);
       } catch (error) {
         console.error('Error en la solicitud:', error.message);
         setError(`Error en la solicitud: ${error.message}`);
+      } finally {
       } finally {
         setLoading(false);
       }
@@ -50,12 +70,19 @@ function PlanificacionDeDesarollo() {
           />
           <div className='pageBorder'>
             <div className='pageBorder_interior'>
+<<<<<<< HEAD
               <InfoEmpresa 
                 nombreLargo={empresaData.nombreLargo} 
                 nombreCorto={empresaData.nombreEmpresa} 
                 integrantes={empresaData.integrantes}
               />
               {!planificacionData.aceptada ? (
+=======
+              <InfoEmpresa nombreLargo= {empresaData.nombreLargo} nombreCorto = {empresaData.nombreEmpresa} integrantes={empresaData.integrantes}></InfoEmpresa>
+              {!planificacionData.aceptada?
+              <InfoEmpresa nombreLargo= {empresaData.nombreLargo} nombreCorto = {empresaData.nombreEmpresa} integrantes={empresaData.integrantes}></InfoEmpresa>
+              {!planificacionData.aceptada?
+>>>>>>> c615931500e8fc26170b99855f789c17902a168d
                 <div className='divContainerPlani'>
                   <h1>TODAVIA NO FUE ACEPTADA</h1>
                 </div>

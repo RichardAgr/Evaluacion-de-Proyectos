@@ -77,9 +77,8 @@ function Planificacion() {
                   <>
                     {change?
                       <EditarPlanificacion 
-                        sprints={planificacionData.sprints} 
+                        planificacionData={planificacionData} 
                         changeTable={changeTable}
-                        idPlanificacion={planificacionData.idPlanificacion}
                         idEmpresa={planificacionData.idEmpresa}
                       ></EditarPlanificacion>
                       :
@@ -88,7 +87,10 @@ function Planificacion() {
                         {planificacionData.aceptada?
                           <></>
                           :
-                          <Button variant='contained'onClick={changeTable}>Editar</Button>
+                          <div className='buttonIzq'>
+                            <Button variant='contained'onClick={changeTable} >Editar</Button>
+                          </div>
+                          
                         }
                       </>
                     }

@@ -22,8 +22,8 @@ function TablaPlanificacionNotas( {numeroDeFaltas, sprints, notaProductoFinal} )
   },[sprints])
   const rows = [
     createData('FALTAS DEL GRUPO', numeroDeFaltas),
-    createData('NOTA SUMATORIA SPRINTS', sumatoriaSprints),
-    createData('NOTA PRODUCTO TERMINADO', notaProductoFinal),
+    createData('NOTA SUMATORIA SPRINTS', sumatoriaSprints?sumatoriaSprints:'Sin Calificar'),
+    createData('NOTA PRODUCTO TERMINADO', notaProductoFinal? notaProductoFinal: 'Sin Calificar'),
   ];
   return (
     <Fragment>

@@ -24,4 +24,12 @@ class Estudiante extends Model
     // {
     //     return $this->belongsTo(Docente::class, 'idDocente');
     // }
+
+
+    public function grupos()
+    {
+        return $this->belongsToMany(Grupo::class, 'estudiantes_grupos', 'idEstudiante', 'idGrupo');
+    }
 }
+
+    
