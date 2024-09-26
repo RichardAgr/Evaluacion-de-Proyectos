@@ -20,6 +20,8 @@ import BackButtonAndTitle from "../../../components/Buttons/BackButtonAndTitle.j
 import TablaPlanificacion from "../../../components/tablaPlanificacionDeDesarollo/tablaPlanificacion.jsx";
 import { getEmpresaData } from "../../../api/getEmpresa.jsx";
 import { getPlanificacion } from "../../../api/getPlanificacion.jsx";
+import { validar } from "../../../api/validarPlanificacion/validar.jsx";
+import { addRevision } from "../../../api/validarPlanificacion/addRevision.jsx";
 
 function ValidarPlanificacion() {
   const [openValidateDialog, setOpenValidateDialog] = useState(false);
@@ -37,7 +39,7 @@ function ValidarPlanificacion() {
   });
 
   const [snackbar, setSnackbar] = useState({ open: false, message: "" });
-  // Jhon, obtener los datos
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -68,40 +70,11 @@ function ValidarPlanificacion() {
   const confirmValidate = async () => {
     setOpenValidateDialog(false);
     try {
-      // validar API
-      const validarResponse = await fetch("http://127.0.0.1:8000/api/validar", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ idPlanificacion: idEmpresa }),
-      });
-  
-      if (!validarResponse.ok) {
-        throw new Error("Error al validar la planificación.");
-      }
-
-      // anadir comentarios
-      const data = {
-        idPlanificacion: idEmpresa,
-        nota: nota,
-        comentario: groupComment,
-        idDocente: 2, // luego hay que cambiar por el ID del docente
-      };
-      const response = await fetch("http://127.0.0.1:8000/api/addRevision", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-      const result = await response.json();
-      if (response.ok) {
-        setSnackbar({ open: true, message: result.message });
-        setPlanificacionData((prevState) => ({ ...prevState, aceptada: true }));
-      } else {
-        throw new Error(result.message || "Error al procesar la solicitud.");
-      }
+      const validarResponse = await validar(idEmpresa);
+      setSnackbar({ open: true, message: validarResponse.message });
+      const revisionResult = await addRevision(idEmpresa, nota, groupComment, 2);
+      setSnackbar({ open: true, message: revisionResult.message });
+      setPlanificacionData((prevState) => ({ ...prevState, aceptada: true }));
     } catch (error) {
       console.error("Error:", error);
       setSnackbar({ open: true, message: error.message });
@@ -111,31 +84,15 @@ function ValidarPlanificacion() {
   const confirmReject = async () => {
     setOpenRejectDialog(false);
     try {
-      const data = {
-        idPlanificacion: planificacionData.id,
-        nota: nota,
-        comentario: groupComment,
-        idDocente: 2, // luego hay que cambiar por el ID del docente
-      };
-      const response = await fetch("http://127.0.0.1:8000/api/addRevision", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-      const result = await response.json();
-      if (response.ok) {
-        setSnackbar({ open: true, message: "Planificación rechazada" });
-        setPlanificacionData((prevState) => ({ ...prevState, aceptada: true }));
-      } else {
-        throw new Error(result.message || "Error al procesar la solicitud.");
-      }
+      const revisionResult = await addRevision(idEmpresa, nota, groupComment, 2);
+      setSnackbar({ open: true, message: revisionResult.message });
+      setPlanificacionData((prevState) => ({ ...prevState, aceptada: true }));
     } catch (error) {
       console.error("Error:", error);
       setSnackbar({ open: true, message: error.message });
     }
   };
+
   if (loading) {
     return (
       <Box
@@ -151,7 +108,41 @@ function ValidarPlanificacion() {
       </Box>
     );
   }
+
   if (error) return <p>Error: {error}</p>;
+
+  if (planificacionData.aceptada) {
+    return (
+      <Fragment>
+        <Header />
+        <Box className="box">
+          <Box className="container">
+            <BackButtonAndTitle title="Validar Planificacion" />
+            <Box
+              className="pageBorder"
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                padding: 3,
+                minHeight: "calc(74vh)",
+                border: "0.3rem solid black",
+                borderRadius: "0.3rem",
+                marginBottom: "1rem",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Typography variant="h5">
+                Esta planificación ya ha sido validada.
+              </Typography>
+            </Box>
+          </Box>
+        </Box>
+        <Footer />
+      </Fragment>
+    );
+  }
+
   return (
     <Fragment>
       <Header />
