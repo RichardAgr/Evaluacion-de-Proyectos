@@ -52,7 +52,7 @@ function tablaPlanificacion({sprints}) {
                                 <></>
                               }
                             </TableCell>
-                            <TableCell align="left">{sprint.notasprint} </TableCell>
+                            <TableCell align="left">{sprint.notasprint? sprint.notasprint:'Sin Calificar'} </TableCell>
                           </TableRow>
                         )})}
                     </TableBody>

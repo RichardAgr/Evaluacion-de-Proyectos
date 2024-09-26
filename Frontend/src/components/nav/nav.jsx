@@ -12,6 +12,7 @@ import HomeEstudiante from '../../pages/Estudiante/homeEstudiante/homeEstudiante
 import HomeGrupoEstudiante from '../../pages/Estudiante/homeGrupoEstudiante/homeGrupoEstudiante.jsx'
 import VerPlanficacionDeDesarollo from '../../pages/Estudiante/verPlanificacionDeDesarollo/VerPlanifacionDeDesarolloE.jsx';
 import EditarPlanificacion from '../../pages/Estudiante/editarPlanificacion/editarPlanificacion.jsx';
+
 function Nav() {
   
   return (
