@@ -70,35 +70,40 @@ export default function EditarPlanificacion({planificacionData, changeTable, idE
   };
 
   const subir = async () => {
+    // Validación de campos vacíos en los sprints
     for (const row of rows) {
-      if (Object.values(row).some(value => value === "" || value === null || value === '')) {
+      if (Object.values(row).some(value => value === "" || value === null)) {
         console.error("Hay campos vacíos en uno de los sprints.");
-        setOpenAlert(true)
+        setOpenAlert(true);
         return;
       }
     }
+
     const date = new Date();
     const dia = String(date.getDate()).padStart(2, '0');
     const mes = String(date.getMonth() + 1).padStart(2, '0'); // Los meses en JavaScript van de 0 a 11
     const anio = date.getFullYear();
+    
     const data = {
-      idEmpresa: ""+idEmpresa,
-      comentarioDocente: ""+planificacionData.comentarioDocente,
-      notaPlanificacion: ""+planificacionData.notaPlanificacion,
-      aceptada: ""+planificacionData.aceptada,
+      idEmpresa: Number(idEmpresa), // Convertir a string
+      comentarioDocente: String(planificacionData.comentarioDocente),
+      notaPlanificacion: Number(planificacionData.notaPlanificacion), // Suponiendo que es un número
+      aceptada: Boolean(planificacionData.aceptada), // Convertir a booleano
       fechaEntrega: `${anio}-${mes}-${dia}`, 
       sprints: rows.map((row) => ({
-        idSprint: -1,  
-        fechaIni: ""+row.fechaIni, // Convertir a Date
-        fechaFin: ""+row.fechaFin, // Convertir a Date
-        cobro: ""+row.cobro, 
-        fechaEntrega: ""+row.fechaEntrega, // Convertir a Date
-        entregables: ""+row.entregables,
-        notasprint: ""+0,
-        comentariodocente: 'Comentario Docente'  
+        // idSprint puede omitirse si es -1 y no es necesario para crear
+        fechaIni: row.fechaIni, // Ya debería ser un string si es ISO
+        fechaFin: row.fechaFin,
+        cobro: Number(row.cobro),
+        fechaEntrega: row.fechaEntrega,
+        entregables: row.entregables,
+        notasprint: 0, // Mantener como número
+        comentariodocente: 'Comentario Docente'
       })),
     };
+
     console.log(data);
+
     try {
       const response = await fetch('http://localhost:8000/api/planificacion/guardar', {
         method: 'POST',
@@ -107,11 +112,11 @@ export default function EditarPlanificacion({planificacionData, changeTable, idE
         },
         body: JSON.stringify(data),
       });
-  
+
       if (!response.ok) {
         throw new Error(`Error: ${response.status}`);
       }
-  
+
       const responseData = await response.json();
       if (responseData.success) {
         console.log('Los datos se subieron correctamente.');
@@ -125,7 +130,8 @@ export default function EditarPlanificacion({planificacionData, changeTable, idE
       setOpenAlertE(true);
       console.error('Error en la solicitud:', error);
     }
-  };
+};
+
   const handleCloseAlert = () => {
     setOpenAlert(false);
     setOpenAlertS(false);

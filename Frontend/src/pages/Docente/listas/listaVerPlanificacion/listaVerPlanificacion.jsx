@@ -9,7 +9,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { getEmpresaPlanisAceptadas } from '../../../../api/getEmpreasasPlanisAceptadas';
+import { getPlanificacionesAceptadas } from '../../../../api/getEmpreasasPlanisAceptadas';
 import { useNavigate } from 'react-router-dom';
 
 function ListaVerPlanificacion() {
@@ -21,7 +21,7 @@ function ListaVerPlanificacion() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const [lista] = await Promise.all([getEmpresaPlanisAceptadas()]);
+                const [lista] = await Promise.all([getPlanificacionesAceptadas()]);
                 setListaEmpresas(lista);
                 console.log(lista);
             } catch (error) {

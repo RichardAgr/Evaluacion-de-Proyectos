@@ -31,4 +31,4 @@ Route::get('/planificacionAceptadas', [PlanificacionController::class, 'planific
 Route::get('/planificacionRechazadas', [PlanificacionController::class, 'planificacionRechazadas']);
 
 //Para crear la planificacion o modificarla
-Route::post('/planificacion/guardar', [PlanificacionController::class, 'guardarPlanificacion']);
+Route::post('/planificacion/guardar', [PlanificacionController::class, 'crearPlanificacion']);
