@@ -14,8 +14,6 @@ function tablaPlanificacion({sprints}) {
   const anio = fechaActual.getFullYear(); // Año
   
 
-  console.log(`${dia}/${mes}/${anio}`);   // Imprime la fecha en formato DD/MM/YYYY
-
   return (
     <Fragment>
       <TableContainer component={Paper}>

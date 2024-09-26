@@ -1,4 +1,5 @@
 
+
 import { Fragment, useEffect } from 'react';
 import { useState } from 'react';
 import { useParams} from "react-router-dom";
@@ -11,6 +12,7 @@ import { getEmpresaData } from '../../../api/getEmpresa.jsx';
 import { getPlanificacion} from '../../../api/getPlanificacion.jsx'
 import ButtonBackAndTitle from '../../../components/buttonBackAndTitle/buttonBackAndTitle.jsx';
 function PlanificacionDeDesarollo() {
+  
   
   const [empresaData, setEmpresaData] = useState(null);
   let { idEmpresa } = useParams();
@@ -27,9 +29,16 @@ function PlanificacionDeDesarollo() {
         ]);
         setEmpresaData(empresa);
         setPlanificacionData(planificacion);
+        const [empresa, planificacion] = await Promise.all([
+          getEmpresaData(idEmpresa),
+          getPlanificacion(idEmpresa),
+        ]);
+        setEmpresaData(empresa);
+        setPlanificacionData(planificacion);
       } catch (error) {
         console.error('Error en la solicitud:', error.message);
         setError(`Error en la solicitud: ${error.message}`);
+      } finally {
       } finally {
         setLoading(false);
       }
@@ -49,6 +58,8 @@ function PlanificacionDeDesarollo() {
           </ButtonBackAndTitle>
           <div className='pageBorder'>
             <div className='pageBorder_interior'>
+              <InfoEmpresa nombreLargo= {empresaData.nombreLargo} nombreCorto = {empresaData.nombreEmpresa} integrantes={empresaData.integrantes}></InfoEmpresa>
+              {!planificacionData.aceptada?
               <InfoEmpresa nombreLargo= {empresaData.nombreLargo} nombreCorto = {empresaData.nombreEmpresa} integrantes={empresaData.integrantes}></InfoEmpresa>
               {!planificacionData.aceptada?
                 <div className='divContainerPlani'>
