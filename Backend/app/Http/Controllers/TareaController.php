@@ -62,10 +62,14 @@ class TareaController extends Controller
             ->get();
 
         // Obtener los archivos relacionados con la tarea
-        $archivosTarea = DB::table('archivostarea')
+            $archivosTarea = DB::table('archivostarea')
             ->select('archivo')
             ->where('idTarea', $idTarea)
             ->get();
+        
+        // Convierte el resultado a un array
+        $archivosArray = $archivosTarea->pluck('archivo')->toArray();
+
 
         // Formar la respuesta
         $respuesta = [
@@ -74,7 +78,7 @@ class TareaController extends Controller
             'textotarea' => $tarea->textoTarea,
             'fechentregado' => $tarea->fechaEntrega,
             'estudiantes' => $estudiantes,
-            'archivotarea' => $archivosTarea,
+            'archivotarea' => $archivosArray,
         ];
 
         return response()->json($respuesta);
