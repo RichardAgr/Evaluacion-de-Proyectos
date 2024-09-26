@@ -15,7 +15,7 @@ class Estudiante extends Model
     }
     public function tareas()
     {
-        return $this->belongsToMany(Tarea::class, 'tareas_estudiantes', 'idEstudiante', 'idTarea');
+        return $this->belongsToMany(Tarea::class, 'tareasestudiantes', 'idEstudiante', 'idTarea');
     }
 }
 

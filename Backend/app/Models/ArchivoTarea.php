@@ -4,7 +4,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 class ArchivoTarea extends Model
 {
-    protected $table = 'archivos_tarea';
+    protected $table = 'archivostarea';
 
     // Relación con la tarea
     public function tarea()
