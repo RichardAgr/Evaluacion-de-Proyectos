@@ -14,6 +14,8 @@ function infoEmpresa({nombreLargo, nombreCorto, integrantes}) {
                             <span> {' ROL: '+ integrante.rol} </span>
                         </p>
                     ))}
+                <h3>Docente:</h3>
+                    <p>Ing. Leticia Blanco Coca </p>
             </div>
         </ContainerInfoEmpresa>
     </Fragment>
@@ -39,10 +41,7 @@ let ContainerInfoEmpresa = styled.div`
         margin: calc(3vw + 1rem);
         display: block;
     }
-    p{
-        border-radius: 0.5rem;
-        padding: 1rem;
-        box-shadow: rgba(0, 0, 0, 0.1) 0px 5px 9px, rgba(0, 0, 0, 0.22) 0px 4px 3px;
+    p{  
         margin-left: calc(2vw + 8rem);
     }
     span{

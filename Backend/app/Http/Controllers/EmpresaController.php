@@ -16,7 +16,7 @@ class EmpresaController extends Controller
         if (!$empresa) {
             return response()->json(['error' => 'Empresa no encontrada'], 404);
         }
-
+        
         // Formatear los datos
         $data = [
             'nombreEmpresa' => $empresa->nombreEmpresa,
