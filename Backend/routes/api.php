@@ -30,5 +30,5 @@ Route::get('/planificacion/{idEmpresa}', [PlanificacionController::class, 'show'
 Route::get('/planificacion/validar/{idPlanificacion}', [PlanificacionController::class, 'validar']);
 
 Route::put('/validar', [PlanificacionController::class, 'validar']);
-Route::put('/addRevision', [RevisionPlaniController::class, 'addRevision']);
+Route::post('/addRevision', [RevisionPlaniController::class, 'addRevision']);
 

@@ -1,13 +1,6 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
   Button,
   TextField,
   Dialog,
@@ -17,7 +10,8 @@ import {
   DialogTitle,
   Snackbar,
   Box,
-  CircularProgress
+  CircularProgress,
+  Typography,
 } from "@mui/material";
 import Header from "../../../components/Header/header.jsx";
 import Footer from "../../../components/Footer/footer.jsx";
@@ -32,6 +26,7 @@ function ValidarPlanificacion() {
   const [openRejectDialog, setOpenRejectDialog] = useState(false);
   const [groupComment, setGroupComment] = useState("");
   const [privateComment, setPrivateComment] = useState("");
+  const [nota, setNota] = useState(0);
 
   let { idEmpresa } = useParams();
   const [empresaData, setEmpresaData] = useState(null);
@@ -42,6 +37,7 @@ function ValidarPlanificacion() {
   });
 
   const [snackbar, setSnackbar] = useState({ open: false, message: "" });
+  // Jhon, obtener los datos
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -72,36 +68,73 @@ function ValidarPlanificacion() {
   const confirmValidate = async () => {
     setOpenValidateDialog(false);
     try {
-      const data = {
-        idPlanificacion: 1,
-        nota: 32,
-        comentario: "groupComment",
-        idDocente: 2  // Asume que tienes una forma de obtener el ID del docente actual
-      };
-      const response = await fetch('http://127.0.0.1:8000/api/addRevision', {
-        method: 'POST',
+      // validar API
+      const validarResponse = await fetch("http://127.0.0.1:8000/api/validar", {
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ idPlanificacion: idEmpresa }),
+      });
+  
+      if (!validarResponse.ok) {
+        throw new Error("Error al validar la planificación.");
+      }
+
+      // anadir comentarios
+      const data = {
+        idPlanificacion: idEmpresa,
+        nota: nota,
+        comentario: groupComment,
+        idDocente: 2, // luego hay que cambiar por el ID del docente
+      };
+      const response = await fetch("http://127.0.0.1:8000/api/addRevision", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
       });
       const result = await response.json();
       if (response.ok) {
         setSnackbar({ open: true, message: result.message });
-        setPlanificacionData(prevState => ({...prevState, aceptada: true}));
+        setPlanificacionData((prevState) => ({ ...prevState, aceptada: true }));
       } else {
-        throw new Error(result.message || 'Error al procesar la solicitud.');
+        throw new Error(result.message || "Error al procesar la solicitud.");
       }
     } catch (error) {
-      console.error('Error:', error);
+      console.error("Error:", error);
       setSnackbar({ open: true, message: error.message });
     }
   };
 
-  const confirmReject = () => {
+  const confirmReject = async () => {
     setOpenRejectDialog(false);
-    setSnackbar({ open: true, message: "Planificación rechazada" });
-    // Here you would typically send the rejection and comments to your backend
+    try {
+      const data = {
+        idPlanificacion: planificacionData.id,
+        nota: nota,
+        comentario: groupComment,
+        idDocente: 2, // luego hay que cambiar por el ID del docente
+      };
+      const response = await fetch("http://127.0.0.1:8000/api/addRevision", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      const result = await response.json();
+      if (response.ok) {
+        setSnackbar({ open: true, message: "Planificación rechazada" });
+        setPlanificacionData((prevState) => ({ ...prevState, aceptada: true }));
+      } else {
+        throw new Error(result.message || "Error al procesar la solicitud.");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      setSnackbar({ open: true, message: error.message });
+    }
   };
   if (loading) {
     return (
@@ -139,7 +172,6 @@ function ValidarPlanificacion() {
             }}
           >
             <TablaPlanificacion sprints={planificacionData.sprints} />
-
             <TextField
               label="Comentarios para el grupo"
               multiline
@@ -159,7 +191,26 @@ function ValidarPlanificacion() {
               fullWidth
               margin="normal"
             />
-
+            <Box sx={{ display: "flex", alignItems: "center", mt: 2 }}>
+              <Typography variant="body1" sx={{ mr: 2 }}>
+                Nota:
+              </Typography>
+              <TextField
+                type="number"
+                value={nota}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setNota(value === "" ? "" : Number(value));
+                }}
+                inputProps={{
+                  min: 0,
+                  max: 100,
+                  style: { width: "50px", height: "50px", textAlign: "center" },
+                }}
+                variant="outlined"
+                size="small"
+              />
+            </Box>
             <Box
               sx={{
                 marginTop: "40px",
