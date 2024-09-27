@@ -33,7 +33,7 @@ Route::get('/planificacion/notaComentario/{idPlanificacion}', [PlanificacionCont
 Route::get('/planificacionAceptadas', [PlanificacionController::class, 'planificacionAceptadas']);
 Route::get('/planificacionRechazadas', [PlanificacionController::class, 'planificacionRechazadas']);
 Route::get('/tarea/{idTarea}', [TareaController::class, 'obtenerTarea']);
-
+Route::get('/docente/empresa/{idEmpresa}', [PlanificacionController::class, 'obtenerDocentePorEmpresa']);
 
 /**
  * TODOS LOS POST VAN ACA
