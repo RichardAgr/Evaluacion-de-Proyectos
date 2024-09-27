@@ -57,7 +57,7 @@ function PlanificacionDeDesarollo() {
                   <h1>TODAVIA NO SE FUE ACEPTADA</h1>
                 </div>
               :
-                  <TablaPlanificacion sprints = {planificacionData.sprints}></TablaPlanificacion>
+                  <TablaPlanificacion sprints = {planificacionData.sprints} ocultarBotones = {true}></TablaPlanificacion>
               }
               <TablaNotasPlanificacion 
                 numeroDeFaltas={empresaData.numeroDeFaltas} 

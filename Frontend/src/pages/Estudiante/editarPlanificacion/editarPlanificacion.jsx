@@ -4,55 +4,33 @@ import Header from '../../../components/Header/header.jsx'
 import ButtonBackAndTitle from '../../../components/buttonBackAndTitle/buttonBackAndTitle.jsx';
 import ComentarioNota from '../../../components/comentarioNota/comentarioNota.jsx';
 import { useParams } from 'react-router-dom';
-import VistaTablaPlanificacion from '../../../components/vistaTablaPlanificacion/vistaTablaPlanificacion.jsx';
-import { Button } from '@mui/material';
 import EditarPlanificacion from '../../../components/editarTablaPlanificacion/editarTablaPlanificacion.jsx';
-import InfoEmpresa from '../../../components/infoEmpresa/infoEmpresa.jsx';
-import { getEmpresaData } from '../../../api/getEmpresa.jsx';
-import { getPlanificacion} from '../../../api/getPlanificacion.jsx';
+import { getPlanificacion } from '../../../api/getPlanificacion.jsx';
+import { getNombreEmpresa } from '../../../api/getNombreEmpresa.jsx';
+import NombreEmpresa from '../../../components/infoEmpresa/nombreEmpresa.jsx'
 function Planificacion() {
-  let [change, setChange] = useState(false);
-  const [datosTitleBack, setDatosTitleBack] = useState(
+  const [datosTitleBack] = useState(
     {
-      titulo: 'Planificacion',
-      ocultarAtras: false
+      titulo: 'MODIFICANDO PLANIFICACION',
+      ocultarAtras: true
     }
   );
-  function changeTable(){
-    setChange(!change)
-    if(!datosTitleBack.ocultarAtras){
-      setDatosTitleBack(
-        {
-          titulo: 'Editando Planificacion',
-          ocultarAtras: true
-        } 
-      );
-    }else{
-      setDatosTitleBack(
-        {
-          titulo: 'Planificacion',
-          ocultarAtras: false
-        } 
-      );
-    }
-  }
   
-  
-  const [empresaData, setEmpresaData] = useState(null);
   let { idEmpresa } = useParams();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [planificacionData, setPlanificacionData] = useState()
-
+  const [datosEmpresa, setDatosEmpresa]= useState();
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [empresa, planificacion] = await Promise.all([
-          getEmpresaData(idEmpresa),
+        const [planificacion,nombreEmpresa] = await Promise.all([
           getPlanificacion(idEmpresa),
+          getNombreEmpresa(idEmpresa),
         ]);
-        setEmpresaData(empresa);
         setPlanificacionData(planificacion);
+        setDatosEmpresa(nombreEmpresa);
+        
       } catch (error) {
         console.error('Error en la solicitud:', error.message);
         setError(`Error en la solicitud: ${error.message}`);
@@ -72,28 +50,16 @@ function Planificacion() {
               <ButtonBackAndTitle datosTitleBack={datosTitleBack}></ButtonBackAndTitle>
               <div className='pageBorder'>
               <div className='pageBorder_interior'>
-                <InfoEmpresa nombreLargo= {empresaData.nombreLargo} nombreCorto = {empresaData.nombreEmpresa} integrantes={empresaData.integrantes}></InfoEmpresa>
+                <NombreEmpresa nombreLargo={datosEmpresa.nombreLargo} nombreCorto={datosEmpresa.nombreEmpresa}></NombreEmpresa>
                 {planificacionData != null?
                   <>
-                    {change?
                       <EditarPlanificacion 
                         planificacionData={planificacionData} 
-                        changeTable={changeTable}
+                        changeTable={ function goBack() {
+                          window.history.back();
+                        }}
                         idEmpresa={planificacionData.idEmpresa}
                       ></EditarPlanificacion>
-                      :
-                      <>
-                        <VistaTablaPlanificacion sprints={planificacionData.sprints}></VistaTablaPlanificacion>        
-                        {planificacionData.aceptada?
-                          <></>
-                          :
-                          <div className='buttonIzq'>
-                            <Button variant='contained'onClick={changeTable} >Editar</Button>
-                          </div>
-                          
-                        }
-                      </>
-                    }
                     <ComentarioNota 
                       comentario={planificacionData.comentarioDocente} 
                       nota = {planificacionData.notaPlanificacion} 
