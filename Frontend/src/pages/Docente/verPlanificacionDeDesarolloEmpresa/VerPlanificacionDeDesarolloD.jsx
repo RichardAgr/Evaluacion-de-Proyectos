@@ -25,8 +25,10 @@ function VerPlanificacionDeDesarolloD() {
           getEmpresaData(idEmpresa),
           getPlanificacion(idEmpresa),
         ]);
+        
         setEmpresaData(empresa);
         setPlanificacionData(planificacion);
+        console.log(empresaData)
       } catch (error) {
         console.error('Error en la solicitud:', error.message);
         setError(`Error en la solicitud: ${error.message}`);
@@ -55,7 +57,7 @@ function VerPlanificacionDeDesarolloD() {
                   <h1>TODAVIA NO SE FUE ACEPTADA</h1>
                 </div>
               :
-                  <TablaPlanificacion sprints = {planificacionData.sprints}></TablaPlanificacion>
+                  <TablaPlanificacion sprints = {planificacionData.sprints} ocultarBotones={true}></TablaPlanificacion>
               }
               <TablaNotasPlanificacion 
                 numeroDeFaltas={empresaData.numeroDeFaltas} 

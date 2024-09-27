@@ -30,7 +30,7 @@ function PlanificacionDeDesarollo() {
       } catch (error) {
         console.error('Error en la solicitud:', error.message);
         setError(`Error en la solicitud: ${error.message}`);
-      } finally {
+      }finally {
         setLoading(false);
       }
     };
@@ -55,7 +55,7 @@ function PlanificacionDeDesarollo() {
                   <h1>TODAVIA NO SE FUE ACEPTADA</h1>
                 </div>
               :
-                  <TablaPlanificacion sprints = {planificacionData.sprints}></TablaPlanificacion>
+                  <TablaPlanificacion sprints = {planificacionData.sprints} ocultarBotones = {true}></TablaPlanificacion>
               }
               <TablaNotasPlanificacion 
                 numeroDeFaltas={empresaData.numeroDeFaltas} 

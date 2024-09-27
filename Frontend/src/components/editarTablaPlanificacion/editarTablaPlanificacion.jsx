@@ -219,7 +219,7 @@ export default function EditarPlanificacion({planificacionData, changeTable, idE
         openDialog= {openCancelDialog} 
         setOpenDialog= {setOpenCancelDialog}
         especial = {changeTable}
-        titleDialog={'¿Estás seguro de que quieres descartar los cambios?'}
+        titleDialog={'¿Estás seguro de que quieres descartar los cambios?, esta accion te llevara atras'}
         textDialog={'Esta acción no se puede deshacer. Todos los cambios realizados se perderán.'}
       ></PopUpDialog>
       <PopUpDialog 
