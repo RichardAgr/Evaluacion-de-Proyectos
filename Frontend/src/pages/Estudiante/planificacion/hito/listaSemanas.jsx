@@ -3,9 +3,9 @@ import {
   Button,
   Grid,
 } from '@mui/material';
-import Header from "../../../../../components/Header/header.jsx";
-import Footer from "../../../../../components/Footer/footer.jsx";
-import BackButtonAndTitle from "../../../../../components/Buttons/BackButtonAndTitle.jsx";
+import Header from "../../../../components/Header/header.jsx";
+import Footer from "../../../../components/Footer/footer.jsx";
+import BackButtonAndTitle from "../../../../components/Buttons/BackButtonAndTitle.jsx";
 
 const TaskList = () => {
   const tasks = [

@@ -19,7 +19,11 @@ function Nav() {
   
   return (
     <Routes>
+        {/** Ruta para sitios incorrectos */}
+        <Route path="*" element={<Navigate to="/" />} />
+        
         <Route path='/' element={<Home/>}/>
+
         <Route path='/homeDocente' element={<HomeDocente/>}/>
         <Route path='/homeDocente/homeGrupoDocente' element={<HomeGrupoDocente/>}/>
         <Route path='/homeDocente/homeGrupoDocente/verPlanificacion' element={<ListaVerPlanificacion/>}/>
@@ -35,8 +39,8 @@ function Nav() {
         <Route path='/homeEstudiante/homeGrupoEstudiante/PlanificacionInicial/Empresa/:idEmpresa' element={<EditarPlanificacion/>}/>
 
         {/** Rutas para ver la lista de semanas y tareas */}
-        <Route path='/GrupoEmpresa/Planificacion/:idEmpresa/Sprint/Semana' element={<ListaSemanas/>}/>
-        <Route path='/GrupoEmpresa/Planificacion/:idEmpresa/Sprint/Semana/Tareas' element={<ListaTareas/>}/>
+        <Route path='/grupoEmpresa/planificacion/:idEmpresa/sprint/semana' element={<ListaSemanas/>}/>
+        <Route path='/grupoEmpresa/planificacion/:idEmpresa/sprint/semana/tareas' element={<ListaTareas/>}/>
     </Routes>
   );
 }
