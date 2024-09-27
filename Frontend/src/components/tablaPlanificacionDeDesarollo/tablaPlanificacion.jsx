@@ -40,7 +40,7 @@ function tablaPlanificacion({sprints, ocultarBotones}) {
                       {sprints.map((sprint, index) => {
                         const fechaInicioSprint = new Date(sprint.fechaIni);
                         return (<TableRow
-                            key={sprint.hito}
+                            key={index}
                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                           >
                             <TableCell component="th" scope="row">
