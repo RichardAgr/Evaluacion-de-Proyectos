@@ -35,11 +35,11 @@ Route::get('/token', function () {
     return csrf_token(); 
 });
 
-Route::get('/test-db', function () {
+/*Route::get('/test-db', function () {
     try {
         DB::connection()->getPdo();
         return "Conexión exitosa a la base de datos: " . DB::connection()->getDatabaseName();
     } catch (\Exception $e) {
         return "No se pudo conectar a la base de datos. Error: " . $e->getMessage();
     }
-});
+});*/
