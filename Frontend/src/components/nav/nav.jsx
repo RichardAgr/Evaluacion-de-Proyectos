@@ -11,6 +11,8 @@ import ListaVerPlanificacion from '../../pages/Docente/listas/listaVerPlanificac
 import HomeEstudiante from '../../pages/Estudiante/homeEstudiante/homeEstudiante.jsx'
 import HomeGrupoEstudiante from '../../pages/Estudiante/homeGrupoEstudiante/homeGrupoEstudiante.jsx'
 import VerPlanficacionDeDesarollo from '../../pages/Estudiante/verPlanificacionDeDesarollo/VerPlanifacionDeDesarolloE.jsx';
+import ListaSemanas from '../../pages/Estudiante/planificacion/hito/listaSemanas.jsx';
+import ListaTareas from '../../pages/Estudiante/planificacion/hito/semana/listaTareas.jsx';
 import EditarPlanificacion from '../../pages/Estudiante/editarPlanificacion/editarPlanificacion.jsx';
 
 function Nav() {
@@ -23,13 +25,18 @@ function Nav() {
         <Route path='/homeDocente/homeGrupoDocente/verPlanificacion' element={<ListaVerPlanificacion/>}/>
         <Route path='/homeDocente/homeGrupoDocente/verPlanificacion/Empresa/:idEmpresa' element={<VerPlanificacionDeDesarolloD/>}/>
         
-        <Route path='/homeDocente/homeGrupoDocente/validarPlanificacion/' element={<ListaEmpresas/>}/>
-        <Route path='/homeDocente/homeGrupoDocente/validarPlanificacion/Empresa/:idEmpresa' element={<ValidarPlanificacion/>}/>
+        {/** Rutas para validar  planificacion */}
+        <Route path='/grupoDocente/validarPlanificacion/' element={<ListaEmpresas/>}/>
+        <Route path='/grupoDocente/validarPlanificacion/Empresa/:idEmpresa' element={<ValidarPlanificacion/>}/>
 
         <Route path='/homeEstudiante' element={<HomeEstudiante/>}/>
         <Route path='/homeEstudiante/homeGrupoEstudiante' element={<HomeGrupoEstudiante/>}/>
         <Route path='/homeEstudiante/homeGrupoEstudiante/PlanificacionDeDesarollo/Empresa/:idEmpresa' element={<VerPlanficacionDeDesarollo/>}/>
         <Route path='/homeEstudiante/homeGrupoEstudiante/PlanificacionInicial/Empresa/:idEmpresa' element={<EditarPlanificacion/>}/>
+
+        {/** Rutas para ver la lista de semanas y tareas */}
+        <Route path='/GrupoEmpresa/Planificacion/:idEmpresa/Sprint/Semana' element={<ListaSemanas/>}/>
+        <Route path='/GrupoEmpresa/Planificacion/:idEmpresa/Sprint/Semana/Tareas' element={<ListaTareas/>}/>
     </Routes>
   );
 }
