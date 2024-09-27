@@ -1,4 +1,5 @@
-import { Fragment } from 'react';
+/* eslint-disable react/prop-types */
+import { Fragment, useEffect, useState } from 'react';
 
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -7,14 +8,22 @@ import TableContainer from '@mui/material/TableContainer';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import styled from '@emotion/styled'
-function tablaPlanificacionNotas() {
-    function createData(titulo, nota) {
+function TablaPlanificacionNotas( {numeroDeFaltas, sprints, notaProductoFinal} ) {
+  function createData(titulo, nota) {
     return { titulo, nota};
   }
+  const [sumatoriaSprints, setSumatoriaSprints] = useState(0);
+  useEffect(()=>{
+
+    if(sprints != null){
+      const tam = sprints.length;
+      setSumatoriaSprints (Math.round(sprints.reduce((acumulador,sprint)=> acumulador+sprint.notasprint, 0)/tam))
+    }
+  },[sprints])
   const rows = [
-    createData('FALTAS DEL GRUPO', 0),
-    createData('NOTA SUMATORIA SPRINTS', ),
-    createData('NOTA PRODUCTO TERMINADO', ),
+    createData('FALTAS DEL GRUPO', numeroDeFaltas),
+    createData('NOTA SUMATORIA SPRINTS', sumatoriaSprints?sumatoriaSprints:'Sin Calificar'),
+    createData('NOTA PRODUCTO TERMINADO', notaProductoFinal? notaProductoFinal: 'Sin Calificar'),
   ];
   return (
     <Fragment>
@@ -41,7 +50,7 @@ function tablaPlanificacionNotas() {
   );
 }
 
-export default tablaPlanificacionNotas;
+export default TablaPlanificacionNotas;
 
 let ContainerTablaNotas = styled.div`
     width: 100%;

@@ -8,5 +8,11 @@ class Estudiante extends Model
     protected $table = 'estudiante';
     protected $primaryKey = 'idEstudiante';
     public $timestamps = false;
+
+    public function grupos()
+    {
+        return $this->belongsToMany(Grupo::class, 'estudiantes_grupos', 'idEstudiante', 'idGrupo');
+    }
 }
 
+    
