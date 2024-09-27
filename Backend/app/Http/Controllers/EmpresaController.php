@@ -34,6 +34,25 @@ class EmpresaController extends Controller
         // Devolver los datos en formato JSON
         return response()->json($data);
     }
+    public function getNombreEmpresa($id)
+    {
+        // Obtener la empresa con el ID proporcionado
+        $empresa = Empresa::with('estudiantes')->find($id);
+
+        // Verificar si la empresa existe
+        if (!$empresa) {
+            return response()->json(['error' => 'Empresa no encontrada'], 404);
+        }
+        
+        // Formatear los datos
+        $data = [
+            'nombreEmpresa' => $empresa->nombreEmpresa,
+            'nombreLargo' => $empresa->nombreLargo,
+        ];
+
+        // Devolver los datos en formato JSON
+        return response()->json($data);
+    }
 
 
     // En el futuro debera filtrar por ID del docente !!!!!!!!
@@ -66,6 +85,4 @@ class EmpresaController extends Controller
         //return response()->json($data);
         return $data;
     }
-    //debe haber una funcion que accede de Empresa a Planificacion y cambia el valor de aceptada de 0 a 1
-    //public function aceptarPlanificacion
 }
