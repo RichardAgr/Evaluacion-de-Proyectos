@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Empresa;
@@ -21,14 +22,11 @@ class EmpresaController extends Controller
         $data = [
             'nombreEmpresa' => $empresa->nombreEmpresa,
             'nombreLargo' => $empresa->nombreLargo,
-            'numeroDeFaltas' => $empresa->numerodefaltasempresa,
-            'notaProductoFinal' => $empresa->notaproductofinal,
             'integrantes' => $empresa->estudiantes->map(function ($estudiante) {
                 return [
                     'nombreEstudiante' => $estudiante->nombreEstudiante,
                     'primerApellido' => $estudiante->primerApellido,
                     'segundoApellido' => $estudiante->segundoApellido,
-                    'rol' => $estudiante->rol,
                 ];
             }),
         ];
@@ -54,5 +52,37 @@ class EmpresaController extends Controller
 
         // Devolver los datos en formato JSON
         return response()->json($data);
+    }
+
+
+    // En el futuro debera filtrar por ID del docente !!!!!!!!
+    // formato aproximado:
+
+    // $empresas = Empresa::whereHas('docente', function($query) use ($idDocente) {
+    //     $query->where('idDocente', $idDocente);
+    // })->orderBy('nombreEmpresa', 'asc')->get();
+    
+    public function getListaEmpresas()
+    {
+        // esta formateado para buscar por orden alfabetico
+        $empresa = Empresa::orderBy('nombreEmpresa', 'asc')->get();
+
+        // Devolver error si no existe
+        if (!$empresa) {
+            return response()->json(['error' => 'Empresa no encontrada'], 404);
+        }
+
+        // Formatear xd
+        $data = $empresa->map(function ($empresa) {
+            return [
+                'idEmpresa' => $empresa->idEmpresa,
+                'nombreEmpresa' => $empresa->nombreEmpresa,
+                'nombreLargo' => $empresa->nombreLargo,
+            ];
+        });
+
+
+        //return response()->json($data);
+        return $data;
     }
 }
