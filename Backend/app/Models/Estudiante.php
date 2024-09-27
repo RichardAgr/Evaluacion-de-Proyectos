@@ -2,6 +2,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Estudiante extends Model
 {
@@ -11,8 +12,9 @@ class Estudiante extends Model
 
     public function grupos()
     {
-        return $this->belongsToMany(Grupo::class, 'estudiantes_grupos', 'idEstudiante', 'idGrupo');
+        return $this->belongsToMany(Grupo::class, 'estudiantesgrupos', 'idEstudiante', 'idGrupo');
     }
+
 }
 
     

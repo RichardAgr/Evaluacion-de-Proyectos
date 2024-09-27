@@ -18,6 +18,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 
 Route::get('/empresa/{id}', [EmpresaController::class, 'getEmpresaData']);
+Route::get('/docente/empresa/{idEmpresa}', [PlanificacionController::class, 'obtenerDocentePorEmpresa']);
+
 Route::get('/planificacion/{idEmpresa}', [PlanificacionController::class, 'show']);
 Route::get('/planificacionAceptadas', [PlanificacionController::class, 'planificacionAceptadas']);
 Route::get('/planificacionRechazadas', [PlanificacionController::class, 'planificacionRechazadas']);
@@ -31,4 +33,13 @@ Route::post('/planificacionGestion', [PlanificacionController::class, 'gestionar
 
 Route::get('/token', function () {
     return csrf_token(); 
+});
+
+Route::get('/test-db', function () {
+    try {
+        DB::connection()->getPdo();
+        return "Conexión exitosa a la base de datos: " . DB::connection()->getDatabaseName();
+    } catch (\Exception $e) {
+        return "No se pudo conectar a la base de datos. Error: " . $e->getMessage();
+    }
 });
