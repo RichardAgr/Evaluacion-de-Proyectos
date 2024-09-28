@@ -1,20 +1,12 @@
 import { Fragment, useState, useEffect } from 'react';
-import Footer from '../../../components/Footer/footer.jsx'
-import Header from '../../../components/Header/header.jsx'
-import ButtonBackAndTitle from '../../../components/buttonBackAndTitle/buttonBackAndTitle.jsx';
 import ComentarioNota from '../../../components/comentarioNota/comentarioNota.jsx';
 import { useParams } from 'react-router-dom';
 import EditarPlanificacion from '../../../components/editarTablaPlanificacion/editarTablaPlanificacion.jsx';
 import { getPlanificacion } from '../../../api/getPlanificacion.jsx';
 import { getNombreEmpresa } from '../../../api/getNombreEmpresa.jsx';
 import NombreEmpresa from '../../../components/infoEmpresa/nombreEmpresa.jsx'
+import BaseUI from '../../../components/baseUI/baseUI.jsx';
 function Planificacion() {
-  const [datosTitleBack] = useState(
-    {
-      titulo: 'MODIFICANDO PLANIFICACION',
-      ocultarAtras: true
-    }
-  );
   
   let { idEmpresa } = useParams();
   const [loading, setLoading] = useState(true);
@@ -44,36 +36,29 @@ function Planificacion() {
   if (error) return <p>Error: {error}</p>;
   return (
     <Fragment>
-      <Header></Header>
-        <div className='box'>
-            <div className='container'>
-              <ButtonBackAndTitle datosTitleBack={datosTitleBack}></ButtonBackAndTitle>
-              <div className='pageBorder'>
-              <div className='pageBorder_interior'>
-                <NombreEmpresa nombreLargo={datosEmpresa.nombreLargo} nombreCorto={datosEmpresa.nombreEmpresa}></NombreEmpresa>
-                {planificacionData != null?
-                  <>
-                      <EditarPlanificacion 
-                        planificacionData={planificacionData} 
-                        changeTable={ function goBack() {
-                          window.history.back();
-                        }}
-                        idEmpresa={planificacionData.idEmpresa}
-                      ></EditarPlanificacion>
-                    <ComentarioNota 
-                      comentario={planificacionData.comentarioDocente} 
-                      nota = {planificacionData.notaPlanificacion} 
-                      linkDir={ 'ocultar' }
-                    ></ComentarioNota>
-                    </>
-                  :
-                  <h1>CARGANDO...</h1>
-                }
-                </div>
-              </div>
-            </div>
-        </div>  
-      <Footer></Footer>
+    <BaseUI
+      titulo = {'MODIFICANDO PLANIFICACION'}
+      ocultarAtras = {false}
+      confirmarAtras = {true}
+      dirBack = {'/'}
+    >
+      <NombreEmpresa nombreLargo={datosEmpresa.nombreLargo} nombreCorto={datosEmpresa.nombreEmpresa}></NombreEmpresa>
+      {planificacionData != null?
+        <>
+            <EditarPlanificacion 
+              planificacionData={planificacionData} 
+              idEmpresa={planificacionData.idEmpresa}
+            ></EditarPlanificacion>
+          <ComentarioNota 
+            comentario={planificacionData.comentarioDocente || 'Sin Comentario Docente'} 
+            nota = {planificacionData.notaPlanificacion || 'Sin Calificar'} 
+            linkDir={ 'ocultar' }
+          ></ComentarioNota>
+          </>
+        :
+        <h1>CARGANDO...</h1>
+      }
+    </BaseUI>
     </Fragment>
   );
 }

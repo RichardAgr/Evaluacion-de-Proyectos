@@ -18,7 +18,7 @@ import PopUpDialog from '../popUPDialog/popUpDialog';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-export default function EditarPlanificacion({planificacionData, changeTable, idEmpresa}) {
+export default function EditarPlanificacion({planificacionData, idEmpresa}) {
   const [rows, setRows] = useState([]);
   const [openCancelDialog, setOpenCancelDialog] = useState(false);
   const [openAlert, setOpenAlert] = useState(false);
@@ -97,8 +97,6 @@ export default function EditarPlanificacion({planificacionData, changeTable, idE
         cobro: Number(row.cobro),
         fechaEntrega: row.fechaEntrega,
         entregables: row.entregables,
-        notasprint: null,
-        comentariodocente: null
       })),
     };
 
@@ -120,9 +118,9 @@ export default function EditarPlanificacion({planificacionData, changeTable, idE
       const responseData = await response.json();
       if (responseData.success) {
         console.log('Los datos se subieron correctamente.');
-        setOpenAlertS(false);
+        setOpenAlertS(true);
       }else{
-        setOpenAlertS(false);
+        setOpenAlertS(true);
       }
       console.log('Respuesta del servidor:', responseData);
     } catch (error) {
@@ -218,7 +216,7 @@ export default function EditarPlanificacion({planificacionData, changeTable, idE
       <PopUpDialog 
         openDialog= {openCancelDialog} 
         setOpenDialog= {setOpenCancelDialog}
-        especial = {changeTable}
+        especial={() => window.location.reload()}
         titleDialog={'¿Estás seguro de que quieres descartar los cambios?, esta accion te llevara atras'}
         textDialog={'Esta acción no se puede deshacer. Todos los cambios realizados se perderán.'}
       ></PopUpDialog>

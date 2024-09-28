@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
   Button,
@@ -13,10 +13,7 @@ import {
   CircularProgress,
   Typography,
 } from "@mui/material";
-import Header from "../../../components/Header/header.jsx";
-import Footer from "../../../components/Footer/footer.jsx";
-import BackButtonAndTitle from "../../../components/Buttons/BackButtonAndTitle.jsx";
-
+import BaseUI from "../../../components/baseUI/baseUI.jsx";
 import TablaPlanificacion from "../../../components/vistaTablaPlanificacion/vistaTablaPlanificacion.jsx";
 import { getEmpresaData } from "../../../api/getEmpresa.jsx";
 import { getPlanificacion } from "../../../api/getPlanificacion.jsx";
@@ -126,54 +123,39 @@ function ValidarPlanificacion() {
   if (planificacionData.aceptada) {
     return (
       <Fragment>
-        <Header />
-        <Box className="box">
-          <Box className="container">
-            <BackButtonAndTitle title="Validar Planificacion" />
+        <BaseUI
+                titulo = {'VALIDAR PLANIFICACION'}
+                ocultarAtras = {false}
+                confirmarAtras = {false}
+                dirBack = {'/'}
+        >
             <Box
-              className="pageBorder"
               sx={{
                 display: "flex",
+                height:'100%',
+                width:'100%',
                 flexDirection: "column",
-                padding: 3,
-                minHeight: "calc(74vh)",
-                border: "0.3rem solid black",
-                borderRadius: "0.3rem",
-                marginBottom: "1rem",
                 justifyContent: "center",
-                alignItems: "center",
+                alignItems: 'center'
               }}
             >
               <Typography variant="h5">
                 Esta planificación ya ha sido validada.
               </Typography>
             </Box>
-          </Box>
-        </Box>
-        <Footer />
+        </BaseUI>
       </Fragment>
     );
   }
 
   return (
     <Fragment>
-      <Header />
-
-      <Box className="box">
-        <Box className="container">
-          <BackButtonAndTitle title="Validar Planificación" />
-          <Box
-            className="pageBorder"
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              padding: 3,
-              minHeight: "calc(74vh)",
-              border: "0.3rem solid black",
-              borderRadius: "0.3rem",
-              marginBottom: "1rem",
-            }}
-          >
+        <BaseUI
+          titulo = {'VALIDAR PLANIFICACION'}
+          ocultarAtras = {false}
+          confirmarAtras = {true}
+          dirBack = {'/'}
+        >
             <TablaPlanificacion sprints={planificacionData.sprints} />
             <TextField
               label="Comentarios para el grupo"
@@ -237,9 +219,7 @@ function ValidarPlanificacion() {
                 Rechazar Planificación
               </Button>
             </Box>
-          </Box>
-        </Box>
-      </Box>
+
 
       <Dialog
         open={openValidateDialog}
@@ -287,8 +267,7 @@ function ValidarPlanificacion() {
         onClose={() => setSnackbar({ ...snackbar, open: false })}
         message={snackbar.message}
       />
-
-      <Footer />
+    </BaseUI>
     </Fragment>
   );
 }
