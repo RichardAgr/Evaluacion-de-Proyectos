@@ -1,7 +1,4 @@
 import { Fragment, useEffect, useState } from 'react';
-import Header from '../../../../components/Header/header';
-import Footer from '../../../../components/Footer/footer';
-import ButtonBackAndTitle from '../../../../components/buttonBackAndTitle/buttonBackAndTitle';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -11,6 +8,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { getPlanificacionesAceptadas } from '../../../../api/getPlanificacionesAceptadas';
 import { useNavigate } from 'react-router-dom';
+import BaseUI from '../../../../components/baseUI/baseUI';
 
 function ListaVerPlanificacion() {
     const [loading, setLoading] = useState(true);
@@ -43,51 +41,46 @@ function ListaVerPlanificacion() {
 
     return (
         <Fragment>
-            <Header />
-            <div className='box'>
-                <div className='container'>
-                    <ButtonBackAndTitle 
-                        datosTitleBack={{ ocultarAtras: false, titulo: 'VER PLANIFICACIONES DE DESAROLLO' }} 
-                    />
-                    <div className='pageBorder'>
-                        <div className='pageBorder_interior'>
-                            <TableContainer component={Paper}>
-                                <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                                    <TableHead>
-                                        <TableRow>
-                                            <TableCell align="left">Nombre Empresa</TableCell>
-                                            <TableCell align="left">Nombre Largo</TableCell>
-                                        </TableRow>
-                                    </TableHead>
-                                    <TableBody>
-                                        {listaEmpresas.map((empresa) => (
-                                            <TableRow
-                                                key={empresa.idEmpresa}
-                                                sx={{
-                                                    cursor: 'pointer',
-                                                    '&:hover': {
-                                                        backgroundColor: '#e0e0e0'
-                                                    },
-                                                    '&:last-child td, &:last-child th': { border: 0 }
-                                                }}
-                                                onClick={() => handleRowClick(empresa.idEmpresa)}
-                                            >
-                                                <TableCell component="th" scope="row" align='left'>
-                                                    {empresa.nombreEmpresa}
-                                                </TableCell>
-                                                <TableCell align='left'>
-                                                    {empresa.nombreLargo}
-                                                </TableCell>
-                                            </TableRow>
-                                        ))}
-                                    </TableBody>
-                                </Table>
-                            </TableContainer>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <Footer />
+            <BaseUI
+                titulo = {'VER PLANIFICACIONES DE DESAROLLO'}
+                ocultarAtras = {false}
+                confirmacionAtras = {false}
+                dirBack = {'/'}
+            >
+            <TableContainer component={Paper}>
+                <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                    <TableHead>
+                        <TableRow>
+                            <TableCell align="left">Nombre Empresa</TableCell>
+                            <TableCell align="left">Nombre Largo</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {listaEmpresas.map((empresa) => (
+                            <TableRow
+                                key={empresa.idEmpresa}
+                                sx={{
+                                    cursor: 'pointer',
+                                    '&:hover': {
+                                        backgroundColor: '#e0e0e0'
+                                    },
+                                    '&:last-child td, &:last-child th': { border: 0 }
+                                }}
+                                onClick={() => handleRowClick(empresa.idEmpresa)}
+                            >
+                                <TableCell component="th" scope="row" align='left'>
+                                    {empresa.nombreEmpresa}
+                                </TableCell>
+                                <TableCell align='left'>
+                                    {empresa.nombreLargo}
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        
+            </BaseUI>
         </Fragment>
     );
 }
