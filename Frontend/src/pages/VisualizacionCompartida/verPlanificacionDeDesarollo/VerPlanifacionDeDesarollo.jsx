@@ -40,7 +40,7 @@ function PlanificacionDeDesarollo() {
       <BaseUI
         titulo = {'PLANIFICACION DE DESAROLLO'}
         ocultarAtras = {false}
-        confirmacionAtras = {false}
+        confirmarAtras = {false}
         dirBack = {'/'}
       >
         <InfoEmpresa nombreLargo= {empresaData.nombreLargo} nombreCorto = {empresaData.nombreEmpresa} integrantes={empresaData.integrantes}></InfoEmpresa>

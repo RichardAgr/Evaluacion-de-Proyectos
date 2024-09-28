@@ -124,7 +124,7 @@ function ValidarPlanificacion() {
         <BaseUI
                 titulo = {'VALIDAR PLANIFICACION'}
                 ocultarAtras = {false}
-                confirmacionAtras = {false}
+                confirmarAtras = {false}
                 dirBack = {'/'}
         >
             <Box
@@ -151,7 +151,7 @@ function ValidarPlanificacion() {
         <BaseUI
           titulo = {'VALIDAR PLANIFICACION'}
           ocultarAtras = {false}
-          confirmacionAtras = {false}
+          confirmarAtras = {true}
           dirBack = {'/'}
         >
             <TablaPlanificacion sprints={planificacionData.sprints} />

@@ -7,7 +7,7 @@ function ModificarTarea() {
       <BaseUI
         titulo={'PLANIFICACION DE DESARROLLO'}
         ocultarAtras={false}
-        confirmacionAtras={false}
+        confirmarAtras={false}
         dirBack={'/'}
       >
         <p>HOLA QUE TAL</p>

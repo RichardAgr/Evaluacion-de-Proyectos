@@ -8,7 +8,7 @@ function EmpresaListPage() {
       <BaseUI
         titulo = {'Lista de Grupo Empresas para Validar'}
         ocultarAtras = {false}
-        confirmacionAtras = {false}
+        confirmarAtras = {false}
         dirBack = {'/'}
       >
           <EmpresaList />

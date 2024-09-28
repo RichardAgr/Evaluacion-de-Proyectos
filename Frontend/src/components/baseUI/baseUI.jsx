@@ -4,7 +4,7 @@ import ButtonBackAndTitle from '../buttonBackAndTitle/buttonBackAndTitle.jsx';
 import Header from '../Header/header.jsx';
 import Footer from '../Footer/footer.jsx';
 
-function BaseUI({ children, titulo, ocultarAtras, confirmacionAtras, dirBack }) {
+function BaseUI({ children, titulo, ocultarAtras, confirmarAtras, dirBack }) {
   return (
     <Fragment>
       <Header />
@@ -13,7 +13,7 @@ function BaseUI({ children, titulo, ocultarAtras, confirmacionAtras, dirBack }) 
           <ButtonBackAndTitle
             titulo={titulo}
             ocultarAtras={ocultarAtras}
-            confirmacionAtras={confirmacionAtras}
+            confirmarAtras={confirmarAtras}
             dirBack={dirBack}
           />
           <div className='pageBorder'>
