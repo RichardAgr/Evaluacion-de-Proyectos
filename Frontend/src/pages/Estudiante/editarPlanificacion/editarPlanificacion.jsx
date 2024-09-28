@@ -9,12 +9,6 @@ import { getPlanificacion } from '../../../api/getPlanificacion.jsx';
 import { getNombreEmpresa } from '../../../api/getNombreEmpresa.jsx';
 import NombreEmpresa from '../../../components/infoEmpresa/nombreEmpresa.jsx'
 function Planificacion() {
-  const [datosTitleBack] = useState(
-    {
-      titulo: 'MODIFICANDO PLANIFICACION',
-      ocultarAtras: true
-    }
-  );
   
   let { idEmpresa } = useParams();
   const [loading, setLoading] = useState(true);
@@ -47,7 +41,12 @@ function Planificacion() {
       <Header></Header>
         <div className='box'>
             <div className='container'>
-              <ButtonBackAndTitle datosTitleBack={datosTitleBack}></ButtonBackAndTitle>
+              <ButtonBackAndTitle 
+                titulo = {'MODIFICANDO PLANIFICACION'}
+                ocultarAtras = {false}
+                confirmarAtras = {true}
+                dirBack = {'/'}
+              ></ButtonBackAndTitle>
               <div className='pageBorder'>
               <div className='pageBorder_interior'>
                 <NombreEmpresa nombreLargo={datosEmpresa.nombreLargo} nombreCorto={datosEmpresa.nombreEmpresa}></NombreEmpresa>
@@ -55,14 +54,11 @@ function Planificacion() {
                   <>
                       <EditarPlanificacion 
                         planificacionData={planificacionData} 
-                        changeTable={ function goBack() {
-                          window.history.back();
-                        }}
                         idEmpresa={planificacionData.idEmpresa}
                       ></EditarPlanificacion>
                     <ComentarioNota 
-                      comentario={planificacionData.comentarioDocente} 
-                      nota = {planificacionData.notaPlanificacion} 
+                      comentario={planificacionData.comentarioDocente || 'Sin Comentario Docente'} 
+                      nota = {planificacionData.notaPlanificacion || 'Sin Calificar'} 
                       linkDir={ 'ocultar' }
                     ></ComentarioNota>
                     </>

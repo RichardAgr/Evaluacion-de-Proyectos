@@ -45,10 +45,12 @@ function PlanificacionDeDesarollo() {
       <Header></Header>
       <div className='box'>
         <div className='container'>
-          <ButtonBackAndTitle 
-            datosTitleBack={{ocultarAtras: false, titulo: 'PLANIFICACION DE DESAROLLO'}}
-          >
-          </ButtonBackAndTitle>
+        <ButtonBackAndTitle 
+            titulo = {'PLANIFICACION DE DESAROLLO'}
+            ocultarAtras = {false}
+            confirmacionAtras = {false}
+            dirBack = {'/'}
+        ></ButtonBackAndTitle>
           <div className='pageBorder'>
             <div className='pageBorder_interior'>
               <InfoEmpresa nombreLargo= {empresaData.nombreLargo} nombreCorto = {empresaData.nombreEmpresa} integrantes={empresaData.integrantes}></InfoEmpresa>
