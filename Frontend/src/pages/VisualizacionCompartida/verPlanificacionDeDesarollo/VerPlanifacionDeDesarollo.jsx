@@ -1,16 +1,12 @@
-
-
 import { Fragment, useEffect } from 'react';
 import { useState } from 'react';
 import { useParams} from "react-router-dom";
-import Header from '../../../components/Header/header.jsx';
-import Footer from '../../../components/Footer/footer.jsx';
 import InfoEmpresa from '../../../components/infoEmpresa/infoEmpresa.jsx'
 import TablaNotasPlanificacion from '../../../components/tablaPlanificacionNotas/tablaPlanificacionNotas.jsx';
 import TablaPlanificacion from '../../../components/tablaPlanificacionDeDesarollo/tablaPlanificacion.jsx';
 import { getEmpresaData } from '../../../api/getEmpresa.jsx';
 import { getPlanificacion} from '../../../api/getPlanificacion.jsx'
-import ButtonBackAndTitle from '../../../components/buttonBackAndTitle/buttonBackAndTitle.jsx';
+import BaseUI from '../../../components/baseUI/baseUI.jsx';
 function PlanificacionDeDesarollo() {
   
   
@@ -42,35 +38,26 @@ function PlanificacionDeDesarollo() {
   if (error) return <p>Error: {error}</p>;
   return (
     <Fragment>
-      <Header></Header>
-      <div className='box'>
-        <div className='container'>
-        <ButtonBackAndTitle 
-            titulo = {'PLANIFICACION DE DESAROLLO'}
-            ocultarAtras = {false}
-            confirmacionAtras = {false}
-            dirBack = {'/'}
-        ></ButtonBackAndTitle>
-          <div className='pageBorder'>
-            <div className='pageBorder_interior'>
-              <InfoEmpresa nombreLargo= {empresaData.nombreLargo} nombreCorto = {empresaData.nombreEmpresa} integrantes={empresaData.integrantes}></InfoEmpresa>
-              {!planificacionData.aceptada?
-                <div className='divContainerPlani'>
-                  <h1>TODAVIA NO SE FUE ACEPTADA</h1>
-                </div>
-              :
-                  <TablaPlanificacion sprints = {planificacionData.sprints} ocultarBotones = {true}></TablaPlanificacion>
-              }
-              <TablaNotasPlanificacion 
-                numeroDeFaltas={empresaData.numeroDeFaltas} 
-                sprints={planificacionData.sprints}
-                notaProductoFinal= {empresaData.notaProductoFinal}
-              ></TablaNotasPlanificacion>
-            </div>
+      <BaseUI
+        titulo = {'PLANIFICACION DE DESAROLLO'}
+        ocultarAtras = {false}
+        confirmacionAtras = {false}
+        dirBack = {'/'}
+      >
+        <InfoEmpresa nombreLargo= {empresaData.nombreLargo} nombreCorto = {empresaData.nombreEmpresa} integrantes={empresaData.integrantes}></InfoEmpresa>
+        {!planificacionData.aceptada?
+          <div className='divContainerPlani'>
+            <h1>TODAVIA NO SE FUE ACEPTADA</h1>
           </div>
-        </div>
-      </div>
-      <Footer></Footer>
+        :
+            <TablaPlanificacion sprints = {planificacionData.sprints} ocultarBotones = {true}></TablaPlanificacion>
+        }
+        <TablaNotasPlanificacion 
+          numeroDeFaltas={empresaData.numeroDeFaltas} 
+          sprints={planificacionData.sprints}
+          notaProductoFinal= {empresaData.notaProductoFinal}
+        ></TablaNotasPlanificacion>
+      </BaseUI> 
     </Fragment>
   );
 }
