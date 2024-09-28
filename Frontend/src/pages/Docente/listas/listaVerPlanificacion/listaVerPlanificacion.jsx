@@ -44,7 +44,7 @@ function ListaVerPlanificacion() {
             <BaseUI
                 titulo = {'VER PLANIFICACIONES DE DESAROLLO'}
                 ocultarAtras = {false}
-                confirmacionAtras = {false}
+                confirmarAtras = {false}
                 dirBack = {'/'}
             >
             <TableContainer component={Paper}>
