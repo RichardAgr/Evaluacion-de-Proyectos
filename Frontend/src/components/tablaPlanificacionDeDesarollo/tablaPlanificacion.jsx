@@ -13,9 +13,6 @@ function tablaPlanificacion({sprints, ocultarBotones}) {
   const mes = fechaActual.getMonth() + 1; // Mes (0-11, por eso se suma 1 para que sea 1-12)
   const anio = fechaActual.getFullYear(); // Año
   
-
-  console.log(`${dia}/${mes}/${anio}`);   // Imprime la fecha en formato DD/MM/YYYY
-
   return (
     <Fragment>
       <TableContainer component={Paper}>

@@ -1,5 +1,4 @@
 
-
 import { Fragment, useEffect } from 'react';
 import { useState } from 'react';
 import { useParams} from "react-router-dom";
@@ -12,7 +11,6 @@ import { getEmpresaData } from '../../../api/getEmpresa.jsx';
 import { getPlanificacion} from '../../../api/getPlanificacion.jsx'
 import ButtonBackAndTitle from '../../../components/buttonBackAndTitle/buttonBackAndTitle.jsx';
 function PlanificacionDeDesarollo() {
-  
   
   const [empresaData, setEmpresaData] = useState(null);
   let { idEmpresa } = useParams();
@@ -65,7 +63,7 @@ function PlanificacionDeDesarollo() {
                 notaProductoFinal= {empresaData.notaProductoFinal}
               ></TablaNotasPlanificacion>
             </div>
-          </div>
+            </div>
         </div>
       </div>
       <Footer></Footer>
