@@ -17,7 +17,7 @@ import Header from "../../../components/Header/header.jsx";
 import Footer from "../../../components/Footer/footer.jsx";
 import BackButtonAndTitle from "../../../components/Buttons/BackButtonAndTitle.jsx";
 
-import TablaPlanificacion from "../../../components/tablaPlanificacionDeDesarollo/tablaPlanificacion.jsx";
+import TablaPlanificacion from "../../../components/vistaTablaPlanificacion/vistaTablaPlanificacion.jsx";
 import { getEmpresaData } from "../../../api/getEmpresa.jsx";
 import { getPlanificacion } from "../../../api/getPlanificacion.jsx";
 import { validar } from "../../../api/validarPlanificacion/validar.jsx";

@@ -12,7 +12,7 @@ function EmpresaListPage() {
       <Header />
       <Box className="box">
         <Box className="container">
-          <BackButtonAndTitle title="Lista de Grupo Empresas" />
+          <BackButtonAndTitle title="Lista de Grupo Empresas para Validar" />
           <EmpresaList />
         </Box>
       </Box>
