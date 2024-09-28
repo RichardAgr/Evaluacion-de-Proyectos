@@ -8,8 +8,8 @@ class Docente extends Model
 {
     use HasFactory;
 
-    protected $table = 'Docente'; // Nombre de la tabla en la base de datos
-
+    protected $table = 'docente'; // Nombre de la tabla en la base de datos
+    protected $primaryKey = 'idDocente';
     protected $fillable = [
         'nombreCuenta',
         'nombreDocente',
