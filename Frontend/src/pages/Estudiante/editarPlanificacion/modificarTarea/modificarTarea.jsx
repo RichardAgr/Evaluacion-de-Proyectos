@@ -1,5 +1,5 @@
 import { Fragment } from 'react';
-import BaseUI from '../../../components/baseUI/baseUI';
+import BaseUI from '../../../../components/baseUI/baseUI';
 
 function ModificarTarea() {
   return (
