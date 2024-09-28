@@ -1,5 +1,6 @@
 import {Routes, Route} from 'react-router-dom';
 //import Home from '../../pages/Home/home.jsx';
+import VerPlanficacionDeDesarollo from '../../pages/VisualizacionCompartida/verPlanificacionDeDesarollo/VerPlanifacionDeDesarollo.jsx'
 
 import HomeDocente from '../../pages/Docente/homeDocente/homeDocente.jsx'
 import HomeGrupoDocente from '../../pages/Docente/homeGrupoDocente/homeGrupoDocente.jsx'
@@ -7,7 +8,7 @@ import ListaVerPlanificacion from '../../pages/Docente/listas/listaVerPlanificac
 
 import HomeEstudiante from '../../pages/Estudiante/homeEstudiante/homeEstudiante.jsx'
 import HomeGrupoEstudiante from '../../pages/Estudiante/homeGrupoEstudiante/homeGrupoEstudiante.jsx'
-import VerPlanficacionDeDesarollo from '../../pages/VisualizacionCompartida/verPlanificacionDeDesarollo/VerPlanifacionDeDesarollo.jsx ';
+
 import EditarPlanificacion from '../../pages/Estudiante/editarPlanificacion/editarPlanificacion.jsx';
 import ModificarTarea from '../../pages/Estudiante/modificarTarea/modificarTarea.jsx';
 function Nav() {
