@@ -9,6 +9,7 @@ use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Http;
+use App\Models\Planificacion;
 
 class RevisionPlaniController extends Controller
 {
@@ -17,7 +18,7 @@ class RevisionPlaniController extends Controller
         try {
             // validar datos
             $validator = Validator::make($request->all(), [
-                'idPlanificacion' => 'required|integer',
+                'idEmpresa' => 'required|integer',
                 'nota' => 'nullable|numeric|min:0|max:100',
                 'comentario' => 'nullable|string',
                 'idDocente' => 'required|integer',
@@ -31,21 +32,27 @@ class RevisionPlaniController extends Controller
             $validatedData = $validator->validated();
 
             try {
+                //obtener el idPlanificacion en base al idEmpresa
+                $requestPlani = new Request();
+                $requestPlani->merge(['idEmpresa' => $validatedData['idEmpresa']]);
+
+                $response = $this->getIdPlanificacion($requestPlani);
+                $idPlanificacion = $response->original['idPlanificacion'];
                 //ver si ya existe una revision de la misma planificacion
                 $exists = DB::table('revisionplani')
-                    ->where('idPlanificacion', $validatedData['idPlanificacion'])
+                    ->where('idPlanificacion', $idPlanificacion)
                     ->where('idDocente', $validatedData['idDocente'])
                     ->exists();
                 //si existe, eliminarla
                 if ($exists != null) {
                     DB::table('revisionplani')
-                        ->where('idPlanificacion', $validatedData['idPlanificacion'])
+                        ->where('idPlanificacion', $idPlanificacion)
                         ->where('idDocente', $validatedData['idDocente'])
                         ->delete();
                 }
                 // crear y añadir datos a una nueva revision
                 $revisionPlani =  new RevisionPlani();
-                $revisionPlani->idPlanificacion = $validatedData['idPlanificacion'];
+                $revisionPlani->idPlanificacion = $idPlanificacion;
                 $revisionPlani->nota = $validatedData['nota'] ?? null;
                 $revisionPlani->comentario = $validatedData['comentario'] ?? null;
                 $revisionPlani->idDocente = $validatedData['idDocente'];
@@ -69,27 +76,18 @@ class RevisionPlaniController extends Controller
             ], 500);
         }
     }
-    public function testAdd()
+    public function getIdPlanificacion(Request $request)
     {
-        try {
-            // Datos de prueba
-            $data = [
-                'idPlanificacion' => 1,   // ID de planificación ficticio
-                'nota' => 123,            // Nota ficticia
-                'comentario' => 'muy bien', // Comentario de prueba
-                'idDocente' => 2          // ID de docente ficticio
-            ];
-
-            // Simular una petición usando la función store
-            $response = $this->addRevision(new Request($data));
-
-            // Devolver la respuesta de la prueba
-            return $response;
-        } catch (Exception $e) {
-            return response()->json([
-                'message' => 'Hubo un error en la prueba de la funcionalidad.',
-                'error' => $e->getMessage()
-            ], 500);
+        //validar datos
+        $validatedData = $request->validate([
+            'idEmpresa' => 'required|integer',
+        ]);
+        //buscar la planificacion con ese  idEmpresa
+        $planificacion = Planificacion::where('idEmpresa', $validatedData['idEmpresa'])->first();
+        if ($planificacion == null) {
+            return response()->json(['error' => 'Planificación no encontrada para esta empresa'], 404);
+        } else {
+            return response()->json(['idPlanificacion' => $planificacion->idPlanificacion]);
         }
     }
 }

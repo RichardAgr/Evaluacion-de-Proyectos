@@ -70,8 +70,7 @@ function ValidarPlanificacion() {
   const confirmValidate = async () => {
     setOpenValidateDialog(false);
     try {
-      const validarResponse = await validar(idEmpresa);
-      setSnackbar({ open: true, message: validarResponse.message });
+      console.log(idEmpresa);
       const revisionResult = await addRevision(
         idEmpresa,
         nota,
@@ -79,6 +78,9 @@ function ValidarPlanificacion() {
         2
       );
       setSnackbar({ open: true, message: revisionResult.message });
+      const validarResponse = await validar(idEmpresa);
+      setSnackbar({ open: true, message: validarResponse.message });
+
       setPlanificacionData((prevState) => ({ ...prevState, aceptada: true }));
     } catch (error) {
       console.error("Error:", error);

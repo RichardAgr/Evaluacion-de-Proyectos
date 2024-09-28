@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\PlanificacionController;
 use App\Http\Controllers\RevisionPlaniController;
+use App\Models\RevisionPlani;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,6 +32,9 @@ Route::get('/planificacion/{idEmpresa}', [PlanificacionController::class, 'show'
 //jhair
 Route::put('/validar', [PlanificacionController::class, 'validar']);
 Route::post('/addRevision', [RevisionPlaniController::class, 'addRevision']);
+
+//testValidar
+Route::put('/prueba2', [RevisionPlaniController::class, 'testValidar']);
 
 //jhon
 Route::get('/planificacion/notaComentario/{idPlanificacion}', [PlanificacionController::class, 'notaComentario']);

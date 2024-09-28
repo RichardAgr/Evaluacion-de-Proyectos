@@ -1,7 +1,7 @@
 
-export const addRevision = async (idPlanificacion, nota, comentario, idDocente) => {
+export const addRevision = async (idEmpresa, nota, comentario, idDocente) => {
     const data = {
-      idPlanificacion,
+      idEmpresa,
       nota,
       comentario,
       idDocente,
@@ -18,7 +18,7 @@ export const addRevision = async (idPlanificacion, nota, comentario, idDocente) 
   
   
     if (!response.ok) {
-      throw new Error(result.message || "Error al procesar la solicitud.");
+      throw new Error(response.message );
     }
   
     return await response.json();;
