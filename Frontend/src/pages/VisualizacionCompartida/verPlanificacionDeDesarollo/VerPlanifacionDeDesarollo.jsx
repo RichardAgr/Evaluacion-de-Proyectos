@@ -9,7 +9,6 @@ import { getPlanificacion} from '../../../api/getPlanificacion.jsx'
 import BaseUI from '../../../components/baseUI/baseUI.jsx';
 function PlanificacionDeDesarollo() {
   
-  
   const [empresaData, setEmpresaData] = useState(null);
   let { idEmpresa } = useParams();
   const [loading, setLoading] = useState(true);
