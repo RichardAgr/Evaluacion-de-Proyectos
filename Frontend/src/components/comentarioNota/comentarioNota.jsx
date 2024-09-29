@@ -1,5 +1,5 @@
+/* eslint-disable react/prop-types */
 import { Fragment } from 'react';
-import PropTypes from 'prop-types';
 import Button from '@mui/material/Button';
 import { Link } from 'react-router-dom';
 function ComentarioNota({ comentario, nota, linkDir }) {
@@ -44,14 +44,5 @@ function ComentarioNota({ comentario, nota, linkDir }) {
     </Fragment>
   );
 }
-
-// Validación de props usando PropTypes
-ComentarioNota.propTypes = {
-  comentario: PropTypes.string.isRequired, // comentario debe ser string y es requerido
-  nota: PropTypes.oneOfType([
-    PropTypes.number,
-    PropTypes.string
-  ]).isRequired, // nota puede ser number o string, pero es requerido
-};
 
 export default ComentarioNota;

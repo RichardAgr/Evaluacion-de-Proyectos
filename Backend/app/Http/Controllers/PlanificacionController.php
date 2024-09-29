@@ -1,17 +1,15 @@
 <?php
+
 namespace App\Http\Controllers;
 
-
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request; // Asegúrate de importar la clase Request
 use Illuminate\Http\JsonResponse; // Para las respuestas JSON
 use App\Models\Planificacion; // Importa tu modelo Planificacion
 use App\Models\Sprint; // Importa tu modelo Sprint
 use App\Models\Empresa; // Asegúrate de importar el modelo Empresa
-use App\Models\EstudiantesEmpresas;
-use App\Models\Grupo;
-use App\Models\Docente;
-use Illuminate\Support\Facades\DB;
+use Exception;
 
 class PlanificacionController extends Controller
 {
@@ -128,7 +126,7 @@ class PlanificacionController extends Controller
                     'fechaEntrega' => $sprint->fechaEntrega,
                     'entregables' => $sprint->entregables,
                     'notasprint' => $sprint->notasprint,
-                    'comentariodocente' => $sprint -> comentariodocente
+                    'comentariodocente' => $sprint->comentariodocente
                 ];
             })->toArray()
         ];
@@ -136,14 +134,15 @@ class PlanificacionController extends Controller
         // Retornar la respuesta JSON
         return response()->json($data);
     }
-    public function notaComentario($idPlanificacion): JsonResponse{
+    public function notaComentario($idPlanificacion): JsonResponse
+    {
         $planificacion = Planificacion::find($idPlanificacion);
-            
+
         if (!$planificacion) {
             return response()->json(['error' => 'Planificación no encontrada para esta empresa'], 404);
         }
 
- 
+
         $data = [
 
             'notaplanificacion' => $planificacion->notaplanificacion ?? null,
@@ -154,6 +153,38 @@ class PlanificacionController extends Controller
         // Retornar la respuesta JSON
         return response()->json($data);
     }
+
+
+
+    public function validar(Request $request)
+    {
+        $validatedData = $request->validate([
+            'idPlanificacion' => 'required|integer',
+        ]);
+        try {
+            $planificacion = Planificacion::findOrFail($validatedData['idPlanificacion']);
+
+            // if (!$planificacion) {
+            //     return response()->json(['error' => 'Planificación no encontrada para esta empresa'], 404);
+            // } else {
+            $planificacion->aceptada = 1;
+            $planificacion->save();
+            // }
+
+            return response()->json([
+                'message' => 'Planificación aceptada con éxito',
+                'planificacion' => $planificacion
+            ]);
+        } catch (Exception $e) {
+            // devolver error
+            return response()->json([
+                'message' => 'Hubo un error al procesar la solicitud.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+   
+
 
     public function crearPlanificacion(Request $request): JsonResponse
     {

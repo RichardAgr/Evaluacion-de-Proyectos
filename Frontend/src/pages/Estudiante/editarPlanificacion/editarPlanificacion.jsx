@@ -1,58 +1,28 @@
 import { Fragment, useState, useEffect } from 'react';
-import Footer from '../../../components/Footer/footer.jsx'
-import Header from '../../../components/Header/header.jsx'
-import ButtonBackAndTitle from '../../../components/buttonBackAndTitle/buttonBackAndTitle.jsx';
 import ComentarioNota from '../../../components/comentarioNota/comentarioNota.jsx';
 import { useParams } from 'react-router-dom';
-import VistaTablaPlanificacion from '../../../components/vistaTablaPlanificacion/vistaTablaPlanificacion.jsx';
-import { Button } from '@mui/material';
 import EditarPlanificacion from '../../../components/editarTablaPlanificacion/editarTablaPlanificacion.jsx';
-import InfoEmpresa from '../../../components/infoEmpresa/infoEmpresa.jsx';
-import { getEmpresaData } from '../../../api/getEmpresa.jsx';
-import { getPlanificacion} from '../../../api/getPlanificacion.jsx';
+import { getPlanificacion } from '../../../api/getPlanificacion.jsx';
+import { getNombreEmpresa } from '../../../api/getNombreEmpresa.jsx';
+import NombreEmpresa from '../../../components/infoEmpresa/nombreEmpresa.jsx'
+import BaseUI from '../../../components/baseUI/baseUI.jsx';
 function Planificacion() {
-  let [change, setChange] = useState(false);
-  const [datosTitleBack, setDatosTitleBack] = useState(
-    {
-      titulo: 'Planificacion',
-      ocultarAtras: false
-    }
-  );
-  function changeTable(){
-    setChange(!change)
-    if(!datosTitleBack.ocultarAtras){
-      setDatosTitleBack(
-        {
-          titulo: 'Editando Planificacion',
-          ocultarAtras: true
-        } 
-      );
-    }else{
-      setDatosTitleBack(
-        {
-          titulo: 'Planificacion',
-          ocultarAtras: false
-        } 
-      );
-    }
-  }
   
-  
-  const [empresaData, setEmpresaData] = useState(null);
   let { idEmpresa } = useParams();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [planificacionData, setPlanificacionData] = useState()
-
+  const [datosEmpresa, setDatosEmpresa]= useState();
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [empresa, planificacion] = await Promise.all([
-          getEmpresaData(idEmpresa),
+        const [planificacion,nombreEmpresa] = await Promise.all([
           getPlanificacion(idEmpresa),
+          getNombreEmpresa(idEmpresa),
         ]);
-        setEmpresaData(empresa);
         setPlanificacionData(planificacion);
+        setDatosEmpresa(nombreEmpresa);
+        
       } catch (error) {
         console.error('Error en la solicitud:', error.message);
         setError(`Error en la solicitud: ${error.message}`);
@@ -66,48 +36,29 @@ function Planificacion() {
   if (error) return <p>Error: {error}</p>;
   return (
     <Fragment>
-      <Header></Header>
-        <div className='box'>
-            <div className='container'>
-              <ButtonBackAndTitle datosTitleBack={datosTitleBack}></ButtonBackAndTitle>
-              <div className='pageBorder'>
-              <div className='pageBorder_interior'>
-                <InfoEmpresa nombreLargo= {empresaData.nombreLargo} nombreCorto = {empresaData.nombreEmpresa} integrantes={empresaData.integrantes}></InfoEmpresa>
-                {planificacionData != null?
-                  <>
-                    {change?
-                      <EditarPlanificacion 
-                        planificacionData={planificacionData} 
-                        changeTable={changeTable}
-                        idEmpresa={planificacionData.idEmpresa}
-                      ></EditarPlanificacion>
-                      :
-                      <>
-                        <VistaTablaPlanificacion sprints={planificacionData.sprints}></VistaTablaPlanificacion>        
-                        {planificacionData.aceptada?
-                          <></>
-                          :
-                          <div className='buttonIzq'>
-                            <Button variant='contained'onClick={changeTable} >Editar</Button>
-                          </div>
-                          
-                        }
-                      </>
-                    }
-                    <ComentarioNota 
-                      comentario={planificacionData.comentarioDocente} 
-                      nota = {planificacionData.notaPlanificacion} 
-                      linkDir={ 'ocultar' }
-                    ></ComentarioNota>
-                    </>
-                  :
-                  <h1>CARGANDO...</h1>
-                }
-                </div>
-              </div>
-            </div>
-        </div>  
-      <Footer></Footer>
+    <BaseUI
+      titulo = {'MODIFICANDO PLANIFICACION'}
+      ocultarAtras = {false}
+      confirmarAtras = {true}
+      dirBack = {'/'}
+    >
+      <NombreEmpresa nombreLargo={datosEmpresa.nombreLargo} nombreCorto={datosEmpresa.nombreEmpresa}></NombreEmpresa>
+      {planificacionData != null?
+        <>
+            <EditarPlanificacion 
+              planificacionData={planificacionData} 
+              idEmpresa={planificacionData.idEmpresa}
+            ></EditarPlanificacion>
+          <ComentarioNota 
+            comentario={planificacionData.comentarioDocente || 'Sin Comentario Docente'} 
+            nota = {planificacionData.notaPlanificacion || 'Sin Calificar'} 
+            linkDir={ 'ocultar' }
+          ></ComentarioNota>
+          </>
+        :
+        <h1>CARGANDO...</h1>
+      }
+    </BaseUI>
     </Fragment>
   );
 }
