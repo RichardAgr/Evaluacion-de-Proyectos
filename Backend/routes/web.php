@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\PlanificacionController;
 use App\Http\Controllers\RevisionPlaniController;
+use App\Models\RevisionPlani;
 
 Route::get('/', function () {
     return view('welcome');
@@ -37,7 +38,7 @@ Route::put('/modificarValidar', [RevisionPlaniController::class, 'addRevision'])
 //anade o sobreescribe una revision
 Route::get('/prueba', [RevisionPlaniController::class, 'testAdd']);
 //test para verificar si la funcion Validar funciona correctamente
-Route::get('/prueba2', [PlanificacionController::class, 'testValidar']);
+Route::get('/prueba2', [RevisionPlaniController::class, 'testValidar']);
 
 Route::get('/token', function () {
     return csrf_token();
