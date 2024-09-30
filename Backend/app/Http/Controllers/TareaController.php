@@ -76,11 +76,40 @@ class TareaController extends Controller
             'idSemana' => $tarea->idSemana,
             'comentario' => $tarea->comentario,
             'textotarea' => $tarea->textoTarea,
-            'fechentregado' => $tarea->fechaEntrega,
+            'fechaentregado' => $tarea->fechaEntrega,
             'estudiantes' => $estudiantes,
             'archivotarea' => $archivosArray,
         ];
 
         return response()->json($respuesta);
     }
+    public function calificarTarea(Request $request, $idTarea)
+    {
+        // Validar la entrada
+        $request->validate([
+            'nota' => 'nullable|integer', // La nota puede ser un , aenterojusta según tus necesidades
+            'comentario_docente' => 'required|string',
+        ]);
+    
+        // Obtener la tarea específica
+        $tarea = Tarea::find($idTarea);
+    
+        // Verificar si la tarea existe
+        if (!$tarea) {
+            return response()->json(['error' => 'Tarea no encontrada'], 404);
+        }
+    
+        // Actualizar el comentario de la tarea
+        $tarea->comentario = $request->comentario_docente;
+    
+        // Aquí puedes agregar la lógica para la nota cuando esté implementada
+        // $tarea->nota = $request->nota; // Descomentar cuando la columna 'nota' esté disponible
+    
+        // Guardar los cambios en la base de datos
+        $tarea->save();
+    
+        // Devolver una respuesta
+        return response()->json(['message' => 'Tarea calificada con éxito', 'tarea' => $tarea]);
+    }
+    
 }

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\PlanificacionController;
 use App\Http\Controllers\RevisionPlaniController;
+use App\Http\Controllers\TareaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,8 +44,13 @@ Route::get('/tarea/{idTarea}', [TareaController::class, 'obtenerTarea']);
 Route::get('/docente/empresa/{idEmpresa}', [PlanificacionController::class, 'obtenerDocentePorEmpresa']);
 
 /**
- * TODOS LOS POST VAN ACA
+ * TODOS LOS POST VAN 
+ *
  */
 //Para crear la planificacion o modificarla
 Route::post('/planificacion/guardar', [PlanificacionController::class, 'crearPlanificacion']);
+
+//Para calificar una tarea
+Route::post('/tarea/{idTarea}/calificar', [TareaController::class, 'calificarTarea']);
+
 
