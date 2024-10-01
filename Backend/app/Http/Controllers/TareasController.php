@@ -7,9 +7,9 @@ use App\Models\Tarea;
 use App\Models\Estudiante;
 use App\Models\ArchivoTarea;
 
-class Tarea2Controller extends Controller
+class TareasController extends Controller
 {
-    public function obtenerTarea($idTarea)
+    public function obtenerTarea2($idTarea)
     {
         // Obtener la tarea específica
         $tarea = DB::table('tarea')

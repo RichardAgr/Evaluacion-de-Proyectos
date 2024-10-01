@@ -34,7 +34,7 @@ Route::get('/planificacionAceptadas', [PlanificacionController::class, 'planific
 Route::get('/planificacionRechazadas', [PlanificacionController::class, 'planificacionRechazadas']);
 Route::get('/tarea/{idTarea}', [TareaController::class, 'obtenerTarea']);
 Route::get('/docente/empresa/{idEmpresa}', [PlanificacionController::class, 'obtenerDocentePorEmpresa']);
-Route::get('/tareaFor/{idTarea}', [TareaController::class, 'obtenerTarea']);
+Route::get('/tareaFor/{idTarea}', [TareasController::class, 'obtenerTarea2']);
 /**
  * TODOS LOS POST VAN ACA
  */
