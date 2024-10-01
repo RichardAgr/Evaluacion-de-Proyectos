@@ -9,6 +9,7 @@ import Paper from '@mui/material/Paper';
 import { getPlanificacionesAceptadas } from '../../../../api/getPlanificacionesAceptadas';
 import { useNavigate } from 'react-router-dom';
 import BaseUI from '../../../../components/baseUI/baseUI';
+import { Box,CircularProgress } from '@mui/material';
 
 function ListaVerPlanificacion() {
     const [loading, setLoading] = useState(true);
@@ -32,7 +33,22 @@ function ListaVerPlanificacion() {
         fetchData();
     }, []);
 
-    if (loading) return <p>Cargando datos...</p>;
+    
+  if (loading) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100%",
+          minHeight: "200px",
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
     if (error) return <p>Error: {error}</p>;
 
     const handleRowClick = (idEmpresa) => {

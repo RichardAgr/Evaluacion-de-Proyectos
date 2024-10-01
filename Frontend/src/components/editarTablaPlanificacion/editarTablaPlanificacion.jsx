@@ -141,7 +141,7 @@ export default function EditarPlanificacion({planificacionData, idEmpresa}) {
   };
   return (
     <Fragment>
-      <Box sx={{ padding: 3 }}>
+      <Box >
         <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="tabla de planificación">
             <TableHead>

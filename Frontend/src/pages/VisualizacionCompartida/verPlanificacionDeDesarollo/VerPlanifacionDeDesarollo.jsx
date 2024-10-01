@@ -7,6 +7,7 @@ import TablaPlanificacion from '../../../components/tablaPlanificacionDeDesaroll
 import { getEmpresaData } from '../../../api/getEmpresa.jsx';
 import { getPlanificacion} from '../../../api/getPlanificacion.jsx'
 import BaseUI from '../../../components/baseUI/baseUI.jsx';
+import { Box,CircularProgress } from '@mui/material';
 function PlanificacionDeDesarollo() {
   
   const [empresaData, setEmpresaData] = useState(null);
@@ -14,6 +15,8 @@ function PlanificacionDeDesarollo() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [planificacionData, setPlanificacionData] = useState({aceptada:false})
+  const path = window.location.pathname;
+  console.log(path);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -33,7 +36,22 @@ function PlanificacionDeDesarollo() {
     };
     fetchData();
   }, [idEmpresa])
-  if (loading) return <p>Cargando datos...</p>;
+  
+  if (loading) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100%",
+          minHeight: "200px",
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
   if (error) return <p>Error: {error}</p>;
   return (
     <Fragment>
@@ -41,7 +59,12 @@ function PlanificacionDeDesarollo() {
         titulo = {'PLANIFICACION DE DESAROLLO'}
         ocultarAtras = {false}
         confirmarAtras = {false}
-        dirBack = {'/'}
+        dirBack = 
+          { path==`/homeDocente/homeGrupoDocente/verPlanificacionDeEmpresas/Empresa/${idEmpresa}`?
+            '/homeDocente/homeGrupoDocente/verPlanificacionDeEmpresas'  
+            :
+            '/'
+          }
       >
         <InfoEmpresa nombreLargo= {empresaData.nombreLargo} nombreCorto = {empresaData.nombreEmpresa} integrantes={empresaData.integrantes}></InfoEmpresa>
         {!planificacionData.aceptada?

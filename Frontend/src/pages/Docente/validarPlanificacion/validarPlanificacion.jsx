@@ -125,7 +125,7 @@ function ValidarPlanificacion() {
                 titulo = {'VALIDAR PLANIFICACION'}
                 ocultarAtras = {false}
                 confirmarAtras = {false}
-                dirBack = {'/'}
+                dirBack = {'/grupoDocente/validarPlanificacion/'}
         >
             <Box
               sx={{
@@ -152,9 +152,27 @@ function ValidarPlanificacion() {
           titulo = {'VALIDAR PLANIFICACION'}
           ocultarAtras = {false}
           confirmarAtras = {true}
-          dirBack = {'/'}
+          dirBack = {'/grupoDocente/validarPlanificacion/'}
         >
-            <TablaPlanificacion sprints={planificacionData.sprints} />
+            {planificacionData.idEmpresa == -1?
+              <TablaPlanificacion sprints={planificacionData.sprints} />
+              :
+              
+                <Box
+                  sx={{
+                    display: "flex",
+                    height:'30vh',
+                    width:'100%',
+                    justifyContent: "center",
+                    alignItems: 'center'
+                  }}
+                >
+                  <Typography variant="h5">
+                    La Empresa no envio su planificacion a tiempo.
+                  </Typography>
+                </Box>
+            }
+            
             <TextField
               label="Comentarios para el grupo"
               multiline
@@ -174,7 +192,10 @@ function ValidarPlanificacion() {
               fullWidth
               margin="normal"
             />
-            <Box sx={{ display: "flex", alignItems: "center", mt: 2 }}>
+            <Box sx={{ display: "flex", alignItems: "center",justifyContent:'space-between',
+                    marginTop: "1rem",
+                    marginBottom: "2rem",}}>
+              <Box sx={{ display: "flex", alignItems: "center" }}>
               <Typography variant="body1" sx={{ mr: 2 }}>
                 Nota:
               </Typography>
@@ -193,30 +214,33 @@ function ValidarPlanificacion() {
                 variant="outlined"
                 size="small"
               />
+              </Box>
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    gap: "20px",
+                  }}
+                >
+                  
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={handleReject}
+                  >
+                    Rechazar Planificación
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleValidate}
+                    
+                  >
+                    Validar Planificación
+                  </Button>
+                </Box>
             </Box>
-            <Box
-              sx={{
-                marginTop: "40px",
-                display: "flex",
-                justifyContent: "flex-end",
-                gap: "20px",
-              }}
-            >
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={handleValidate}
-              >
-                Validar Planificación
-              </Button>
-              <Button
-                variant="contained"
-                color="secondary"
-                onClick={handleReject}
-              >
-                Rechazar Planificación
-              </Button>
-            </Box>
+            
 
 
       <Dialog

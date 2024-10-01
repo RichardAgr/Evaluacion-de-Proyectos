@@ -97,9 +97,9 @@ class PlanificacionController extends Controller
                 return response()->json([
                     'idEmpresa' => $empresa->idEmpresa,
                     'idPlanificacion' => -1,
-                    'aceptada' => 0,
+                    'aceptada' => -1,
                     'notaPlanificacion' => 0,
-                    'comentarioDocente' => 'Comentario Docente',
+                    'comentarioDocente' => 'Sin Comentario',
                     'sprints' => [
                         ['idSprint' => null, 'fechaIni' => '2024-09-06', 'fechaFin' => '2024-09-06', 'cobro' => 12, 'fechaEntrega' => '2024-09-06', 'entregables'=>'esto es un ejemplo'],
                         ['idSprint' => null, 'fechaIni' => '2024-09-06', 'fechaFin' => '2024-09-06', 'cobro' => 12, 'fechaEntrega' => '2024-09-06', 'entregables'=>'esto es un ejemplo'],
