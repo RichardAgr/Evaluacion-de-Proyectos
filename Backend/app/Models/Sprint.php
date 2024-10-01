@@ -25,4 +25,8 @@ class Sprint extends Model
     {
         return $this->belongsTo(Planificacion::class, 'idPlanificacion');
     }
+    public function semanas(): HasMany
+    {
+        return $this->hasMany(Semana::class, 'idSprint', 'idSprint');
+    }
 }

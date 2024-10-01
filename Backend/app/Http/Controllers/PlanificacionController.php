@@ -254,5 +254,33 @@ class PlanificacionController extends Controller
 
         return response()->json(['error' => 'Docente no encontrado'], 404);
     }
+
+    public function obtenerDetallesSprint($idSprint): JsonResponse
+    {
+        // Obtener el sprint con sus semanas y las tareas de cada semana
+        $sprint = Sprint::with(['semanas.tareas'])->find($idSprint);
+
+        if (!$sprint) {
+            return response()->json(['error' => 'Sprint no encontrado'], 404);
+        }
+
+        // Estructurar la respuesta
+        $response = [
+            'semanas' => $sprint->semanas->map(function ($semana) {
+                return [
+                    'idSemana' => $semana->idSemana,
+                    'tareas' => $semana->tareas->map(function ($tarea) {
+                        return [
+                            'idTarea' => $tarea->idTarea
+                        ];
+                    }),
+                ];
+            }),
+            'sprintComentario' => $sprint->comentariodocente, // Comentario del docente del sprint
+            'sprintNota' => $sprint->notasprint // Nota del sprint
+        ];
+
+        return response()->json($response);
+    }
     
 }
