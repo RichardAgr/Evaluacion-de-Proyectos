@@ -105,14 +105,23 @@ class TareaController extends Controller
             ->get();
 
         // Obtener los archivos relacionados con la tarea, usando idTarea y fechaEntrega
-        $archivosTarea = DB::table('archivostarea')
+        /*$archivosTarea = DB::table('archivostarea')
             ->join('tarea', function($join) use ($idTarea) {
-                $join->on('archivostarea.idTarea', '=', 'tarea.idTarea')
-                    ->on('archivostarea.fechaEntrega', '=', 'tarea.fechaEntrega');
+                $join->on('archivostarea.idTarea', '=', 'tarea.idTarea');
+                    //->on('archivostarea.fechaEntrega', '=', 'tarea.fechaEntrega');
             })
             ->select('archivostarea.archivo')
             ->where('tarea.idTarea', $idTarea)
+            ->get();*/
+            $archivosTarea = DB::table('archivostarea')
+            ->join('tarea', function($join) use ($idTarea) {
+                $join->on('archivostarea.idTarea', '=', 'tarea.idTarea')
+                    ->whereRaw('DATE(archivostarea.fechaEntrega) = DATE(tarea.fechaEntrega)');
+            })
+            ->where('tarea.idTarea', $idTarea)
+            ->select('archivostarea.archivo','archivostarea.nombreArchivo')
             ->get();
+
 
         // Convierte el resultado de archivos a un array
         $archivosArray = $archivosTarea->pluck('archivo')->toArray();

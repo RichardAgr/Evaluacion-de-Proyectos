@@ -3,6 +3,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Estudiante extends Model
 {
@@ -17,6 +18,10 @@ class Estudiante extends Model
     public function tareas()
     {
         return $this->belongsToMany(Tarea::class, 'tareasestudiantes', 'idEstudiante', 'idTarea');
+    }
+    public function foto(): HasOne
+    {
+        return $this->hasOne(FotoEstudiante::class, 'idEstudiante', 'idEstudiante');
     }
 }
 
