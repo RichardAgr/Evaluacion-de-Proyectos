@@ -41,7 +41,7 @@ class TareaController extends Controller
         // Devolver la respuesta en formato JSON
         return response()->json($response, 200);
     }*/
-    public function obtenerTarea($idTarea)
+    /*public function obtenerTarea($idTarea)
     {
         // Obtener la tarea específica
         $tarea = DB::table('tarea')
@@ -57,7 +57,7 @@ class TareaController extends Controller
         // Obtener los estudiantes relacionados con la tarea
         $estudiantes = DB::table('estudiante')
             ->join('tareasestudiantes', 'tareasestudiantes.idEstudiante', '=', 'estudiante.idEstudiante')
-            ->select('nombreEstudiante', 'primerApellido') // Asumiendo que tienes la columna 'fotoEstudiante' en la tabla 'estudiante'
+            ->select('nombreEstudiante', 'primerApellido', 'segundoApellido') // Asumiendo que tienes la columna 'fotoEstudiante' en la tabla 'estudiante'
             ->where('tareasestudiantes.idTarea', $idTarea)
             ->get();
 
@@ -83,4 +83,51 @@ class TareaController extends Controller
 
         return response()->json($respuesta);
     }
+}*/
+    public function obtenerTarea($idTarea)
+    {
+        // Obtener la tarea específica
+        $tarea = DB::table('tarea')
+            ->select('idSemana', 'comentario', 'textoTarea', 'fechaEntrega')
+            ->where('idTarea', $idTarea)
+            ->first();
+
+        // Si no se encuentra la tarea, devolver un error
+        if (!$tarea) {
+            return response()->json(['error' => 'Tarea no encontrada'], 404);
+        }
+
+        // Obtener los estudiantes relacionados con la tarea
+        $estudiantes = DB::table('estudiante')
+            ->join('tareasestudiantes', 'tareasestudiantes.idEstudiante', '=', 'estudiante.idEstudiante')
+            ->select('nombreEstudiante', 'primerApellido', 'segundoApellido') // Puedes agregar 'fotoEstudiante' si está disponible
+            ->where('tareasestudiantes.idTarea', $idTarea)
+            ->get();
+
+        // Obtener los archivos relacionados con la tarea, usando idTarea y fechaEntrega
+        $archivosTarea = DB::table('archivostarea')
+            ->join('tarea', function($join) use ($idTarea) {
+                $join->on('archivostarea.idTarea', '=', 'tarea.idTarea')
+                    ->on('archivostarea.fechaEntrega', '=', 'tarea.fechaEntrega');
+            })
+            ->select('archivostarea.archivo')
+            ->where('tarea.idTarea', $idTarea)
+            ->get();
+
+        // Convierte el resultado de archivos a un array
+        $archivosArray = $archivosTarea->pluck('archivo')->toArray();
+
+        // Formar la respuesta
+        $respuesta = [
+            'idSemana' => $tarea->idSemana,
+            'comentario' => $tarea->comentario,
+            'textotarea' => $tarea->textoTarea,
+            'fechentregado' => $tarea->fechaEntrega,
+            'estudiantes' => $estudiantes,
+            'archivotarea' => $archivosArray,
+        ];
+
+        return response()->json($respuesta);
+    }
+
 }
