@@ -60,7 +60,7 @@ function ModificarTarea() {
                             <FolderZipIcon style={{ fontSize: 30 }} />
                           )}
                           <IconButton
-                            color="secondary"
+                            color="primary"
                             onClick={() => handleDeleteFile(index)}
                           >
                             <DeleteIcon />
