@@ -41,4 +41,5 @@ Route::get('/tareaFor/{idTarea}', [TareasController::class, 'obtenerTarea2']);
  */
 //Para crear la planificacion o modificarla
 Route::post('/planificacion/guardar', [PlanificacionController::class, 'crearPlanificacion']);
-
+// Ruta para crear una tarea
+Route::post('/tarea/crear', [TareaController::class, 'store']);
