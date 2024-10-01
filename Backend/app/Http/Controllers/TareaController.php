@@ -125,7 +125,7 @@ class TareaController extends Controller
 
 
         // Convierte el resultado de archivos a un array
-        $archivosArray = $archivosTarea->pluck('archivo')->toArray();
+        $archivosArray = $archivosTarea->pluck('archivo','nombreArchivo')->toArray();
 
         // Formar la respuesta
         $respuesta = [
