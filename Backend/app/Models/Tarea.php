@@ -9,11 +9,11 @@ class Tarea extends Model
     public $timestamps = false;
  
     protected $fillable = [
-        'idArchivo',
         'idSemana',
         'comentario',
-        'textoArea',
-        'fechaEntrega'
+        'textoTarea',
+        'fechaEntrega',
+        'notaTarea'
      
     ];   
 

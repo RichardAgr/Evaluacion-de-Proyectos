@@ -9,43 +9,14 @@ use App\Models\ArchivoTarea;
 
 class TareaController extends Controller
 {
-    // Método para recibir el idTarea y devolver los datos solicitados
-    /*public function obtenerTarea($idTarea): JsonResponse
-    {
-        // Buscar la tarea por ID
-        $tarea = Tarea::find($idTarea);
+  
 
-        if (!$tarea) {
-            return response()->json(['message' => 'Tarea no encontrada'], 404);
-        }
-
-        // Recuperar datos relacionados (estudiantes y archivos de tarea)
-        $estudiantes = Estudiante::where('idTarea', $idTarea)
-                        ->get(['nombreEstudiante', 'primerApellido'])
-                        ->toArray(); // Obtener los estudiantes como array
-
-        $archivos = ArchivoTarea::where('idTarea', $idTarea)
-                        ->get(['archivo'])
-                        ->toArray(); // Obtener los archivos como array
-
-        // Crear la estructura de la respuesta
-        $response = [
-            'idSemana' => $tarea->idSemana,
-            'comentario' => $tarea->comentarioDocente,
-            'textoTarea' => $tarea->textoTareaEstudiante,
-            'fechaEntregado' => $tarea->fechaEntregado,
-            'estudiantes' => $estudiantes,
-            'archivosTarea' => $archivos
-        ];
-
-        // Devolver la respuesta en formato JSON
-        return response()->json($response, 200);
-    }*/
+    /* Metodos GET*/
     public function obtenerTarea($idTarea)
     {
         // Obtener la tarea específica
         $tarea = DB::table('tarea')
-            ->select('idSemana', 'comentario', 'textoTarea', 'fechaEntrega')
+            ->select('idSemana', 'comentario', 'textoTarea', 'fechaEntrega','notaTarea')
             ->where('idTarea', $idTarea)
             ->first();
 
@@ -77,38 +48,31 @@ class TareaController extends Controller
             'comentario' => $tarea->comentario,
             'textotarea' => $tarea->textoTarea,
             'fechaentregado' => $tarea->fechaEntrega,
+            'notatarea' => $tarea->notaTarea,
             'estudiantes' => $estudiantes,
             'archivotarea' => $archivosArray,
         ];
 
         return response()->json($respuesta);
     }
+
+    /* Metodos POST */
     public function calificarTarea(Request $request, $idTarea)
     {
-        // Validar la entrada
-        $request->validate([
-            'nota' => 'nullable|integer', // La nota puede ser un , aenterojusta según tus necesidades
-            'comentario_docente' => 'required|string',
-        ]);
-    
-        // Obtener la tarea específica
+ 
         $tarea = Tarea::find($idTarea);
     
-        // Verificar si la tarea existe
+        
         if (!$tarea) {
             return response()->json(['error' => 'Tarea no encontrada'], 404);
         }
     
-        // Actualizar el comentario de la tarea
+    
         $tarea->comentario = $request->comentario_docente;
+        $tarea->notaTarea = $request->nota; 
     
-        // Aquí puedes agregar la lógica para la nota cuando esté implementada
-        // $tarea->nota = $request->nota; // Descomentar cuando la columna 'nota' esté disponible
-    
-        // Guardar los cambios en la base de datos
         $tarea->save();
     
-        // Devolver una respuesta
         return response()->json(['message' => 'Tarea calificada con éxito', 'tarea' => $tarea]);
     }
     

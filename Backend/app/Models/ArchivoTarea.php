@@ -10,9 +10,10 @@ class ArchivoTarea extends Model
 
     protected $fillable = [
         'idTarea',
-        'archivo'
+        'archivo',
+        'fechaEntrega',
+        'nombreArchivo'
     ];
-
 
 
     // Relación con la tarea
