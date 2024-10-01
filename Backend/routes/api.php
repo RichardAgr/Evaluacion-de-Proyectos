@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\PlanificacionController;
 use App\Http\Controllers\TareaController;
+use App\Http\Controllers\TareasController;
 
 
 /*
