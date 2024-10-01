@@ -126,6 +126,9 @@ class TareaController extends Controller
 
         // Convierte el resultado de archivos a un array
         $archivosArray = $archivosTarea->pluck('archivo','nombreArchivo')->toArray();*/
+
+        //================= USANDO HASHMAP =============================
+        /*
         $archivosTarea = DB::table('archivostarea')
         ->join('tarea', function($join) use ($idTarea) {
                 $join->on('archivostarea.idTarea', '=', 'tarea.idTarea')
@@ -142,6 +145,25 @@ class TareaController extends Controller
                     'archivo' => $item->archivo,
                 ];
         })->toArray();
+        */
+
+        //===================================== UTILIZANDO FOREACH ==========================
+        $archivosTarea = DB::table('archivostarea')
+        ->join('tarea', function($join) use ($idTarea) {
+            $join->on('archivostarea.idTarea', '=', 'tarea.idTarea')
+                ->whereRaw('DATE(archivostarea.fechaEntrega) = DATE(tarea.fechaEntrega)');
+        })
+        ->where('tarea.idTarea', $idTarea)
+        ->select('archivostarea.archivo', 'archivostarea.nombreArchivo')
+        ->get();
+
+    // Convierte el resultado de archivos a un array en el formato deseado
+    $archivosArray = []; // Inicializa el array
+
+    foreach ($archivosTarea as $item) {
+        $archivosArray[] = [$item->nombreArchivo, $item->archivo]; // Añade un array con el nombre y el archivo
+    }
+
 
 
         // Formar la respuesta
