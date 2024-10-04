@@ -19,6 +19,9 @@ function Home() {
   const handleNavigateToValidarEmpresas = () => {
     navigate("/grupoDocente/validarPlanificacion/");
   };
+  const handleNavigateToModificarLista = () => {
+    navigate("/grupoEstudiante/sprint/semana/1/modificarListaTareas");
+  };
   return (
     <Fragment>
       <Header />
