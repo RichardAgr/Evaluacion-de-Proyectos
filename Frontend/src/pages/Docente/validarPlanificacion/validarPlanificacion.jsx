@@ -49,6 +49,22 @@ function ValidarPlanificacion() {
     });
   };
 
+  const errorTranslations = {
+    "The comentario field must be a string.":
+      "El comentario para el grupo no debe estar vacio.",
+    "The nota field must be at least 0.": "La nota debe ser al menos 0.",
+    "The nota field must not be greater than 100.":
+      "La nota no debe ser mayor que 100.",
+    "The nota field must be a number.": "El campo nota está vacío.",
+    "The group comment field is required.":
+      "El campo de comentario para el grupo es obligatorio.",
+    // aca se añaden los demas errores de ser necesario
+  };
+
+  const translateError = (error) => {
+    return errorTranslations[error] || `Error: ${error}`;
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -84,7 +100,10 @@ function ValidarPlanificacion() {
     if (revisionResult.errors != null) {
       const errorMessages = Object.keys(revisionResult.errors)
         .map((key) => {
-          return `${key}: ${revisionResult.errors[key][0]}`;
+          const errors = revisionResult.errors[key];
+          return errors
+            .map((error) => `${key}: ${translateError(error)}`)
+            .join("\n");
         })
         .join("\n");
       console.log(errorMessages);
@@ -127,7 +146,10 @@ function ValidarPlanificacion() {
     if (revisionResult.errors != null) {
       const errorMessages = Object.keys(revisionResult.errors)
         .map((key) => {
-          return `${key}: ${revisionResult.errors[key][0]}`;
+          const errors = revisionResult.errors[key];
+          return errors
+            .map((error) => `${key}: ${translateError(error)}`)
+            .join("\n");
         })
         .join("\n");
       console.log(errorMessages);
@@ -245,13 +267,15 @@ function ValidarPlanificacion() {
             display: "flex",
             justifyContent: "flex-end",
             gap: "20px",
+
+            padding: "20px",
           }}
         >
-          <Button variant="contained" color="primary" onClick={handleValidate}>
-            Validar Planificación
-          </Button>
           <Button variant="contained" color="secondary" onClick={handleReject}>
             Rechazar Planificación
+          </Button>
+          <Button variant="contained" color="primary" onClick={handleValidate}>
+            Validar Planificación
           </Button>
         </Box>
 
@@ -268,11 +292,17 @@ function ValidarPlanificacion() {
           <DialogActions>
             <Button
               onClick={() => setOpenValidateDialog(false)}
-              color="primary"
+              color="secondary"
+              variant="contained"
             >
               Cancelar
             </Button>
-            <Button onClick={confirmValidate} color="primary" autoFocus>
+            <Button
+              onClick={confirmValidate}
+              variant="contained"
+              color="primary"
+              autoFocus
+            >
               Confirmar
             </Button>
           </DialogActions>
@@ -289,10 +319,10 @@ function ValidarPlanificacion() {
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={() => setOpenRejectDialog(false)} color="primary">
+            <Button onClick={() => setOpenRejectDialog(false)} variant="contained" color="secondary">
               Cancelar
             </Button>
-            <Button onClick={confirmReject} color="secondary" autoFocus>
+            <Button onClick={confirmReject} variant="contained" color="primary" autoFocus>
               Confirmar
             </Button>
           </DialogActions>
