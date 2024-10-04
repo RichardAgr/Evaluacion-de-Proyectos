@@ -20,7 +20,7 @@ class RevisionPlaniController extends Controller
             $validator = Validator::make($request->all(), [
                 'idEmpresa' => 'required|integer',
                 'nota' => 'numeric|min:0|max:100',
-                'comentario' => 'string',
+                'comentario' => 'nullable|string',
                 'idDocente' => 'required|integer',
             ]);
             if ($validator->fails()) {
