@@ -6,10 +6,9 @@ export const validar = async (idEmpresa) => {
       },
       body: JSON.stringify({ idEmpresa }),
     });
-  
-    if (!validarResponse.ok) {
-      throw new Error("Error al validar la planificación.");
-    }
+    
+    $data=await  validarResponse.json();
+
   
     return await validarResponse.json();
   };
