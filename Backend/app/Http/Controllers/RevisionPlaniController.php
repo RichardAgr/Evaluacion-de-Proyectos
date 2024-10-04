@@ -19,8 +19,8 @@ class RevisionPlaniController extends Controller
             // validar datos
             $validator = Validator::make($request->all(), [
                 'idEmpresa' => 'required|integer',
-                'nota' => 'nullable|numeric|min:0|max:100',
-                'comentario' => 'nullable|string',
+                'nota' => 'numeric|min:0|max:100',
+                'comentario' => 'string',
                 'idDocente' => 'required|integer',
             ]);
             if ($validator->fails()) {
