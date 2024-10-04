@@ -80,9 +80,7 @@ function ValidarPlanificacion() {
     setOpenValidateDialog(false);
     console.log(idEmpresa);
     const revisionResult = await addRevision(idEmpresa, nota, groupComment, 2);
-    console.log(revisionResult);
 
-    console.log(revisionResult.errors);
     if (revisionResult.errors != null) {
       const errorMessages = Object.keys(revisionResult.errors)
         .map((key) => {
