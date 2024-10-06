@@ -3,15 +3,16 @@ import { styled } from '@mui/material';
 import { Button, TextField, Alert, AlertTitle } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { getTareaData, calificarTarea } from '../../api/validarTareas/tareas';
-import PopUpDialog from '../popUPDialog/popUpDialog'; // Importar el componente PopUpDialog
+import PopUpDialog from '../popUPDialog/popUpDialog';
 
 const CalificarTarea = ({ idTarea }) => {
   const [tarea, setTarea] = useState(null);
   const [nota, setNota] = useState(0);
   const [comentario, setComentario] = useState('');
   const [loading, setLoading] = useState(true);
-  const [openDialog, setOpenDialog] = useState(false); // Controla el diálogo
-  const [alertInfo, setAlertInfo] = useState(null); // Controla las alertas
+  const [openDialog, setOpenDialog] = useState(false);
+  const [alertInfo, setAlertInfo] = useState(null);
+  const [openCancelDialog, setOpenCancelDialog] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -19,7 +20,7 @@ const CalificarTarea = ({ idTarea }) => {
       try {
         const data = await getTareaData(idTarea);
         setTarea(data);
-        setNota(data.notatarea || 50); // Si no hay nota, coloca 50 como predeterminado
+        setNota(data.notatarea);
         setComentario(data.comentario);
         setLoading(false);
       } catch (error) {
@@ -39,21 +40,42 @@ const CalificarTarea = ({ idTarea }) => {
       console.error('Error al guardar la calificación', error);
       setAlertInfo({ type: 'error', message: 'Hubo un error al guardar la calificación.' });
     } finally {
-      setOpenDialog(false); // Asegurarse de cerrar el diálogo después de guardar
+      setOpenDialog(false);
     }
   };
 
   const handleValidarCampos = () => {
-    // Validar que ninguno de los campos esté vacío
     if (!nota || !comentario) {
       setAlertInfo({ type: 'warning', message: 'Ninguno de los campos debe estar vacío' });
     } else {
-      setOpenDialog(true); // Abrir diálogo si los campos están completos
+      setOpenDialog(true);
     }
   };
 
   const handleCloseAlert = () => {
-    setAlertInfo(null); // Cerrar alerta después de mostrarla
+    setAlertInfo(null);
+  };
+
+  const handleCancel = () => {
+    setOpenCancelDialog(true);
+  };
+
+  // Validación de nota para que sea solo un número entre 0 y 100 y controle los ceros iniciales
+  const handleNotaChange = (e) => {
+    let value = e.target.value;
+
+    // Remover cualquier carácter que no sea un número
+    let formattedValue = value.replace(/[^0-9]/g, '');
+
+    // Eliminar ceros iniciales no deseados
+    if (formattedValue.length > 1 && formattedValue.startsWith('0')) {
+      formattedValue = formattedValue.replace(/^0+/, '');
+    }
+
+    // Asegurar que el valor esté entre 0 y 100
+    if (formattedValue === '' || (formattedValue.length <= 3 && Number(formattedValue) <= 100)) {
+      setNota(formattedValue);
+    }
   };
 
   if (loading) {
@@ -65,137 +87,113 @@ const CalificarTarea = ({ idTarea }) => {
   }
 
   return (
-    <Container>
-      <Button className="btn-atras" onClick={() => navigate(-1)}>Atrás</Button>
-      <h2>CALIFICAR TAREA</h2>
-
-      <ContentWrapper>
-        <h1>MockUps</h1>
-
-        <ArchivosYEstudiantesSection>
-          <ArchivosSection>
-            <h3>Archivos:</h3>
-            <ArchivosWrapper>
-              <div className="archivos-icons">
-                {tarea.archivotarea && tarea.archivotarea.length > 0 ? (
-                  tarea.archivotarea.map((archivo) => (
-                    <a key={archivo.idArchivo} href={archivo.archivo} download>
-                      <img src="/icono-archivo.png" alt="Archivo" />
-                    </a>
-                  ))
-                ) : (
-                  <>
-                    <img src="/icono-pdf.png" alt="PDF" className="archivo-ejemplo" />
-                    <img src="/icono-img.png" alt="Imagen" className="archivo-ejemplo" />
-                    <img src="/icono-rar.png" alt="RAR" className="archivo-ejemplo" />
-                  </>
-                )}
-              </div>
-            </ArchivosWrapper>
-          </ArchivosSection>
-
-          <EstudiantesSection>
-            <h3>Estudiantes:</h3>
-            <div className="fotos-estudiantes">
-              {tarea.estudiantes && tarea.estudiantes.length > 0 ? (
-                tarea.estudiantes.map((estudiante) => (
-                  <EstudianteFoto key={estudiante.id} src={estudiante.foto || '/icono-usuario.png'} alt={`Foto de ${estudiante.nombre}`} />
+    <>
+      <h1>MockUps</h1>
+      <ArchivosYEstudiantesSection>
+        <ArchivosSection>
+          <h3>Archivos:</h3>
+          <ArchivosWrapper>
+            <div className="archivos-icons">
+              {tarea.archivotarea && tarea.archivotarea.length > 0 ? (
+                tarea.archivotarea.map((archivo) => (
+                  <a key={archivo.idArchivo} href={archivo.archivo} download>
+                    <img src="/icono-archivo.png" alt="Archivo" />
+                  </a>
                 ))
               ) : (
                 <>
-                  <EstudianteFoto src="/icono-usuario.png" alt="Usuario" />
-                  <EstudianteFoto src="/icono-usuario.png" alt="Usuario" />
+                  <img src="/icono-pdf.png" alt="PDF" className="archivo-ejemplo" />
+                  <img src="/icono-img.png" alt="Imagen" className="archivo-ejemplo" />
+                  <img src="/icono-rar.png" alt="RAR" className="archivo-ejemplo" />
                 </>
               )}
             </div>
-          </EstudiantesSection>
-        </ArchivosYEstudiantesSection>
+          </ArchivosWrapper>
+        </ArchivosSection>
 
-        <DescripcionTarea>
-          <h3>Descripción de la tarea:</h3>
-          <p>{tarea.textotarea}</p>
-        </DescripcionTarea>
+        <EstudiantesSection>
+          <h3>Estudiantes:</h3>
+          <div className="fotos-estudiantes">
+            {tarea.estudiantes && tarea.estudiantes.length > 0 ? (
+              tarea.estudiantes.map((estudiante) => (
+                <EstudianteFoto key={estudiante.id} src={estudiante.foto || '/icono-usuario.png'} alt={`Foto de ${estudiante.nombre}`} />
+              ))
+            ) : (
+              <>
+                <EstudianteFoto src="/icono-usuario.png" alt="Usuario" />
+                <EstudianteFoto src="/icono-usuario.png" alt="Usuario" />
+              </>
+            )}
+          </div>
+        </EstudiantesSection>
+      </ArchivosYEstudiantesSection>
 
-        <ComentarioDocente>
-          <h3>Comentario Docente:</h3>
-          <StyledTextField
-            value={comentario}
-            onChange={(e) => setComentario(e.target.value)}
-            placeholder="Comentarios del docente"
-            multiline
-            minRows={6}
-            style={{ minHeight: '150px' }}
-          />
-        </ComentarioDocente>
+      <DescripcionTarea>
+        <h3>Descripción de la tarea:</h3>
+        <p>{tarea.textotarea}</p>
+      </DescripcionTarea>
 
-        <NotaYBotonesSection>
-          <NotaSection>
-            <h3>NOTA:</h3>
-            <StyledTextField
-              type="number"
-              value={nota}
-              onChange={(e) => {
-                const valorNota = Math.max(0, Math.min(100, Number(e.target.value)));
-                setNota(valorNota);
-              }}
-              min="0"
-              max="100"
-              placeholder="Escribe la nota..."
-              style={{ width: '80px' }}
-            />
-          </NotaSection>
-          <BotonesSection>
-            <Button variant="contained" color="secondary" className="btn-cancelar">
-              No Guardar
-            </Button>
-            <Button variant="contained" color="primary" onClick={handleValidarCampos}>
-              Guardar
-            </Button>
-          </BotonesSection>
-        </NotaYBotonesSection>
-
-        {/* Componente de PopUpDialog */}
-        <PopUpDialog
-          openDialog={openDialog}
-          setOpenDialog={setOpenDialog}
-          titleDialog="Confirmación"
-          textDialog="¿Estás seguro de guardar la calificación?"
-          especial={handleGuardar}
+      <ComentarioDocente>
+        <h3>Comentario Docente:</h3>
+        <StyledTextField
+          value={comentario}
+          onChange={(e) => setComentario(e.target.value)}
+          placeholder="Comentarios del docente"
+          multiline
+          minRows={6}
+          style={{ minHeight: '150px' }}
         />
+      </ComentarioDocente>
 
-        {/* Mensaje de Alerta */}
-        {alertInfo && (
-          <Alert severity={alertInfo.type} onClose={handleCloseAlert}>
-            <AlertTitle>{alertInfo.type === 'success' ? 'Éxito' : 'Error'}</AlertTitle>
-            {alertInfo.message}
-          </Alert>
-        )}
-      </ContentWrapper>
+      <NotaYBotonesSection>
+        <NotaSection>
+          <h3>NOTA:</h3>
+          <StyledTextField
+            type="text" // Cambiado a texto para mayor control
+            value={nota}
+            onChange={handleNotaChange}
+            placeholder="Escribe la nota..."
+            inputProps={{ maxLength: 3 }} // Limitar el número de caracteres
+            style={{ width: '80px' }}
+          />
+        </NotaSection>
+        <BotonesSection>
+          <Button variant="contained" color="secondary" className="btn-cancelar" onClick={handleCancel}>
+            No Guardar
+          </Button>
+          <Button variant="contained" color="primary" onClick={handleValidarCampos}>
+            Guardar
+          </Button>
+        </BotonesSection>
+      </NotaYBotonesSection>
 
-    </Container>
+      {/* Componente de PopUpDialog */}
+      <PopUpDialog
+        openDialog={openDialog}
+        setOpenDialog={setOpenDialog}
+        titleDialog="Confirmación"
+        textDialog="¿Estás seguro de guardar la calificación?"
+        especial={handleGuardar}
+      />
+      <PopUpDialog
+        openDialog={openCancelDialog}
+        setOpenDialog={setOpenCancelDialog}
+        especial={() => window.location.reload()}
+        titleDialog={'¿Estás seguro de que quieres descartar los cambios?, esta accion te llevara atras'}
+        textDialog={'Esta acción no se puede deshacer. Todos los cambios realizados se perderán.'}
+      ></PopUpDialog>
+      {/* Mensaje de Alerta */}
+      {alertInfo && (
+        <Alert severity={alertInfo.type} onClose={handleCloseAlert}>
+          <AlertTitle>{alertInfo.type === 'success' ? 'Éxito' : 'Error'}</AlertTitle>
+          {alertInfo.message}
+        </Alert>
+      )}
+    </>
   );
 };
 
 export default CalificarTarea;
-
-// Estilos
-const Container = styled('div')`
-  margin: 0 5rem;
-  h2, h1 {
-    text-align: left; // Alineación a la izquierda
-  }
-  .btn-atras {
-    background-color: red;
-    color: white;
-    margin-bottom: 1rem;
-    margin-top: 1rem;
-  }
-`;
-
-const ContentWrapper = styled('div')`
-  border: 3px solid black; 
-  padding: 5rem;
-`;
 
 const ArchivosYEstudiantesSection = styled('div')`
   display: flex;
@@ -208,7 +206,6 @@ const ArchivosSection = styled('div')`
 `;
 
 const ArchivosWrapper = styled('div')`
-  border: 2px solid black;
   padding: 1rem;
   .archivos-icons {
     display: flex;

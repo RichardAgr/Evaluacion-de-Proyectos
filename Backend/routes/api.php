@@ -8,6 +8,7 @@ use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\PlanificacionController;
 use App\Http\Controllers\RevisionPlaniController;
 use App\Http\Controllers\TareaController;
+use App\Http\Controllers\DocenteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -51,6 +52,7 @@ Route::get('/docente/empresa/{idEmpresa}', [PlanificacionController::class, 'obt
 Route::post('/planificacion/guardar', [PlanificacionController::class, 'crearPlanificacion']);
 
 //Para calificar una tarea
+//Adrian
 Route::post('/tarea/{idTarea}/calificar', [TareaController::class, 'calificarTarea']);
-
-
+Route::get('/docente/{idDocente}/empresas', [DocenteController::class, 'obtenerEmpresasPorDocente']);
+Route::get('/empresa/{idEmpresa}/{idDocente}/sprints', [EmpresaController::class, 'obtenerSprints']);
