@@ -6,6 +6,16 @@ class Tarea extends Model
 {
     protected $table = 'tarea'; // Nombre de la tabla
     protected $primaryKey = 'idTarea'; // Especificar la clave primaria
+    public $timestamps = false;
+ 
+    protected $fillable = [
+        'idSemana',
+        'comentario',
+        'textoTarea',
+        'fechaEntrega',
+        'notaTarea'
+     
+    ];   
 
     // Relación con los estudiantes (muchos a muchos)
     public function estudiantes()

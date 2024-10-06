@@ -15,11 +15,25 @@ class Docente extends Model
         'nombreDocente',
         'primerApellido',
         'segundoApellido',
-        'contraseña',
+        'contrasena',
     ];
 
     public function grupos()
     {
         return $this->hasMany(Grupo::class, 'idDocente');
     }
+
+    public function empresas()
+    {
+        return $this->hasManyThrough(
+            Empresa::class,           
+            Estudiante::class,        
+            'idEstudiante',           
+            'idEmpresa',              
+            'idDocente',             
+            'idEstudiante'           
+        )
+        ->distinct();                 
+    }
+
 }

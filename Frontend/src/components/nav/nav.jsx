@@ -1,30 +1,51 @@
-import {Routes, Route} from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
+//archivos compartidas
 import Home from '../../pages/Home/home.jsx';
+import VerPlanificacionDeDesarollo from '../../pages/VisualizacionCompartida/verPlanificacionDeDesarollo/VerPlanifacionDeDesarollo.jsx'
 
+//archivos docente
 import HomeDocente from '../../pages/Docente/homeDocente/homeDocente.jsx'
 import HomeGrupoDocente from '../../pages/Docente/homeGrupoDocente/homeGrupoDocente.jsx'
-import VerPlanificacionDeDesarolloD from '../../pages/Docente/verPlanificacionDeDesarolloEmpresa/VerPlanificacionDeDesarolloD.jsx'
 import ListaVerPlanificacion from '../../pages/Docente/listas/listaVerPlanificacion/listaVerPlanificacion.jsx';
+import ListaEmpresas from '../../pages/Docente/listas/listaEmpresas/listaEmpresas.jsx'
+import ValidarPlanificacion from '../../pages/Docente/validarPlanificacion/validarPlanificacion.jsx';
+import TareaPagina from '../../pages/Docente/gestionEmpresasTareas/tareaPagina.jsx';
+import CalificarEmpresas from '../../pages/Docente/gestionEmpresasTareas/calificarEmpresas.jsx';
+import SprintsEmpresas from '../../pages/Docente/gestionEmpresasTareas/sprintsEmpresas.jsx';
 
+//archivos estudiante
 import HomeEstudiante from '../../pages/Estudiante/homeEstudiante/homeEstudiante.jsx'
 import HomeGrupoEstudiante from '../../pages/Estudiante/homeGrupoEstudiante/homeGrupoEstudiante.jsx'
-import VerPlanficacionDeDesarollo from '../../pages/Estudiante/verPlanificacionDeDesarollo/VerPlanifacionDeDesarolloE.jsx';
 import EditarPlanificacion from '../../pages/Estudiante/editarPlanificacion/editarPlanificacion.jsx';
+import ModificarTarea from '../../pages/Estudiante/editarPlanificacion/modificarTarea/modificarTarea.jsx'
 
 function Nav() {
-  
-  return (
-    <Routes>
-        <Route path='/' element={<Home/>}/>
-        <Route path='/homeDocente' element={<HomeDocente/>}/>
-        <Route path='/homeDocente/homeGrupoDocente' element={<HomeGrupoDocente/>}/>
-        <Route path='/homeDocente/homeGrupoDocente/verPlanificacionDeEmpresas' element={<ListaVerPlanificacion/>}/>
-        <Route path='/homeDocente/homeGrupoDocente/verPlanificacionDeEmpresas/Empresa/:idEmpresa' element={<VerPlanificacionDeDesarolloD/>}/>
 
-        <Route path='/homeEstudiante' element={<HomeEstudiante/>}/>
-        <Route path='/homeEstudiante/homeGrupoEstudiante' element={<HomeGrupoEstudiante/>}/>
-        <Route path='/homeEstudiante/homeGrupoEstudiante/PlanificacionDeDesarollo/Empresa/:idEmpresa' element={<VerPlanficacionDeDesarollo/>}/>
-        <Route path='/homeEstudiante/homeGrupoEstudiante/PlanificacionInicial/Empresa/:idEmpresa' element={<EditarPlanificacion/>}/>
+  return (
+
+    <Routes>
+      {/** Ruta compartidas*/}
+      <Route path="*" element={<Navigate to="/" />} />
+      <Route path='/' element={<Home />} />
+
+      {/** Ruta Docente*/}
+      <Route path='/homeDocente' element={<HomeDocente />} />
+      <Route path='/homeDocente/homeGrupoDocente' element={<HomeGrupoDocente />} />
+      <Route path='/homeDocente/homeGrupoDocente/verPlanificacionDeEmpresas' element={<ListaVerPlanificacion />} />
+      <Route path='/homeDocente/homeGrupoDocente/verPlanificacionDeEmpresas/Empresa/:idEmpresa' element={<VerPlanificacionDeDesarollo />} />
+      <Route path='/grupoDocente/validarPlanificacion/' element={<ListaEmpresas />} />
+      <Route path='/grupoDocente/validarPlanificacion/Empresa/:idEmpresa' element={<ValidarPlanificacion />} />
+      {/** Rutas Adrian*/}
+      <Route path='/grupoDocente/calificarTareasEmpresas/:idDocente/empresas' element={<CalificarEmpresas />} />
+      <Route path='/grupoDocente/calificarTareasEmpresas/empresas/:idEmpresa/:idDocente/sprints' element={<SprintsEmpresas />} />
+      <Route path='/grupoDocente/calificarTareasEmpresas/empresas/sprints/semanas/tareas/:idTarea/tarea' element={<TareaPagina />} />
+
+      {/** Ruta Estudiante*/}
+      <Route path='/homeEstudiante' element={<HomeEstudiante />} />
+      <Route path='/homeEstudiante/homeGrupoEstudiante' element={<HomeGrupoEstudiante />} />
+      <Route path='/homeEstudiante/homeGrupoEstudiante/PlanificacionDeDesarollo/Empresa/:idEmpresa' element={<VerPlanificacionDeDesarollo />} />
+      <Route path='/homeEstudiante/homeGrupoEstudiante/PlanificacionInicial/Empresa/:idEmpresa' element={<EditarPlanificacion />} />
+      <Route path='/homeEstudiante/homeGrupoEstudiante/sprint/semana/tareas/:idTarea' element={<ModificarTarea />} />
     </Routes>
   )
 }
