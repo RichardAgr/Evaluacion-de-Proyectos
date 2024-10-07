@@ -9,6 +9,7 @@ use App\Http\Controllers\PlanificacionController;
 use App\Http\Controllers\RevisionPlaniController;
 use App\Http\Controllers\TareaController;
 use App\Http\Controllers\DocenteController;
+use App\Http\Controllers\SprintController;
 
 /*
 |--------------------------------------------------------------------------
@@ -44,12 +45,19 @@ Route::get('/planificacionRechazadas', [PlanificacionController::class, 'planifi
 Route::get('/tarea/{idTarea}', [TareaController::class, 'obtenerTarea']);
 Route::get('/docente/empresa/{idEmpresa}', [PlanificacionController::class, 'obtenerDocentePorEmpresa']);
 Route::get('/tareaFor/{idTarea}', [TareasController::class, 'obtenerTarea2']);
+
+//Ale
+Route::get('/estudiante/sprint/semana/{idSprint}',[SprintController::class, 'sprintsSemanas']);
+Route::get('/estudiante/sprint/semana/tarea/{idTarea}',[SprintController::class, 'integrantesPorTarea']);
+
+
+
 /**
  * TODOS LOS POST VAN 
  *
  */
 //Para crear la planificacion o modificarla
-Route::post('/planificacion/guardar', [PlanificacionController::class, 'crearPlanificacion']);
+//Route::post('/planificacion/guardar', [PlanificacionController::class, 'crearPlanificacion']);
 
 //Para calificar una tarea
 //Adrian
