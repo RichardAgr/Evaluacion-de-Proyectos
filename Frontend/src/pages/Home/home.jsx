@@ -19,6 +19,9 @@ function Home() {
   const handleNavigateToValidarEmpresas = () => {
     navigate("/grupoDocente/validarPlanificacion/");
   };
+  const handleNavigateToCalificarSprint = () => {
+    navigate("/grupoDocente/empresa/1/planificacion/calificarSprint/1");
+  };
   const handleNavigateToModificarLista = () => {
     navigate("/grupoEstudiante/sprint/semana/1/modificarListaTareas");
   };
@@ -69,6 +72,18 @@ function Home() {
           }}
         >
           Ir a Validar Empresas
+        </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          size="large"
+          onClick={handleNavigateToCalificarSprint}
+          style={{
+            padding: "15px 30px",
+            fontSize: "1.2rem",
+          }}
+        >
+          Ir a Calificar Sprint
         </Button>
         <Button
           variant="contained"

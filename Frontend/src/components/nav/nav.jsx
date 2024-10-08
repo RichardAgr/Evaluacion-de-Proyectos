@@ -9,6 +9,8 @@ import HomeGrupoDocente from '../../pages/Docente/homeGrupoDocente/homeGrupoDoce
 import ListaVerPlanificacion from '../../pages/Docente/listas/listaVerPlanificacion/listaVerPlanificacion.jsx';
 import ListaEmpresas from '../../pages/Docente/listas/listaEmpresas/listaEmpresas.jsx'
 import ValidarPlanificacion from '../../pages/Docente/validarPlanificacion/validarPlanificacion.jsx';
+import CalificarSprint from '../../pages/Docente/calificarSprint/calificarSprint.jsx';
+
 
 //archivos estudiante
 import HomeEstudiante from '../../pages/Estudiante/homeEstudiante/homeEstudiante.jsx'
@@ -33,6 +35,7 @@ function Nav() {
         <Route path='/homeDocente/homeGrupoDocente/verPlanificacionDeEmpresas/Empresa/:idEmpresa' element={<VerPlanificacionDeDesarollo/>}/>
         <Route path='/grupoDocente/validarPlanificacion/' element={<ListaEmpresas/>}/>
         <Route path='/grupoDocente/validarPlanificacion/empresa/:idEmpresa' element={<ValidarPlanificacion/>}/>
+        <Route path='/grupoDocente/empresa/:idEmpresa/planificacion/calificarSprint/:idSprint' element={<CalificarSprint/>}/>
 
         {/** Ruta Estudiante*/}
         <Route path='/homeEstudiante' element={<HomeEstudiante/>}/>
