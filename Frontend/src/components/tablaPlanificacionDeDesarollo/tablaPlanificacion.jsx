@@ -7,15 +7,12 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
-function tablaPlanificacion({sprints}) {
+function tablaPlanificacion({sprints, ocultarBotones}) {
   const fechaActual = new Date();
   const dia = fechaActual.getDate();      // Día del mes (1-31)
   const mes = fechaActual.getMonth() + 1; // Mes (0-11, por eso se suma 1 para que sea 1-12)
   const anio = fechaActual.getFullYear(); // Año
   
-
-  console.log(`${dia}/${mes}/${anio}`);   // Imprime la fecha en formato DD/MM/YYYY
-
   return (
     <Fragment>
       <TableContainer component={Paper}>
@@ -28,7 +25,11 @@ function tablaPlanificacion({sprints}) {
                         <TableCell align="left">Cobro</TableCell>
                         <TableCell align="left">Fecha Entrega</TableCell>
                         <TableCell align="left">Entregables</TableCell>
-                        <TableCell align="left"></TableCell>
+                        {ocultarBotones?
+                          <></>
+                          :
+                          <TableCell align="left"></TableCell>
+                        }
                         <TableCell align="left">NOTAS</TableCell>
                       </TableRow>
                     </TableHead>
@@ -36,7 +37,7 @@ function tablaPlanificacion({sprints}) {
                       {sprints.map((sprint, index) => {
                         const fechaInicioSprint = new Date(sprint.fechaIni);
                         return (<TableRow
-                            key={sprint.hito}
+                            key={index}
                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                           >
                             <TableCell component="th" scope="row">
@@ -47,14 +48,18 @@ function tablaPlanificacion({sprints}) {
                             <TableCell align="left">{sprint.cobro}</TableCell>
                             <TableCell align="left">{sprint.fechaEntrega}</TableCell>
                             <TableCell align="left">{sprint.entregables}</TableCell>
-                            <TableCell align="left">
-                              {fechaActual >= fechaInicioSprint?
-                                <Button variant='contained'>Ver Sprint</Button>
-                                :
-                                <></>
-                              }
-                            </TableCell>
-                            <TableCell align="left"> </TableCell>
+                            {ocultarBotones?
+                              <></> 
+                              :
+                              <TableCell align="left">
+                                {fechaActual >= fechaInicioSprint?
+                                  <Button variant='contained'>Ver Sprint</Button>
+                                  :
+                                  <></>
+                                }
+                              </TableCell>
+                            }
+                            <TableCell align="left">{sprint.notasprint? sprint.notasprint:'Sin Calificar'} </TableCell>
                           </TableRow>
                         )})}
                     </TableBody>

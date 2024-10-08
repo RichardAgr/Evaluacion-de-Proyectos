@@ -8,9 +8,30 @@ class Empresa extends Model
     protected $table = 'empresa';
     protected $primaryKey = 'idEmpresa';
     public $timestamps = false;
+    public $fillable = [
+        'nombreEmpresa',
+        'nombreLargo',
+        'numerodefaltasempresa',
+        'notaproductofinal',
+    ];
 
     public function estudiantes()
     {
         return $this->belongsToMany(Estudiante::class, 'estudiantesempresas', 'idEmpresa', 'idEstudiante');
+    }
+    public function planificaciones()
+    {
+        return $this->hasMany(Planificacion::class, 'idEmpresa');
+    }
+    public function sprints()
+    {
+        return $this->hasManyThrough(
+            Sprint::class,       
+            Planificacion::class, 
+            'idEmpresa',          
+            'idPlanificacion',    
+            'idEmpresa',          
+            'idPlanificacion'   
+        );
     }
 }

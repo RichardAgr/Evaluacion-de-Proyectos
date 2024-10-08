@@ -1,16 +1,13 @@
-
 import { Fragment, useEffect } from 'react';
 import { useState } from 'react';
 import { useParams} from "react-router-dom";
-import { Button } from '@mui/material';
-import Header from '../../../components/Header/header.jsx';
-import Footer from '../../../components/Footer/footer.jsx';
 import InfoEmpresa from '../../../components/infoEmpresa/infoEmpresa.jsx'
 import TablaNotasPlanificacion from '../../../components/tablaPlanificacionNotas/tablaPlanificacionNotas.jsx';
 import TablaPlanificacion from '../../../components/tablaPlanificacionDeDesarollo/tablaPlanificacion.jsx';
-import { getEmpresaData } from '../../../endPoints/getEmpresa.jsx';
-import { getPlanificacion} from '../../../endPoints/getPlanificacion.jsx'
-function VerPlanificacionDeDesarolloD() {
+import { getEmpresaData } from '../../../api/getEmpresa.jsx';
+import { getPlanificacion} from '../../../api/getPlanificacion.jsx'
+import BaseUI from '../../../components/baseUI/baseUI.jsx';
+function PlanificacionDeDesarollo() {
   
   const [empresaData, setEmpresaData] = useState(null);
   let { idEmpresa } = useParams();
@@ -30,7 +27,7 @@ function VerPlanificacionDeDesarolloD() {
       } catch (error) {
         console.error('Error en la solicitud:', error.message);
         setError(`Error en la solicitud: ${error.message}`);
-      } finally {
+      }finally {
         setLoading(false);
       }
     };
@@ -40,29 +37,28 @@ function VerPlanificacionDeDesarolloD() {
   if (error) return <p>Error: {error}</p>;
   return (
     <Fragment>
-      <Header></Header>
-      <div className='box'>
-        <div className='container'>
-          <Button variant='contained' >Atras</Button>
-          <h1>PLANIFICACION DE DESAROLLO</h1>
-          <div className='pageBorder'>
-            <div className='pageBorder_interior'>
-              <InfoEmpresa nombreLargo= {empresaData.nombreLargo} nombreCorto = {empresaData.nombreEmpresa} integrantes={empresaData.integrantes}></InfoEmpresa>
-              {!planificacionData.aceptada?
-                <div className='divContainerPlani'>
-                  <h1>TODAVIA NO SE FUE ACEPTADA</h1>
-                </div>
-              :
-                  <TablaPlanificacion sprints = {planificacionData.sprints}></TablaPlanificacion>
-              }
-              <TablaNotasPlanificacion ></TablaNotasPlanificacion>
-            </div>
+      <BaseUI
+        titulo = {'PLANIFICACION DE DESAROLLO'}
+        ocultarAtras = {false}
+        confirmarAtras = {false}
+        dirBack = {'/'}
+      >
+        <InfoEmpresa nombreLargo= {empresaData.nombreLargo} nombreCorto = {empresaData.nombreEmpresa} integrantes={empresaData.integrantes}></InfoEmpresa>
+        {!planificacionData.aceptada?
+          <div className='divContainerPlani'>
+            <h1>TODAVIA NO SE FUE ACEPTADA</h1>
           </div>
-        </div>
-      </div>
-      <Footer></Footer>
+        :
+            <TablaPlanificacion sprints = {planificacionData.sprints} ocultarBotones = {true}></TablaPlanificacion>
+        }
+        <TablaNotasPlanificacion 
+          numeroDeFaltas={empresaData.numeroDeFaltas} 
+          sprints={planificacionData.sprints}
+          notaProductoFinal= {empresaData.notaProductoFinal}
+        ></TablaNotasPlanificacion>
+      </BaseUI> 
     </Fragment>
   );
 }
 
-export default VerPlanificacionDeDesarolloD;
+export default PlanificacionDeDesarollo;

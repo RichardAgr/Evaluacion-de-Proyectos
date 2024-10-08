@@ -27,7 +27,6 @@
   min-height: calc(74vh);
   border: 0.3rem solid black;
   border-radius: 0.3rem;
-  margin-bottom: 1rem;
   -webkit-border-radius: 0.3rem;
   -moz-border-radius: 0.3rem;
   -ms-border-radius: 0.3rem;
@@ -35,6 +34,9 @@
 }
 .pageBorder_interior{
   width: 90%;
+}
+h1{
+  font-size: 2.5rem;
 }
 h1,h2,h3{
   margin-top: 0;
@@ -107,3 +109,49 @@ h1,h2,h3{
  .iconsSec:hover{
    background-color: #0e316d;
  }
+
+ .buttonIzq{
+  display: flex;
+  width: 100%;
+
+  justify-content: end;
+ }
+ .collapse-header {
+  display: flex; 
+  min-height: 1vw; 
+  width: 50vw; 
+  border: 0.4rem; 
+  cursor: pointer; 
+  padding: 13px; 
+  background-color: #d0d4e4; 
+  user-select: none; 
+  margin: 0 auto;
+  font-family: 'Montserrat', sans-serif; 
+  font-weight: normal;
+}
+.collapse-child {
+  display: flex; 
+  min-height: 1vw; 
+  width: 50vw; 
+  border: 0.4rem;
+  cursor: pointer; 
+  padding: 13px; 
+  background-color: #d0d4e4; 
+  user-select: none; 
+  margin: 0 auto; 
+  font-family: 'Montserrat', sans-serif; 
+  font-weight: normal;
+  margin-left: 5vw; 
+}
+
+.prueba{
+  display: flex; 
+
+}
+
+.visualizarSprint{
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
