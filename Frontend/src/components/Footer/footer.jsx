@@ -54,6 +54,7 @@ let FooterContainer = styled.footer`
     }
     p{
         width: 98vw;
+        padding-bottom:0.5rem;
         text-align: center;
         font-size: calc(0.5vw + 0.3rem);
         display: block;
