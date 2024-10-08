@@ -3,6 +3,7 @@
 // import { useParams} from "react-router-dom";
 import BaseUI from '../../../components/baseUI/baseUI';
 import ComentarioNota from '../../../components/comentarioNota/comentarioNotaMejorado';
+import ComentarioTarea from '../../../components/comentarioTarea/comentarioTarea';
 // import SprintSemanas from '../../../components/SprintTareas/sprintSemanas.jsx';
 
 function VisualizarTarea() {
@@ -16,6 +17,10 @@ function VisualizarTarea() {
             confirmarAtras={false}
             dirBack={'/'}
         >
+        <ComentarioTarea
+            linkDir={"ocultar"}
+        >
+        </ComentarioTarea>
         <ComentarioNota
             linkDir={"ocultar"}
             tituloComentario={"Comentario del Docente"}
