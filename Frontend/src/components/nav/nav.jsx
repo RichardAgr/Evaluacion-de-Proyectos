@@ -13,14 +13,17 @@ import TareaPagina from '../../pages/Docente/gestionEmpresasTareas/tareaPagina.j
 import CalificarEmpresas from '../../pages/Docente/gestionEmpresasTareas/calificarEmpresas.jsx';
 import SprintsEmpresas from '../../pages/Docente/gestionEmpresasTareas/sprintsEmpresas.jsx';
 import SprintsSemanas from '../../pages/Docente/gestionEmpresasTareas/sprintsSemanas.jsx';
+import CalificarSprint from '../../pages/Docente/calificarSprint/calificarSprint.jsx';
 
 //archivos estudiante
 import HomeEstudiante from '../../pages/Estudiante/homeEstudiante/homeEstudiante.jsx'
 import HomeGrupoEstudiante from '../../pages/Estudiante/homeGrupoEstudiante/homeGrupoEstudiante.jsx'
 import EditarPlanificacion from '../../pages/Estudiante/editarPlanificacion/editarPlanificacion.jsx';
 import ModificarTarea from '../../pages/Estudiante/editarPlanificacion/modificarTarea/modificarTarea.jsx'
+
 import VisualizarSprintEst from '../../pages/Estudiante/visualizarSprintEstudiante/visualizarSprint.jsx';
 import VisualizarTarea from '../../pages/Estudiante/tareaEstudiante/viualizarTarea.jsx';
+import ModificarListaTareas from '../../pages/Estudiante/editarPlanificacion/modificarListaTareas/modificarListaTareas.jsx'
 
 function Nav() {
 
@@ -56,6 +59,11 @@ function Nav() {
       <Route path='/homeEstudiante/homeGrupoEstudiante/PlanificacionDeDesarollo/Empresa/:idEmpresa' element={<VerPlanificacionDeDesarollo />} />
       <Route path='/homeEstudiante/homeGrupoEstudiante/PlanificacionInicial/Empresa/:idEmpresa' element={<EditarPlanificacion />} />
       <Route path='/homeEstudiante/homeGrupoEstudiante/sprint/semana/tareas/:idTarea' element={<ModificarTarea />} />
+        {/** Ruta Docente*/}
+        <Route path='/grupoDocente/empresa/:idEmpresa/planificacion/calificarSprint/:idSprint' element={<CalificarSprint/>}/>
+
+        {/** Ruta Estudiante*/}
+        <Route path='/grupoEstudiante/sprint/semana/:idSemana/modificarListaTareas' element={<ModificarListaTareas/>}/>
     </Routes>
   )
 }

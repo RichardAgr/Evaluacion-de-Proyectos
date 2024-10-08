@@ -7,10 +7,14 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\PlanificacionController;
 use App\Http\Controllers\RevisionPlaniController;
+<<<<<<< HEAD
 use App\Http\Controllers\TareaController;
 use App\Http\Controllers\DocenteController;
 use App\Http\Controllers\SprintController;
 
+=======
+use App\Models\RevisionPlani;
+>>>>>>> jhair
 
 /*
 |--------------------------------------------------------------------------
@@ -37,7 +41,8 @@ Route::get('/planificacion/{idEmpresa}', [PlanificacionController::class, 'show'
 
 //jhair
 Route::put('/validar', [PlanificacionController::class, 'validar']);
-Route::post('/addRevision', [RevisionPlaniController::class, 'addRevision']);
+Route::post('/addRevision', [PlanificacionController::class, 'addRevision']);
+
 
 //jhon
 Route::get('/planificacion/notaComentario/{idPlanificacion}', [PlanificacionController::class, 'notaComentario']);
