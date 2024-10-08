@@ -9,12 +9,18 @@ import {
   Box,
   Avatar,
   AvatarGroup,
+  TextField,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import BaseUI from "../../../../components/baseUI/baseUI.jsx";
+import CuadroDialogo from "../../../../components/cuadroDialogo/cuadroDialogo.jsx";
 
 const ModificarListaTareas = () => {
+  const [openRejectDialog, setOpenRejectDialog] = useState(false);
+  const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [taskToDelete, setTaskToDelete] = useState(null);
   const [tasks, setTasks] = useState([
     {
       id: 1,
@@ -26,17 +32,40 @@ const ModificarListaTareas = () => {
     },
     { id: 2, name: "ProductBacklog", assignees: [] },
   ]);
-  const [newTask, setNewTask] = useState("");
 
   const handleAddTask = () => {
-    if (newTask.trim() !== "") {
-      setTasks([...tasks, { id: Date.now(), name: newTask, assignees: [] }]);
-      setNewTask("");
+    setTasks([...tasks, { id: Date.now(), name: "Nueva tarea", assignees: [] }]);
+  };
+
+  const handleConfirmDelete = (id) => {
+    if (taskToDelete !== null) {
+      handleDeleteTask(taskToDelete);
+      setTaskToDelete(null);
     }
+    setOpenDeleteDialog(false);
+
   };
 
   const handleDeleteTask = (id) => {
     setTasks(tasks.filter((task) => task.id !== id));
+  };
+
+  const handleEditTask = (id, newName) => {
+    setTasks(tasks.map(task => 
+      task.id === id ? { ...task, name: newName } : task
+    ));
+  };
+
+  const handleConfirmCancelar = () => {
+    // Lógica específica de esta página
+    console.log("Acción confirmada en EnhancedExamplePage");
+    setOpenRejectDialog(false);
+  };
+
+  const handleConfirmGuardar = () => {
+    // Lógica específica de esta página
+    console.log("Acción confirmada en EnhancedExamplePage");
+    setOpenConfirmDialog(false);
   };
 
   return (
@@ -83,12 +112,14 @@ const ModificarListaTareas = () => {
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}>
-                <ListItemText 
-                  primary={task.name} 
-                  primaryTypographyProps={{ 
-                    variant: "h6", 
-                    component: "h3",
-                    sx: { fontWeight: 'medium' }
+                <TextField
+                  value={task.name}
+                  onChange={(e) => handleEditTask(task.id, e.target.value)}
+                  variant="standard"
+                  fullWidth
+                  InputProps={{
+                    disableUnderline: true,
+                    style: { fontSize: '1.25rem', fontWeight: 'medium' }
                   }}
                 />
                 {task.assignees.length > 0 && (
@@ -103,7 +134,9 @@ const ModificarListaTareas = () => {
                 variant="contained"
                 color="secondary"
                 startIcon={<DeleteIcon />}
-                onClick={() => handleDeleteTask(task.id)}
+                onClick={() => {
+                  setTaskToDelete(task.id);
+                  setOpenDeleteDialog(true);}}
                 sx={{ ml: 2 }}
               >
                 Eliminar
@@ -111,28 +144,12 @@ const ModificarListaTareas = () => {
             </ListItem>
           ))}
         </List>
-        <Box sx={{ display: "flex", flexDirection: "column", mt: 3, mb: 2 }}>
-          <Box sx={{ display: "flex", mb: 2 }}>
-            <input
-              type="text"
-              placeholder="Nueva tarea"
-              value={newTask}
-              onChange={(e) => setNewTask(e.target.value)}
-              style={{
-                flexGrow: 1,
-                padding: '10px',
-                fontSize: '16px',
-                border: '1px solid #ccc',
-                borderRadius: '4px',
-              }}
-            />
-          </Box>
+        <Box sx={{ display: "flex", justifyContent: "center", mt: 3, mb: 2 }}>
           <Button
             variant="contained"
             color="primary"
             startIcon={<AddIcon />}
             onClick={handleAddTask}
-            sx={{ alignSelf: "flex-start" }}
           >
             Añadir tarea
           </Button>
@@ -145,13 +162,45 @@ const ModificarListaTareas = () => {
             gap: "20px",
           }}
         >
-          <Button variant="contained" color="secondary">
+                  <Button
+            variant="contained"
+            color="secondary"
+            onClick={() => setOpenRejectDialog(true)}
+          >
             Cancelar
           </Button>
-          <Button variant="contained" color="primary">
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => setOpenConfirmDialog(true)}
+          >
             Guardar
           </Button>
         </Box>
+        <CuadroDialogo
+          open={openRejectDialog}
+          onClose={() => setOpenRejectDialog(false)}
+          title="Cancelar cambios"
+          description="Todos los cambios realizados se perderán. Esta acción no se puede deshacer."
+          onConfirm={handleConfirmCancelar}
+        />
+        <CuadroDialogo
+          open={openConfirmDialog}
+          onClose={() => setOpenConfirmDialog(false)}
+          title="Guardar cambios"
+          description="Esta acción guardará todos los cambios realizados. ¿Está segur@?"
+
+          onConfirm={handleConfirmGuardar}
+        />
+        <CuadroDialogo
+          open={openDeleteDialog}
+          onClose={() => setOpenDeleteDialog(false)}
+          title="Eliminar tarea"
+          description="Esta acción eliminará la tarea  seleccionada. ¿Está segur@?"
+
+
+          onConfirm={handleConfirmDelete}
+        />
       </Container>
     </BaseUI>
   );

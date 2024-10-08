@@ -35,6 +35,7 @@ function Home() {
           justifyContent: "center",
           alignItems: "center",
           minHeight: "calc(100vh - 200px)", // Adjust this value based on your header and footer height
+          
         }}
       >
         <Button
@@ -45,6 +46,7 @@ function Home() {
           style={{
             padding: "15px 30px",
             fontSize: "1.2rem",
+            margin: "10px", 
           }}
         >
           Ir a Ver Planificacion
@@ -57,6 +59,7 @@ function Home() {
           style={{
             padding: "15px 30px",
             fontSize: "1.2rem",
+            margin: "10px", 
           }}
         >
           Ir a Editar Planificacion
@@ -69,6 +72,7 @@ function Home() {
           style={{
             padding: "15px 30px",
             fontSize: "1.2rem",
+            margin: "10px", 
           }}
         >
           Ir a Validar Empresas
@@ -81,6 +85,7 @@ function Home() {
           style={{
             padding: "15px 30px",
             fontSize: "1.2rem",
+            margin: "10px", 
           }}
         >
           Ir a Calificar Sprint
@@ -93,6 +98,7 @@ function Home() {
           style={{
             padding: "15px 30px",
             fontSize: "1.2rem",
+            margin: "10px", 
           }}
         >
           Ir a Modificar Lista de Tareas

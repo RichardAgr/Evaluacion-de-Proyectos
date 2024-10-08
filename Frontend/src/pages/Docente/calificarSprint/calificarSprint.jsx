@@ -103,7 +103,7 @@ const calificarSprint = () => {
   return (
     <Fragment>
       <BaseUI
-        titulo={"Calificar Sprint"}
+        titulo={"CALIFICAR HITO"}
         ocultarAtras={false}
         confirmarAtras={false}
         dirBack={"/"}
