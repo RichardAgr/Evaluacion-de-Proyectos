@@ -7,14 +7,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\PlanificacionController;
 use App\Http\Controllers\RevisionPlaniController;
-<<<<<<< HEAD
 use App\Http\Controllers\TareaController;
 use App\Http\Controllers\DocenteController;
 use App\Http\Controllers\SprintController;
-
-=======
 use App\Models\RevisionPlani;
->>>>>>> jhair
 
 /*
 |--------------------------------------------------------------------------
