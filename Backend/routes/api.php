@@ -6,7 +6,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\PlanificacionController;
+<<<<<<< HEAD
 use App\Http\Controllers\RevisionPlaniController;
+=======
+use App\Http\Controllers\TareaController;
+use App\Http\Controllers\TareasController;
+
+>>>>>>> ethan
 
 /*
 |--------------------------------------------------------------------------
@@ -22,10 +28,16 @@ use App\Http\Controllers\RevisionPlaniController;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+/** 
+ * TODOS LOS GETS VAN ACA
+*/
 
 Route::get('/empresa/{id}', [EmpresaController::class, 'getEmpresaData']);
+<<<<<<< HEAD
 Route::get('/empresas/', [EmpresaController::class, 'getListaEmpresas']);
 
+=======
+>>>>>>> ethan
 Route::get('/planificacion/{idEmpresa}', [PlanificacionController::class, 'show']);
 
 //jhair
@@ -36,6 +48,13 @@ Route::post('/addRevision', [RevisionPlaniController::class, 'addRevision']);
 Route::get('/planificacion/notaComentario/{idPlanificacion}', [PlanificacionController::class, 'notaComentario']);
 Route::get('/planificacionAceptadas', [PlanificacionController::class, 'planificacionAceptadas']);
 Route::get('/planificacionRechazadas', [PlanificacionController::class, 'planificacionRechazadas']);
-
+Route::get('/tarea/{idTarea}', [TareaController::class, 'obtenerTarea']);
+Route::get('/docente/empresa/{idEmpresa}', [PlanificacionController::class, 'obtenerDocentePorEmpresa']);
+Route::get('/tareaFor/{idTarea}', [TareasController::class, 'obtenerTarea2']);
+/**
+ * TODOS LOS POST VAN ACA
+ */
 //Para crear la planificacion o modificarla
 Route::post('/planificacion/guardar', [PlanificacionController::class, 'crearPlanificacion']);
+// Ruta para crear una tarea
+Route::post('/tarea/crear', [TareaController::class, 'store']);

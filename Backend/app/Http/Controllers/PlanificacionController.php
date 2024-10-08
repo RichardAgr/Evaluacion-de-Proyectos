@@ -9,7 +9,14 @@ use Illuminate\Http\JsonResponse; // Para las respuestas JSON
 use App\Models\Planificacion; // Importa tu modelo Planificacion
 use App\Models\Sprint; // Importa tu modelo Sprint
 use App\Models\Empresa; // Asegúrate de importar el modelo Empresa
+<<<<<<< HEAD
 use Exception;
+=======
+use App\Models\EstudiantesEmpresas;
+use App\Models\Grupo;
+use App\Models\Docente;
+use Illuminate\Support\Facades\DB;
+>>>>>>> ethan
 
 class PlanificacionController extends Controller
 {
@@ -145,8 +152,8 @@ class PlanificacionController extends Controller
 
         $data = [
 
-            'notaPlanificacion' => $planificacion->notaPlanificacion ?? null,
-            'comentarioDocente' => $planificacion->comentarioDocente ?? null,
+            'notaplanificacion' => $planificacion->notaplanificacion ?? null,
+            'comentarioocente' => $planificacion->comentariodocente ?? null,
             'fechaEntrega' => $planificacion->fechaEntrega
         ];
 
@@ -154,6 +161,7 @@ class PlanificacionController extends Controller
         return response()->json($data);
     }
 
+<<<<<<< HEAD
 
 
     public function validar(Request $request)
@@ -186,6 +194,8 @@ class PlanificacionController extends Controller
    
 
 
+=======
+>>>>>>> ethan
     public function crearPlanificacion(Request $request): JsonResponse
     {
         // Validar los datos de entrada
@@ -253,5 +263,37 @@ class PlanificacionController extends Controller
         }
     }
     
+    public function obtenerDocentePorEmpresa($idEmpresa): JsonResponse
+    {
+        // Obtener el primer estudiante asociado a la empresa
+        $estudianteEmpresa = EstudiantesEmpresas::where('idEmpresa', $idEmpresa)->first();
+
+        if (!$estudianteEmpresa) {
+            return response()->json(['error' => 'No se encontraron estudiantes para esta empresa'], 404);
+        }
+
+        // Obtener el ID del estudiante
+        $idEstudiante = $estudianteEmpresa->idEstudiante;
+
+        // Obtener el grupo del estudiante
+        $grupo = Grupo::whereHas('estudiantes', function ($query) use ($idEstudiante) {
+            $query->where('idEstudiante', $idEstudiante);
+        })->first();
+
+        if (!$grupo) {
+            return response()->json(['error' => 'El estudiante no pertenece a ningún grupo'], 404);
+        }
+
+        // Obtener el docente del grupo
+        $docente = $grupo->docente;
+
+        if ($docente) {
+            return response()->json([
+                $docente->nombreDocente,$docente->primerApellido,$docente->segundoApellido,
+            ]);
+        }
+
+        return response()->json(['error' => 'Docente no encontrado'], 404);
+    }
     
 }

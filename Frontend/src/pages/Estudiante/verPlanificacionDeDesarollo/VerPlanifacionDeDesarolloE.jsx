@@ -29,17 +29,10 @@ function PlanificacionDeDesarollo() {
         ]);
         setEmpresaData(empresa);
         setPlanificacionData(planificacion);
-        const [empresa, planificacion] = await Promise.all([
-          getEmpresaData(idEmpresa),
-          getPlanificacion(idEmpresa),
-        ]);
-        setEmpresaData(empresa);
-        setPlanificacionData(planificacion);
       } catch (error) {
         console.error('Error en la solicitud:', error.message);
         setError(`Error en la solicitud: ${error.message}`);
-      } finally {
-      } finally {
+      }finally {
         setLoading(false);
       }
     };
@@ -58,8 +51,6 @@ function PlanificacionDeDesarollo() {
           </ButtonBackAndTitle>
           <div className='pageBorder'>
             <div className='pageBorder_interior'>
-              <InfoEmpresa nombreLargo= {empresaData.nombreLargo} nombreCorto = {empresaData.nombreEmpresa} integrantes={empresaData.integrantes}></InfoEmpresa>
-              {!planificacionData.aceptada?
               <InfoEmpresa nombreLargo= {empresaData.nombreLargo} nombreCorto = {empresaData.nombreEmpresa} integrantes={empresaData.integrantes}></InfoEmpresa>
               {!planificacionData.aceptada?
                 <div className='divContainerPlani'>
