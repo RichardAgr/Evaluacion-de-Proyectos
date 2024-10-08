@@ -12,6 +12,7 @@ import ValidarPlanificacion from '../../pages/Docente/validarPlanificacion/valid
 import TareaPagina from '../../pages/Docente/gestionEmpresasTareas/tareaPagina.jsx';
 import CalificarEmpresas from '../../pages/Docente/gestionEmpresasTareas/calificarEmpresas.jsx';
 import SprintsEmpresas from '../../pages/Docente/gestionEmpresasTareas/sprintsEmpresas.jsx';
+import SprintsSemanas from '../../pages/Docente/gestionEmpresasTareas/sprintsSemanas.jsx';
 
 //archivos estudiante
 import HomeEstudiante from '../../pages/Estudiante/homeEstudiante/homeEstudiante.jsx'
@@ -40,7 +41,8 @@ function Nav() {
       {/** Rutas Adrian*/}
       <Route path='/grupoDocente/calificarTareasEmpresas/:idDocente/empresas' element={<CalificarEmpresas />} />
       <Route path='/grupoDocente/calificarTareasEmpresas/empresas/:idEmpresa/:idDocente/sprints' element={<SprintsEmpresas />} />
-      <Route path='/grupoDocente/calificarTareasEmpresas/empresas/sprints/semanas/tareas/:idTarea/tarea' element={<TareaPagina />} />
+      <Route path='/grupoDocente/calificarTareasEmpresas/empresas/sprints/:idSprint/:idEmpresa/:idDocente/semanas' element={<SprintsSemanas />} />
+      <Route path='/grupoDocente/calificarTareasEmpresas/empresas/sprints/semanas/tareas/:idTarea/:idSprint/:idEmpresa/:idDocente/tarea' element={<TareaPagina />} />
 
 
       {/** Rutas Joaquin*/}

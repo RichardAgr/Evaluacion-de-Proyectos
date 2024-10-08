@@ -83,6 +83,40 @@ class SprintController extends Controller
         return response()->json($response);
     }
 
+    public function obtenerSemanasYTareas($idSprint)
+    {
+        try {
     
+            $sprint = Sprint::with(['semanas.tareas'])->findOrFail($idSprint);
+
+    
+            $response = [
+                'success' => true,
+                'sprint' => $sprint->idSprint,
+                'semanas' => $sprint->semanas->map(function ($semana) {
+                    return [
+                        'idSemana' => $semana->idSemana,
+                        'tareas' => $semana->tareas->map(function ($tarea) {
+                            return [
+                                'idTarea' => $tarea->idTarea,
+                                'comentario' => $tarea->comentario,
+                                'textoTarea' => $tarea->textoTarea,
+                                'fechaEntrega' => $tarea->fechaEntrega,
+                                'notaTarea' => $tarea->notaTarea
+                            ];
+                        }),
+                    ];
+                }),
+            ];
+
+            return response()->json($response);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al obtener los datos del sprint.',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
 
 }

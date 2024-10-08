@@ -7,7 +7,6 @@ import NombreEmpresa from '../../../components/infoEmpresa/nombreEmpresa';
 
 function SprintsEmpresas() {
     let { idEmpresa, idDocente } = useParams();
-    console.log("Ide es"+ idDocente);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [sprintsData, setSprintsData] = useState([]);
@@ -37,15 +36,15 @@ function SprintsEmpresas() {
     return (
         <Fragment>
             <BaseUI
-                titulo={'CALIFICAR SPRINTS'}
+                titulo={`CALIFICAR TAREAS SPRINTS `}
                 ocultarAtras={false}
                 confirmarAtras={false}
-                dirBack={`/grupoDocente/calificarTareasEmpresas/`+ idDocente + `/empresas`}  // Cambia la ruta según tus necesidades
+                dirBack={`/grupoDocente/calificarTareasEmpresas/` + idDocente + `/empresas`}
             >
                 <NombreEmpresa nombreLargo={nombreLargo} nombreCorto={nombreEmpresa}></NombreEmpresa>
 
                 {sprintsData.length > 0 ? (
-                    <SprintTareas sprints={sprintsData} />
+                    <SprintTareas sprints={sprintsData} idDocente={idDocente} idEmpresa={idEmpresa} />
                 ) : (
                     <h3>No hay sprints disponibles para esta empresa.</h3>
                 )}

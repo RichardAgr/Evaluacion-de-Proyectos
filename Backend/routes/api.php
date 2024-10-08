@@ -11,6 +11,7 @@ use App\Http\Controllers\TareaController;
 use App\Http\Controllers\DocenteController;
 use App\Http\Controllers\SprintController;
 
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -64,3 +65,4 @@ Route::get('/estudiante/sprint/semana/tarea/{idTarea}',[SprintController::class,
 Route::post('/tarea/{idTarea}/calificar', [TareaController::class, 'calificarTarea']);
 Route::get('/docente/{idDocente}/empresas', [DocenteController::class, 'obtenerEmpresasPorDocente']);
 Route::get('/empresa/{idEmpresa}/{idDocente}/sprints', [EmpresaController::class, 'obtenerSprints']);
+Route::get('/sprint/{idSprint}/semanas', [SprintController::class, 'obtenerSemanasYTareas']);

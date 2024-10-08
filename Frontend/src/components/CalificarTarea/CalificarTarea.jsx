@@ -179,7 +179,7 @@ const CalificarTarea = ({ idTarea }) => {
         openDialog={openCancelDialog}
         setOpenDialog={setOpenCancelDialog}
         especial={() => window.location.reload()}
-        titleDialog={'¿Estás seguro de que quieres descartar los cambios?, esta accion te llevara atras'}
+        titleDialog={'¿Estás seguro de que quieres descartar los cambios?'}
         textDialog={'Esta acción no se puede deshacer. Todos los cambios realizados se perderán.'}
       ></PopUpDialog>
       {/* Mensaje de Alerta */}

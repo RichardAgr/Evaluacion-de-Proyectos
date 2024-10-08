@@ -1,4 +1,5 @@
 import { Fragment, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -9,12 +10,13 @@ import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import TablePagination from '@mui/material/TablePagination';
 
-function SprintTareas({ sprints }) {
+function SprintTareas({ sprints, idDocente, idEmpresa }) {
+    const navigate = useNavigate();
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10); // Para controlar la paginación
 
     const handleVerTareas = (idSprint) => {
-        console.log(`Ver tareas del Sprint ID: ${idSprint}`);
+        navigate(`/grupoDocente/calificarTareasEmpresas/empresas/sprints/${idSprint}/${idDocente}/${idEmpresa}/semanas`);
     };
 
     const handleChangePage = (event, newPage) => {
