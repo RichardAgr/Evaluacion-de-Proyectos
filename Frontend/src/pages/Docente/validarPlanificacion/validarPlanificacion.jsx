@@ -19,13 +19,15 @@ import { getPlanificacion } from "../../../api/getPlanificacion.jsx";
 import { validar } from "../../../api/validarPlanificacion/validar.jsx";
 import { addRevision } from "../../../api/validarPlanificacion/addRevision.jsx";
 import InfoSnackbar from "../../../components/infoSnackbar/infoSnackbar.jsx";
+import CuadroComentario from "../../../components/cuadroComentario/cuadroComentario.jsx";
+import CuadroNota from "../../../components/cuadroNota/cuadroNota.jsx";
 
 function ValidarPlanificacion() {
   const [openValidateDialog, setOpenValidateDialog] = useState(false);
   const [openRejectDialog, setOpenRejectDialog] = useState(false);
   const [groupComment, setGroupComment] = useState("");
   const [privateComment, setPrivateComment] = useState("");
-  const [nota, setNota] = useState(0);
+  const [nota, setNota] = useState('');
 
   let { idEmpresa } = useParams();
   const [empresaData, setEmpresaData] = useState(null);
@@ -222,45 +224,20 @@ function ValidarPlanificacion() {
         dirBack={"/"}
       >
         <TablaPlanificacion sprints={planificacionData.sprints} />
-        <TextField
-          label="Comentarios para el grupo"
-          multiline
-          rows={4}
-          value={groupComment}
-          onChange={(e) => setGroupComment(e.target.value)}
-          fullWidth
-          margin="normal"
+        <CuadroComentario
+        title="Comentario para el grupo" 
+        maxChars={200} 
+        onTextChange={(text) => setGroupComment(text)} 
         />
 
-        <TextField
-          label="Comentarios privados"
-          multiline
-          rows={4}
-          value={privateComment}
-          onChange={(e) => setPrivateComment(e.target.value)}
-          fullWidth
-          margin="normal"
+        <CuadroComentario
+        title="Comentario privado" 
+        maxChars={400} 
+        onTextChange={(text) => setPrivateComment(text)} 
         />
-        <Box sx={{ display: "flex", alignItems: "center", mt: 2 }}>
-          <Typography variant="body1" sx={{ mr: 2 }}>
-            Nota:
-          </Typography>
-          <TextField
-            type="number"
-            value={nota}
-            onChange={(e) => {
-              const value = e.target.value;
-              setNota(value === "" ? "" : Number(value));
-            }}
-            inputProps={{
-              min: 0,
-              max: 100,
-              style: { width: "50px", height: "50px", textAlign: "center" },
-            }}
-            variant="outlined"
-            size="small"
-          />
-        </Box>
+        <CuadroNota
+        onNoteChange={(value) => setNota(value)} 
+      />
         <Box
           sx={{
             marginTop: "40px",
