@@ -28,10 +28,6 @@ Route::get('/notas1/{idPlanificacion}', [PlanificacionController::class, 'notaCo
 Route::get('/planificaciones/{idPlanificacion}/sprints', [PlanificacionController::class, 'showP']);
 Route::post('/planificaciones1/{idPlanificacion}/sprints', [PlanificacionController::class, 'agregarSprint']);
 Route::put('/planificacion2/{idPlanificacion}/{idSprint}', [PlanificacionController::class, 'modificarSprint']);
-
-<<<<<<< HEAD
-
-//HU Validar Planificion
 Route::put('/validar', [PlanificacionController::class, 'validar']);
 Route::put('/modificarValidar', [RevisionPlaniController::class, 'addRevision']);
 
@@ -46,20 +42,9 @@ Route::get('/prueba2', [PlanificacionController::class, 'testValidar']);
 Route::get('/token', function () {
     return csrf_token();
 });
-=======
+
 Route::post('/planificacionGestion', [PlanificacionController::class, 'gestionarPlanificacion']);
-
-
 Route::get('/token', function () {
     return csrf_token(); 
 });
 
-/*Route::get('/test-db', function () {
-    try {
-        DB::connection()->getPdo();
-        return "Conexión exitosa a la base de datos: " . DB::connection()->getDatabaseName();
-    } catch (\Exception $e) {
-        return "No se pudo conectar a la base de datos. Error: " . $e->getMessage();
-    }
-});*/
->>>>>>> ethan

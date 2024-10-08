@@ -6,13 +6,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\PlanificacionController;
-<<<<<<< HEAD
 use App\Http\Controllers\RevisionPlaniController;
-=======
 use App\Http\Controllers\TareaController;
 use App\Http\Controllers\TareasController;
-
->>>>>>> ethan
 
 /*
 |--------------------------------------------------------------------------
@@ -33,11 +29,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 */
 
 Route::get('/empresa/{id}', [EmpresaController::class, 'getEmpresaData']);
-<<<<<<< HEAD
 Route::get('/empresas/', [EmpresaController::class, 'getListaEmpresas']);
-
-=======
->>>>>>> ethan
 Route::get('/planificacion/{idEmpresa}', [PlanificacionController::class, 'show']);
 
 //jhair
