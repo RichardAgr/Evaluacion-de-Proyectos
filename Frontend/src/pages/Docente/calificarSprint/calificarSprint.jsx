@@ -12,15 +12,19 @@ import {
   Box,
   Grid,
 } from "@mui/material";
-
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import BaseUI from "../../../components/baseUI/baseUI.jsx";
+import CuadroNota from "../../../components/cuadroNota/cuadroNota.jsx";
+import CuadroDialogo from "../../../components/cuadroDialogo/cuadroDialogo.jsx";
+import CuadroComentario from "../../../components/cuadroComentario/cuadroComentario.jsx";
 
-const calificarSprint = () => {
+const CalificarSprint = () => {
   const [hitos, setHitos] = useState([
     {
       nombre: "Hito 1",
       calificacionGeneral: 0,
+      nota: "",
+      comentario: "",
       evaluaciones: [
         {
           semana: 1,
@@ -28,12 +32,12 @@ const calificarSprint = () => {
             {
               nombre: "Tarea 1",
               descripcion: "Recopilación de requisitos",
-              calificacion: 8,
+              calificacion: 80,
             },
             {
               nombre: "Tarea 2",
               descripcion: "Desarrollo de arquitectura",
-              calificacion: 7,
+              calificacion: 73,
             },
           ],
         },
@@ -43,12 +47,12 @@ const calificarSprint = () => {
             {
               nombre: "Tarea 3",
               descripcion: "Diseño de interfaz de usuario",
-              calificacion: 9,
+              calificacion: 91,
             },
             {
               nombre: "Tarea 4",
               descripcion: "Implementación de base de datos",
-              calificacion: 8,
+              calificacion: 38,
             },
           ],
         },
@@ -57,6 +61,8 @@ const calificarSprint = () => {
     {
       nombre: "Hito 2",
       calificacionGeneral: 0,
+      nota: "",
+      comentario: "",
       evaluaciones: [
         {
           semana: 3,
@@ -64,12 +70,12 @@ const calificarSprint = () => {
             {
               nombre: "Tarea 5",
               descripcion: "Desarrollo de funcionalidades principales",
-              calificacion: 7,
+              calificacion: 45,
             },
             {
               nombre: "Tarea 6",
               descripcion: "Pruebas unitarias",
-              calificacion: 8,
+              calificacion: 100,
             },
           ],
         },
@@ -95,6 +101,18 @@ const calificarSprint = () => {
     setHitos(nuevosHitos);
   };
 
+  const handleNotaChange = (hitoIndex, valor) => {
+    const nuevosHitos = [...hitos];
+    nuevosHitos[hitoIndex].nota = valor;
+    setHitos(nuevosHitos);
+  };
+
+  const handleComentarioChange = (hitoIndex, valor) => {
+    const nuevosHitos = [...hitos];
+    nuevosHitos[hitoIndex].comentario = valor;
+    setHitos(nuevosHitos);
+  };
+
   const guardarEvaluacion = () => {
     console.log("Evaluación guardada:", hitos);
     // Aquí puedes implementar la lógica para guardar la evaluación en tu backend
@@ -103,7 +121,7 @@ const calificarSprint = () => {
   return (
     <Fragment>
       <BaseUI
-        titulo={"CALIFICAR HITO"}
+        titulo={"CALIFICAR HITOS"}
         ocultarAtras={false}
         confirmarAtras={false}
         dirBack={"/"}
@@ -148,29 +166,15 @@ const calificarSprint = () => {
                   Promedio de las tareas: {calcularPromedioHito(hito)}
                 </Typography>
               </Box>
-              <Box sx={{ mt: 2 }}>
-                <Grid container spacing={2} alignItems="center">
-                  <Grid item xs={12} sm={8}>
-                    <Typography variant="body1">
-                      Calificación general del Hito:
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={12} sm={4}>
-                    <TextField
-                      type="number"
-                      value={hito.calificacionGeneral}
-                      onChange={(e) =>
-                        handleCalificacionGeneralChange(
-                          hitoIndex,
-                          Number(e.target.value)
-                        )
-                      }
-                      inputProps={{ min: 0, max: 10 }}
-                      fullWidth
-                    />
-                  </Grid>
-                </Grid>
-              </Box>
+              <CuadroNota
+                title={`Nota para ${hito.nombre} :`}
+                onNoteChange={(value) => handleNotaChange(hitoIndex, value)}
+              />
+              <CuadroComentario
+                title={`Comentario para ${hito.nombre}`}
+                maxChars={500}
+                onTextChange={(value) => handleComentarioChange(hitoIndex, value)}
+              />
             </CardContent>
           </Card>
         ))}
@@ -182,4 +186,4 @@ const calificarSprint = () => {
   );
 };
 
-export default calificarSprint;
+export default CalificarSprint;

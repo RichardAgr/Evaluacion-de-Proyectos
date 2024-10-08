@@ -20,21 +20,38 @@ export default function CuadroNota({ title = "Nota:", onNoteChange }) {
         display: "flex",
         alignItems: "center",
         width: "100%",
-        maxWidth: 135,
+        maxWidth: "none",
         mt: 2,
       }}
     >
-      <Typography variant="body1" sx={{ mr: 2 }}>
+      <Typography 
+        variant="body1" 
+        sx={{ 
+          mr: 2,
+          whiteSpace: "nowrap",
+          minWidth: "fit-content",
+        }}
+      >
         {title}
       </Typography>
       <TextField
         type="number"
         value={note}
         onChange={handleNoteChange}
-        fullWidth
-        margin="normal"
-        inputProps={{ min: 0, max: 100 }}
+        sx={{
+          width: "80px",
+            height: '60px',
+            padding: "5px"
+        }}
+        inputProps={{ 
+          min: 0, 
+          max: 100,
+          style: { 
+            textAlign: 'center',
+          }
+        }}
         helperText="1 - 100"
+        margin="none"
       />
     </Box>
   );

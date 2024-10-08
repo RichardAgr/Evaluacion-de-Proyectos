@@ -27,7 +27,7 @@ function ValidarPlanificacion() {
   const [openRejectDialog, setOpenRejectDialog] = useState(false);
   const [groupComment, setGroupComment] = useState("");
   const [privateComment, setPrivateComment] = useState("");
-  const [nota, setNota] = useState('');
+  const [nota, setNota] = useState("");
 
   let { idEmpresa } = useParams();
   const [empresaData, setEmpresaData] = useState(null);
@@ -225,19 +225,17 @@ function ValidarPlanificacion() {
       >
         <TablaPlanificacion sprints={planificacionData.sprints} />
         <CuadroComentario
-        title="Comentario para el grupo" 
-        maxChars={200} 
-        onTextChange={(text) => setGroupComment(text)} 
+          title="Comentario para el grupo"
+          maxChars={200}
+          onTextChange={(text) => setGroupComment(text)}
         />
 
         <CuadroComentario
-        title="Comentario privado" 
-        maxChars={400} 
-        onTextChange={(text) => setPrivateComment(text)} 
+          title="Comentario privado"
+          maxChars={400}
+          onTextChange={(text) => setPrivateComment(text)}
         />
-        <CuadroNota
-        onNoteChange={(value) => setNota(value)} 
-      />
+        <CuadroNota onNoteChange={(value) => setNota(value)} />
         <Box
           sx={{
             marginTop: "40px",
@@ -296,10 +294,19 @@ function ValidarPlanificacion() {
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={() => setOpenRejectDialog(false)} variant="contained" color="secondary">
+            <Button
+              onClick={() => setOpenRejectDialog(false)}
+              variant="contained"
+              color="secondary"
+            >
               Cancelar
             </Button>
-            <Button onClick={confirmReject} variant="contained" color="primary" autoFocus>
+            <Button
+              onClick={confirmReject}
+              variant="contained"
+              color="primary"
+              autoFocus
+            >
               Confirmar
             </Button>
           </DialogActions>
