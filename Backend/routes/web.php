@@ -36,7 +36,7 @@ Route::put('/modificarValidar', [RevisionPlaniController::class, 'addRevision'])
 //test HU Validar Planificacion
 //test para modificar la BD, añadiendo comentarios y nota en una tabla intermedia
 //anade o sobreescribe una revision
-Route::get('/prueba', [RevisionPlaniController::class, 'testAdd']);
+Route::get('/prueba', [PlanificacionController::class, 'testAdd']);
 //test para verificar si la funcion Validar funciona correctamente
 Route::get('/prueba2', [RevisionPlaniController::class, 'testValidar']);
 

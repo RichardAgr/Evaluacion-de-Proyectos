@@ -9,6 +9,7 @@ use Illuminate\Http\JsonResponse; // Para las respuestas JSON
 use App\Models\Planificacion; // Importa tu modelo Planificacion
 use App\Models\Sprint; // Importa tu modelo Sprint
 use App\Models\Empresa; // Asegúrate de importar el modelo Empresa
+use Illuminate\Support\Facades\Validator;
 use Exception;
 
 class PlanificacionController extends Controller
@@ -154,7 +155,52 @@ class PlanificacionController extends Controller
         return response()->json($data);
     }
 
-
+    public function addRevision(Request $request)
+    {
+        try {
+            // validar datos
+            $validator = Validator::make($request->all(), [
+                'idEmpresa' => 'required|integer',
+                'nota' => 'numeric|min:0|max:100',
+                'comentario' => 'nullable|string',
+            ]);
+            if ($validator->fails()) {
+                return response()->json([
+                    'message' => 'Los datos proporcionados no son válidos.',
+                    'errors' => $validator->errors()
+                ], 422);
+            }
+            $validatedData = $validator->validated();
+            //anadir comentario grupal, comentario privado y nota, 
+            //verificar que la fila de la empresa existe
+            $planificacion = Planificacion::where('idEmpresa', $validatedData['idEmpresa'])->first();
+            if (!$planificacion) {
+                return response()->json([
+                    'message' => 'No se encontró la planificación para la empresa especificada.'
+                ], 404);
+            }
+            // Añadir nota de planificación
+            if (isset($validatedData['nota'])) {
+                $planificacion->notaplanificacion = $validatedData['nota'];
+            }
+            // Añadir comentario del docente
+            if (isset($validatedData['comentario'])) {
+                $planificacion->comentariodocente = $validatedData['comentario'];
+            }
+            // Guardar los cambios
+            $planificacion->save();
+            // devolver respuesta exitosa
+            return response()->json([
+                'message' => 'Revisión guardada exitosamente.'
+            ], 200);
+        } catch (Exception $e) {
+            // Capturar otros errores
+            return response()->json([
+                'message' => 'Hubo un error al procesar la solicitud.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
 
     public function validar(Request $request)
     {

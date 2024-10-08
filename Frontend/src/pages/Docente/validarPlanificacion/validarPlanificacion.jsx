@@ -95,7 +95,7 @@ function ValidarPlanificacion() {
   const confirmValidate = async () => {
     setOpenValidateDialog(false);
     console.log(idEmpresa);
-    const revisionResult = await addRevision(idEmpresa, nota, groupComment, 2);
+    const revisionResult = await addRevision(idEmpresa, nota, groupComment);
 
     if (revisionResult.errors != null) {
       const errorMessages = Object.keys(revisionResult.errors)

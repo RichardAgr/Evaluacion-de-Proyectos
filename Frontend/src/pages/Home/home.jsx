@@ -44,7 +44,7 @@ function Home() {
             fontSize: "1.2rem",
           }}
         >
-          Go to Ver Planificacion
+          Ir a Ver Planificacion
         </Button>
         <Button
           variant="contained"
@@ -56,7 +56,7 @@ function Home() {
             fontSize: "1.2rem",
           }}
         >
-          Go to Editar Planificacion
+          Ir a Editar Planificacion
         </Button>
         <Button
           variant="contained"
@@ -68,7 +68,19 @@ function Home() {
             fontSize: "1.2rem",
           }}
         >
-          Go to ValidarEmpresas
+          Ir a Validar Empresas
+        </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          size="large"
+          onClick={handleNavigateToModificarLista}
+          style={{
+            padding: "15px 30px",
+            fontSize: "1.2rem",
+          }}
+        >
+          Ir a Modificar Lista de Tareas
         </Button>
       </div>
       <Footer />

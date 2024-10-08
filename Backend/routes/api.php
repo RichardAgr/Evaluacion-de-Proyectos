@@ -31,7 +31,8 @@ Route::get('/planificacion/{idEmpresa}', [PlanificacionController::class, 'show'
 
 //jhair
 Route::put('/validar', [PlanificacionController::class, 'validar']);
-Route::post('/addRevision', [RevisionPlaniController::class, 'addRevision']);
+Route::post('/addRevisio', [RevisionPlaniController::class, 'addRevision']);//mal mal mal
+Route::post('/addRevision', [PlanificacionController::class, 'addRevision']);
 
 //testValidar
 Route::put('/prueba2', [RevisionPlaniController::class, 'testValidar']);
