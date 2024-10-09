@@ -8,6 +8,8 @@ use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\PlanificacionController;
 use App\Http\Controllers\TareaController;
 use App\Http\Controllers\TareasController;
+use App\Http\Controllers\GrupoController;
+use App\Http\Controllers\EstudianteController;
 
 
 /*
@@ -36,6 +38,8 @@ Route::get('/planificacionRechazadas', [PlanificacionController::class, 'planifi
 Route::get('/tarea/{idTarea}', [TareaController::class, 'obtenerTarea']);
 Route::get('/docente/empresa/{idEmpresa}', [PlanificacionController::class, 'obtenerDocentePorEmpresa']);
 Route::get('/tareaFor/{idTarea}', [TareasController::class, 'obtenerTarea2']);
+Route::get('/grupos', [GrupoController::class, 'obtenerTodosLosGrupos']);
+Route::get('/grupo/{idGrupo}/participantes', [GrupoController::class, 'obtenerEstudiantesYDocentePorGrupo']);
 /**
  * TODOS LOS POST VAN ACA
  */
@@ -43,3 +47,5 @@ Route::get('/tareaFor/{idTarea}', [TareasController::class, 'obtenerTarea2']);
 Route::post('/planificacion/guardar', [PlanificacionController::class, 'crearPlanificacion']);
 // Ruta para crear una tarea
 Route::post('/tarea/crear', [TareaController::class, 'store']);
+//Para asignar grupos
+Route::post('/asignarEstudiante', [EstudianteController::class, 'asignarEstudianteAGrupo']);
