@@ -2,6 +2,11 @@
   font-family: 'Montserrat';
   src: url('./assets/Fonts/Montserrat-VariableFont_wght.ttf') format('truetype');
 }
+
+*{
+  margin:0;
+  padding: 0;
+}
 :root {
   font-family: 'Montserrat', sans-serif;
   font-synthesis: none;
@@ -22,6 +27,8 @@
   display: block;
 }
 .pageBorder{
+  padding:  2vh;
+
   display: flex;
   justify-content: center;
   min-height: calc(74vh);
@@ -116,3 +123,42 @@ h1,h2,h3{
 
   justify-content: end;
  }
+ .collapse-header {
+  display: flex; 
+  min-height: 1vw; 
+  width: 50vw; 
+  border: 0.4rem; 
+  cursor: pointer; 
+  padding: 13px; 
+  background-color: #d0d4e4; 
+  user-select: none; 
+  margin: 0 auto;
+  font-family: 'Montserrat', sans-serif; 
+  font-weight: normal;
+}
+.collapse-child {
+  display: flex; 
+  min-height: 1vw; 
+  width: 50vw; 
+  border: 0.4rem;
+  cursor: pointer; 
+  padding: 13px; 
+  background-color: #d0d4e4; 
+  user-select: none; 
+  margin: 0 auto; 
+  font-family: 'Montserrat', sans-serif; 
+  font-weight: normal;
+  margin-left: 5vw; 
+}
+
+.prueba{
+  display: flex; 
+
+}
+
+.visualizarSprint{
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

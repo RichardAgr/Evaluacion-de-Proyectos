@@ -19,6 +19,12 @@ function Home() {
   const handleNavigateToValidarEmpresas = () => {
     navigate("/grupoDocente/validarPlanificacion/");
   };
+  const handleNavigateToCalificarSprint = () => {
+    navigate("/grupoDocente/empresa/1/planificacion/calificarSprint/1");
+  };
+  const handleNavigateToModificarLista = () => {
+    navigate("/grupoEstudiante/sprint/semana/1/modificarListaTareas");
+  };
   return (
     <Fragment>
       <Header />
@@ -29,6 +35,7 @@ function Home() {
           justifyContent: "center",
           alignItems: "center",
           minHeight: "calc(100vh - 200px)", // Adjust this value based on your header and footer height
+          
         }}
       >
         <Button
@@ -39,9 +46,10 @@ function Home() {
           style={{
             padding: "15px 30px",
             fontSize: "1.2rem",
+            margin: "10px", 
           }}
         >
-          Go to Ver Planificacion
+          Ir a Ver Planificacion
         </Button>
         <Button
           variant="contained"
@@ -51,9 +59,10 @@ function Home() {
           style={{
             padding: "15px 30px",
             fontSize: "1.2rem",
+            margin: "10px", 
           }}
         >
-          Go to Editar Planificacion
+          Ir a Editar Planificacion
         </Button>
         <Button
           variant="contained"
@@ -63,9 +72,36 @@ function Home() {
           style={{
             padding: "15px 30px",
             fontSize: "1.2rem",
+            margin: "10px", 
           }}
         >
-          Go to ValidarEmpresas
+          Ir a Validar Empresas
+        </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          size="large"
+          onClick={handleNavigateToCalificarSprint}
+          style={{
+            padding: "15px 30px",
+            fontSize: "1.2rem",
+            margin: "10px", 
+          }}
+        >
+          Ir a Calificar Sprint
+        </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          size="large"
+          onClick={handleNavigateToModificarLista}
+          style={{
+            padding: "15px 30px",
+            fontSize: "1.2rem",
+            margin: "10px", 
+          }}
+        >
+          Ir a Modificar Lista de Tareas
         </Button>
       </div>
       <Footer />

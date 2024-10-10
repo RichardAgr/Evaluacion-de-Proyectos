@@ -86,4 +86,26 @@ class EmpresaController extends Controller
         //return response()->json($data);
         return $data;
     }
+    public function obtenerSprints($idEmpresa, $idDocente)
+    {
+        try {
+           
+            $empresa = Empresa::findOrFail($idEmpresa);
+
+            $sprints = $empresa->sprints;
+
+            return response()->json([
+                'success' => true,
+                'nombre' => $empresa->nombreEmpresa,
+                'nombreLargo' => $empresa->nombreLargo,
+                'idDocente' => $idDocente,
+                'sprints' => $sprints
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al obtener los sprints: ' . $e->getMessage()
+            ], 500);
+        }
+    }
 }
