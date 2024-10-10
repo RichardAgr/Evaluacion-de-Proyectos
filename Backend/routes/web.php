@@ -4,6 +4,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\PlanificacionController;
+use App\Http\Controllers\TareaController;
+use App\Http\Controllers\TareasController;
+use App\Http\Controllers\GrupoController;
+use App\Http\Controllers\EstudianteController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -30,6 +34,9 @@ Route::put('/planificacion2/{idPlanificacion}/{idSprint}', [PlanificacionControl
 
 Route::post('/planificacionGestion', [PlanificacionController::class, 'gestionarPlanificacion']);
 
+//Probando el web
+Route::get('/grupo/estudiantes', [GrupoController::class, 'obtenerEstudiantesPorGrupo']);
+Route::get('/grupo/empresas', [GrupoController::class, 'obtenerEmpresasPorGrupoYDocente']);
 
 Route::get('/token', function () {
     return csrf_token(); 

@@ -39,7 +39,7 @@ Route::get('/tarea/{idTarea}', [TareaController::class, 'obtenerTarea']);
 Route::get('/docente/empresa/{idEmpresa}', [PlanificacionController::class, 'obtenerDocentePorEmpresa']);
 Route::get('/tareaFor/{idTarea}', [TareasController::class, 'obtenerTarea2']);
 Route::get('/grupos', [GrupoController::class, 'obtenerTodosLosGrupos']);
-Route::get('/grupo/{idGrupo}/participantes', [GrupoController::class, 'obtenerEstudiantesYDocentePorGrupo']);
+Route::get('/grupo/{idGrupo}/participantes', [GrupoController::class, 'obtenerEstudiantesPorGrupo']);
 /**
  * TODOS LOS POST VAN ACA
  */

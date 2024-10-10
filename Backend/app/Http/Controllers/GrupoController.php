@@ -29,23 +29,28 @@ class GrupoController extends Controller
         return response()->json($gruposDocentes, 200);
     }
 
-    public function obtenerEstudiantesYDocentePorGrupo($idGrupo)
+    public function obtenerEstudiantesPorGrupo(Request $request)
     {
+        $request->validate([
+            'idGrupo' => 'required|integer',
+            'gestionGrupo' => 'required|string'
+        ]);
         // Consulta para obtener todos los estudiantes y el docente del grupo
         $datosGrupo = DB::table('estudiantesgrupos')
             ->join('grupo', 'estudiantesgrupos.idGrupo', '=', 'grupo.idGrupo')
             ->join('estudiante', 'estudiantesgrupos.idEstudiante', '=', 'estudiante.idEstudiante')
             ->join('docente', 'grupo.idDocente', '=', 'docente.idDocente')
-            ->where('grupo.idGrupo', $idGrupo)
+            ->where('grupo.idGrupo',"=",  $request -> idGrupo)
+            ->where('grupo.gestionGrupo',$request->gestionGrupo)
             ->select(
                 'grupo.numGrupo', 
                 'grupo.gestionGrupo',
                 'estudiante.nombreEstudiante as nombreEstudiante', 
                 'estudiante.primerApellido as apellidoPaternoEstudiante', 
                 'estudiante.segundoApellido as apellidoMaternoEstudiante',
-                'docente.nombreDocente as nombreDocente', 
+                /*'docente.nombreDocente as nombreDocente', 
                 'docente.primerApellido as apellidoPaternoDocente', 
-                'docente.segundoApellido as apellidoMaternoDocente'
+                'docente.segundoApellido as apellidoMaternoDocente'*/
             )
             ->get();
 
@@ -56,6 +61,37 @@ class GrupoController extends Controller
 
         return response()->json($datosGrupo, 200);
     }
-
+    public function obtenerEmpresasPorGrupoYDocente(Request $request)
+    {
+        // Validar los parámetros de entrada
+        $request->validate([
+            'idDocente' => 'required|integer',
+            //'gestionGrupo' => 'required|string',
+            'idGrupo' => 'required|integer'
+        ]);
+    
+        // Ejecutar la consulta
+        $resultados = DB::table('estudiantesgrupos AS eg')
+            ->join('grupo AS g', 'eg.idGrupo', '=', 'g.idGrupo')
+            ->join('docente AS d', 'g.idDocente', '=', 'd.idDocente')
+            ->join('estudiantesempresas AS ee', 'eg.idEstudiante', '=', 'ee.idEstudiante')
+            ->join('empresa AS emp', 'ee.idEmpresa', '=', 'emp.idEmpresa')
+            ->join('estudiante AS e', 'eg.idEstudiante', '=', 'e.idEstudiante') // Asegúrate de unirte a la tabla estudiante
+            ->select('emp.nombreEmpresa', 'g.gestionGrupo')
+            ->where('d.idDocente', $request->idDocente)
+            ->where('g.idGrupo',$request->idGrupo)
+            //->where('g.gestionGrupo', $request->gestionGrupo)
+            ->groupBy('emp.nombreEmpresa','g.gestionGrupo')
+            ->get();
+    
+        if ($resultados->isEmpty()) {
+            return response()->json([
+                'message' => 'No se encontraron registros para el grupo y/o gestión especificados.'
+            ], 404); // Puedes devolver un código 404 o cualquier otro código de estado
+        }
+    
+        // Si hay resultados, retornarlos
+        return response()->json($resultados);
+    }
     
 }
