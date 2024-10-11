@@ -2,7 +2,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 //archivos compartidas
 import Home from '../../pages/Home/home.jsx';
 import VerPlanificacionDeDesarollo from '../../pages/VisualizacionCompartida/verPlanificacionDeDesarollo/VerPlanifacionDeDesarollo.jsx'
->>>>>>> origin/jhon
+
 
 //archivos docente
 import HomeDocente from '../../pages/Docente/homeDocente/homeDocente.jsx'
@@ -51,7 +51,7 @@ function Nav() {
 
       {/** Rutas Joaquin*/}
       <Route path ='/homeEstudiante/homeGrupoEstudiante/sprint/:idSprint' element={<VisualizarSprintEst />} />
-      <Route path ='/homeEstudiante/homeGrupoEstudiante/tarea/:idTarea' element={<VisualizarTarea />} />
+      <Route path ='/homeEstudiante/homeGrupoEstudiante/sprint/:idSprint/tarea/:idTarea' element={<VisualizarTarea />} />
 
 
       {/** Ruta Estudiante*/}

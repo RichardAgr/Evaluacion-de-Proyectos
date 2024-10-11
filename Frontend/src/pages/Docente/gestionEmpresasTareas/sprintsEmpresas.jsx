@@ -28,7 +28,7 @@ function SprintsEmpresas() {
             }
         };
         fetchData();
-    }, [idEmpresa]);
+    });
 
     if (loading) return <p>Cargando datos...</p>;
     if (error) return <p>Error: {error}</p>;

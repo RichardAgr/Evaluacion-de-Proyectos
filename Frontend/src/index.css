@@ -124,31 +124,27 @@ h1,h2,h3{
   justify-content: end;
  }
  .collapse-header {
-  display: flex; 
-  min-height: 1vw; 
-  width: 50vw; 
-  border: 0.4rem; 
+  display: flex;  
+  width: 83%; 
   cursor: pointer; 
-  padding: 13px; 
+  padding: 17px; 
   background-color: #d0d4e4; 
   user-select: none; 
-  margin: 0 auto;
-  font-family: 'Montserrat', sans-serif; 
-  font-weight: normal;
+  margin: auto;
+  margin-bottom: 0.2rem;
+  margin-top: 0.2rem;
+  overflow: auto;
 }
 .collapse-child {
   display: flex; 
-  min-height: 1vw; 
-  width: 50vw; 
-  border: 0.4rem;
+  min-height: 1vw;
+  max-width: 83%;
   cursor: pointer; 
-  padding: 13px; 
+  padding: 17px; 
   background-color: #d0d4e4; 
   user-select: none; 
-  margin: 0 auto; 
-  font-family: 'Montserrat', sans-serif; 
-  font-weight: normal;
-  margin-left: 5vw; 
+  margin:  0.4vw; 
+  margin-left: 10%; 
 }
 
 .prueba{
@@ -161,4 +157,16 @@ h1,h2,h3{
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.descripcion_inputText{
+  display: block;
+  min-height: 14vw;
+  padding: 1rem;
+  border-radius: 0.3rem;
+  -webkit-border-radius: 0.3rem;
+  -moz-border-radius: 0.3rem;
+  -ms-border-radius: 0.3rem;
+  -o-border-radius: 0.3rem;
+  border: 0.3rem solid black;
 }
