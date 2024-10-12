@@ -14,7 +14,6 @@ import {
   Alert,
   AlertTitle,
 } from "@mui/material";
-import PopUpDialog from "../popUPDialog/popUpDialog";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import InfoSnackbar from "../infoSnackbar/infoSnackbar";
@@ -23,22 +22,35 @@ import DecisionButtons from "../Buttons/decisionButtons";
 
 export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
   const [rows, setRows] = useState([]);
-  const [openCancelDialog, setOpenCancelDialog] = useState(false);
-  const [openAlertS, setOpenAlertS] = useState(false);
-  const [openAlertE, setOpenAlertE] = useState(false);
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",
     severity: "info",
   });
-
+  const [cuadroDialogo, setCuadroDialogo] = useState({
+    open: false,
+    onConfirm: () => {},
+    title: "",
+    description: "",
+    onConfirm: () => {},
+  });
   const handleCancel = () => {
-    setOpenCancelDialog(true);
+    setCuadroDialogo({
+      open: true,
+      title: "Descartar los cambios",
+      description: "Esta acción no se puede deshacer. Todos los cambios realizados se perderán.  ¿Está seguro?",
+      onConfirm: () => window.location.reload(),
+    });
   };
-  const [openSaveDialog, setOpenSaveDialog] = useState(false);
   const handleSave = () => {
-    setOpenSaveDialog(true);
+    setCuadroDialogo({
+      open: true,
+      title: "Guardar los cambios",
+      description: "Esta acción guardará todos los cambios realizados en la planificación. ¿Está seguro?",
+      onConfirm: subir,
+    });
   };
+
 
   useEffect(() => {
     const newRows = planificacionData.sprints.map((sprint, index) => {
@@ -215,51 +227,20 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
           style={{ marginTop: "20px" }}
           aria-label="Añadir nueva fila"
         ></AddIcon>
-        <div
-          style={{
-            marginTop: "40px",
-            display: "flex",
-            justifyContent: "flex-end",
-            gap: "20px",
-          }}
-        >
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={handleCancel}
-            aria-label="Descartar cambios"
-          >
-            No Guardar
-          </Button>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleSave}
-            aria-label="Guardar cambios"
-          >
-            Guardar
-          </Button>
-        </div>
+
+        <DecisionButtons
+          rejectButtonText="Descartar"
+          validateButtonText="Guardar cambios"
+          onReject={handleCancel}
+          onValidate={handleSave}
+        />
       </Box>
-      <PopUpDialog
-        openDialog={openCancelDialog}
-        setOpenDialog={setOpenCancelDialog}
-        especial={() => window.location.reload()}
-        titleDialog={
-          "¿Estás seguro de que quieres descartar los cambios?, esta accion te llevara atras"
-        }
-        textDialog={
-          "Esta acción no se puede deshacer. Todos los cambios realizados se perderán."
-        }
-      ></PopUpDialog>
-      <PopUpDialog
-        openDialog={openSaveDialog}
-        setOpenDialog={setOpenSaveDialog}
-        especial={subir}
-        titleDialog={"¿Estás seguro de que quieres guardar los cambios?"}
-        textDialog={
-          "Esta acción guardará todos los cambios realizados en la planificación."
-        }
+      <CuadroDialogo
+        open={cuadroDialogo.open}
+        onClose={() => setCuadroDialogo({ ...cuadroDialogo, open: false })}
+        title={cuadroDialogo.title}
+        description={cuadroDialogo.description}
+        onConfirm={cuadroDialogo.onConfirm}
       />
       <InfoSnackbar
         openSnackbar={snackbar.open}
