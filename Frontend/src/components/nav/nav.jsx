@@ -26,6 +26,10 @@ import VisualizarSprintEst from '../../pages/Estudiante/visualizarSprintEstudian
 import VisualizarTarea from '../../pages/Estudiante/tareaEstudiante/viualizarTarea.jsx';
 import ModificarListaTareas from '../../pages/Estudiante/editarPlanificacion/modificarListaTareas/modificarListaTareas.jsx'
 
+
+import GruposDisponibles from '../../pages/Estudiante/gruposDisponibles/gruposDisponibles.jsx'; // Import the new page
+import InscribirGrupo from '../../pages/Estudiante/gruposDisponibles/inscribirGrupo.jsx';
+import ObtenerEstudiantesPorGrupo from '../../pages/Docente/listas/listaEstudiantes/listaEstudiantes.jsx';
 function Nav() {
 
   return (
@@ -65,6 +69,10 @@ function Nav() {
 
         {/** Ruta Estudiante*/}
         <Route path='/grupoEstudiante/sprint/semana/:idSemana/modificarListaTareas' element={<ModificarListaTareas/>}/>
+
+        <Route path='/homeEstudiante/gruposDisponibles' element={<GruposDisponibles />} />
+        <Route path='/homeEstudiante/inscribirGrupo/:idGrupo' element={<InscribirGrupo />} />
+        <Route path="/homeGrupoDocente/listaEstudiantes/:idGrupo/:gestionGrupo" element={<ObtenerEstudiantesPorGrupo />} />
     </Routes>
   )
 }
