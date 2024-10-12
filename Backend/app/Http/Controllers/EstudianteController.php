@@ -14,7 +14,7 @@ class EstudianteController extends Controller
         $request->validate([
             'idEstudiante' => 'required|integer|exists:estudiante,idEstudiante',
             'idGrupo' => 'required|integer|exists:grupo,idGrupo',
-            'codigoAcceso' => 'required|string'
+            'clave' => 'required|string'
         ]);
 
         // Verificar si la relación ya existe
@@ -25,7 +25,7 @@ class EstudianteController extends Controller
         if ($existeRelacion) {
             return response()->json(['message' => 'Ya esta inscrito en un grupo.'], 400);
         }
-        $passwordCorrecta = Grupo::where('codigoAcceso',$request -> codigoAcceso)
+        $passwordCorrecta = Grupo::where('codigoAcceso',$request -> clave)
                                             ->where('idGrupo', $request->idGrupo)
                                             ->exists();
         if($passwordCorrecta){
@@ -34,11 +34,13 @@ class EstudianteController extends Controller
             $estudiantesGrupo->idEstudiante = $request->idEstudiante;
             $estudiantesGrupo->idGrupo = $request->idGrupo;
             $estudiantesGrupo->save();
-            return response()->json(['message' => 'Estudiante asignado al grupo exitosamente.'], status: 201);
+            return response()->json(['message' => 'Estudiante asignado al grupo exitosamente.'], status: 200);
         }else{
-            return response()->json(['message' => 'Password Incorrecta.'], status: 200 );
+            return response()->json(['message' => 'Password Incorrecta.'], status: 201 );
         }
 
     }
+
+
 
 }

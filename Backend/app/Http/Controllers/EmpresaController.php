@@ -36,4 +36,9 @@ class EmpresaController extends Controller
         // Devolver los datos en formato JSON
         return response()->json($data);
     }
+
+    public function registrarEmpresa(){
+
+        
+    }
 }

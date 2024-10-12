@@ -13,12 +13,14 @@ class GrupoController extends Controller
         $gruposDocentes = DB::table('grupo')
             ->join('docente', 'grupo.idDocente', '=', 'docente.idDocente')
             ->select(
+                'grupo.idGrupo',
                 'grupo.numGrupo', 
                 'docente.nombreDocente as nombre', 
                 'docente.primerApellido as apellidoPaterno', 
                 'docente.segundoApellido as apellidoMaterno', 
-                'grupo.gestionGrupo'
+                //'grupo.gestionGrupo'
             )
+            ->where('grupo.gestionGrupo','=','2024-2')
             ->get();
 
         // Si no se encuentran resultados
@@ -93,5 +95,27 @@ class GrupoController extends Controller
         // Si hay resultados, retornarlos
         return response()->json($resultados);
     }
+    public function getDescripcion($id)
+    {
+        // Recupera la descripción del curso basado en el ID
+        $datosCurso = DB::table('grupo')
+            ->join('docente AS d', 'grupo.idDocente','=','d.idDocente')
+            ->select(
+                'grupo.numGrupo',
+                'd.nombreDocente as nombreDocente', 
+                'd.primerApellido as apellidoPaternoDocente', 
+                'd.segundoApellido as apellidoMaternoDocente',
+                'grupo.descripcion'
+            )
+            ->where('idGrupo', $id) // Asegúrate de usar solo el nombre de la columna
+            ->first(); // Usa first() para obtener un solo resultado
     
+        // Verifica si se encontraron datos
+        if (!$datosCurso) {
+            return response()->json(['message' => 'Curso no encontrado'], 404);
+        }
+    
+        // Devuelve los datos en formato JSON
+        return response()->json($datosCurso);
+    }
 }

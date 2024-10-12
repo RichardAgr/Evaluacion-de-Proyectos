@@ -40,6 +40,8 @@ Route::get('/docente/empresa/{idEmpresa}', [PlanificacionController::class, 'obt
 Route::get('/tareaFor/{idTarea}', [TareasController::class, 'obtenerTarea2']);
 Route::get('/grupos', [GrupoController::class, 'obtenerTodosLosGrupos']);
 Route::get('/grupo/{idGrupo}/participantes', [GrupoController::class, 'obtenerEstudiantesPorGrupo']);
+Route::get('/grupoDescripcion/{idGrupo}', [GrupoController::class, 'getDescripcion']);
+
 /**
  * TODOS LOS POST VAN ACA
  */
