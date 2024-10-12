@@ -35,7 +35,7 @@ function Planificacion() {
   return (
     <Fragment>
       <BaseUI
-        titulo={"MODIFICANDO PLANIFICACION"}
+        titulo={"MODIFICAR PLANIFICACION"}
         ocultarAtras={false}
         confirmarAtras={true}
         dirBack={"/"}

@@ -24,6 +24,7 @@ import CuadroNota from "../../../components/cuadroNota/cuadroNota.jsx";
 import Loading from "../../../components/loading/loading.jsx";
 import NombreEmpresa from "../../../components/infoEmpresa/nombreEmpresa.jsx";
 import CuadroDialogo from "../../../components/cuadroDialogo/cuadroDialogo.jsx";
+import DecisionButtons from "../../../components/Buttons/decisionButtons.jsx";
 
 function ValidarPlanificacion() {
   const [openValidateDialog, setOpenValidateDialog] = useState(false);
@@ -172,34 +173,6 @@ function ValidarPlanificacion() {
     }
   };
 
-  if (planificacionData.aceptada) {
-    return (
-      <Fragment>
-        <BaseUI
-          titulo={"VALIDAR PLANIFICACION"}
-          ocultarAtras={false}
-          confirmarAtras={false}
-          dirBack={"/"}
-        >
-          <Box
-            sx={{
-              display: "flex",
-              height: "100%",
-              width: "100%",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Typography variant="h5">
-              Esta planificación ya ha sido validada.
-            </Typography>
-          </Box>
-        </BaseUI>
-      </Fragment>
-    );
-  }
-
   return (
     <Fragment>
       <BaseUI
@@ -212,6 +185,23 @@ function ValidarPlanificacion() {
           <p>Error: {error}</p>
         ) : loading ? (
           <Loading />
+        ) : planificacionData.aceptada ? (
+          <>
+            <Box
+              sx={{
+                display: "flex",
+                height: "100%",
+                width: "100%",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Typography variant="h5">
+                Esta planificación ya ha sido validada.
+              </Typography>
+            </Box>
+          </>
         ) : (
           <>
             <NombreEmpresa
@@ -231,32 +221,12 @@ function ValidarPlanificacion() {
               onTextChange={(text) => setPrivateComment(text)}
             />
             <CuadroNota onNoteChange={(value) => setNota(value)} />
-            <Box
-              sx={{
-                marginTop: "40px",
-                display: "flex",
-                justifyContent: "flex-end",
-                gap: "20px",
-
-                padding: "20px",
-              }}
-            >
-              <Button
-                variant="contained"
-                color="secondary"
-                onClick={handleReject}
-              >
-                Rechazar Planificación
-              </Button>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={handleValidate}
-              >
-                Validar Planificación
-              </Button>
-            </Box>
-
+            <DecisionButtons
+              rejectButtonText="Rechazar Planificación"
+              validateButtonText="Validar Planificación"
+              onReject={handleReject}
+              onValidate={handleValidate}
+            />
             <CuadroDialogo
               open={openValidateDialog}
               onClose={() => setOpenValidateDialog(false)}
