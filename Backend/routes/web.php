@@ -8,6 +8,8 @@ use App\Http\Controllers\TareaController;
 use App\Http\Controllers\TareasController;
 use App\Http\Controllers\GrupoController;
 use App\Http\Controllers\EstudianteController;
+use App\Http\Controllers\RevisionPlaniController;
+use App\Models\RevisionPlani;
 
 Route::get('/', function () {
     return view('welcome');
@@ -38,15 +40,19 @@ Route::post('/planificacionGestion', [PlanificacionController::class, 'gestionar
 Route::get('/grupo/estudiantes', [GrupoController::class, 'obtenerEstudiantesPorGrupo']);
 Route::get('/grupo/empresas', [GrupoController::class, 'obtenerEmpresasPorGrupoYDocente']);
 
-Route::get('/token', function () {
-    return csrf_token(); 
-});
 
-/*Route::get('/test-db', function () {
-    try {
-        DB::connection()->getPdo();
-        return "Conexión exitosa a la base de datos: " . DB::connection()->getDatabaseName();
-    } catch (\Exception $e) {
-        return "No se pudo conectar a la base de datos. Error: " . $e->getMessage();
-    }
-});*/
+//HU Validar Planificion
+Route::put('/validar', [PlanificacionController::class, 'validar']);
+Route::put('/modificarValidar', [RevisionPlaniController::class, 'addRevision']);
+
+//tests
+//test HU Validar Planificacion
+//test para modificar la BD, añadiendo comentarios y nota en una tabla intermedia
+//anade o sobreescribe una revision
+Route::get('/prueba', [RevisionPlaniController::class, 'testAdd']);
+//test para verificar si la funcion Validar funciona correctamente
+Route::get('/prueba2', [RevisionPlaniController::class, 'testValidar']);
+
+Route::get('/token', function () {
+    return csrf_token();
+});

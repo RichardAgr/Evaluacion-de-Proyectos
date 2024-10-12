@@ -19,7 +19,7 @@ const getGrupoDescripcion = async (idGrupo) => {
 
 const enviarClave = async (idGrupo, clave, idEstudiante) => {
   try {
-    const response = await fetch(`http://127.0.0.1:8000/api/enviarClave`, {
+    const response = await fetch(`http://127.0.0.1:8000/api/asignarEstudiante`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -64,7 +64,7 @@ function GrupoDescripcion() {
 
   const handleEnviarClave = async (e) => {
     e.preventDefault();
-    const idEstudiante = "123"; // Hardcodear el idEstudiante como un string
+    const idEstudiante = "27"; // Hardcodear el idEstudiante como un string
 
     try {
       const response = await enviarClave(idGrupo, clave, idEstudiante);
