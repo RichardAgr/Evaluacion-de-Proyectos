@@ -37,7 +37,7 @@ Route::put('/planificacion2/{idPlanificacion}/{idSprint}', [PlanificacionControl
 Route::post('/planificacionGestion', [PlanificacionController::class, 'gestionarPlanificacion']);
 
 //Probando el web
-Route::get('/grupo/estudiantes', [GrupoController::class, 'obtenerEstudiantesPorGrupo']);
+Route::get('/grupo/estudiantes/{idGrupo}/{gestionGrupo}', [GrupoController::class, 'obtenerEstudiantesPorGrupo']);
 Route::get('/grupo/empresas', [GrupoController::class, 'obtenerEmpresasPorGrupoYDocente']);
 
 
