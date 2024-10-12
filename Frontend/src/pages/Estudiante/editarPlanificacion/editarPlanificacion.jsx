@@ -55,6 +55,7 @@ function Planificacion() {
               planificacionData={planificacionData}
               idEmpresa={planificacionData.idEmpresa}
             />
+            
             <ComentarioNota
               comentario={
                 planificacionData.comentarioDocente || "Sin Comentario Docente"
