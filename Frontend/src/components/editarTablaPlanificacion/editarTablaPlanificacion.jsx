@@ -105,7 +105,7 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
         if (value < currentDate) {
           setSnackbar({
             open: true,
-            message: "No se permite seleccionar fechas anteriores al día actual.",
+            message: `${newRows[index].hito}: No se permite seleccionar fechas anteriores al día actual.`,
             severity: "error",
           });
         } else if (field === "fechaIni") {
@@ -113,23 +113,24 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
             setSnackbar({
               open: true,
               message:
-                "La fecha de inicio no puede ser anterior a la fecha fin del sprint anterior.",
+                `${newRows[index].hito}: La fecha de inicio no puede ser anterior a la fecha fin del sprint anterior.`,
               severity: "error",
             });
-          } else if (value > newRows[index].fechaFin) {
+          } else if (newRows[index].fechaFin!= '' && value > newRows[index].fechaFin) {
             setSnackbar({
               open: true,
               message:
-                "La fecha de inicio no puede ser posterior a la fecha fin del mismo sprint. Verifique el ",
+                `${newRows[index].hito}: La fecha de inicio no puede ser posterior a la fecha fin del mismo sprint. Verifique el `,
   
               severity: "error",
             });
+            console.log(newRows[index]);
           }
         } else if (field === "fechaFin" && value < newRows[index].fechaIni) {
           setSnackbar({
             open: true,
             message:
-              "La fecha fin no puede ser anterior a la fecha de inicio del mismo sprint.",
+              `${newRows[index].hito}: La fecha fin no puede ser anterior a la fecha de inicio del mismo sprint.`,
             severity: "error",
           });
         } else if (field === "fechaEntrega" && value < newRows[index].fechaFin) {
