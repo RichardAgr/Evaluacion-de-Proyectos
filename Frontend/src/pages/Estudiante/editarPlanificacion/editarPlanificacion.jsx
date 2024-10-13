@@ -6,7 +6,7 @@ import { getPlanificacion } from "../../../api/getPlanificacion.jsx";
 import { getNombreEmpresa } from "../../../api/getNombreEmpresa.jsx";
 import NombreEmpresa from "../../../components/infoEmpresa/nombreEmpresa.jsx";
 import BaseUI from "../../../components/baseUI/baseUI.jsx";
-import Loading from  "../../../components/loading/loading.jsx";
+import Loading from "../../../components/loading/loading.jsx";
 
 function Planificacion() {
   let { idEmpresa } = useParams();
@@ -28,6 +28,7 @@ function Planificacion() {
         setError(`Error en la solicitud: ${error.message}`);
       } finally {
         setLoading(false);
+        console.log(planificacionData.comentarioDocente);
       }
     };
     fetchData();
@@ -43,7 +44,7 @@ function Planificacion() {
         {error ? (
           <p>Error: {error}</p>
         ) : loading ? (
-          <Loading/>
+          <Loading />
         ) : (
           <>
             <NombreEmpresa
@@ -55,14 +56,17 @@ function Planificacion() {
               planificacionData={planificacionData}
               idEmpresa={planificacionData.idEmpresa}
             />
-            
-            <ComentarioNota
-              comentario={
-                planificacionData.comentarioDocente || "Sin Comentario Docente"
-              }
-              nota={planificacionData.notaPlanificacion || "Sin Calificar"}
-              linkDir={"ocultar"}
-            />
+            {planificacionData.comentarioDocente != null && (
+              <>
+                <ComentarioNota
+                  comentario={
+                    planificacionData.comentarioDocente
+                  }
+                  nota={planificacionData.notaPlanificacion || "Sin Calificar"}
+                  linkDir={"ocultar"}
+                />
+              </>
+            )}
           </>
         )}
       </BaseUI>

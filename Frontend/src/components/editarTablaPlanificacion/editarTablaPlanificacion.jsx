@@ -32,13 +32,13 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
     onConfirm: () => {},
     title: "",
     description: "",
-    onConfirm: () => {},
   });
   const handleCancel = () => {
     setCuadroDialogo({
       open: true,
       title: "Descartar los cambios",
-      description: "Esta acción no se puede deshacer. Todos los cambios realizados se perderán.  ¿Está seguro?",
+      description:
+        "Esta acción no se puede deshacer. Todos los cambios realizados se perderán.  ¿Está seguro?",
       onConfirm: () => window.location.reload(),
     });
   };
@@ -46,11 +46,11 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
     setCuadroDialogo({
       open: true,
       title: "Guardar los cambios",
-      description: "Esta acción guardará todos los cambios realizados en la planificación. ¿Está seguro?",
+      description:
+        "Esta acción guardará todos los cambios realizados en la planificación. ¿Está seguro?",
       onConfirm: subir,
     });
   };
-
 
   useEffect(() => {
     const newRows = planificacionData.sprints.map((sprint, index) => {
@@ -82,71 +82,79 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
     const newRows = rows.filter((_, i) => i !== index);
     setRows(newRows);
   };
-  const dialogoEliminar = (index,hito) => {
+  const dialogoEliminar = (index, hito) => {
     setCuadroDialogo({
       open: true,
       title: `Eliminar ${hito}`,
-      description: "Esta acción no se puede deshacer. Todos los cambios realizados se perderán.  ¿Está seguro?",
+      description:
+        "Esta acción no se puede deshacer. Todos los cambios realizados se perderán.  ¿Está seguro?",
       onConfirm: () => {
         deleteRow(index);
-        setCuadroDialogo({ ...cuadroDialogo, open: false })
+        setCuadroDialogo({ ...cuadroDialogo, open: false });
       },
     });
   };
-    const handleCellChange = (index, field, value) => {
-      const newRows = [...rows];
-      newRows[index][field] = value;
-  
-      // Validate dates
-      if (field.includes("fecha")) {
-        const currentDate = new Date().toISOString().split("T")[0];
-        const prevSprintEndDate = index > 0 ? rows[index - 1].fechaFin : null;
-  
-        if (value < currentDate) {
+  const handleCellChange = (index, field, value) => {
+    const newRows = [...rows];
+    newRows[index][field] = value;
+
+    // Validate dates
+    if (field.includes("fecha")) {
+      const currentDate = new Date().toISOString().split("T")[0];
+      const prevSprintEndDate = index > 0 ? rows[index - 1].fechaFin : null;
+
+      if (value < currentDate) {
+        setSnackbar({
+          open: true,
+          message: `${newRows[index].hito}: No se permite seleccionar fechas anteriores al día actual.`,
+          severity: "error",
+          autoHide: 1000,
+        });
+      } else if (field === "fechaIni") {
+        if (prevSprintEndDate && value < prevSprintEndDate) {
           setSnackbar({
             open: true,
-            message: `${newRows[index].hito}: No se permite seleccionar fechas anteriores al día actual.`,
+            message: `${newRows[index].hito}: La fecha de inicio no puede ser anterior a la fecha fin del sprint anterior.`,
             severity: "error",
+            autoHide: 1000,
           });
-        } else if (field === "fechaIni") {
-          if (prevSprintEndDate && value < prevSprintEndDate) {
-            setSnackbar({
-              open: true,
-              message:
-                `${newRows[index].hito}: La fecha de inicio no puede ser anterior a la fecha fin del sprint anterior.`,
-              severity: "error",
-            });
-          } else if (newRows[index].fechaFin!= '' && value > newRows[index].fechaFin) {
-            setSnackbar({
-              open: true,
-              message:
-                `${newRows[index].hito}: La fecha de inicio no puede ser posterior a la fecha fin del mismo sprint. Verifique el `,
-  
-              severity: "error",
-            });
-            console.log(newRows[index]);
-          }
-        } else if (field === "fechaFin" && value < newRows[index].fechaIni) {
+        } else if (
+          newRows[index].fechaFin != "" &&
+          value > newRows[index].fechaFin
+        ) {
           setSnackbar({
             open: true,
-            message:
-              `${newRows[index].hito}: La fecha fin no puede ser anterior a la fecha de inicio del mismo sprint.`,
+            message: `${newRows[index].hito}: La fecha de inicio no puede ser posterior a la fecha fin del mismo sprint. Verifique el `,
+
             severity: "error",
+            autoHide: 1000,
           });
-        } else if (field === "fechaEntrega" && value < newRows[index].fechaFin) {
-          setSnackbar({
-            open: true,
-            message:
-              `${newRows[index].hito}: La fecha de entrega no puede ser anterior a la fecha fin del mismo sprint.`,
-            severity: "error",
-          });
-          return;
+          console.log(newRows[index]);
         }
+      } else if (field === "fechaFin" && value < newRows[index].fechaIni) {
+        setSnackbar({
+          open: true,
+          message: `${newRows[index].hito}: La fecha fin no puede ser anterior a la fecha de inicio del mismo sprint.`,
+          severity: "error",
+          autoHide: 1000,
+        });
+      } else if (field === "fechaEntrega" && value < newRows[index].fechaFin) {
+        setSnackbar({
+          open: true,
+          message: `${newRows[index].hito}: La fecha de entrega no puede ser anterior a la fecha fin del mismo sprint.`,
+          severity: "error",
+          autoHide: 1000,
+        });
+        return;
       }
-        setRows(newRows);
-  
-    };
+    }
+    setRows(newRows);
+  };
   const subir = async () => {
+    setCuadroDialogo({
+      ...cuadroDialogo,
+      open: false,
+    });
     for (const row of rows) {
       if (Object.values(row).some((value) => value === "" || value === null)) {
         console.error("Hay campos vacíos en uno de los sprints.");
@@ -154,6 +162,7 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
           open: true,
           message: "Ninguno de los campos debe estar vacío",
           severity: "warning",
+          autoHide: "false",
         });
         return;
       }
@@ -191,7 +200,7 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
     const response = await fetch(
       "http://localhost:8000/api/planificacion/guardar",
       {
-        method: "POST",
+        method: "POST", 
         headers: {
           "Content-Type": "application/json",
         },
@@ -208,6 +217,7 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
     {
       /** ResponseData no devuelve success nunca 
         if (responseData.success) {
+        setOpenAlertS(true);
       } else {
         setOpenAlertS(true);
         */
@@ -224,14 +234,15 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
         open: true,
         message: "Se subio los datos correctamente.",
         severity: "success",
+        autoHide: "true",
       });
       console.log("Respuesta del servidor:", responseData);
     }
   };
 
   return (
-    <Fragment>
-      <Box sx={{ padding: 3 }}>
+    <>
+      <Box >
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="tabla de planificación">
             <TableHead>
@@ -268,22 +279,29 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
                     </TableCell>
                   ))}
                   <TableCell align="left">
-                    <DeleteIcon
-                      className="iconsSec"
-                      onClick={() => dialogoEliminar(index,row.hito)}
-                    ></DeleteIcon>
+                    <Button
+                      variant= "contained"
+                      color="secondary"
+                      startIcon={<DeleteIcon />}
+                      onClick={() => dialogoEliminar(index, row.hito)}
+                    >
+                      Eliminar
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
         </TableContainer>
-        <AddIcon
-          className="icons"
-          onClick={addRow}
-          style={{ marginTop: "20px" }}
-          aria-label="Añadir nueva fila"
-        ></AddIcon>
+        <Button
+            variant="contained"
+            color="primary"
+            startIcon={<AddIcon />}
+            onClick={addRow}
+            sx={{marginTop: "20px"}}
+          >
+            Añadir fila
+          </Button>
 
         <DecisionButtons
           rejectButtonText="Descartar"
@@ -305,6 +323,6 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
         message={snackbar.message}
         severity={snackbar.severity}
       />
-    </Fragment>
+    </>
   );
 }

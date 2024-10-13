@@ -14,7 +14,6 @@ export default function DecisionButtons({
         display: "flex",
         justifyContent: "flex-end",
         gap: "30px",
-        padding: "20px",
       }}
     >
       <Button
