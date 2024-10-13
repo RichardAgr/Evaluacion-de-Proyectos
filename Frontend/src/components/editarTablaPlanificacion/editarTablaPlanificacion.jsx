@@ -82,12 +82,69 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
     const newRows = rows.filter((_, i) => i !== index);
     setRows(newRows);
   };
-
-  const handleCellChange = (index, field, value) => {
-    const newRows = [...rows];
-    newRows[index][field] = value;
-    setRows(newRows);
+  const dialogoEliminar = (index,hito) => {
+    setCuadroDialogo({
+      open: true,
+      title: `Eliminar ${hito}`,
+      description: "Esta acción no se puede deshacer. Todos los cambios realizados se perderán.  ¿Está seguro?",
+      onConfirm: () => {
+        deleteRow(index);
+        setCuadroDialogo({ ...cuadroDialogo, open: false })
+      },
+    });
   };
+    const handleCellChange = (index, field, value) => {
+      const newRows = [...rows];
+      newRows[index][field] = value;
+  
+      // Validate dates
+      if (field.includes("fecha")) {
+        const currentDate = new Date().toISOString().split("T")[0];
+        const prevSprintEndDate = index > 0 ? rows[index - 1].fechaFin : null;
+  
+        if (value < currentDate) {
+          setSnackbar({
+            open: true,
+            message: "No se permite seleccionar fechas anteriores al día actual.",
+            severity: "error",
+          });
+        } else if (field === "fechaIni") {
+          if (prevSprintEndDate && value < prevSprintEndDate) {
+            setSnackbar({
+              open: true,
+              message:
+                "La fecha de inicio no puede ser anterior a la fecha fin del sprint anterior.",
+              severity: "error",
+            });
+          } else if (value > newRows[index].fechaFin) {
+            setSnackbar({
+              open: true,
+              message:
+                "La fecha de inicio no puede ser posterior a la fecha fin del mismo sprint. Verifique el ",
+  
+              severity: "error",
+            });
+          }
+        } else if (field === "fechaFin" && value < newRows[index].fechaIni) {
+          setSnackbar({
+            open: true,
+            message:
+              "La fecha fin no puede ser anterior a la fecha de inicio del mismo sprint.",
+            severity: "error",
+          });
+        } else if (field === "fechaEntrega" && value < newRows[index].fechaFin) {
+          setSnackbar({
+            open: true,
+            message:
+              `${newRows[index].hito}: La fecha de entrega no puede ser anterior a la fecha fin del mismo sprint.`,
+            severity: "error",
+          });
+          return;
+        }
+      }
+        setRows(newRows);
+  
+    };
   const subir = async () => {
     for (const row of rows) {
       if (Object.values(row).some((value) => value === "" || value === null)) {
@@ -212,8 +269,7 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
                   <TableCell align="left">
                     <DeleteIcon
                       className="iconsSec"
-                      onClick={() => deleteRow(index)}
-                      aria-label={`Eliminar ${row.hito}`}
+                      onClick={() => dialogoEliminar(index,row.hito)}
                     ></DeleteIcon>
                   </TableCell>
                 </TableRow>
