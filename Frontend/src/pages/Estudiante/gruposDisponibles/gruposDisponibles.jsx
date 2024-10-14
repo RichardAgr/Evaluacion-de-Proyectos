@@ -1,15 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import Header from '../../../components/Header/header.jsx';
-import Footer from '../../../components/Footer/footer.jsx';
-import ButtonBackAndTitle from '../../../components/buttonBackAndTitle/buttonBackAndTitle.jsx';
+import { Fragment, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import BaseUI from "../../../components/baseUI/baseUI.jsx";
+import { styled } from "@mui/material";
 
 const getGruposDocentes = async () => {
   try {
-    const response = await fetch('http://127.0.0.1:8000/api/grupos', {
-      method: 'GET',
+    const response = await fetch("http://127.0.0.1:8000/api/grupos", {
+      method: "GET",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     });
 
@@ -17,14 +16,13 @@ const getGruposDocentes = async () => {
       const data = await response.json();
       return data;
     } else if (response.status === 404) {
-      console.log('No se encontraron grupos.');
+      console.log("No se encontraron grupos.");
       return null;
     } else {
       throw new Error(`Error inesperado, código de estado: ${response.status}`);
     }
-
   } catch (error) {
-    console.error('Error en la solicitud:', error);
+    console.error("Error en la solicitud:", error);
     throw error;
   }
 };
@@ -45,7 +43,7 @@ function GruposDocentes() {
           setGrupos([]);
         }
       } catch (error) {
-        console.error('Error en la solicitud:', error.message);
+        console.error("Error en la solicitud:", error.message);
         setError(`Error en la solicitud: ${error.message}`);
       } finally {
         setLoading(false);
@@ -62,49 +60,50 @@ function GruposDocentes() {
     navigate(url); // Redirigir a la nueva página
   };
 
+
+
   return (
-    <React.Fragment>
-      <Header />
-      <div className='box'>
-        <div className='container'>
-          <ButtonBackAndTitle 
-            datosTitleBack={{ ocultarAtras: false, titulo: 'LISTA DE GRUPOS Y DOCENTES' }}
-          />
-          <div className='pageBorder'>
-            <div className='pageBorder_interior'>
-              {grupos.length === 0 ? (
-                <p>No se encontraron grupos.</p>
-              ) : (
-                <table className='table'>
-                  <thead>
-                    <tr>
-                      <th>Grupo</th>
-                      <th>Docente</th>
-                      <th>Apellidos</th>
-                      <th>Acción</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {grupos.map((grupo, index) => (
-                      <tr key={index}>
-                        <td>{grupo.numGrupo}</td>
-                        <td>{grupo.nombre}</td>
-                        <td>{grupo.apellidoPaterno} {grupo.apellidoMaterno}</td>
-                        <td>
-                          <button onClick={() => handleMatricularse(grupo)}>Matricularse</button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-      <Footer />
-    </React.Fragment>
+    <Fragment>
+      <BaseUI
+        titulo={`LISTA DE DOCENTES DISPONIBLES`}
+        ocultarAtras={false}
+        confirmarAtras={false}
+        dirBack={`/`}
+      >
+        <DivLista>
+          {grupos.map((grupo, index) => (
+            <ListaDocente key={index} onClick={() => handleMatricularse(grupo)}>
+              <div >
+                {/* <td>{grupo.numGrupo}</td> */}
+                <h2 style={{ fontWeight: '450' }}>
+                   {">"} {grupo.apellidoPaterno} {grupo.apellidoMaterno} {grupo.nombre}
+                </h2>
+              </div>
+            </ListaDocente>
+          ))}
+        </DivLista>
+      </BaseUI>
+    </Fragment>
   );
 }
 
 export default GruposDocentes;
+
+const ListaDocente = styled("div")`
+  display: flex;
+  width: 83%;
+  cursor: pointer;
+  padding: 17px;
+  background-color: #d0d4e4;
+  user-select: none;
+  margin: auto;
+  margin-bottom: 0.2rem;
+  margin-top: 0.2rem;
+  overflow: auto;
+`;
+
+const DivLista = styled("div")`
+  display: flex;
+  flex-direction: column;
+  margin: 2rem;
+`;

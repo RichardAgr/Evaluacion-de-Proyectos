@@ -15,6 +15,8 @@ import CalificarEmpresas from '../../pages/Docente/gestionEmpresasTareas/calific
 import SprintsEmpresas from '../../pages/Docente/gestionEmpresasTareas/sprintsEmpresas.jsx';
 import SprintsSemanas from '../../pages/Docente/gestionEmpresasTareas/sprintsSemanas.jsx';
 import CalificarSprint from '../../pages/Docente/calificarSprint/calificarSprint.jsx';
+import CalificarTarea from '../CalificarTarea/CalificarTarea.jsx';
+
 
 //archivos estudiante
 import HomeEstudiante from '../../pages/Estudiante/homeEstudiante/homeEstudiante.jsx'
@@ -26,7 +28,7 @@ import VisualizarSprintEst from '../../pages/Estudiante/visualizarSprintEstudian
 import VisualizarTarea from '../../pages/Estudiante/tareaEstudiante/viualizarTarea.jsx';
 import ModificarListaTareas from '../../pages/Estudiante/editarPlanificacion/modificarListaTareas/modificarListaTareas.jsx'
 
-
+import CrearGrupoEmpresa from '../../pages/Estudiante/grupoEmpresa/crearGrupoEmpresa.jsx';
 import GruposDisponibles from '../../pages/Estudiante/gruposDisponibles/gruposDisponibles.jsx'; // Import the new page
 import InscribirGrupo from '../../pages/Estudiante/gruposDisponibles/inscribirGrupo.jsx';
 import ObtenerEstudiantesPorGrupo from '../../pages/Docente/listas/listaEstudiantes/listaEstudiantes.jsx';
@@ -56,6 +58,8 @@ function Nav() {
       {/** Rutas Joaquin*/}
       <Route path ='/homeEstudiante/homeGrupoEstudiante/sprint/:idSprint' element={<VisualizarSprintEst />} />
       <Route path ='/homeEstudiante/homeGrupoEstudiante/sprint/:idSprint/tarea/:idTarea' element={<VisualizarTarea />} />
+      <Route path ='/homeEstudiante/homeGrupoEstudiante/crearGrupo' element={<CrearGrupoEmpresa/>}/>
+      <Route path ='/homeEstudiante/homeGrupoEstudiante/calificar/:idTarea' element={<CalificarTarea/>}/>
 
 
       {/** Ruta Estudiante*/}

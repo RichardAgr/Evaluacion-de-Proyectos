@@ -3,11 +3,14 @@ import { useParams } from 'react-router-dom';
 import BaseUI from '../../../components/baseUI/baseUI';
 import { getSprintSemanas } from '../../../api/sprintApi.jsx'; 
 import SprintSemanas from '../../../components/SprintTareas/sprintSemanas';
+import ComentarioNota from '../../../components/comentarioNota/comentarioNota.jsx';
 
 const VisualizarSprintEst = () => {
     const { idSprint } = useParams(); 
     // const navigate = useNavigate();
     const [semanas, setSemanas] = useState([]);
+    const [comentario, setComentario] = useState('');
+    const [nota, setNota] = useState(null);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true); 
 
@@ -19,7 +22,9 @@ const VisualizarSprintEst = () => {
             try {
                 const data = await getSprintSemanas(idSprint); 
                 setSemanas(data.semanas); 
-                setError(null); 
+                setComentario(data.comentario);
+                setNota(data.nota);
+                setError(null);
             } catch (err) {
                 console.error('Error en la solicitud:', err);
                 setError(err.message); 
@@ -51,6 +56,9 @@ const VisualizarSprintEst = () => {
                     <SprintSemanas key={index} title={`Semana ${index + 1}`} semana={semana} idSprint={idSprint}>
                     </SprintSemanas>
                 ))}
+                {comentario && nota && (
+                    <ComentarioNota linkDir={'ocultar'} comentario={comentario} nota={nota}></ComentarioNota>
+                )}
             </BaseUI>
         </Fragment>
     );

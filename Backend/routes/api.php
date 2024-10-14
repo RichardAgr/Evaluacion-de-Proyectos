@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\PlanificacionController;
 use App\Http\Controllers\RevisionPlaniController;
-use App\Http\Controllers\TareaController;
 use App\Http\Controllers\DocenteController;
 use App\Http\Controllers\SprintController;
 use App\Models\RevisionPlani;
@@ -42,6 +41,7 @@ Route::get('/grupos', [GrupoController::class, 'obtenerTodosLosGrupos']);
 Route::get('/grupo/{idGrupo}/participantes', [GrupoController::class, 'obtenerEstudiantesPorGrupo']);
 Route::get('/grupoDescripcion/{idGrupo}', [GrupoController::class, 'getDescripcion']);
 Route::get('/grupo/estudiantes/{idGrupo}/{gestionGrupo}', [GrupoController::class, 'obtenerEstudiantesPorGrupo']);
+Route::get('/estudiante/sprint/semana/{idSprint}',[SprintController::class, 'sprintsSemanas']);
 /**
  * TODOS LOS POST VAN 
  *
