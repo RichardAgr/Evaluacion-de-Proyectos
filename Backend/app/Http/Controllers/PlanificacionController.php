@@ -10,6 +10,8 @@ use App\Models\Planificacion; // Importa tu modelo Planificacion
 use App\Models\Sprint; // Importa tu modelo Sprint
 use App\Models\Empresa; // Asegúrate de importar el modelo Empresa
 use Illuminate\Support\Facades\Validator;
+
+use Carbon\Carbon;
 use Exception;
 
 class PlanificacionController extends Controller
@@ -89,7 +91,6 @@ class PlanificacionController extends Controller
 
         // Obtener la planificación de la empresa si existe
         $planificacion = Planificacion::with(['empresa', 'sprints'])
-            ->orderBy('fechaEntrega', 'desc')
             ->where('idEmpresa', $idEmpresa)
             ->first();
 
@@ -103,9 +104,7 @@ class PlanificacionController extends Controller
                 'comentarioDocente' => 'Comentario Docente',
                 'sprints' => [
                     ['idSprint' => null, 'fechaIni' => '2024-09-06', 'fechaFin' => '2024-09-06', 'cobro' => 12, 'fechaEntrega' => '2024-09-06', 'entregables' => 'esto es un ejemplo'],
-                    ['idSprint' => null, 'fechaIni' => '2024-09-06', 'fechaFin' => '2024-09-06', 'cobro' => 12, 'fechaEntrega' => '2024-09-06', 'entregables' => 'esto es un ejemplo'],
-                    ['idSprint' => null, 'fechaIni' => '2024-09-06', 'fechaFin' => '2024-09-06', 'cobro' => 12, 'fechaEntrega' => '2024-09-06', 'entregables' => 'esto es un ejemplo'],
-                ],  // Array de sprints con 3 filas vacías  
+                ],  // Array de sprints con 1 filas vacías  
             ], 200);  // Código 200 ya que la empresa existe
         }
 
@@ -289,5 +288,70 @@ class PlanificacionController extends Controller
                 'message' => 'Error al crear la planificación: ' . $e->getMessage(),
             ], 500);
         }
+    }
+    public function modificarPlanificacion(Request $request): JsonResponse
+    {
+        //validar datos
+        $validator = Validator::make($request->all(), [
+            'aceptada' => 'required|boolean',
+            'comentarioDocente' => 'string',
+            'idEmpresa' => 'required|integer|exists:empresa,idEmpresa',
+            'notaPlanificacion' => 'required|integer',
+        ]);
+        // si no valida, devuelve error
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Los datos proporcionados no son válidos.',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+        //consigue los datos validados
+        $validatedData = $validator->validated();
+        try {
+            // verifica que  la planificación exista
+            $planificacion = Planificacion::where('idEmpresa', $validatedData['idEmpresa'])->first();
+
+            if ($planificacion !== null) {
+                // si la planificacion existe, se actualiza la fechaEntrega y se eliminan los campos de notaplanificacion y comentariodocente
+                $planificacion->fechaEntrega = Carbon::now('America/Caracas')->format('Y-m-d H:i:s');// ajustado a la zona horaria de Bolivia
+                $planificacion->notaPlanificacion = null;
+                $planificacion->comentarioDocente = null;
+                $planificacion->save();
+            } else {
+                // si la planificacion no existe, se crea una nueva planificacion
+                $planificacion = new Planificacion();
+                $planificacion->idEmpresa = $validatedData['idEmpresa'];
+                $planificacion->aceptada = 0;
+                $planificacion->fechaEntrega = Carbon::now('America/Caracas')->format('Y-m-d H:i:s');
+                $planificacion->save();
+            }
+            DB::commit();
+            return response()->json([
+                'message' => 'La Planificación fue modificada correctamente',
+            ], 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'message' => 'Hubo un error al modificar la Planificación',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+    public function testModificarPlanificacion()
+    {
+        // Simular una solicitud con datos de prueba
+        $requestData = [
+            'aceptada' => true,
+            'comentarioDocente' => 'Comentario de prueba',
+            'idEmpresa' => 1, // Asegúrate de que este ID exista en tu base de datos
+            'notaPlanificacion' => 85
+        ];
+
+        // Crear una nueva instancia de Request con los datos de prueba
+        $request = new Request($requestData);
+
+        // Llamar a la función modificarPlanificacion
+        $response = $this->modificarPlanificacion($request);
+        return $response;
     }
 }

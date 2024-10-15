@@ -22,13 +22,14 @@ function Planificacion() {
           getNombreEmpresa(idEmpresa),
         ]);
         setPlanificacionData(planificacion);
+        console.log(planificacion);
         setDatosEmpresa(nombreEmpresa);
       } catch (error) {
         console.error("Error en la solicitud:", error.message);
         setError(`Error en la solicitud: ${error.message}`);
       } finally {
         setLoading(false);
-        console.log(planificacionData.comentarioDocente);
+        
       }
     };
     fetchData();
@@ -56,7 +57,7 @@ function Planificacion() {
               planificacionData={planificacionData}
               idEmpresa={planificacionData.idEmpresa}
             />
-            {planificacionData.comentarioDocente != null && (
+            {(planificacionData.comentarioDocente != null && planificacionData.comentarioDocente!="") && (
               <>
                 <ComentarioNota
                   comentario={

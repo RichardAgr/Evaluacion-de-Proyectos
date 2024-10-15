@@ -3,7 +3,6 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
-  DialogContentText,
   DialogActions,
   Button,
   Typography,
@@ -22,12 +21,13 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
   },
 }));
 
-const StyledDialogTitle = styled(DialogTitle)(({ theme }) => ({
+const StyledDialogTitle = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.primary.main,
   color: theme.palette.primary.contrastText,
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
+  padding: theme.spacing(2),
 }));
 
 const CuadroDialogo = ({ open, onClose, title, description, onConfirm }) => {
@@ -39,8 +39,10 @@ const CuadroDialogo = ({ open, onClose, title, description, onConfirm }) => {
       maxWidth="sm"
       fullWidth
     >
-      <StyledDialogTitle id="customized-dialog-title">
-        <Typography variant="h6">{title}</Typography>
+      <StyledDialogTitle>
+        <Typography variant="h6" component="h2" id="customized-dialog-title">
+          {title}
+        </Typography>
         <IconButton
           aria-label="close"
           onClick={onClose}
@@ -55,11 +57,9 @@ const CuadroDialogo = ({ open, onClose, title, description, onConfirm }) => {
         </IconButton>
       </StyledDialogTitle>
       <DialogContent dividers>
-        <DialogContentText>
-          <Box sx={{ mt: 2, mb: 2 }}>
-            <Typography variant="body1">{description}</Typography>
-          </Box>
-        </DialogContentText>
+        <Box sx={{ mt: 2, mb: 2 }}>
+          <Typography variant="body1">{description}</Typography>
+        </Box>
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} color="secondary" variant="contained">

@@ -124,7 +124,7 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
         ) {
           setSnackbar({
             open: true,
-            message: `${newRows[index].hito}: La fecha de inicio no puede ser posterior a la fecha fin del mismo sprint. Verifique el `,
+            message: `${newRows[index].hito}: La fecha de inicio no puede ser posterior a la fecha fin del mismo sprint.`,
 
             severity: "error",
             autoHide: 1000,
@@ -155,12 +155,14 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
       ...cuadroDialogo,
       open: false,
     });
+    let rowIndex = 0;
     for (const row of rows) {
+      rowIndex++;
       if (Object.values(row).some((value) => value === "" || value === null)) {
         console.error("Hay campos vacíos en uno de los sprints.");
         setSnackbar({
           open: true,
-          message: "Ninguno de los campos debe estar vacío",
+          message: `Sprint ${rowIndex}: Ninguno de los campos debe estar vacío`,
           severity: "warning",
           autoHide: "false",
         });
@@ -168,24 +170,18 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
       }
     }
 
-    const date = new Date();
-    const dia = String(date.getDate()).padStart(2, "0");
-    const mes = String(date.getMonth() + 1).padStart(2, "0");
-    const anio = date.getFullYear();
-    const horas = String(date.getHours()).padStart(2, "0");
-    const minutos = String(date.getMinutes()).padStart(2, "0");
-    const segundos = String(date.getSeconds()).padStart(2, "0");
-
-    const data = {
+    const dataPlanificacion = {
       idEmpresa: Number(idEmpresa),
       comentarioDocente: String(
         planificacionData.comentarioDocente
           ? planificacionData.comentarioDocente
-          : "Falta que comente el docente"
+          : null
       ),
-      notaPlanificacion: Number(planificacionData.notaPlanificacion),
-      aceptada: Boolean(planificacionData.aceptada),
-      fechaEntrega: `${anio}-${mes}-${dia} ${horas}:${minutos}:${segundos}`,
+      notaPlanificacion: 0,
+      aceptada: 0,
+    };
+    const dataSprint = {
+      idEmpresa: Number(idEmpresa),
       sprints: rows.map((row) => ({
         fechaIni: row.fechaIni,
         fechaFin: row.fechaFin,
@@ -194,55 +190,60 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
         entregables: row.entregables,
       })),
     };
-
-    console.log(data);
-
     const response = await fetch(
       "http://localhost:8000/api/planificacion/guardar",
       {
-        method: "POST", 
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(dataPlanificacion),
       }
     );
-
-    if (!response.ok) {
-      throw new Error(`Error: ${response.status}`);
-    }
-
     const responseData = await response.json();
-
-    {
-      /** ResponseData no devuelve success nunca 
-        if (responseData.success) {
-        setOpenAlertS(true);
-      } else {
-        setOpenAlertS(true);
-        */
-    }
-    if (responseData.error) {
+    if (responseData.error !== undefined && responseData.error !== null) {
       setSnackbar({
         open: true,
-        message: "Error: ${responseData.error}, pruebe mas tarde.",
+        message: `Error al actualizar la planificacion: ${responseData.error}${responseData.message}`,
         severity: "error",
+        autoHide: false,
       });
     } else {
-      console.log("Los datos se subieron correctamente.");
-      setSnackbar({
-        open: true,
-        message: "Se subio los datos correctamente.",
-        severity: "success",
-        autoHide: "true",
-      });
-      console.log("Respuesta del servidor:", responseData);
+      console.log("Planificacion modificada con exito.");
+      const responseSprint = await fetch(
+        "http://localhost:8000/api/planificacion/guardarSprints",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(dataSprint),
+        }
+      );
+      const responseDataSprint = await responseSprint.json();
+      if (responseDataSprint.error !== undefined && responseDataSprint.error !== null) {
+        setSnackbar({
+          open: true,
+          message: `Error al actualizar la planificacion: ${responseSprint.error} ${responseSprint.message}`,
+          severity: "error",
+          autoHide: false,
+        });
+      } else {{/** Aun no se manejan los errores tipo {responseDataSprint.errors} */}
+        console.log("Sprints modificados con exito.");
+        setSnackbar({
+          open: true,
+          message: `${responseDataSprint.message}`,
+          severity: "success",
+          autoHide: true,
+        });
+        console.log("Respuesta del servidor:", responseDataSprint);
+      }
     }
   };
 
   return (
     <>
-      <Box >
+      <Box>
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="tabla de planificación">
             <TableHead>
@@ -280,7 +281,7 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
                   ))}
                   <TableCell align="left">
                     <Button
-                      variant= "contained"
+                      variant="contained"
                       color="secondary"
                       startIcon={<DeleteIcon />}
                       onClick={() => dialogoEliminar(index, row.hito)}
@@ -294,14 +295,14 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
           </Table>
         </TableContainer>
         <Button
-            variant="contained"
-            color="primary"
-            startIcon={<AddIcon />}
-            onClick={addRow}
-            sx={{marginTop: "20px"}}
-          >
-            Añadir fila
-          </Button>
+          variant="contained"
+          color="primary"
+          startIcon={<AddIcon />}
+          onClick={addRow}
+          sx={{ marginTop: "20px" }}
+        >
+          Añadir fila
+        </Button>
 
         <DecisionButtons
           rejectButtonText="Descartar"
