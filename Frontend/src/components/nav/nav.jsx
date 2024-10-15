@@ -32,6 +32,7 @@ import CrearGrupoEmpresa from '../../pages/Estudiante/grupoEmpresa/crearGrupoEmp
 import GruposDisponibles from '../../pages/Estudiante/gruposDisponibles/gruposDisponibles.jsx'; // Import the new page
 import InscribirGrupo from '../../pages/Estudiante/gruposDisponibles/inscribirGrupo.jsx';
 import ObtenerEstudiantesPorGrupo from '../../pages/Docente/listas/listaEstudiantes/listaEstudiantes.jsx';
+import EmpresasPorDocente from '../../pages/Docente/listas/listaEmpresas/listaEmpresaPorDocente.jsx';
 function Nav() {
 
   return (
@@ -77,6 +78,7 @@ function Nav() {
         <Route path='/homeEstudiante/gruposDisponibles' element={<GruposDisponibles />} />
         <Route path='/homeEstudiante/inscribirGrupo/:idGrupo' element={<InscribirGrupo />} />
         <Route path="/homeGrupoDocente/listaEstudiantes/:idGrupo/:gestionGrupo" element={<ObtenerEstudiantesPorGrupo />} />
+        <Route path='/homeGrupoDocente/listaEmpresas' element={<EmpresasPorDocente />} />
     </Routes>
   )
 }

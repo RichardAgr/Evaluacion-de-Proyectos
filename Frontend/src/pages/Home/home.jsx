@@ -25,6 +25,16 @@ function Home() {
   const handleNavigateToModificarLista = () => {
     navigate("/grupoEstudiante/sprint/semana/1/modificarListaTareas");
   };
+  const handleNavigateToEmpresasLista = () => {
+    navigate( '/homeGrupoDocente/listaEmpresas');
+  };
+
+  const handleNavigateToListaEstudiantes = () => {
+    navigate( '/homeGrupoDocente/listaEstudiantes/1/2024-2');
+  };
+
+  
+ 
   return (
     <Fragment>
       <Header />
@@ -103,6 +113,33 @@ function Home() {
         >
           Ir a Modificar Lista de Tareas
         </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          size="large"
+          onClick={handleNavigateToEmpresasLista}
+          style={{
+            padding: "15px 30px",
+            fontSize: "1.2rem",
+            margin: "10px", 
+          }}
+        >
+          Ir a Lista Empresas
+        </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          size="large"
+          onClick={handleNavigateToListaEstudiantes}
+          style={{
+            padding: "15px 30px",
+            fontSize: "1.2rem",
+            margin: "10px", 
+          }}
+        >
+          Ir a Lista Estudiantes
+        </Button>
+        
       </div>
       <Footer />
     </Fragment>

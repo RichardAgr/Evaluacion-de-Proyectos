@@ -65,28 +65,31 @@ class GrupoController extends Controller
 
         return response()->json($datosGrupo, 200);
     }
-    public function obtenerEmpresasPorGrupoYDocente(Request $request)
+    public function obtenerEmpresasPorGrupoYDocente()
     {
         // Validar los parámetros de entrada
-        $request->validate([
+        /*$request->validate([
             'idDocente' => 'required|integer',
             //'gestionGrupo' => 'required|string',
-            'idGrupo' => 'required|integer'
-        ]);
+            //'idGrupo' => 'required|integer'
+        ]);*/
     
         // Ejecutar la consulta
-        $resultados = DB::table('estudiantesgrupos AS eg')
+            $resultados = DB::table('estudiantesgrupos AS eg')
             ->join('grupo AS g', 'eg.idGrupo', '=', 'g.idGrupo')
             ->join('docente AS d', 'g.idDocente', '=', 'd.idDocente')
             ->join('estudiantesempresas AS ee', 'eg.idEstudiante', '=', 'ee.idEstudiante')
             ->join('empresa AS emp', 'ee.idEmpresa', '=', 'emp.idEmpresa')
-            ->join('estudiante AS e', 'eg.idEstudiante', '=', 'e.idEstudiante') // Asegúrate de unirte a la tabla estudiante
-            ->select('emp.nombreEmpresa', 'g.gestionGrupo')
-            ->where('d.idDocente', $request->idDocente)
-            ->where('g.idGrupo',$request->idGrupo)
+            ->join('estudiante AS e', 'eg.idEstudiante', '=', 'e.idEstudiante')
+            ->select('emp.nombreEmpresa','emp.nombreLargo', 'g.gestionGrupo', DB::raw('count(eg.idEstudiante) as totalEstudiantes'), 'g.numGrupo')
+            ->where('d.idDocente', 1)
+           // ->where('g.idGrupo', $request->idGrupo)
             //->where('g.gestionGrupo', $request->gestionGrupo)
-            ->groupBy('emp.nombreEmpresa','g.gestionGrupo')
+            ->groupBy('emp.nombreEmpresa', 'emp.nombreLargo','g.gestionGrupo', 'g.numGrupo')
+            -> orderByDesc('g.gestionGrupo')
+            ->orderBy('emp.nombreEmpresa')
             ->get();
+        
     
         if ($resultados->isEmpty()) {
             return response()->json([

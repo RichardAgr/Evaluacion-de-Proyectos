@@ -23,7 +23,7 @@ Route::get('/planificacion/{idEmpresa}', [PlanificacionController::class, 'show'
 Route::put('/validar', [PlanificacionController::class, 'validar']);
 Route::post('/addRevision', [PlanificacionController::class, 'addRevision']);
 
-Route::put('/prueba2', [RevisionPlaniController::class, 'testValidar']);
+//Route::put('/prueba2', [RevisionPlaniController::class, 'testValidar']);
 
 
 
@@ -42,6 +42,9 @@ Route::get('/grupo/{idGrupo}/participantes', [GrupoController::class, 'obtenerEs
 Route::get('/grupoDescripcion/{idGrupo}', [GrupoController::class, 'getDescripcion']);
 Route::get('/grupo/estudiantes/{idGrupo}/{gestionGrupo}', [GrupoController::class, 'obtenerEstudiantesPorGrupo']);
 Route::get('/estudiante/sprint/semana/{idSprint}',[SprintController::class, 'sprintsSemanas']);
+Route::get('/docente/obtenerEmpresasPorGrupoYDocente',[GrupoController::class, 'obtenerEmpresasPorGrupoYDocente']);
+
+
 /**
  * TODOS LOS POST VAN 
  *

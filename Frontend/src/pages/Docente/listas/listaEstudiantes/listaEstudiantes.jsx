@@ -24,7 +24,7 @@ function ObtenerEstudiantesPorGrupo() {
       });
 
       if (!response.ok) {
-        throw new Error('Error al obtener estudiantes');
+        throw new Error('Error de grupo');
       }
 
       const data = await response.json();
