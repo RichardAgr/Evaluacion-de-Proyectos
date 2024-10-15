@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, CircularProgress, Typography, Paper } from '@mui/material';
 
-export default function Component() {
+export default function Loading() {
   return (
     <>
       <Box
@@ -10,7 +10,6 @@ export default function Component() {
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
-          height: "100%",
           minHeight: "200px",
         }}
       >

@@ -7,11 +7,15 @@ import { getNombreEmpresa } from "../../../api/getNombreEmpresa.jsx";
 import NombreEmpresa from "../../../components/infoEmpresa/nombreEmpresa.jsx";
 import BaseUI from "../../../components/baseUI/baseUI.jsx";
 import Loading from "../../../components/loading/loading.jsx";
+import Error from "../../../components/error/error.jsx";
 
 function Planificacion() {
   let { idEmpresa } = useParams();
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState({
+    errorMessage: "", 
+    errorDetails: "",
+  });
   const [planificacionData, setPlanificacionData] = useState();
   const [datosEmpresa, setDatosEmpresa] = useState();
   useEffect(() => {
@@ -26,7 +30,10 @@ function Planificacion() {
         setDatosEmpresa(nombreEmpresa);
       } catch (error) {
         console.error("Error en la solicitud:", error.message);
-        setError(`Error en la solicitud: ${error.message}`);
+        setError({
+          errorMessage: "Ha ocurrido un error",
+          errorDetails: error.message,
+        });
       } finally {
         setLoading(false);
         
@@ -42,8 +49,9 @@ function Planificacion() {
         confirmarAtras={true}
         dirBack={"/"}
       >
-        {error ? (
-          <p>Error: {error}</p>
+        {error.errorMessage || error.errorDetails ? (
+
+          <Error errorMessage={error.errorMessage} errorDetails={error.errorDetails} />
         ) : loading ? (
           <Loading />
         ) : (
