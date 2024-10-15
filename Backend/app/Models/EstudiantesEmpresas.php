@@ -7,14 +7,16 @@ class EstudiantesEmpresas extends Model
 {
     protected $table = 'estudiantesempresas';
     protected $primaryKey = ['idEmpresa', 'idEstudiante'];  // Llave primaria compuesta
+    protected $fillable =['idEmpresa', 'idEstudiante'];
     public $incrementing = false;
     public $timestamps = false;
 
     // Relaciones
-    public function empresa()
-    {
-        return $this->belongsTo(Empresa::class, 'idEmpresa');
-    }
+        public function empresas()
+        {
+            return $this->belongsToMany(Empresa::class, 'estudiantesempresas', 'idEstudiante', 'idEmpresa');
+        }
+        
 
     public function estudiante()
     {

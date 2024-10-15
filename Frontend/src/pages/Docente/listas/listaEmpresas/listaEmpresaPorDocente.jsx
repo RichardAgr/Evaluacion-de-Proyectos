@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Header from '../../../../components/Header/header.jsx';
-import Footer from '../../../../components/Footer/footer.jsx';
-import ButtonBackAndTitle from '../../../../components/buttonBackAndTitle/buttonBackAndTitle.jsx';
+import BaseUI from "../../../../components/baseUI/baseUI";
 
 function EmpresasPorGrupo() {
   const [data, setData] = useState([]);
@@ -12,14 +10,12 @@ function EmpresasPorGrupo() {
   // Initial data fetch with GET request
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
       try {
         const response = await fetch('http://localhost:8000/grupo/empresas/1');
-        if (response.ok) {
-          const result = await response.json();
-          setData(result);
-        } else {
-          throw new Error('Error fetching data');
-        }
+        if (!response.ok) throw new Error('Error fetching data');
+        const result = await response.json();
+        setData(result);
       } catch (error) {
         setError(error.message);
       } finally {
@@ -32,78 +28,84 @@ function EmpresasPorGrupo() {
   // Function to handle search (POST request)
   const handleSearch = async (e) => {
     e.preventDefault();
-    try {
-        const response = await fetch('http://localhost:8000/api/grupo/docente/1/barraBusqueda', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ termino: searchTerm }),  // Enviar el término de búsqueda
-        });
-
-        if (response.ok) {
-            const result = await response.json();
-            setData(result);  // Actualizar la tabla con los resultados de la búsqueda
-        } else {
-            throw new Error('Error en la búsqueda');
-        }
-    } catch (error) {
-        setError(error.message);
+    if (!searchTerm.trim()) {
+      setError('Por favor, ingresa un término de búsqueda.');
+      return;
     }
-};
+    setLoading(true);
+    setError(null); // Limpiar error antes de hacer la búsqueda
+    try {
+      const response = await fetch('http://localhost:8000/api/grupo/docente/1/barraBusqueda', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ termino: searchTerm }),
+      });
 
-  if (loading) return <p>Cargando datos...</p>;
+      if (!response.ok) throw new Error('Error en la búsqueda');
+      const result = await response.json();
+      setData(result);
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   if (error) return <p>Error: {error}</p>;
 
   return (
-    <div>
-      <Header />
-      <div className="box">
-        <div className="container">
-          <ButtonBackAndTitle datosTitleBack={{ ocultarAtras: false, titulo: 'EMPRESAS POR GRUPO' }} />
-          <h1>LISTADO DE GRUPOS</h1>
+    <BaseUI
+      titulo={`LISTADO DE GRUPOS`}
+      ocultarAtras={false}
+      confirmarAtras={false}
+      dirBack={`/`}
+    >
+      {/* Search bar */}
+      <form onSubmit={handleSearch}>
+        <input
+          type="text"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          placeholder="Buscar Empresa"
+        />
+        <button type="submit">Buscar</button>
+      </form>
 
-          {/* Search bar */}
-          <form onSubmit={handleSearch}>
-            <input
-              type="text"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Buscar Empresa"
-            />
-            <button type="submit">Buscar</button>
-          </form>
-
-          <div className="pageBorder">
-            <div className="pageBorder_interior">
-              <table className="excelTable">
-                <thead>
-                  <tr>
-                    <th>Nombre Empresa</th>
-                    <th>Nombre Largo</th>
-                    <th>Total Estudiantes</th>
-                    <th>Gestión</th>
-                    <th>Num Grupo</th>
+      <div className="pageBorder">
+        <div className="pageBorder_interior">
+          <table className="excelTable">
+            <thead>
+              <tr>
+                <th>Nombre Empresa</th>
+                <th>Nombre Largo</th>
+                <th>Total Estudiantes</th>
+                <th>Gestión</th>
+                <th>Num Grupo</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data.length > 0 ? (
+                data.map((empresa, index) => (
+                  <tr key={index}>
+                    <td>{empresa.nombreEmpresa}</td>
+                    <td>{empresa.nombreLargo}</td>
+                    <td>{empresa.totalEstudiantes}</td>
+                    <td>{empresa.gestionGrupo}</td>
+                    <td>{empresa.numGrupo}</td>
                   </tr>
-                </thead>
-                <tbody>
-                  {data.map((empresa, index) => (
-                    <tr key={index}>
-                      <td>{empresa.nombreEmpresa}</td>
-                      <td>{empresa.nombreLargo}</td>
-                      <td>{empresa.totalEstudiantes}</td>
-                      <td>{empresa.gestionGrupo}</td>
-                      <td>{empresa.numGrupo}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="5">No se encontraron empresas.</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
         </div>
       </div>
-      <Footer />
-    </div>
+    </BaseUI>
   );
 }
 
@@ -111,15 +113,6 @@ export default EmpresasPorGrupo;
 
 // Estilos en la misma página
 const styles = `
-  .box {
-    padding: 20px;
-  }
-
-  .container {
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-
   .pageBorder {
     border: 2px solid #ccc;
     border-radius: 10px;

@@ -14,6 +14,8 @@ use App\Http\Controllers\RevisionPlaniController;
 use App\Http\Controllers\DocenteController;
 use App\Http\Controllers\SprintController;
 use App\Models\RevisionPlani;
+use App\Http\Controllers\EstudiantesEmpresasController;
+
 Route::get('/empresa/{id}', [EmpresaController::class, 'getEmpresaData']);
 Route::get('/nombreEmpresa/{id}', [EmpresaController::class, 'getNombreEmpresa']);
 Route::get('/empresas/', [EmpresaController::class, 'getListaEmpresas']);
@@ -43,8 +45,7 @@ Route::get('/grupoDescripcion/{idGrupo}', [GrupoController::class, 'getDescripci
 Route::get('/grupo/estudiantes/{idGrupo}/{gestionGrupo}', [GrupoController::class, 'obtenerEstudiantesPorGrupo']);
 Route::get('/estudiante/sprint/semana/{idSprint}',[SprintController::class, 'sprintsSemanas']);
 Route::get('/docente/obtenerEmpresasPorGrupoYDocente',[GrupoController::class, 'obtenerEmpresasPorGrupoYDocente']);
-Route::post('/grupo/estudiante/barraBusqueda', [GrupoController::class, 'barraBusquedaEstudiante']);
-Route::post('/grupo/docente/1/barraBusqueda', [GrupoController::class, 'barraBusquedaEmpresas']);
+Route::get('/estudiante/getEstudiante/{idEstudiante}',[EstudianteController::class, 'obtenerEstudiantesParaEmpresa']);
 
 /**
  * TODOS LOS POST VAN 
@@ -56,3 +57,7 @@ Route::post('/planificacion/guardar', [PlanificacionController::class, 'crearPla
 Route::post('/tarea/crear', [TareaController::class, 'store']);
 //Para asignar grupos
 Route::post('/asignarEstudiante', [EstudianteController::class, 'asignarEstudianteAGrupo']);
+Route::post('/grupo/estudiante/barraBusqueda', [GrupoController::class, 'barraBusquedaEstudiante']);
+Route::post('/grupo/docente/1/barraBusqueda', [GrupoController::class, 'barraBusquedaEmpresas']);
+
+Route::post('/estudiante/crearEmpresa', [EstudiantesEmpresasController::class, 'crearEmpresa']);

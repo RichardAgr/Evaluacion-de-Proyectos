@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Header from '../../../../components/Header/header.jsx';
-import Footer from '../../../../components/Footer/footer.jsx';
-import ButtonBackAndTitle from '../../../../components/buttonBackAndTitle/buttonBackAndTitle.jsx';
+import BaseUI from "../../../../components/baseUI/baseUI";
 
 function ObtenerEstudiantesPorGrupo() {
   const idGrupo = 1; // Hardcodeado
@@ -46,9 +44,9 @@ function ObtenerEstudiantesPorGrupo() {
   // Función para manejar la búsqueda
   const handleSearch = async (e) => {
     e.preventDefault();
-        if (!searchTerm.trim()) {
-        window.location.reload(); // Esto recargará la página y mostrará todos los datos
-        return;
+    if (!searchTerm.trim()) {
+      window.location.reload(); // Recargar la página para mostrar todos los datos
+      return;
     }
     setLoading(true); // Iniciar carga
     try {
@@ -61,7 +59,7 @@ function ObtenerEstudiantesPorGrupo() {
           idGrupo, 
           gestionGrupo, 
           termino: searchTerm 
-        }), // Enviar el idGrupo, gestionGrupo y término de búsqueda
+        }),
       });
 
       if (!response.ok) {
@@ -95,72 +93,66 @@ function ObtenerEstudiantesPorGrupo() {
     }
   };
 
-  if (loading) return <p>Cargando estudiantes...</p>;
+  if (loading) return null; // Eliminar mensaje de carga
   if (error) return <p>Error: {error}</p>;
 
   return (
-    <React.Fragment>
-      <Header />
-      <div className='box'>
-        <div className='container'>
-          <ButtonBackAndTitle 
-            datosTitleBack={{ ocultarAtras: false, titulo: 'ESTUDIANTES POR GRUPO' }}
-          />
-          <h1>LISTA DE ESTUDIANTES</h1>
+    <BaseUI
+      titulo={`LISTA DE ESTUDIANTES`}
+      ocultarAtras={false}
+      confirmarAtras={false}
+      dirBack={`/`}
+    >
+      {/* Barra de búsqueda */}
+      <form onSubmit={handleSearch}>
+        <input
+          type="text"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          placeholder="Buscar Estudiante"
+          style={{ marginBottom: '20px', padding: '8px', width: '200px' }}
+        />
+        <button type="submit">Buscar</button>
+      </form>
 
-          {/* Barra de búsqueda */}
-          <form onSubmit={handleSearch}>
-            <input
-              type="text"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Buscar Estudiante"
-              style={{ marginBottom: '20px', padding: '8px', width: '200px' }}
-            />
-            <button type="submit">Buscar</button>
-          </form>
-
-          <div className='pageBorder'>
-            <div className='pageBorder_interior'>
-              {estudiantesActuales.length === 0 ? (
-                <p>No se encontraron estudiantes.</p>
-              ) : (
-                <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-                  <table className='excelTable'>
-                    <thead>
-                      <tr>
-                        <th>ESTUDIANTE</th>
-                        <th>EMPRESA</th>
-                        <th>ACCIONES</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {estudiantesActuales.map((estudiante) => (
-                        <tr key={estudiante.idEstudiante}>
-                          <td>
-                            {estudiante.nombreEstudiante} {estudiante.apellidoPaternoEstudiante} {estudiante.apellidoMaternoEstudiante}
-                          </td>
-                          <td>{estudiante.nombreEmpresa}</td>
-                          <td>
-                            <button onClick={() => handleDarDeBaja(estudiante.idEstudiante)}>Dar de baja</button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                  <div className='pagination' style={{ marginTop: '20px', display: 'flex', justifyContent: 'flex-end' }}>
-                    <button onClick={handlePreviousPage} disabled={currentPage === 1}>Anterior</button>
-                    <span>Página {currentPage} de {totalPaginas}</span>
-                    <button onClick={handleNextPage} disabled={currentPage === totalPaginas}>Siguiente</button>
-                  </div>
-                </div>
-              )}
+      <div className='pageBorder'>
+        <div className='pageBorder_interior'>
+          {estudiantesActuales.length === 0 ? (
+            <p>No se encontraron estudiantes.</p>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+              <table className='excelTable'>
+                <thead>
+                  <tr>
+                    <th>ESTUDIANTE</th>
+                    <th>EMPRESA</th>
+                    <th>ACCIONES</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {estudiantesActuales.map((estudiante) => (
+                    <tr key={estudiante.idEstudiante}>
+                      <td>
+                        {estudiante.nombreEstudiante} {estudiante.apellidoPaternoEstudiante} {estudiante.apellidoMaternoEstudiante}
+                      </td>
+                      <td>{estudiante.nombreEmpresa}</td>
+                      <td>
+                        <button onClick={() => handleDarDeBaja(estudiante.idEstudiante)}>Dar de baja</button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <div className='pagination' style={{ marginTop: '20px', display: 'flex', justifyContent: 'flex-end' }}>
+                <button onClick={handlePreviousPage} disabled={currentPage === 1}>Anterior</button>
+                <span>Página {currentPage} de {totalPaginas}</span>
+                <button onClick={handleNextPage} disabled={currentPage === totalPaginas}>Siguiente</button>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
-      <Footer />
-    </React.Fragment>
+    </BaseUI>
   );
 
   function handleDarDeBaja(id) {
@@ -194,7 +186,7 @@ const styles = `
 
   .pagination {
     display: flex;
-    justify-content: flex-end; /* Alinear a la derecha */
+    justify-content: flex-end;
     margin-top: 20px;
   }
 

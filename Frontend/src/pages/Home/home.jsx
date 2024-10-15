@@ -36,9 +36,16 @@ function Home() {
     navigate( '/homeGrupoDocente/listaEstudiantesA/1/2024-2');
   };
 
+  const handleNavigateToCrearEmpresa = () => {
+    navigate( '/homeEstudiante/homeGrupoEstudiante/crearGrupo');
+  };
 
-  
+  const handleNavigateToGruposDisponibles = () => {
+    navigate( '/homeEstudiante/gruposDisponibles');
+  };
+
  
+  
   return (
     <Fragment>
       <Header />
@@ -117,15 +124,18 @@ function Home() {
         >
           Ir a Modificar Lista de Tareas
         </Button>
-        <Button
+      </div>
+      <div>
+      <Button
           variant="contained"
           color="primary"
           size="large"
           onClick={handleNavigateToEmpresasLista}
           style={{
             padding: "15px 30px",
-            fontSize: "1.2rem",
-            margin: "10px", 
+            fontSize: "10px",
+            margin: "10px",
+            marginTop: "-20em" 
           }}
         >
           Ir a Lista Empresas
@@ -137,13 +147,15 @@ function Home() {
           onClick={handleNavigateToListaEstudiantes}
           style={{
             padding: "15px 30px",
-            fontSize: "0.8rem",
-            margin: "10px", 
+            fontSize: "10px",
+            margin: "10px",
+            marginTop: "-20em"  
           }}
         >
           Ir a Lista Estudiantes
         </Button>
-        <Button
+        
+      <Button
           variant="contained"
           color="primary"
           size="large"
@@ -151,12 +163,40 @@ function Home() {
           style={{
             padding: "15px 30px",
             fontSize: "10px",
-            margin: "10px", 
+            margin: "10px",
+            marginTop: "-20em" 
           }}
         >
           Ir a Lista Estudiantes Automatico
         </Button>
-        
+        <Button
+          variant="contained"
+          color="primary"
+          size="large"
+          onClick={handleNavigateToCrearEmpresa}
+          style={{
+            padding: "15px 30px",
+            fontSize: "10px",
+            margin: "10px",
+            marginTop: "-20em" 
+          }}
+        >
+          Ir a Crear Empresa
+        </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          size="large"
+          onClick={handleNavigateToGruposDisponibles}
+          style={{
+            padding: "15px 30px",
+            fontSize: "10px",
+            margin: "10px",
+            marginTop: "-20em" 
+          }}
+        >
+          Ir a Grupos Disponibles
+        </Button>
       </div>
       <Footer />
     </Fragment>
