@@ -3,7 +3,8 @@ import { Fragment } from 'react';
 import { Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import PopUpDialog from '../popUPDialog/popUpDialog.jsx'
+import CuadroDialogo from '../cuadroDialogo/cuadroDialogo';
+
 
 function ButtonBackAndTitle({titulo, ocultarAtras, confirmarAtras, dirBack}) {
     const navigate = useNavigate();
@@ -33,12 +34,12 @@ function ButtonBackAndTitle({titulo, ocultarAtras, confirmarAtras, dirBack}) {
                 </Button>
             )}
             <h1>{titulo}</h1>
-            <PopUpDialog 
-                openDialog={openConfirmarDialog} 
-                setOpenDialog={setOpenConfirmarDialog}
-                especial={handleConfirmarAtras}
-                titleDialog={'Esta accion te llevara atras y se desaseran los cambios, ¿Esta Seguro?'}
-                textDialog={'Esta acción no se puede deshacer. Todos los cambios realizados se perderán.'}
+            <CuadroDialogo
+                open={openConfirmarDialog} 
+                onClose={() => setOpenConfirmarDialog(false)}
+                onConfirm={handleConfirmarAtras}
+                title={'Al volver atrás, se desharán los cambios'}
+                description={'Esta acción no se puede deshacer. Todos los cambios realizados se perderán. ¿Esta Seguro?'}
             />
         </Fragment>
     );

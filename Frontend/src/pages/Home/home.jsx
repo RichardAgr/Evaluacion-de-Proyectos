@@ -62,7 +62,7 @@ function Home() {
             margin: "10px", 
           }}
         >
-          Ir a Editar Planificacion
+          Ir a Modificar Planificacion
         </Button>
         <Button
           variant="contained"

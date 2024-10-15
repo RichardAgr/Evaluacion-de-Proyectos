@@ -221,14 +221,20 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
         }
       );
       const responseDataSprint = await responseSprint.json();
-      if (responseDataSprint.error !== undefined && responseDataSprint.error !== null) {
+      if (
+        responseDataSprint.error !== undefined &&
+        responseDataSprint.error !== null
+      ) {
         setSnackbar({
           open: true,
           message: `Error al actualizar la planificacion: ${responseSprint.error} ${responseSprint.message}`,
           severity: "error",
           autoHide: false,
         });
-      } else {{/** Aun no se manejan los errores tipo {responseDataSprint.errors} */}
+      } else {
+        {
+          /** Aun no se manejan los errores tipo {responseDataSprint.errors} */
+        }
         console.log("Sprints modificados con exito.");
         setSnackbar({
           open: true,
@@ -280,14 +286,16 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
                     </TableCell>
                   ))}
                   <TableCell align="left">
-                    <Button
-                      variant="contained"
-                      color="secondary"
-                      startIcon={<DeleteIcon />}
-                      onClick={() => dialogoEliminar(index, row.hito)}
-                    >
-                      Eliminar
-                    </Button>
+                    {rows.length > 1 && (
+                      <Button
+                        variant="contained"
+                        color="secondary"
+                        startIcon={<DeleteIcon />}
+                        onClick={() => dialogoEliminar(index, row.hito)}
+                      >
+                        Eliminar
+                      </Button>
+                    )}
                   </TableCell>
                 </TableRow>
               ))}
