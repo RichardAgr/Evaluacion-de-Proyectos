@@ -231,7 +231,19 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
           severity: "error",
           autoHide: false,
         });
-      } else {
+      } else if(responseDataSprint.errors !== undefined &&
+        responseDataSprint.errors !== null){
+          setSnackbar({
+            open: true,
+            message: `Los datos en la planicacion no son validos, proximamente se podra decir exactamente que esta mal`,
+            severity: "error",
+            autoHide: false,
+          });
+          
+        console.log("Respuesta del servidor:");
+        console.log(responseDataSprint);
+        }
+          else {
         {
           /** Aun no se manejan los errores tipo {responseDataSprint.errors} */
         }
@@ -242,7 +254,8 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
           severity: "success",
           autoHide: true,
         });
-        console.log("Respuesta del servidor:", responseDataSprint);
+        console.log("Respuesta del servidor:");
+        console.log(responseDataSprint);
       }
     }
   };
