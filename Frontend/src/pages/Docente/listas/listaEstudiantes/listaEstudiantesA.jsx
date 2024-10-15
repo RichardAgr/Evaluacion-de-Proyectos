@@ -8,7 +8,6 @@ function ObtenerEstudiantesPorGrupo() {
   const gestionGrupo = '2024-2'; // Hardcodeado
   
   const [estudiantes, setEstudiantes] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   
   const [currentPage, setCurrentPage] = useState(1);
@@ -34,49 +33,50 @@ function ObtenerEstudiantesPorGrupo() {
     } catch (error) {
       console.error('Error en la solicitud:', error);
       setError(error.message);
-    } finally {
-      setLoading(false);
     }
   };
 
+  // Efecto para cargar los estudiantes al montar el componente
   useEffect(() => {
     fetchEstudiantes();
-  }, [idGrupo, gestionGrupo]);
+  }, []); // Solo se ejecuta una vez al montar
 
-  // Función para manejar la búsqueda
-  const handleSearch = async (e) => {
-    e.preventDefault();
-        if (!searchTerm.trim()) {
-        window.location.reload(); // Esto recargará la página y mostrará todos los datos
+  // Función para manejar la búsqueda en tiempo real
+  useEffect(() => {
+    const handleSearch = async () => {
+      if (!searchTerm.trim()) {
+        fetchEstudiantes(); // Volver a cargar todos los estudiantes si el término está vacío
         return;
-    }
-    setLoading(true); // Iniciar carga
-    try {
-      const response = await fetch(`http://localhost:8000/api/grupo/estudiante/barraBusqueda`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ 
-          idGrupo, 
-          gestionGrupo, 
-          termino: searchTerm 
-        }), // Enviar el idGrupo, gestionGrupo y término de búsqueda
-      });
-
-      if (!response.ok) {
-        throw new Error('Error en la búsqueda');
       }
 
-      const result = await response.json();
-      setEstudiantes(result); // Actualizar los estudiantes con los resultados de la búsqueda
-    } catch (error) {
-      console.error('Error en la solicitud:', error);
-      setError(error.message);
-    } finally {
-      setLoading(false); // Finalizar carga
-    }
-  };
+      try {
+        const response = await fetch(`http://localhost:8000/api/grupo/estudiante/barraBusqueda`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ 
+            idGrupo, 
+            gestionGrupo, 
+            termino: searchTerm 
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Error en la búsqueda');
+        }
+
+        const result = await response.json();
+        setEstudiantes(result);
+      } catch (error) {
+        console.error('Error en la solicitud:', error);
+        setError(error.message);
+      }
+    };
+
+    handleSearch(); // Llamar a la búsqueda inmediatamente
+
+  }, [searchTerm]); // Solo se ejecuta cuando searchTerm cambia
 
   const totalPaginas = Math.ceil(estudiantes.length / estudiantesPorPagina);
   const indexOfLastEstudiante = currentPage * estudiantesPorPagina;
@@ -95,7 +95,6 @@ function ObtenerEstudiantesPorGrupo() {
     }
   };
 
-  if (loading) return <p>Cargando estudiantes...</p>;
   if (error) return <p>Error: {error}</p>;
 
   return (
@@ -109,16 +108,13 @@ function ObtenerEstudiantesPorGrupo() {
           <h1>LISTA DE ESTUDIANTES</h1>
 
           {/* Barra de búsqueda */}
-          <form onSubmit={handleSearch}>
-            <input
-              type="text"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Buscar Estudiante"
-              style={{ marginBottom: '20px', padding: '8px', width: '200px' }}
-            />
-            <button type="submit">Buscar</button>
-          </form>
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Buscar Estudiante"
+            style={{ marginBottom: '20px', padding: '8px', width: '200px' }}
+          />
 
           <div className='pageBorder'>
             <div className='pageBorder_interior'>
@@ -170,37 +166,7 @@ function ObtenerEstudiantesPorGrupo() {
 
 // Estilos para la tabla y demás elementos
 const styles = `
-  .excelTable {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-  }
-
-  .excelTable th, .excelTable td {
-    border: 1px solid #000;
-    padding: 10px;
-    text-align: center;
-    background-color: #fff;
-  }
-
-  .excelTable th {
-    background-color: #f0f0f0;
-    font-weight: bold;
-  }
-
-  .excelTable tr:hover {
-    background-color: #f1f1f1;
-  }
-
-  .pagination {
-    display: flex;
-    justify-content: flex-end; /* Alinear a la derecha */
-    margin-top: 20px;
-  }
-
-  .pagination button {
-    margin: 0 5px;
-  }
+// Estilos aquí
 `;
 
 // Insertar estilos en el head del documento

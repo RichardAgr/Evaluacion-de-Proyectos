@@ -7,7 +7,9 @@ function EmpresasPorGrupo() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
 
+  // Initial data fetch with GET request
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -27,6 +29,29 @@ function EmpresasPorGrupo() {
     fetchData();
   }, []);
 
+  // Function to handle search (POST request)
+  const handleSearch = async (e) => {
+    e.preventDefault();
+    try {
+        const response = await fetch('http://localhost:8000/api/grupo/docente/1/barraBusqueda', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ termino: searchTerm }),  // Enviar el término de búsqueda
+        });
+
+        if (response.ok) {
+            const result = await response.json();
+            setData(result);  // Actualizar la tabla con los resultados de la búsqueda
+        } else {
+            throw new Error('Error en la búsqueda');
+        }
+    } catch (error) {
+        setError(error.message);
+    }
+};
+
   if (loading) return <p>Cargando datos...</p>;
   if (error) return <p>Error: {error}</p>;
 
@@ -37,6 +62,18 @@ function EmpresasPorGrupo() {
         <div className="container">
           <ButtonBackAndTitle datosTitleBack={{ ocultarAtras: false, titulo: 'EMPRESAS POR GRUPO' }} />
           <h1>LISTADO DE GRUPOS</h1>
+
+          {/* Search bar */}
+          <form onSubmit={handleSearch}>
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Buscar Empresa"
+            />
+            <button type="submit">Buscar</button>
+          </form>
+
           <div className="pageBorder">
             <div className="pageBorder_interior">
               <table className="excelTable">
@@ -77,7 +114,7 @@ const styles = `
   .box {
     padding: 20px;
   }
-  
+
   .container {
     max-width: 1200px;
     margin: 0 auto;
@@ -111,6 +148,27 @@ const styles = `
   .excelTable th {
     background-color: #f0f0f0;
     font-weight: bold;
+  }
+
+  input[type="text"] {
+    padding: 8px;
+    width: 200px;
+    margin-right: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+
+  button {
+    padding: 8px 12px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background-color: #45a049;
   }
 `;
 

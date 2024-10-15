@@ -43,7 +43,8 @@ Route::get('/grupoDescripcion/{idGrupo}', [GrupoController::class, 'getDescripci
 Route::get('/grupo/estudiantes/{idGrupo}/{gestionGrupo}', [GrupoController::class, 'obtenerEstudiantesPorGrupo']);
 Route::get('/estudiante/sprint/semana/{idSprint}',[SprintController::class, 'sprintsSemanas']);
 Route::get('/docente/obtenerEmpresasPorGrupoYDocente',[GrupoController::class, 'obtenerEmpresasPorGrupoYDocente']);
-
+Route::post('/grupo/estudiante/barraBusqueda', [GrupoController::class, 'barraBusquedaEstudiante']);
+Route::post('/grupo/docente/1/barraBusqueda', [GrupoController::class, 'barraBusquedaEmpresas']);
 
 /**
  * TODOS LOS POST VAN 

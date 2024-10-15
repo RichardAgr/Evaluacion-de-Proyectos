@@ -41,6 +41,9 @@ Route::get('/grupo/estudiantes/{idGrupo}/{gestionGrupo}', [GrupoController::clas
 Route::get('/grupo/empresas/{idDocente}', [GrupoController::class, 'obtenerEmpresasPorGrupoYDocente']);
 
 
+//barra de busqueda
+
+
 //HU Validar Planificion
 Route::put('/validar', [PlanificacionController::class, 'validar']);
 Route::get('/prueba', [PlanificacionController::class, 'testAdd']);
