@@ -11,7 +11,7 @@ function EmpresasPorGrupo() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:8000/grupo/empresas');
+        const response = await fetch('http://localhost:8000/grupo/empresas/1');
         if (response.ok) {
           const result = await response.json();
           setData(result);

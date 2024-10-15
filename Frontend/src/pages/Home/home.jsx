@@ -26,7 +26,7 @@ function Home() {
     navigate("/grupoEstudiante/sprint/semana/1/modificarListaTareas");
   };
   const handleNavigateToEmpresasLista = () => {
-    navigate( '/homeGrupoDocente/listaEmpresas');
+    navigate( '/homeGrupoDocente/listaEmpresas/1');
   };
 
   const handleNavigateToListaEstudiantes = () => {

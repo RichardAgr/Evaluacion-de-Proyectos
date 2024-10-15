@@ -78,7 +78,7 @@ function Nav() {
         <Route path='/homeEstudiante/gruposDisponibles' element={<GruposDisponibles />} />
         <Route path='/homeEstudiante/inscribirGrupo/:idGrupo' element={<InscribirGrupo />} />
         <Route path="/homeGrupoDocente/listaEstudiantes/:idGrupo/:gestionGrupo" element={<ObtenerEstudiantesPorGrupo />} />
-        <Route path='/homeGrupoDocente/listaEmpresas' element={<EmpresasPorDocente />} />
+        <Route path='/homeGrupoDocente/listaEmpresas/:idDocente' element={<EmpresasPorDocente />} />
     </Routes>
   )
 }

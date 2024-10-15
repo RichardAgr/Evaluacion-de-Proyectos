@@ -65,7 +65,7 @@ class GrupoController extends Controller
 
         return response()->json($datosGrupo, 200);
     }
-    public function obtenerEmpresasPorGrupoYDocente()
+    public function obtenerEmpresasPorGrupoYDocente($idDocente)
     {
         // Validar los parámetros de entrada
         /*$request->validate([
@@ -82,7 +82,7 @@ class GrupoController extends Controller
             ->join('empresa AS emp', 'ee.idEmpresa', '=', 'emp.idEmpresa')
             ->join('estudiante AS e', 'eg.idEstudiante', '=', 'e.idEstudiante')
             ->select('emp.nombreEmpresa','emp.nombreLargo', 'g.gestionGrupo', DB::raw('count(eg.idEstudiante) as totalEstudiantes'), 'g.numGrupo')
-            ->where('d.idDocente', 1)
+            ->where('d.idDocente', $idDocente)
            // ->where('g.idGrupo', $request->idGrupo)
             //->where('g.gestionGrupo', $request->gestionGrupo)
             ->groupBy('emp.nombreEmpresa', 'emp.nombreLargo','g.gestionGrupo', 'g.numGrupo')
