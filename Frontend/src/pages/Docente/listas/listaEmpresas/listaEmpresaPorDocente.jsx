@@ -36,6 +36,7 @@ function EmpresasPorGrupo() {
       <div className="box">
         <div className="container">
           <ButtonBackAndTitle datosTitleBack={{ ocultarAtras: false, titulo: 'EMPRESAS POR GRUPO' }} />
+          <h1>LISTADO DE GRUPOS</h1>
           <div className="pageBorder">
             <div className="pageBorder_interior">
               <table className="excelTable">
