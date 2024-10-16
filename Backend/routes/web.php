@@ -38,7 +38,10 @@ Route::post('/planificacionGestion', [PlanificacionController::class, 'gestionar
 
 //Probando el web
 Route::get('/grupo/estudiantes/{idGrupo}/{gestionGrupo}', [GrupoController::class, 'obtenerEstudiantesPorGrupo']);
-Route::get('/grupo/empresas', [GrupoController::class, 'obtenerEmpresasPorGrupoYDocente']);
+Route::get('/grupo/empresas/{idDocente}', [GrupoController::class, 'obtenerEmpresasPorGrupoYDocente']);
+
+
+//barra de busqueda
 
 
 //HU Validar Planificion
