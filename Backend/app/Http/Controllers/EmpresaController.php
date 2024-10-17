@@ -27,7 +27,6 @@ class EmpresaController extends Controller
                     'nombreEstudiante' => $estudiante->nombreEstudiante,
                     'primerApellido' => $estudiante->primerApellido,
                     'segundoApellido' => $estudiante->segundoApellido,
-                    'rol'=> $estudiante ->rol
                 ];
             }),
         ];

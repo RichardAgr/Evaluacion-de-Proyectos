@@ -8,13 +8,9 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 function tablaPlanificacion({sprints, ocultarBotones}) {
-  const fechaActual = new Date();
-  const dia = fechaActual.getDate();      // Día del mes (1-31)
-  const mes = fechaActual.getMonth() + 1; // Mes (0-11, por eso se suma 1 para que sea 1-12)
-  const anio = fechaActual.getFullYear(); // Año
-  
+
   return (
-    <Fragment>
+    <>
       <TableContainer component={Paper}>
                   <Table sx={{ minWidth: 650 }} aria-label="simple table">
                     <TableHead>
@@ -65,7 +61,7 @@ function tablaPlanificacion({sprints, ocultarBotones}) {
                     </TableBody>
                   </Table>
                 </TableContainer>
-    </Fragment>
+    </>
   );
 }
 

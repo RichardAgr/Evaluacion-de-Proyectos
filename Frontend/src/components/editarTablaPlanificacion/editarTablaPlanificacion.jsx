@@ -227,23 +227,24 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
       ) {
         setSnackbar({
           open: true,
-          message: `Error al actualizar la planificacion: ${responseSprint.error} ${responseSprint.message}`,
+          message: `Error al modificar los Sprints: ${responseDataSprint.error} ${responseDataSprint.message}`,
           severity: "error",
           autoHide: false,
         });
-      } else if(responseDataSprint.errors !== undefined &&
-        responseDataSprint.errors !== null){
-          setSnackbar({
-            open: true,
-            message: `Los datos en la planicacion no son validos, proximamente se podra decir exactamente que esta mal`,
-            severity: "error",
-            autoHide: false,
-          });
-          
+      } else if (
+        responseDataSprint.errors !== undefined &&
+        responseDataSprint.errors !== null
+      ) {
+        setSnackbar({
+          open: true,
+          message: `Los datos en la planicacion no son validos, proximamente se podra decir exactamente que esta mal`,
+          severity: "error",
+          autoHide: false,
+        });
+
         console.log("Respuesta del servidor:");
         console.log(responseDataSprint);
-        }
-          else {
+      } else {
         {
           /** Aun no se manejan los errores tipo {responseDataSprint.errors} */
         }

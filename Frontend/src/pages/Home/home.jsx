@@ -9,7 +9,7 @@ function Home() {
   const navigate = useNavigate();
 
   const handleNavigateToVerPlanificacion = () => {
-    navigate("/homeDocente/homeGrupoDocente/verPlanificacionDeEmpresas");
+    navigate("/seleccionarVisualizarEmpresa");
   };
   const handleNavigateToEditarPlanificacion = () => {
     navigate(
@@ -17,13 +17,13 @@ function Home() {
     );
   };
   const handleNavigateToValidarEmpresas = () => {
-    navigate("/grupoDocente/validarPlanificacion/");
+    navigate("/validarPlanificacion/");
   };
-  const handleNavigateToCalificarSprint = () => {
-    navigate("/grupoDocente/empresa/1/planificacion/calificarSprint/1");
+  const handleNavigateToEvaluacionSemanal = () => {
+    navigate("/evaluacionSemanal/empresa/1/sprint/1/");
   };
   const handleNavigateToModificarLista = () => {
-    navigate("/grupoEstudiante/sprint/semana/1/modificarListaTareas");
+    navigate("/empresa/1/sprint/1/semana/1/modificarListaTareas");
   };
   return (
     <Fragment>
@@ -81,14 +81,14 @@ function Home() {
           variant="contained"
           color="primary"
           size="large"
-          onClick={handleNavigateToCalificarSprint}
+          onClick={handleNavigateToEvaluacionSemanal}
           style={{
             padding: "15px 30px",
             fontSize: "1.2rem",
             margin: "10px", 
           }}
         >
-          Ir a Calificar Sprint
+          Ir a Evaluacion Semanal
         </Button>
         <Button
           variant="contained"
