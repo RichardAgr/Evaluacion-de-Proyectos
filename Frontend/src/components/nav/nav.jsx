@@ -14,7 +14,7 @@ import EvaluacionSemanal from  '../../pages/Docente/evaluacionSemanal/evaluacion
 //archivos estudiante
 import HomeEstudiante from '../../pages/Estudiante/homeEstudiante/homeEstudiante.jsx'
 import HomeGrupoEstudiante from '../../pages/Estudiante/homeGrupoEstudiante/homeGrupoEstudiante.jsx'
-import EditarPlanificacion from '../../pages/Estudiante/editarPlanificacion/editarPlanificacion.jsx';
+import ModificarPlanificacion from '../../pages/Estudiante/editarPlanificacion/editarPlanificacion.jsx';
 import ModificarTarea from '../../pages/Estudiante/editarPlanificacion/modificarTarea/modificarTarea.jsx'
 import ModificarListaTareas from '../../pages/Estudiante/editarPlanificacion/modificarListaTareas/modificarListaTareas.jsx'
 
@@ -30,22 +30,30 @@ function Nav() {
       {/** Rutas Docente*/}
         <Route path='/homeDocente' element={<HomeDocente/>}/>
         <Route path='/homeDocente/homeGrupoDocente' element={<HomeGrupoDocente/>}/>
+
         {/** Seleccionar una planificacion para visualizar*/}
         <Route path='/seleccionarVisualizarEmpresa' element={<ListaVerPlanificacion/>}/>
+
         {/** Visualizar Planificacion*/}
         <Route path='/homeDocente/homeGrupoDocente/verPlanificacionDeEmpresas/Empresa/:idEmpresa' element={<VerPlanificacionDeDesarollo/>}/>
+       
         {/** Seleccionar una planificacion para validar*/}
         <Route path='/validarPlanificacion/' element={<SeleccionarEmpresaSinValidar/>}/>
+        
         {/** Validar Planificacion */}
         <Route path='/validarPlanificacion/empresa/:idEmpresa' element={<ValidarPlanificacion/>}/>
+        
         {/** Evaluacion Semanal */}
         <Route path='/evaluacionSemanal/empresa/:idEmpresa/sprint/:idSprint' element={<EvaluacionSemanal/>}/>
 
-      {/** Ruta Estudiante*/}
+      {/** Rutas Estudiante*/}
         <Route path='/homeEstudiante' element={<HomeEstudiante/>}/>
         <Route path='/homeEstudiante/homeGrupoEstudiante' element={<HomeGrupoEstudiante/>}/>
         <Route path='/homeEstudiante/homeGrupoEstudiante/PlanificacionDeDesarollo/Empresa/:idEmpresa' element={<VerPlanificacionDeDesarollo/>}/>
-        <Route path='/homeEstudiante/homeGrupoEstudiante/PlanificacionInicial/Empresa/:idEmpresa' element={<EditarPlanificacion/>}/>
+
+        {/** Modificar Planificacion */}
+        <Route path='/modificarPlanificacion/Empresa/:idEmpresa' element={<ModificarPlanificacion/>}/>
+        {/** Modificar Tarea */}
         <Route path='/homeEstudiante/homeGrupoEstudiante/sprint/semana/tareas/:idTarea' element={<ModificarTarea/>}/>
         {/** Modificar Lista de Tareas */}
         <Route path='/empresa/:idEmpresa/sprint/:idSprint/semana/:idSemana/modificarListaTareas' element={<ModificarListaTareas/>}/>

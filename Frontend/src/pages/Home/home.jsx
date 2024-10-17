@@ -11,9 +11,9 @@ function Home() {
   const handleNavigateToVerPlanificacion = () => {
     navigate("/seleccionarVisualizarEmpresa");
   };
-  const handleNavigateToEditarPlanificacion = () => {
+  const handleNavigateToModificarPlanificacion = () => {
     navigate(
-      "/homeEstudiante/homeGrupoEstudiante/PlanificacionInicial/Empresa/1"
+      "/modificarPlanificacion/empresa/1"
     );
   };
   const handleNavigateToValidarEmpresas = () => {
@@ -55,7 +55,7 @@ function Home() {
           variant="contained"
           color="primary"
           size="large"
-          onClick={handleNavigateToEditarPlanificacion}
+          onClick={handleNavigateToModificarPlanificacion}
           style={{
             padding: "15px 30px",
             fontSize: "1.2rem",

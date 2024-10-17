@@ -10,24 +10,25 @@ import {
 
 const InfoEmpresa = ({ nombreLargo, nombreCorto, integrantes }) => {
   return (
-    <Paper elevation={1} sx={{ p: 3, mt: 2, mb: 2 }}>
-      <Box sx={{ textAlign: "center", mb: 2 }}>
-        <Typography variant="h4" component="h1" gutterBottom>
+    <Paper elevation={1} sx={{ p: 2, my: 1 }}>
+      <Box sx={{ textAlign: "center", mb: 1 }}>
+        <Typography variant="h5" component="h1" gutterBottom>
           {nombreLargo}
         </Typography>
-        <Typography variant="h5" component="h2" color="text.secondary">
+        <Typography variant="subtitle1" component="h2" color="text.secondary">
           {nombreCorto}
         </Typography>
       </Box>
-      <Box sx={{ mt: 4, ml: 4 }}>
-        <Typography variant="h6" component="h3" gutterBottom>
+      <Box sx={{ ml: 4 }}>
+        <Typography variant="subtitle" component="h3" gutterBottom>
           Integrantes:
         </Typography>
-        <List>
+        <List dense>
           {integrantes.map((integrante, index) => (
-            <ListItem key={index}>
+            <ListItem key={index} disableGutters>
               <ListItemText
                 primary={`${integrante.nombreEstudiante} ${integrante.primerApellido} ${integrante.segundoApellido}`}
+                primaryTypographyProps={{ variant: 'body1' }}
               />
             </ListItem>
           ))}

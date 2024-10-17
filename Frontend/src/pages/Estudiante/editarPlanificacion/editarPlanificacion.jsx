@@ -21,7 +21,7 @@ import {
   Typography,
 } from "@mui/material";
 
-function Planificacion() {
+function ModificarPlanificacion() {
   let { idEmpresa } = useParams();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState({
@@ -117,4 +117,4 @@ function Planificacion() {
   );
 }
 
-export default Planificacion;
+export default ModificarPlanificacion;

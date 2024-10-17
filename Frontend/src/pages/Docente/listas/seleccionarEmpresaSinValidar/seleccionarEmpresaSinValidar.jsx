@@ -6,7 +6,7 @@ function SeleccionarEmpresaSinValidar() {
   return (
     <>
       <BaseUI
-        titulo = {'SELECCIONE UNA EMPRESA PARA VALIDAR'}
+        titulo = {'SELECCIONE UNA PLANIFICACION PARA VALIDAR'}
         ocultarAtras = {false}
         confirmarAtras = {false}
         dirBack = {'/'}
