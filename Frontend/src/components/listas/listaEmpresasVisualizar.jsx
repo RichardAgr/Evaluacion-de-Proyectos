@@ -41,7 +41,7 @@ function ListaEmpresasVisualizar() {
 
   const handleRowClick = (idEmpresa) => {
     navigate(
-      `/homeDocente/homeGrupoDocente/verPlanificacionDeEmpresas/Empresa/${idEmpresa}`
+      `/visualizarPlanificacion/empresa/${idEmpresa}`
     );
   };
 

@@ -23,20 +23,21 @@ function Nav() {
   return (
     
     <Routes>
-        {/** Ruta compartidas*/}
+      {/** Ruta compartidas*/}
         <Route path="*" element={<Navigate to="/" />} />
         <Route path='/' element={<Home/>}/>
 
+        {/** Seleccionar una planificacion para visualizar*/}
+        <Route path='/visualizarPlanificacion' element={<ListaVerPlanificacion/>}/>
+
+        {/** Visualizar Planificacion*/}
+        <Route path='/visualizarPlanificacion/Empresa/:idEmpresa' element={<VerPlanificacionDeDesarollo/>}/>
+       
       {/** Rutas Docente*/}
         <Route path='/homeDocente' element={<HomeDocente/>}/>
         <Route path='/homeDocente/homeGrupoDocente' element={<HomeGrupoDocente/>}/>
 
-        {/** Seleccionar una planificacion para visualizar*/}
-        <Route path='/seleccionarVisualizarEmpresa' element={<ListaVerPlanificacion/>}/>
 
-        {/** Visualizar Planificacion*/}
-        <Route path='/homeDocente/homeGrupoDocente/verPlanificacionDeEmpresas/Empresa/:idEmpresa' element={<VerPlanificacionDeDesarollo/>}/>
-       
         {/** Seleccionar una planificacion para validar*/}
         <Route path='/validarPlanificacion/' element={<SeleccionarEmpresaSinValidar/>}/>
         
@@ -49,14 +50,15 @@ function Nav() {
       {/** Rutas Estudiante*/}
         <Route path='/homeEstudiante' element={<HomeEstudiante/>}/>
         <Route path='/homeEstudiante/homeGrupoEstudiante' element={<HomeGrupoEstudiante/>}/>
-        <Route path='/homeEstudiante/homeGrupoEstudiante/PlanificacionDeDesarollo/Empresa/:idEmpresa' element={<VerPlanificacionDeDesarollo/>}/>
 
         {/** Modificar Planificacion */}
         <Route path='/modificarPlanificacion/Empresa/:idEmpresa' element={<ModificarPlanificacion/>}/>
+
         {/** Modificar Tarea */}
         <Route path='/homeEstudiante/homeGrupoEstudiante/sprint/semana/tareas/:idTarea' element={<ModificarTarea/>}/>
+      
         {/** Modificar Lista de Tareas */}
-        <Route path='/empresa/:idEmpresa/sprint/:idSprint/semana/:idSemana/modificarListaTareas' element={<ModificarListaTareas/>}/>
+        <Route path='/modificarListaTareas/empresa/:idEmpresa/sprint/:idSprint/semana/:idSemana' element={<ModificarListaTareas/>}/>
     </Routes>
   )
 }

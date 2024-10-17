@@ -9,7 +9,7 @@ function Home() {
   const navigate = useNavigate();
 
   const handleNavigateToVerPlanificacion = () => {
-    navigate("/seleccionarVisualizarEmpresa");
+    navigate("/visualizarPlanificacion");
   };
   const handleNavigateToModificarPlanificacion = () => {
     navigate(
@@ -23,7 +23,7 @@ function Home() {
     navigate("/evaluacionSemanal/empresa/1/sprint/1/");
   };
   const handleNavigateToModificarLista = () => {
-    navigate("/empresa/1/sprint/1/semana/1/modificarListaTareas");
+    navigate("/modificarListaTareas/empresa/1/sprint/1/semana/1");
   };
   return (
     <Fragment>
