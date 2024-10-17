@@ -12,11 +12,11 @@ const InfoEmpresa = ({ nombreLargo, nombreCorto, integrantes }) => {
   return (
     <Paper elevation={1} sx={{ p: 2, my: 1 }}>
       <Box sx={{ textAlign: "center", mb: 1 }}>
-        <Typography variant="h5" component="h1" gutterBottom>
-          {nombreLargo}
-        </Typography>
-        <Typography variant="subtitle1" component="h2" color="text.secondary">
+        <Typography variant="subtitle" component="h1" gutterBottom>
           {nombreCorto}
+        </Typography>
+        <Typography variant="subtitle" component="h3" color="text.secondary">
+          {nombreLargo}
         </Typography>
       </Box>
       <Box sx={{ ml: 4 }}>
@@ -28,7 +28,7 @@ const InfoEmpresa = ({ nombreLargo, nombreCorto, integrantes }) => {
             <ListItem key={index} disableGutters>
               <ListItemText
                 primary={`${integrante.nombreEstudiante} ${integrante.primerApellido} ${integrante.segundoApellido}`}
-                primaryTypographyProps={{ variant: 'body1' }}
+                primaryTypographyProps={{ variant: 'body2' }}
               />
             </ListItem>
           ))}
