@@ -6,8 +6,8 @@ import VerPlanificacionDeDesarollo from '../../pages/VisualizacionCompartida/ver
 //archivos docente
 import HomeDocente from '../../pages/Docente/homeDocente/homeDocente.jsx'
 import HomeGrupoDocente from '../../pages/Docente/homeGrupoDocente/homeGrupoDocente.jsx'
-import ListaVerPlanificacion from '../../pages/Docente/listas/listaVerPlanificacion/listaVerPlanificacion.jsx';
-import ListaEmpresas from '../../pages/Docente/listas/listaEmpresas/listaEmpresas.jsx'
+import ListaVerPlanificacion from '../../pages/Docente/listas/seleccionarEmpresaVisualizar/seleccionarEmpresaVisualizar.jsx';
+import SeleccionarEmpresaSinValidar from '../../pages/Docente/listas/seleccionarEmpresaSinValidar/seleccionarEmpresaSinValidar.jsx'
 import ValidarPlanificacion from '../../pages/Docente/validarPlanificacion/validarPlanificacion.jsx';
 import EvaluacionSemanal from  '../../pages/Docente/evaluacionSemanal/evaluacionSemanal.jsx';
 
@@ -35,7 +35,7 @@ function Nav() {
         {/** Visualizar Planificacion*/}
         <Route path='/homeDocente/homeGrupoDocente/verPlanificacionDeEmpresas/Empresa/:idEmpresa' element={<VerPlanificacionDeDesarollo/>}/>
         {/** Seleccionar una planificacion para validar*/}
-        <Route path='/validarPlanificacion/' element={<ListaEmpresas/>}/>
+        <Route path='/validarPlanificacion/' element={<SeleccionarEmpresaSinValidar/>}/>
         {/** Validar Planificacion */}
         <Route path='/validarPlanificacion/empresa/:idEmpresa' element={<ValidarPlanificacion/>}/>
         {/** Evaluacion Semanal */}

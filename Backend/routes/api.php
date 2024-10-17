@@ -25,20 +25,26 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::get('/empresa/{id}', [EmpresaController::class, 'getEmpresaData']);
 Route::get('/nombreEmpresa/{id}', [EmpresaController::class, 'getNombreEmpresa']);
-Route::get('/empresas/', [EmpresaController::class, 'getListaEmpresas']);
+
 Route::get('/planificacion/{idEmpresa}', [PlanificacionController::class, 'show']);
 
 // ----añadir revision-----
 // cambia la revision como valida
 Route::put('/validar', [PlanificacionController::class, 'validar']);
+
 // añade los comentarios y la nota
 Route::post('/addRevision', [PlanificacionController::class, 'addRevision']);
 
+// ----Listar Empresas-----
+// obtiene una lista de todas las empresas
+Route::get('/empresas/', [EmpresaController::class, 'getListaEmpresas']);
+
+// obtiene una lista de todas las empresas que aun no fueron validadas
+Route::get('/planificacionesSinValidar', [PlanificacionController::class, 'planificacionesSinValidar']);
 
 //jhon
 Route::get('/planificacion/notaComentario/{idPlanificacion}', [PlanificacionController::class, 'notaComentario']);
 Route::get('/planificacionAceptadas', [PlanificacionController::class, 'planificacionAceptadas']);
-Route::get('/planificacionRechazadas', [PlanificacionController::class, 'planificacionRechazadas']);
 
 //Para crear la planificacion o modificarla
 Route::post('/planificacion/guardar2', [PlanificacionController::class, 'crearPlanificacion']);

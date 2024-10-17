@@ -6,13 +6,12 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { getPlanificacionesAceptadas } from "../../../../api/getPlanificacionesAceptadas";
+import { getPlanificacionesSinValidar } from "../../api/getPlanificacionesSinValidar";
 import { useNavigate } from "react-router-dom";
-import BaseUI from "../../../../components/baseUI/baseUI";
-import Loading from "../../../../components/loading/loading";
-import Error from "../../../../components/error/error";
+import Loading from "../loading/loading";
+import Error from "../error/error";
 
-function ListaVerPlanificacion() {
+function ListaEmpresasSinValidar() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState({
     errorMessage: "",
@@ -23,45 +22,37 @@ function ListaVerPlanificacion() {
 
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        const [lista] = await Promise.all([getPlanificacionesAceptadas()]);
-        setListaEmpresas(lista);
-        console.log(lista);
-      } catch (error) {
-        console.error("Error en la solicitud:", error.message);
+      const responseData = await Promise.all([getPlanificacionesSinValidar()]);
+      if (responseData.error !== undefined && responseData.error !== null) {
         setError({
           errorMessage: "Ha ocurrido un error",
           errorDetails: error.message,
         });
-      } finally {
-        setLoading(false);
+      } else {
+        const [lista] = await responseData;
+        setListaEmpresas(lista);
+        console.log(lista);
       }
+      setLoading(false);
     };
     fetchData();
   }, []);
 
   const handleRowClick = (idEmpresa) => {
-    navigate(
-      `/homeDocente/homeGrupoDocente/verPlanificacionDeEmpresas/Empresa/${idEmpresa}`
-    );
+    navigate(`/validarPlanificacion/Empresa/${idEmpresa}`);
   };
 
   return (
-    <Fragment>
-      <BaseUI
-        titulo={"SELECCIONE UNA PLANIFICACION PARA VISUALIZAR"}
-        ocultarAtras={false}
-        confirmarAtras={false}
-        dirBack={"/"}
-      >
-        {error.errorMessage || error.errorDetails ? (
-          <Error
-            errorMessage={error.errorMessage}
-            errorDetails={error.errorDetails}
-          />
-        ) : loading ? (
-          <Loading />
-        ) : (
+    <>
+      {error.errorMessage || error.errorDetails ? (
+        <Error
+          errorMessage={error.errorMessage}
+          errorDetails={error.errorDetails}
+        />
+      ) : loading ? (
+        <Loading />
+      ) : (
+        <>
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>
@@ -92,10 +83,10 @@ function ListaVerPlanificacion() {
               </TableBody>
             </Table>
           </TableContainer>
-        )}
-      </BaseUI>
-    </Fragment>
+        </>
+      )}
+    </>
   );
 }
 
-export default ListaVerPlanificacion;
+export default ListaEmpresasSinValidar;
