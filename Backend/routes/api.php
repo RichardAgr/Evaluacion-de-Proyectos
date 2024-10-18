@@ -15,6 +15,8 @@ use App\Http\Controllers\RevisionPlaniController;
 use App\Http\Controllers\DocenteController;
 use App\Http\Controllers\SprintController;
 use App\Models\RevisionPlani;
+use App\Http\Controllers\EstudiantesEmpresasController;
+
 
 Route::get('/empresa/{id}', [EmpresaController::class, 'getEmpresaData']);
 Route::get('/nombreEmpresa/{id}', [EmpresaController::class, 'getNombreEmpresa']);
@@ -25,7 +27,7 @@ Route::get('/planificacion/{idEmpresa}', [PlanificacionController::class, 'show'
 Route::put('/validar', [PlanificacionController::class, 'validar']);
 Route::post('/addRevision', [PlanificacionController::class, 'addRevision']);
 
-Route::put('/prueba2', [RevisionPlaniController::class, 'testValidar']);
+//Route::put('/prueba2', [RevisionPlaniController::class, 'testValidar']);
 
 
 
@@ -43,7 +45,11 @@ Route::get('/grupos', [GrupoController::class, 'obtenerTodosLosGrupos']);
 Route::get('/grupo/{idGrupo}/participantes', [GrupoController::class, 'obtenerEstudiantesPorGrupo']);
 Route::get('/grupoDescripcion/{idGrupo}', [GrupoController::class, 'getDescripcion']);
 Route::get('/grupo/estudiantes/{idGrupo}/{gestionGrupo}', [GrupoController::class, 'obtenerEstudiantesPorGrupo']);
-Route::get('/estudiante/sprint/semana/{idSprint}', [SprintController::class, 'sprintsSemanas']);
+Route::get('/estudiante/sprint/semana/{idSprint}',[SprintController::class, 'sprintsSemanas']);
+Route::get('/docente/obtenerEmpresasPorGrupoYDocente',[GrupoController::class, 'obtenerEmpresasPorGrupoYDocente']);
+Route::get('/estudiante/getEstudiante/{idEstudiante}',[EstudianteController::class, 'obtenerEstudiantesParaEmpresa']);
+Route::get('/empresas/{idEmpresa}/calificaciones', [EmpresaController::class, 'getCalificacionesEmpresa']);
+
 /**
  * TODOS LOS POST VAN 
  *
@@ -54,10 +60,10 @@ Route::post('/planificacion/guardar', [PlanificacionController::class, 'crearPla
 Route::post('/tarea/crear', [TareaController::class, 'store']);
 //Para asignar grupos
 Route::post('/asignarEstudiante', [EstudianteController::class, 'asignarEstudianteAGrupo']);
+Route::post('/grupo/estudiante/barraBusqueda', [GrupoController::class, 'barraBusquedaEstudiante']);
+Route::post('/grupo/docente/1/barraBusqueda', [GrupoController::class, 'barraBusquedaEmpresas']);
 
-
-/**
- * TODOS LOS PUT VAN 
- *
- */
+Route::post('/estudiante/crearEmpresa', [EstudiantesEmpresasController::class, 'crearEmpresa']);
+// Ruta para modificar una tarea con sus archivos
 Route::post('/tarea/{idTarea}/guardar', [TareaController::class, 'update']);
+

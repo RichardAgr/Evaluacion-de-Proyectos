@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\JsonResponse;
 use App\Models\EstudiantesGrupos;
 use App\Models\Grupo;
+use App\Models\Estudiante;
 
 class EstudianteController extends Controller
 {
@@ -41,6 +42,20 @@ class EstudianteController extends Controller
 
     }
 
+    public function obtenerEstudiantesParaEmpresa($idEstudiante){
+        $grupo = EstudiantesGrupos::select('idGrupo')
+                ->where('idEstudiante',$idEstudiante)
+                ->first();
+        
+        $resultado = Estudiante::select( 'estudiante.idEstudiante',DB::raw("CONCAT(nombreEstudiante, ' ', primerApellido, ' ', segundoApellido) AS nombreCompleto"))
+        ->join('estudiantesgrupos AS eg','eg.idEstudiante','=','estudiante.idEstudiante')
+        ->where('estudiante.disponible','<>','1')
+        ->where('eg.idGrupo',$grupo -> idGrupo)
+        ->where('estudiante.idEstudiante','<>',$idEstudiante)
+        ->orderBy('estudiante.nombreEstudiante')
+        ->get();
 
-
+        return response()->json($resultado, 200);
+    }
+    
 }

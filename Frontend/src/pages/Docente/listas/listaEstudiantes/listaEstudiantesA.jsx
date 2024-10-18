@@ -7,9 +7,7 @@ function ObtenerEstudiantesPorGrupo() {
   const gestionGrupo = '2024-2'; // Hardcodeado
   
   const [estudiantes, setEstudiantes] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
   const estudiantesPorPagina = 20;
@@ -29,53 +27,67 @@ function ObtenerEstudiantesPorGrupo() {
       }
 
       const data = await response.json();
+      // Ordenar alfabéticamente por el nombre
+      data.sort((a, b) => {
+        const nombreA = `${a.nombreEstudiante} ${a.apellidoPaternoEstudiante} ${a.apellidoMaternoEstudiante}`.toLowerCase();
+        const nombreB = `${b.nombreEstudiante} ${b.apellidoPaternoEstudiante} ${a.apellidoMaternoEstudiante}`.toLowerCase();
+        return nombreA.localeCompare(nombreB);
+      });
+
       setEstudiantes(data);
     } catch (error) {
       console.error('Error en la solicitud:', error);
       setError(error.message);
-    } finally {
-      setLoading(false);
     }
   };
 
+  // Efecto para cargar los estudiantes al montar el componente
   useEffect(() => {
     fetchEstudiantes();
-  }, [idGrupo, gestionGrupo]);
+  }, []); // Solo se ejecuta una vez al montar
 
-  // Función para manejar la búsqueda
-  const handleSearch = async (e) => {
-    e.preventDefault();
-    if (!searchTerm.trim()) {
-      window.location.reload(); // Recargar la página para mostrar todos los datos
-      return;
-    }
-    setLoading(true); // Iniciar carga
-    try {
-      const response = await fetch(`http://localhost:8000/api/grupo/estudiante/barraBusqueda`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ 
-          idGrupo, 
-          gestionGrupo, 
-          termino: searchTerm 
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Error en la búsqueda');
+  // Función para manejar la búsqueda en tiempo real
+  useEffect(() => {
+    const handleSearch = async () => {
+      if (!searchTerm.trim()) {
+        fetchEstudiantes(); // Volver a cargar todos los estudiantes si el término está vacío
+        return;
       }
 
-      const result = await response.json();
-      setEstudiantes(result); // Actualizar los estudiantes con los resultados de la búsqueda
-    } catch (error) {
-      console.error('Error en la solicitud:', error);
-      setError(error.message);
-    } finally {
-      setLoading(false); // Finalizar carga
-    }
-  };
+      try {
+        const response = await fetch(`http://localhost:8000/api/grupo/estudiante/barraBusqueda`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ 
+            idGrupo, 
+            gestionGrupo, 
+            termino: searchTerm 
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Error en la búsqueda');
+        }
+
+        const result = await response.json();
+        // Ordenar alfabéticamente por el nombre
+        result.sort((a, b) => {
+          const nombreA = `${a.nombreEstudiante} ${a.apellidoPaternoEstudiante} ${a.apellidoMaternoEstudiante}`.toLowerCase();
+          const nombreB = `${b.nombreEstudiante} ${b.apellidoPaternoEstudiante} ${a.apellidoMaternoEstudiante}`.toLowerCase();
+          return nombreA.localeCompare(nombreB);
+        });
+
+        setEstudiantes(result);
+      } catch (error) {
+        console.error('Error en la solicitud:', error);
+        setError(error.message);
+      }
+    };
+
+    handleSearch(); // Llamar a la búsqueda inmediatamente
+  }, [searchTerm]); // Solo se ejecuta cuando searchTerm cambia
 
   const totalPaginas = Math.ceil(estudiantes.length / estudiantesPorPagina);
   const indexOfLastEstudiante = currentPage * estudiantesPorPagina;
@@ -94,7 +106,6 @@ function ObtenerEstudiantesPorGrupo() {
     }
   };
 
-  if (loading) return null; // Eliminar mensaje de carga
   if (error) return <p>Error: {error}</p>;
 
   return (
@@ -104,17 +115,15 @@ function ObtenerEstudiantesPorGrupo() {
       confirmarAtras={false}
       dirBack={`/`}
     >
+
       {/* Barra de búsqueda */}
-      <form onSubmit={handleSearch}>
-        <input
-          type="text"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          placeholder="Buscar Estudiante"
-          style={{ marginBottom: '20px', padding: '8px', width: '200px' }}
-        />
-        <button type="submit">Buscar</button>
-      </form>
+      <input
+        type="text"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        placeholder="Nombre, código sis, Nombre Grupo Empresa"
+        style={{ marginBottom: '20px',marginTop:'50px', padding: '8px', width: '200px' }}
+      />
       <Tabla>
         <thead>
           <tr>
@@ -124,16 +133,23 @@ function ObtenerEstudiantesPorGrupo() {
           </tr>
         </thead>
         <tbody>
-          {estudiantesActuales.map((estudiante) => (
-            <tr key={estudiante.idEstudiante}>
-              <td>
-                {estudiante.nombreEstudiante} {estudiante.apellidoPaternoEstudiante} {estudiante.apellidoMaternoEstudiante}
+          {estudiantesActuales.length > 0 ? (
+            estudiantesActuales.map((estudiante) => (
+              <tr key={estudiante.idEstudiante}>
+                <td>
+                  {estudiante.nombreEstudiante} {estudiante.apellidoPaternoEstudiante} {estudiante.apellidoMaternoEstudiante}
+                </td>
+                <td>falta codigo sis</td>
+                <td>{estudiante.nombreEmpresa}</td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="3" style={{ textAlign: 'center' }}>
+                No hay estudiantes inscritos en este momento
               </td>
-              <td>falta codigo sis</td>
-              <td>{estudiante.nombreEmpresa}</td>
-
             </tr>
-          ))}
+          )}
         </tbody>      
       </Tabla>
 
@@ -146,6 +162,7 @@ function ObtenerEstudiantesPorGrupo() {
         handlePreviousPage={handlePreviousPage}
         handleNextPage={handleNextPage}
       />
+
     </BaseUI>
   );
 }
