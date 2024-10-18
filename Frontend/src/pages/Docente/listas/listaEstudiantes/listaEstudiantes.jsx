@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import BaseUI from "../../../../components/baseUI/baseUI";
+import { styled } from '@mui/material';
 
 function ObtenerEstudiantesPorGrupo() {
   const idGrupo = 1; // Hardcodeado
@@ -11,7 +12,7 @@ function ObtenerEstudiantesPorGrupo() {
   
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
-  const estudiantesPorPagina = 10;
+  const estudiantesPorPagina = 20;
 
   // Función para obtener estudiantes
   const fetchEstudiantes = async () => {
@@ -114,91 +115,100 @@ function ObtenerEstudiantesPorGrupo() {
         />
         <button type="submit">Buscar</button>
       </form>
+      <Tabla>
+        <thead>
+          <tr>
+            <th>ESTUDIANTE</th>
+            <th>CODIGO SIS</th>
+            <th>Nombre Grupo Empresa</th>
+          </tr>
+        </thead>
+        <tbody>
+          {estudiantesActuales.map((estudiante) => (
+            <tr key={estudiante.idEstudiante}>
+              <td>
+                {estudiante.nombreEstudiante} {estudiante.apellidoPaternoEstudiante} {estudiante.apellidoMaternoEstudiante}
+              </td>
+              <td>falta codigo sis</td>
+              <td>{estudiante.nombreEmpresa}</td>
 
-      <div className='pageBorder'>
-        <div className='pageBorder_interior'>
-          {estudiantesActuales.length === 0 ? (
-            <p>No se encontraron estudiantes.</p>
-          ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-              <table className='excelTable'>
-                <thead>
-                  <tr>
-                    <th>ESTUDIANTE</th>
-                    <th>EMPRESA</th>
-                    <th>ACCIONES</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {estudiantesActuales.map((estudiante) => (
-                    <tr key={estudiante.idEstudiante}>
-                      <td>
-                        {estudiante.nombreEstudiante} {estudiante.apellidoPaternoEstudiante} {estudiante.apellidoMaternoEstudiante}
-                      </td>
-                      <td>{estudiante.nombreEmpresa}</td>
-                      <td>
-                        <button onClick={() => handleDarDeBaja(estudiante.idEstudiante)}>Dar de baja</button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-              <div className='pagination' style={{ marginTop: '20px', display: 'flex', justifyContent: 'flex-end' }}>
-                <button onClick={handlePreviousPage} disabled={currentPage === 1}>Anterior</button>
-                <span>Página {currentPage} de {totalPaginas}</span>
-                <button onClick={handleNextPage} disabled={currentPage === totalPaginas}>Siguiente</button>
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
+            </tr>
+          ))}
+        </tbody>      
+      </Tabla>
+
+      {/* Componente de Paginación */}
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPaginas}
+        totalItems={estudiantes.length}
+        rowsPerPage={estudiantesPorPagina}
+        handlePreviousPage={handlePreviousPage}
+        handleNextPage={handleNextPage}
+      />
     </BaseUI>
   );
-
-  function handleDarDeBaja(id) {
-    console.log(`Dar de baja al estudiante con ID: ${id}`);
-  }
 }
 
-// Estilos para la tabla y demás elementos
-const styles = `
-  .excelTable {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-  }
+const Tabla = styled('table')({
+  width: '100%',
+  borderCollapse: 'collapse',
+  textAlign: 'left',
 
-  .excelTable th, .excelTable td {
-    border: 1px solid #000;
-    padding: 10px;
-    text-align: center;
-    background-color: #fff;
-  }
+  'th, td': {
+    padding: '12px 15px',
+    textAlign: 'left',
+    border: 'none', 
+  },
 
-  .excelTable th {
-    background-color: #f0f0f0;
-    font-weight: bold;
-  }
+  th: {
+    color: 'black',
+    fontWeight: 'bold',
+    backgroundColor: '#f8f9fa',
+    borderBottom: '2px solid #ddd', 
+  },
 
-  .excelTable tr:hover {
-    background-color: #f1f1f1;
-  }
+  'td': {
+    backgroundColor: '#fff',
+    borderBottom: '1px solid #ddd', 
+  },
 
-  .pagination {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 20px;
-  }
+  'tr:nth-of-type(even)': {
+    backgroundColor: '#f2f2f2', 
+  },
+});
 
-  .pagination button {
-    margin: 0 5px;
-  }
+const Boton = styled('button')`
+  box-sizing: border-box;
+  margin-right: 5px;           
+  border: none;                
+  background-color: transparent; 
+  font-size: 16px;            
+  cursor: pointer;            
+  padding: 10px;
+  opacity: ${({ currentPage }) => (currentPage === 1 ? 0.5 : 1)}; 
 `;
 
-// Insertar estilos en el head del documento
-const styleSheet = document.createElement("style");
-styleSheet.type = "text/css";
-styleSheet.innerText = styles;
-document.head.appendChild(styleSheet);
+// eslint-disable-next-line react/prop-types
+const Pagination = ({ currentPage, totalPages, totalItems, rowsPerPage, handlePreviousPage, handleNextPage }) => {
+  const startRow = (currentPage - 1) * rowsPerPage + 1;
+  const endRow = Math.min(currentPage * rowsPerPage, totalItems);
+
+  return (
+    <div className='pagination' style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', borderBottom: '2px solid #ddd', marginTop: '0px' }}>
+      <div style={{ marginRight: '30px' }}>
+        <span style={{ marginRight: '10px' }}>Filas por página:</span>
+        <span>{rowsPerPage}</span>
+      </div>
+      <div style={{ marginRight: '30px' }}>
+        <span>{startRow}-{endRow} de {totalItems}</span>
+      </div>
+      <div>
+        <Boton onClick={handlePreviousPage} disabled={currentPage === 1}>&lt;</Boton>
+        <Boton onClick={handleNextPage} disabled={currentPage === totalPages}>&gt;</Boton>
+      </div>
+    </div>
+  );
+};
 
 export default ObtenerEstudiantesPorGrupo;
