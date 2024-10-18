@@ -2,6 +2,7 @@
 /*
 esto es un prueba de subir al git 2
 */
+
 use App\Http\Controllers\TareaController;
 use App\Http\Controllers\TareasController;
 use App\Http\Controllers\GrupoController;
@@ -14,6 +15,7 @@ use App\Http\Controllers\RevisionPlaniController;
 use App\Http\Controllers\DocenteController;
 use App\Http\Controllers\SprintController;
 use App\Models\RevisionPlani;
+
 Route::get('/empresa/{id}', [EmpresaController::class, 'getEmpresaData']);
 Route::get('/nombreEmpresa/{id}', [EmpresaController::class, 'getNombreEmpresa']);
 Route::get('/empresas/', [EmpresaController::class, 'getListaEmpresas']);
@@ -29,7 +31,7 @@ Route::put('/prueba2', [RevisionPlaniController::class, 'testValidar']);
 
 /** 
  * TODOS LOS GETS VAN ACA
-*/
+ */
 
 Route::get('/planificacion/notaComentario/{idPlanificacion}', [PlanificacionController::class, 'notaComentario']);
 Route::get('/planificacionAceptadas', [PlanificacionController::class, 'planificacionAceptadas']);
@@ -41,7 +43,7 @@ Route::get('/grupos', [GrupoController::class, 'obtenerTodosLosGrupos']);
 Route::get('/grupo/{idGrupo}/participantes', [GrupoController::class, 'obtenerEstudiantesPorGrupo']);
 Route::get('/grupoDescripcion/{idGrupo}', [GrupoController::class, 'getDescripcion']);
 Route::get('/grupo/estudiantes/{idGrupo}/{gestionGrupo}', [GrupoController::class, 'obtenerEstudiantesPorGrupo']);
-Route::get('/estudiante/sprint/semana/{idSprint}',[SprintController::class, 'sprintsSemanas']);
+Route::get('/estudiante/sprint/semana/{idSprint}', [SprintController::class, 'sprintsSemanas']);
 /**
  * TODOS LOS POST VAN 
  *
@@ -52,3 +54,10 @@ Route::post('/planificacion/guardar', [PlanificacionController::class, 'crearPla
 Route::post('/tarea/crear', [TareaController::class, 'store']);
 //Para asignar grupos
 Route::post('/asignarEstudiante', [EstudianteController::class, 'asignarEstudianteAGrupo']);
+
+
+/**
+ * TODOS LOS PUT VAN 
+ *
+ */
+Route::post('/tarea/{idTarea}/guardar', [TareaController::class, 'update']);
