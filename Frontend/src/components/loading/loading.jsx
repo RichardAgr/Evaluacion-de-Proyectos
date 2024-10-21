@@ -1,7 +1,7 @@
-import React from 'react';
-import { Box, CircularProgress, Typography, Paper } from '@mui/material';
+import React from "react";
+import { Box, CircularProgress, Typography, Paper } from "@mui/material";
 
-export default function Component() {
+export default function Loading() {
   return (
     <>
       <Box
@@ -10,15 +10,18 @@ export default function Component() {
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
-          height: "100%",
           minHeight: "200px",
         }}
       >
         <CircularProgress size={60} thickness={4} />
-        <Typography variant="h6" sx={{ mt: 2 }}>
+        <Typography variant="h5" sx={{ mt: 2 }}>
           Cargando...
         </Typography>
-        <Typography variant="body2" color="text.secondary" sx={{ mt: 1, textAlign: 'center' }}>
+        <Typography
+          variant="body1"
+          color="text.secondary"
+          sx={{ mt: 1, textAlign: "center" }}
+        >
           Por favor, espere mientras procesamos su solicitud.
         </Typography>
       </Box>
