@@ -126,7 +126,7 @@ function ObtenerEstudiantesPorGrupo() {
                   <tr>
                     <th>ESTUDIANTE</th>
                     <th>EMPRESA</th>
-                    <th>ACCIONES</th>
+                    <th>GRUPO</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -137,7 +137,7 @@ function ObtenerEstudiantesPorGrupo() {
                       </td>
                       <td>{estudiante.nombreEmpresa}</td>
                       <td>
-                        <button onClick={() => handleDarDeBaja(estudiante.idEstudiante)}>Dar de baja</button>
+                        {estudiante.numGrupo}
                       </td>
                     </tr>
                   ))}

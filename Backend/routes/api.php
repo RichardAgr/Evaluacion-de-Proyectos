@@ -61,3 +61,5 @@ Route::post('/grupo/estudiante/barraBusqueda', [GrupoController::class, 'barraBu
 Route::post('/grupo/docente/1/barraBusqueda', [GrupoController::class, 'barraBusquedaEmpresas']);
 
 Route::post('/estudiante/crearEmpresa', [EstudiantesEmpresasController::class, 'crearEmpresa']);
+
+Route::post('/docente/darDeBaja', [GrupoController::class, 'darDeBaja']);
