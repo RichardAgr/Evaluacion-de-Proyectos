@@ -1,5 +1,5 @@
 import { Fragment, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import {
   Button,
   TextField,
@@ -19,13 +19,21 @@ import { getPlanificacion } from "../../../api/getPlanificacion.jsx";
 import { validar } from "../../../api/validarPlanificacion/validar.jsx";
 import { addRevision } from "../../../api/validarPlanificacion/addRevision.jsx";
 import InfoSnackbar from "../../../components/infoSnackbar/infoSnackbar.jsx";
+import CuadroComentario from "../../../components/cuadroComentario/cuadroComentario.jsx";
+import CuadroNota from "../../../components/cuadroNota/cuadroNota.jsx";
+import Loading from "../../../components/loading/loading.jsx";
+import NombreEmpresa from "../../../components/infoEmpresa/nombreEmpresa.jsx";
+import CuadroDialogo from "../../../components/cuadroDialogo/cuadroDialogo.jsx";
+import DecisionButtons from "../../../components/Buttons/decisionButtons.jsx";
+import Redirecting from "../../../components/redirecting/redirecting.jsx";
 
 function ValidarPlanificacion() {
   const [openValidateDialog, setOpenValidateDialog] = useState(false);
   const [openRejectDialog, setOpenRejectDialog] = useState(false);
   const [groupComment, setGroupComment] = useState("");
   const [privateComment, setPrivateComment] = useState("");
-  const [nota, setNota] = useState(0);
+  const [nota, setNota] = useState("");
+  const navigate = useNavigate();
 
   let { idEmpresa } = useParams();
   const [empresaData, setEmpresaData] = useState(null);
@@ -40,14 +48,6 @@ function ValidarPlanificacion() {
     message: "",
     severity: "info",
   });
-
-  const triggerSnackbar = (message, severity) => {
-    setSnackbar({
-      open: true,
-      message,
-      severity,
-    });
-  };
 
   const errorTranslations = {
     "The comentario field must be a string.":
@@ -84,6 +84,15 @@ function ValidarPlanificacion() {
     fetchData();
   }, [idEmpresa]);
 
+  useEffect(() => {
+    if (planificacionData && planificacionData.aceptada) {
+      const timer = setTimeout(() => {
+        navigate(`/visualizarPlanificacion/empresa/${idEmpresa}`);
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [planificacionData, idEmpresa, navigate]);
+
   const handleValidate = () => {
     setOpenValidateDialog(true);
   };
@@ -95,7 +104,7 @@ function ValidarPlanificacion() {
   const confirmValidate = async () => {
     setOpenValidateDialog(false);
     console.log(idEmpresa);
-    const revisionResult = await addRevision(idEmpresa, nota, groupComment, 2);
+    const revisionResult = await addRevision(idEmpresa, nota, groupComment);
 
     if (revisionResult.errors != null) {
       const errorMessages = Object.keys(revisionResult.errors)
@@ -167,52 +176,6 @@ function ValidarPlanificacion() {
     }
   };
 
-  if (loading) {
-    return (
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100%",
-          minHeight: "200px",
-        }}
-      >
-        <CircularProgress />
-      </Box>
-    );
-  }
-
-  if (error) return <p>Error: {error}</p>;
-
-  if (planificacionData.aceptada) {
-    return (
-      <Fragment>
-        <BaseUI
-          titulo={"VALIDAR PLANIFICACION"}
-          ocultarAtras={false}
-          confirmarAtras={false}
-          dirBack={"/"}
-        >
-          <Box
-            sx={{
-              display: "flex",
-              height: "100%",
-              width: "100%",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Typography variant="h5">
-              Esta planificación ya ha sido validada.
-            </Typography>
-          </Box>
-        </BaseUI>
-      </Fragment>
-    );
-  }
-
   return (
     <Fragment>
       <BaseUI
@@ -221,119 +184,79 @@ function ValidarPlanificacion() {
         confirmarAtras={true}
         dirBack={"/"}
       >
-        <TablaPlanificacion sprints={planificacionData.sprints} />
-        <TextField
-          label="Comentarios para el grupo"
-          multiline
-          rows={4}
-          value={groupComment}
-          onChange={(e) => setGroupComment(e.target.value)}
-          fullWidth
-          margin="normal"
-        />
+        {error ? (
+          <p>Error: {error}</p>
+        ) : loading ? (
+          <Loading />
+        ) : (
+          <>
+            <NombreEmpresa
+              nombreLargo={empresaData.nombreLargo}
+              nombreCorto={empresaData.nombreEmpresa}
+            />
+            {planificacionData.aceptada ? (
+              <Redirecting />
+            ) : planificacionData.message !== null &&  planificacionData.message !== undefined ? (
 
-        <TextField
-          label="Comentarios privados"
-          multiline
-          rows={4}
-          value={privateComment}
-          onChange={(e) => setPrivateComment(e.target.value)}
-          fullWidth
-          margin="normal"
-        />
-        <Box sx={{ display: "flex", alignItems: "center", mt: 2 }}>
-          <Typography variant="body1" sx={{ mr: 2 }}>
-            Nota:
-          </Typography>
-          <TextField
-            type="number"
-            value={nota}
-            onChange={(e) => {
-              const value = e.target.value;
-              setNota(value === "" ? "" : Number(value));
-            }}
-            inputProps={{
-              min: 0,
-              max: 100,
-              style: { width: "50px", height: "50px", textAlign: "center" },
-            }}
-            variant="outlined"
-            size="small"
-          />
-        </Box>
-        <Box
-          sx={{
-            marginTop: "40px",
-            display: "flex",
-            justifyContent: "flex-end",
-            gap: "20px",
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  minHeight: "200px",
+                }}
+              >
+                <Typography variant="h5" sx={{ mt: 2 }}>
+                  {planificacionData.message}
+                </Typography>
+              </Box>
+            ) : (
+              <>
 
-            padding: "20px",
-          }}
-        >
-          <Button variant="contained" color="secondary" onClick={handleReject}>
-            Rechazar Planificación
-          </Button>
-          <Button variant="contained" color="primary" onClick={handleValidate}>
-            Validar Planificación
-          </Button>
-        </Box>
+                <TablaPlanificacion sprints={planificacionData.sprints} />
+                <CuadroComentario
+                  title="Comentario para el grupo"
+                  maxChars={200}
+                  onTextChange={(text) => setGroupComment(text)}
+                />
 
-        <Dialog
-          open={openValidateDialog}
-          onClose={() => setOpenValidateDialog(false)}
-        >
-          <DialogTitle>Confirmar Validación</DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              ¿Está seguro de que desea validar esta planificación?
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button
-              onClick={() => setOpenValidateDialog(false)}
-              color="secondary"
-              variant="contained"
-            >
-              Cancelar
-            </Button>
-            <Button
-              onClick={confirmValidate}
-              variant="contained"
-              color="primary"
-              autoFocus
-            >
-              Confirmar
-            </Button>
-          </DialogActions>
-        </Dialog>
+                <CuadroComentario
+                  title="Comentario privado"
+                  maxChars={400}
+                  onTextChange={(text) => setPrivateComment(text)}
+                />
+                <DecisionButtons
+                  rejectButtonText="Rechazar Planificación"
+                  validateButtonText="Validar Planificación"
+                  onReject={handleReject}
+                  onValidate={handleValidate}
+                />
+                <CuadroDialogo
+                  open={openValidateDialog}
+                  onClose={() => setOpenValidateDialog(false)}
+                  title="Confirmar Validar planificación"
+                  description="¿Está seguro de que desea validar esta planificación?"
+                  onConfirm={confirmValidate}
+                />
+                <CuadroDialogo
+                  open={openRejectDialog}
+                  onClose={() => setOpenRejectDialog(false)}
+                  title="Confirmar Rechazar Planificacion"
+                  description="¿Está seguro de que desea rechazar esta planificación?"
+                  onConfirm={confirmReject}
+                />
 
-        <Dialog
-          open={openRejectDialog}
-          onClose={() => setOpenRejectDialog(false)}
-        >
-          <DialogTitle>Confirmar Rechazo</DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              ¿Está seguro de que desea rechazar esta planificación?
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={() => setOpenRejectDialog(false)} variant="contained" color="secondary">
-              Cancelar
-            </Button>
-            <Button onClick={confirmReject} variant="contained" color="primary" autoFocus>
-              Confirmar
-            </Button>
-          </DialogActions>
-        </Dialog>
-
-        <InfoSnackbar
-          openSnackbar={snackbar.open}
-          setOpenSnackbar={(open) => setSnackbar({ ...snackbar, open })}
-          message={snackbar.message}
-          severity={snackbar.severity}
-        />
+                <InfoSnackbar
+                  openSnackbar={snackbar.open}
+                  setOpenSnackbar={(open) => setSnackbar({ ...snackbar, open })}
+                  message={snackbar.message}
+                  severity={snackbar.severity}
+                />
+              </>
+            )}
+          </>
+        )}
       </BaseUI>
     </Fragment>
   );

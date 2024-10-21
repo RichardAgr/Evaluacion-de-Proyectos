@@ -9,18 +9,21 @@ function Home() {
   const navigate = useNavigate();
 
   const handleNavigateToVerPlanificacion = () => {
-    navigate("/homeDocente/homeGrupoDocente/verPlanificacionDeEmpresas");
+    navigate("/visualizarPlanificacion");
   };
-  const handleNavigateToEditarPlanificacion = () => {
+  const handleNavigateToModificarPlanificacion = () => {
     navigate(
-      "/homeEstudiante/homeGrupoEstudiante/PlanificacionInicial/Empresa/1"
+      "/modificarPlanificacion/empresa/1"
     );
   };
   const handleNavigateToValidarEmpresas = () => {
-    navigate("/grupoDocente/validarPlanificacion/");
+    navigate("/validarPlanificacion/");
+  };
+  const handleNavigateToEvaluacionSemanal = () => {
+    navigate("/evaluacionSemanal/empresa/1/sprint/1/");
   };
   const handleNavigateToModificarLista = () => {
-    navigate("/grupoEstudiante/sprint/semana/1/modificarListaTareas");
+    navigate("/modificarListaTareas/empresa/1/sprint/1/semana/1");
   };
   return (
     <Fragment>
@@ -32,6 +35,7 @@ function Home() {
           justifyContent: "center",
           alignItems: "center",
           minHeight: "calc(100vh - 200px)", // Adjust this value based on your header and footer height
+          
         }}
       >
         <Button
@@ -42,21 +46,23 @@ function Home() {
           style={{
             padding: "15px 30px",
             fontSize: "1.2rem",
+            margin: "10px", 
           }}
         >
-          Go to Ver Planificacion
+          Ir a Ver Planificacion
         </Button>
         <Button
           variant="contained"
           color="primary"
           size="large"
-          onClick={handleNavigateToEditarPlanificacion}
+          onClick={handleNavigateToModificarPlanificacion}
           style={{
             padding: "15px 30px",
             fontSize: "1.2rem",
+            margin: "10px", 
           }}
         >
-          Go to Editar Planificacion
+          Ir a Modificar Planificacion
         </Button>
         <Button
           variant="contained"
@@ -66,9 +72,36 @@ function Home() {
           style={{
             padding: "15px 30px",
             fontSize: "1.2rem",
+            margin: "10px", 
           }}
         >
-          Go to ValidarEmpresas
+          Ir a Validar Empresas
+        </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          size="large"
+          onClick={handleNavigateToEvaluacionSemanal}
+          style={{
+            padding: "15px 30px",
+            fontSize: "1.2rem",
+            margin: "10px", 
+          }}
+        >
+          Ir a Evaluacion Semanal
+        </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          size="large"
+          onClick={handleNavigateToModificarLista}
+          style={{
+            padding: "15px 30px",
+            fontSize: "1.2rem",
+            margin: "10px", 
+          }}
+        >
+          Ir a Modificar Lista de Tareas
         </Button>
       </div>
       <Footer />

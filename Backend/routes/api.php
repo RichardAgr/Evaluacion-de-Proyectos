@@ -6,8 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\PlanificacionController;
-use App\Http\Controllers\RevisionPlaniController;
-use App\Models\RevisionPlani;
+use App\Http\Controllers\SprintController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,20 +25,36 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::get('/empresa/{id}', [EmpresaController::class, 'getEmpresaData']);
 Route::get('/nombreEmpresa/{id}', [EmpresaController::class, 'getNombreEmpresa']);
-Route::get('/empresas/', [EmpresaController::class, 'getListaEmpresas']);
+
 Route::get('/planificacion/{idEmpresa}', [PlanificacionController::class, 'show']);
 
-//jhair
+// ----añadir revision-----
+// cambia la revision como valida
 Route::put('/validar', [PlanificacionController::class, 'validar']);
-Route::post('/addRevision', [RevisionPlaniController::class, 'addRevision']);
 
-//testValidar
-Route::put('/prueba2', [RevisionPlaniController::class, 'testValidar']);
+// añade los comentarios y la nota
+Route::post('/addRevision', [PlanificacionController::class, 'addRevision']);
+
+// ----Listar Empresas-----
+// obtiene una lista de todas las empresas
+Route::get('/empresas/', [EmpresaController::class, 'getListaEmpresas']);
+
+// obtiene una lista de todas las empresas que aun no fueron validadas
+Route::get('/planificacionesSinValidar', [PlanificacionController::class, 'planificacionesSinValidar']);
 
 //jhon
 Route::get('/planificacion/notaComentario/{idPlanificacion}', [PlanificacionController::class, 'notaComentario']);
 Route::get('/planificacionAceptadas', [PlanificacionController::class, 'planificacionAceptadas']);
-Route::get('/planificacionRechazadas', [PlanificacionController::class, 'planificacionRechazadas']);
 
 //Para crear la planificacion o modificarla
-Route::post('/planificacion/guardar', [PlanificacionController::class, 'crearPlanificacion']);
+Route::post('/planificacion/guardar2', [PlanificacionController::class, 'crearPlanificacion']);
+
+Route::post('/planificacion/guardar', [PlanificacionController::class, 'modificarPlanificacion']);
+Route::post('/planificacion/guardarSprints', [SprintController::class, 'modificarSprint']);
+
+//tests
+//---Modificar planificacion---
+//tests para ver si los sprints insertados se guardan
+Route::get('/testGuardar', [SprintController::class, 'testModificarSprint']);
+//tests para  ver si la planificacion se actualiza o se crea si no existe
+Route::get('/testGuardarPlanificacion', [PlanificacionController::class, 'testModificarPlanificacion']);

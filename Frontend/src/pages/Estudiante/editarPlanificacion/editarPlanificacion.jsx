@@ -1,66 +1,119 @@
-import { Fragment, useState, useEffect } from 'react';
-import ComentarioNota from '../../../components/comentarioNota/comentarioNota.jsx';
-import { useParams } from 'react-router-dom';
-import EditarPlanificacion from '../../../components/editarTablaPlanificacion/editarTablaPlanificacion.jsx';
-import { getPlanificacion } from '../../../api/getPlanificacion.jsx';
-import { getNombreEmpresa } from '../../../api/getNombreEmpresa.jsx';
-import NombreEmpresa from '../../../components/infoEmpresa/nombreEmpresa.jsx'
-import BaseUI from '../../../components/baseUI/baseUI.jsx';
-function Planificacion() {
-  
+import { Fragment, useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+
+import ComentarioNota from "../../../components/comentarioNota/comentarioNota.jsx";
+import EditarPlanificacion from "../../../components/editarTablaPlanificacion/editarTablaPlanificacion.jsx";
+import { getPlanificacion } from "../../../api/getPlanificacion.jsx";
+import { getNombreEmpresa } from "../../../api/getNombreEmpresa.jsx";
+import NombreEmpresa from "../../../components/infoEmpresa/nombreEmpresa.jsx";
+import BaseUI from "../../../components/baseUI/baseUI.jsx";
+import Loading from "../../../components/loading/loading.jsx";
+import Error from "../../../components/error/error.jsx";
+
+import Redirecting from "../../../components/redirecting/redirecting.jsx";
+import {
+  Button,
+  TextField,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Box,
+  CircularProgress,
+  Typography,
+} from "@mui/material";
+
+function ModificarPlanificacion() {
   let { idEmpresa } = useParams();
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [planificacionData, setPlanificacionData] = useState()
-  const [datosEmpresa, setDatosEmpresa]= useState();
+  const [error, setError] = useState({
+    errorMessage: "",
+    errorDetails: "",
+  });
+  const [planificacionData, setPlanificacionData] = useState();
+  const [datosEmpresa, setDatosEmpresa] = useState();
+  const navigate = useNavigate();
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [planificacion,nombreEmpresa] = await Promise.all([
+        const [planificacion, nombreEmpresa] = await Promise.all([
           getPlanificacion(idEmpresa),
           getNombreEmpresa(idEmpresa),
         ]);
         setPlanificacionData(planificacion);
+        console.log(planificacion);
         setDatosEmpresa(nombreEmpresa);
-        
       } catch (error) {
-        console.error('Error en la solicitud:', error.message);
-        setError(`Error en la solicitud: ${error.message}`);
+        console.error("Error en la solicitud:", error.message);
+        setError({
+          errorMessage: "Ha ocurrido un error",
+          errorDetails: error.message,
+        });
       } finally {
         setLoading(false);
       }
     };
     fetchData();
-  }, [idEmpresa])
-  if (loading) return <p>Cargando datos...</p>;
-  if (error) return <p>Error: {error}</p>;
+  }, [idEmpresa]);
+
+  useEffect(() => {
+    if (planificacionData && planificacionData.aceptada) {
+      const timer = setTimeout(() => {
+        navigate(`/visualizarPlanificacion/empresa/${idEmpresa}`);
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [planificacionData, idEmpresa, navigate]);
+
   return (
     <Fragment>
-    <BaseUI
-      titulo = {'MODIFICANDO PLANIFICACION'}
-      ocultarAtras = {false}
-      confirmarAtras = {true}
-      dirBack = {'/'}
-    >
-      <NombreEmpresa nombreLargo={datosEmpresa.nombreLargo} nombreCorto={datosEmpresa.nombreEmpresa}></NombreEmpresa>
-      {planificacionData != null?
-        <>
-            <EditarPlanificacion 
-              planificacionData={planificacionData} 
-              idEmpresa={planificacionData.idEmpresa}
-            ></EditarPlanificacion>
-          <ComentarioNota 
-            comentario={planificacionData.comentarioDocente || 'Sin Comentario Docente'} 
-            nota = {planificacionData.notaPlanificacion || 'Sin Calificar'} 
-            linkDir={ 'ocultar' }
-          ></ComentarioNota>
+      <BaseUI
+        titulo={"MODIFICAR PLANIFICACION"}
+        ocultarAtras={false}
+        confirmarAtras={true}
+        dirBack={"/"}
+      >
+        {error.errorMessage || error.errorDetails ? (
+          <Error
+            errorMessage={error.errorMessage}
+            errorDetails={error.errorDetails}
+          />
+        ) : loading ? (
+          <Loading />
+        ) : (
+          <>
+            <NombreEmpresa
+              nombreLargo={datosEmpresa.nombreLargo}
+              nombreCorto={datosEmpresa.nombreEmpresa}
+            />
+            {planificacionData.aceptada ? (
+              <Redirecting />
+            ) : (
+              <>
+                <EditarPlanificacion
+                  planificacionData={planificacionData}
+                  idEmpresa={planificacionData.idEmpresa}
+                />
+                {planificacionData.comentarioDocente != null &&
+                  planificacionData.comentarioDocente != "" && (
+                    <>
+                      <ComentarioNota
+                        comentario={planificacionData.comentarioDocente}
+                        nota={
+                          planificacionData.notaPlanificacion || "Sin Calificar"
+                        }
+                        linkDir={"ocultar"}
+                      />
+                    </>
+                  )}
+              </>
+            )}
           </>
-        :
-        <h1>CARGANDO...</h1>
-      }
-    </BaseUI>
+        )}
+      </BaseUI>
     </Fragment>
   );
 }
 
-export default Planificacion;
+export default ModificarPlanificacion;
