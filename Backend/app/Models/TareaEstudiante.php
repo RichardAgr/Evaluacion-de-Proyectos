@@ -11,12 +11,12 @@ class TareaEstudiante extends Model
     public $timestamps = false;
 
   
-    public function tarea()
+    public function tareas()
     {
         return $this->belongsTo(Tarea::class, 'idTarea');
     }
 
-    public function estudiante()
+    public function estudiantes()
     {
         return $this->belongsTo(Estudiante::class, 'idEstudiante');
     }

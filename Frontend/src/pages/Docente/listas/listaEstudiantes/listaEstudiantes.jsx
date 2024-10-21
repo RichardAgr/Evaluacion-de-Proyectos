@@ -119,8 +119,8 @@ function ObtenerEstudiantesPorGrupo() {
         <thead>
           <tr>
             <th>ESTUDIANTE</th>
-            <th>CODIGO SIS</th>
-            <th>Nombre Grupo Empresa</th>
+            <th>EMPRESA</th>
+            <th>GRUPO</th>
           </tr>
         </thead>
         <tbody>
@@ -129,8 +129,8 @@ function ObtenerEstudiantesPorGrupo() {
               <td>
                 {estudiante.nombreEstudiante} {estudiante.apellidoPaternoEstudiante} {estudiante.apellidoMaternoEstudiante}
               </td>
-              <td>falta codigo sis</td>
               <td>{estudiante.nombreEmpresa}</td>
+              <td>{estudiante.numGrupo}</td>
 
             </tr>
           ))}
