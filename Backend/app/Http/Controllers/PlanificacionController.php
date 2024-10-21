@@ -111,7 +111,6 @@ class PlanificacionController extends Controller
             'idEmpresa' => $planificacion->idEmpresa,
             'aceptada' => $planificacion->aceptada,
             'fechaEntrega' => $planificacion->fechaEntrega,
-            'notaPlanificacion' => $planificacion->notaplanificacion,
             'comentarioDocente' => $planificacion->comentariodocente,
             'sprints' => $planificacion->sprints->map(function ($sprint) {
                 return [
@@ -121,7 +120,6 @@ class PlanificacionController extends Controller
                     'cobro' => $sprint->cobro,
                     'fechaEntrega' => $sprint->fechaEntrega,
                     'entregables' => $sprint->entregables,
-                    'notasprint' => $sprint->notasprint,
                     'comentariodocente' => $sprint->comentariodocente
                 ];
             })->toArray()

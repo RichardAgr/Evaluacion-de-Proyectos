@@ -7,12 +7,14 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
+import { Box } from '@mui/material';
 function tablaPlanificacion({sprints, ocultarBotones}) {
 
   return (
     <>
+    <Box sx={{ mb: 2}}>
       <TableContainer component={Paper}>
-                  <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                  <Table sx={{ minWidth: 650}} aria-label="simple table">
                     <TableHead>
                       <TableRow>
                         <TableCell>Hito</TableCell>
@@ -26,7 +28,6 @@ function tablaPlanificacion({sprints, ocultarBotones}) {
                           :
                           <TableCell align="left"></TableCell>
                         }
-                        <TableCell align="left">NOTAS</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -55,12 +56,12 @@ function tablaPlanificacion({sprints, ocultarBotones}) {
                                 }
                               </TableCell>
                             }
-                            <TableCell align="left">{sprint.notasprint? sprint.notasprint:'Sin Calificar'} </TableCell>
-                          </TableRow>
+                            </TableRow>
                         )})}
                     </TableBody>
                   </Table>
                 </TableContainer>
+                </Box>
     </>
   );
 }
