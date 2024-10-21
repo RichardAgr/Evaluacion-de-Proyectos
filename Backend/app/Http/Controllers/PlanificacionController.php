@@ -156,7 +156,6 @@ class PlanificacionController extends Controller
             // validar datos
             $validator = Validator::make($request->all(), [
                 'idEmpresa' => 'required|integer',
-                'nota' => 'numeric|min:0|max:100',
                 'comentario' => 'nullable|string',
             ]);
             if ($validator->fails()) {
@@ -173,10 +172,6 @@ class PlanificacionController extends Controller
                 return response()->json([
                     'message' => 'No se encontró la planificación para la empresa especificada.'
                 ], 404);
-            }
-            // Añadir nota de planificación
-            if (isset($validatedData['nota'])) {
-                $planificacion->notaplanificacion = $validatedData['nota'];
             }
             // Añadir comentario del docente
             if (isset($validatedData['comentario'])) {
@@ -224,7 +219,6 @@ class PlanificacionController extends Controller
             'aceptada' => 'required|boolean',
             'comentarioDocente' => 'string',
             'idEmpresa' => 'required|integer|exists:empresa,idEmpresa',
-            'notaPlanificacion' => 'required|integer',
         ]);
         // si no valida, devuelve error
         if ($validator->fails()) {
