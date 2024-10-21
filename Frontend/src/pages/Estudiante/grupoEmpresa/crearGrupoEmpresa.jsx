@@ -4,6 +4,7 @@ import { styled } from "@mui/material";
 import { Modal, Button, TextField, Autocomplete } from "@mui/material";
 
 const CrearGrupoEmpresa = () => {
+
     const [nombreLargo, setNombreLargo] = useState("");
     const [nombreCorto, setNombreCorto] = useState("");
     const [intentoEnviar, setIntentoEnviar] = useState(false);
@@ -77,14 +78,29 @@ const CrearGrupoEmpresa = () => {
 
     const confirmarAgregarIntegrante = () => {
         if (selectedIntegrante) {
-            const nuevoIntegrante = { id: selectedIntegrante.id, nombre: selectedIntegrante.label, fijo: false }; // Usar el ID correcto
+            // Verifica si el integrante ya está en la lista
+            const existe = integrantes.some(integrante => integrante.id === selectedIntegrante.id);
+            if (existe) {
+                setMensajeError("Este integrante ya ha sido agregado.");
+                return;
+            }
+    
+            // Agregar el integrante al grupo
+            const nuevoIntegrante = { id: selectedIntegrante.id, nombre: selectedIntegrante.label, fijo: false };
             setIntegrantes([...integrantes, nuevoIntegrante]);
-            setSelectedIntegrante(null); 
+    
+            // Eliminar el integrante seleccionado de las opciones disponibles
+            const nuevasOpciones = options.filter(option => option.id !== selectedIntegrante.id);
+            setOptions(nuevasOpciones); 
+    
+            // Limpiar la selección y cerrar el modal
+            setSelectedIntegrante(null);
             setOpenModal(false);
         } else {
             setMensajeError("Debe seleccionar un integrante.");
         }
     };
+    
 
     const eliminarIntegrante = (id) => {
         setIntegrantes(integrantes.filter(integrante => integrante.id !== id));
@@ -106,7 +122,13 @@ const CrearGrupoEmpresa = () => {
                             value={nombreLargo}
                             onChange={(e) => setNombreLargo(e.target.value)}
                         />
-                        {intentoEnviar && nombreLargo === "" && <Mensaje>No hay nombre largo</Mensaje>} 
+                            {intentoEnviar && (
+                            nombreLargo === "" 
+                            ? <Mensaje>No hay nombre largo</Mensaje>
+                            : nombreLargo.length < 5
+                            ? <Mensaje>debe tener un mínimo de 5 caracteres y un máximo de 100 caracteres.</Mensaje>
+                            : null
+                        )} 
                     </NombreEmpresaCompleto>
 
                     <NombreEmpresaCompleto>
@@ -116,17 +138,28 @@ const CrearGrupoEmpresa = () => {
                             value={nombreCorto}
                             onChange={(e) => setNombreCorto(e.target.value)} 
                         />
-                        {intentoEnviar && nombreCorto === "" && <Mensaje>No hay nombre corto</Mensaje>} 
+                            {intentoEnviar && (
+                            nombreCorto === "" 
+                            ? <Mensaje>No hay nombre largo</Mensaje>
+                            : nombreCorto.length < 2
+                            ? <Mensaje>debe tener un mínimo de 5 caracteres y un máximo de 100 caracteres.</Mensaje>
+                            : null
+                        )} 
                     </NombreEmpresaCompleto>
                     
                     <div>
                         <h2 style={{marginTop: '6vw'}}>Integrantes</h2>
-                        <h6 style={{ color: '#979797', fontSize: '1.5vw', padding: '0.4vw'}}>MINIMO 3 - MAXIMO 6</h6>
+                        <h6 style={{ color: '#979797', fontSize: '1.5vw', padding: '0.4vw'}}>MAXIMO 6 - MINIMO 3</h6>
                     </div>
 
-                    {integrantes.map((integrante) => (
+                    {integrantes.map((integrante, index) => (
                         <Integrante key={integrante.id}>
-                            <h3 style={{ padding: '10px' }}>{integrante.nombre}</h3>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', padding: '10px' }}>
+                                <h3>{integrante.nombre}</h3>
+                                {index === 0 && (
+                                    <span style={{ color: 'black' }}>Representante Legal</span>
+                                )}
+                            </div>
                             {!integrante.fijo && (
                                 <BotonAzul onClick={() => eliminarIntegrante(integrante.id)}>
                                     Eliminar
@@ -134,6 +167,7 @@ const CrearGrupoEmpresa = () => {
                             )}
                         </Integrante>
                     ))}
+
                     {mensajeError && <Mensaje>{mensajeError}</Mensaje>}
 
                     <div style={{ display: 'flex', justifyContent: 'flex-start', marginTop: '1vw' }}>
@@ -184,24 +218,27 @@ const NombreEmpresaCompleto = styled('div')`
 const InputCentro = styled('input')`
     box-sizing: border-box;
     justify-content: center;
-    width: 30%;
-    height: 150%;
+    width: 221px;
+    height: 34px;
     background-color: #d0d4e4; 
     border: none;
+    margin-left: 10px;
+    margin-right: 10px;
 `;
 
 const Mensaje = styled('div')`
     color: red; 
     margin-top: 0.5vw;
     font-size: 14px;
+    max-width: 300px;
 `;
 
 const BotonAzul = styled('button')`
     margin-left: auto;
     background-color: #114093; 
     color: white; 
-    width: 17%;
-    height: 3vw;
+    width: 122px;
+    height: 28px;
     border: none;
     cursor: pointer;
     border-radius: 0.3vw;

@@ -16,7 +16,7 @@ import SprintsEmpresas from '../../pages/Docente/gestionEmpresasTareas/sprintsEm
 import SprintsSemanas from '../../pages/Docente/gestionEmpresasTareas/sprintsSemanas.jsx';
 import CalificarSprint from '../../pages/Docente/calificarSprint/calificarSprint.jsx';
 import CalificarTarea from '../CalificarTarea/CalificarTarea.jsx';
-
+import CalificarEstSemana from '../../pages/Docente/calificarSprint/calificarEstudiante/calificarEstSemana.jsx';
 
 //archivos estudiante
 import HomeEstudiante from '../../pages/Estudiante/homeEstudiante/homeEstudiante.jsx'
@@ -62,6 +62,8 @@ function Nav() {
       <Route path ='/homeEstudiante/homeGrupoEstudiante/sprint/:idSprint/tarea/:idTarea' element={<VisualizarTarea />} />
       <Route path ='/homeEstudiante/homeGrupoEstudiante/crearGrupo' element={<CrearGrupoEmpresa/>}/>
       <Route path ='/homeEstudiante/homeGrupoEstudiante/calificar/:idTarea' element={<CalificarTarea/>}/>
+
+      <Route path = '/pruebasXD' element={<CalificarEstSemana/>}/>
 
 
       {/** Ruta Estudiante*/}
