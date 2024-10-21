@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Empresa;
+use App\Models\Semana;
+use App\Models\NotasSemana;
+use App\Models\Estudiante;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 
@@ -17,7 +20,7 @@ class EmpresaController extends Controller
         if (!$empresa) {
             return response()->json(['error' => 'Empresa no encontrada'], 404);
         }
-        
+
         // Formatear los datos
         $data = [
             'nombreEmpresa' => $empresa->nombreEmpresa,
@@ -27,7 +30,7 @@ class EmpresaController extends Controller
                     'nombreEstudiante' => $estudiante->nombreEstudiante,
                     'primerApellido' => $estudiante->primerApellido,
                     'segundoApellido' => $estudiante->segundoApellido,
-                    'rol'=> $estudiante ->rol
+                    'rol' => $estudiante->rol
                 ];
             }),
         ];
@@ -44,7 +47,7 @@ class EmpresaController extends Controller
         if (!$empresa) {
             return response()->json(['error' => 'Empresa no encontrada'], 404);
         }
-        
+
         // Formatear los datos
         $data = [
             'nombreEmpresa' => $empresa->nombreEmpresa,
@@ -62,7 +65,7 @@ class EmpresaController extends Controller
     // $empresas = Empresa::whereHas('docente', function($query) use ($idDocente) {
     //     $query->where('idDocente', $idDocente);
     // })->orderBy('nombreEmpresa', 'asc')->get();
-    
+
     public function getListaEmpresas()
     {
         // esta formateado para buscar por orden alfabetico
@@ -89,7 +92,7 @@ class EmpresaController extends Controller
     public function obtenerSprints($idEmpresa, $idDocente)
     {
         try {
-           
+
             $empresa = Empresa::findOrFail($idEmpresa);
 
             $sprints = $empresa->sprints;
@@ -105,6 +108,72 @@ class EmpresaController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Error al obtener los sprints: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function getCalificacionesEmpresa($idEmpresa)
+    {
+        try {
+            // Obtener la empresa y sus estudiantes
+            $empresa = Empresa::with('estudiantes')->findOrFail($idEmpresa);
+
+            // Obtener todos los sprints asociados a la empresa
+            $sprints = $empresa->sprints;
+
+            // Crear un arreglo para almacenar las calificaciones por estudiante y sprint
+            $calificaciones = [];
+
+            // Iterar sobre cada estudiante en la empresa
+            foreach ($empresa->estudiantes as $estudiante) {
+                $calificacionesEstudiante = [
+                    'estudiante' => [
+                        'nombre' => $estudiante->nombreEstudiante,
+                        'primerApellido' => $estudiante->primerApellido,
+                        'segundoApellido' => $estudiante->segundoApellido,
+                    ],
+                    'promediosPorSprint' => []
+                ];
+
+                // Obtener el promedio de notas por sprint para el estudiante
+                foreach ($sprints as $sprint) {
+                    $semanas = Semana::where('idSprint', $sprint->idSprint)->get();
+                    $totalNotas = 0;
+                    $cantidadNotas = 0;
+
+                    foreach ($semanas as $semana) {
+                        $notasSemana = NotasSemana::where('idSemana', $semana->idSemana)
+                            ->where('idEstudiante', $estudiante->idEstudiante)
+                            ->get();
+
+                        foreach ($notasSemana as $nota) {
+                            $totalNotas += $nota->nota;
+                            $cantidadNotas++;
+                        }
+                    }
+
+                    // Calcular el promedio de las notas en este sprint
+                    $promedio = $cantidadNotas > 0 ? $totalNotas / $cantidadNotas : 0;
+
+                    // Almacenar el promedio en el arreglo
+                    $calificacionesEstudiante['promediosPorSprint'][] = [
+                        'sprint' => $sprint->idSprint,
+                        'promedio' => $promedio
+                    ];
+                }
+
+                $calificaciones[] = $calificacionesEstudiante;
+            }
+
+            // Retornar las calificaciones en formato JSON
+            return response()->json([
+                'nombre' => $empresa->nombreEmpresa,
+                'nombreLargo' => $empresa->nombreLargo,
+                'calificaciones' => $calificaciones
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Error al obtener las calificaciones: ' . $e->getMessage()
             ], 500);
         }
     }

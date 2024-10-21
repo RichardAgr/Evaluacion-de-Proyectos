@@ -11,6 +11,16 @@ class Estudiante extends Model
     protected $primaryKey = 'idEstudiante';
     public $timestamps = false;
 
+    protected $fillable = [
+        'nombreCuenta',
+        'nombreEstudiante',
+        'primerApellido',
+        'segundoApellido',
+        'contrasena',
+        'rol',
+        'numerodefaltasest',
+    ];
+
     public function grupos()
     {
         return $this->belongsToMany(Grupo::class, 'estudiantesgrupos', 'idEstudiante', 'idGrupo');
