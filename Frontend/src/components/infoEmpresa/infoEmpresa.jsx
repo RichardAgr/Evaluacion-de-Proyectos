@@ -40,7 +40,7 @@ const InfoEmpresa = ({ nombreLargo, nombreCorto, integrantes }) => {
 
 export default InfoEmpresa;
 
-let ContainerInfoEmpresa = styled.div`
+/* let ContainerInfoEmpresa = styled.div`
     width: 100%;
     margin-top: 1rem;
     margin-bottom: 1rem;
@@ -67,4 +67,4 @@ let ContainerInfoEmpresa = styled.div`
     span{
         color: darkgray;
     }
-`
+` */
