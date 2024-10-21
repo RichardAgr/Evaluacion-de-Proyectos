@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Semana;
 use App\Models\Sprint;
 use App\Models\Tarea;
+use App\Models\NotasSemana;
 
 class SprintController extends Controller 
 {
@@ -16,7 +17,7 @@ class SprintController extends Controller
     public function sprintsSemanas(int $idSprint): JsonResponse
     {
         // Obtener el sprint con su comentario y nota
-        $sprint = Sprint::find($idSprint, ['idSprint', 'comentariodocente', 'notasprint']);
+        $sprint = Sprint::find($idSprint, ['idSprint', 'comentariodocente']);
         
         // Verificar si el sprint existe
         if (!$sprint) {
@@ -30,7 +31,7 @@ class SprintController extends Controller
         $response = [
             'idSprint' => $sprint->idSprint,
             'comentario' => $sprint->comentariodocente,
-            'nota' => $sprint->notasprint,
+           // 'nota' => $sprint->notasprint,
             'semanas' => []
         ];
     
@@ -118,5 +119,35 @@ class SprintController extends Controller
             ], 500);
         }
     }
+    ///////ETHAN
 
+    public function obtenerNotasPorEstudiante(Request $request)
+{
+    $request->validate([
+        'idSprint' => 'required|integer',  // Sprint es un identificador relacionado
+    ]);
+
+    //$idSprint = $request->input('idSprint');
+
+    // Asumiendo que hay una relación entre semana y sprint en alguna tabla
+    $notas = DB::table('notassemana')
+        ->join('semana', 'notassemana.idSemana', '=', 'semana.idSemana')
+        ->join('sprint','notassemana.idSemana','=','semana.')
+        ->where('semana.idSemana', $request ->idSemana)
+        ->select('notassemana.idEstudiante', DB::raw('SUM(nota) as totalNota'), DB::raw('COUNT(notassemana.idSemana) as semanasCount'))
+        ->groupBy('notassemana.idEstudiante')
+        ->get();
+
+    // Calcular el promedio si hay más de dos semanas
+    $resultado = $notas->map(function ($nota) {
+        if ($nota->semanasCount > 2) {
+            $nota->promedioNota = $nota->totalNota / $nota->semanasCount;
+        } else {
+            $nota->promedioNota = $nota->totalNota;
+        }
+        return $nota;
+    });
+
+    return response()->json($resultado, 200);
+}
 }
