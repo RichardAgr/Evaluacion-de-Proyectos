@@ -3,11 +3,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Grupo extends Model
+class Grupos extends Model
 {
     protected $table = 'grupo'; // Nombre de la tabla en la base de datos
     protected $primaryKey = 'idGrupo';
     public $timestamps = false;
+    protected $fillable = [
+        'numGrupo',
+        'gestionGrupo',
+        'idDocente',
+    ];
 
     public function docentes()
     {

@@ -7,15 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 class Planificacion extends Model
 {
 
-    protected $table = 'planificacion'; // Nombre de la tabla
-    protected $primaryKey = 'idPlanificacion'; // Clave primaria
+    protected $table = 'planificacion';
+    protected $primaryKey = 'idPlanificacion';
     public $timestamps = false; // Cambia a true si usas created_at y updated_at
     protected $fillable = [
-        'idEmpresa', // ID de la empresa
-        'aceptada', // Estado de aceptación
-        'fechaEntrega', // Fecha de entrega
-        'notaplanificacion', // Nota de planificación
-        'comentariodocente', // Comentarios del docente
+        'idEmpresa', 
+        'aceptada', 
+        'fechaEntrega',
+        'notaplanificacion',
+        'comentariodocente',
     ];
     public function empresa()
     {

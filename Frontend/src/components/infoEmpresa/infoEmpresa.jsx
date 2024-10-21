@@ -39,3 +39,32 @@ const InfoEmpresa = ({ nombreLargo, nombreCorto, integrantes }) => {
 };
 
 export default InfoEmpresa;
+
+/* let ContainerInfoEmpresa = styled.div`
+    width: 100%;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    border: 0.3rem solid black;
+    border-radius: 0.3rem;
+        -webkit-border-radius: 0.3rem;
+        -moz-border-radius: 0.3rem;
+        -ms-border-radius: 0.3rem;
+        -o-border-radius: 0.3rem;
+    h1,h2{
+        text-align: center;
+    }
+    .integrantes{
+        margin: calc(3vw + 1rem);
+        display: block;
+    }
+    .docente{
+        margin: calc(3vw + 1rem);
+        display: block;        
+    }
+    p{  
+        margin-left: calc(2vw + 8rem);
+    }
+    span{
+        color: darkgray;
+    }
+` */
