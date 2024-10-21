@@ -155,20 +155,7 @@ function Home() {
           Ir a Lista Estudiantes
         </Button>
         
-      <Button
-          variant="contained"
-          color="primary"
-          size="large"
-          onClick={handleNavigateToListaEstudiantesA}
-          style={{
-            padding: "15px 30px",
-            fontSize: "10px",
-            margin: "10px",
-            marginTop: "-20em" 
-          }}
-        >
-          Ir a Lista Estudiantes Automatico
-        </Button>
+      
         <Button
           variant="contained"
           color="primary"

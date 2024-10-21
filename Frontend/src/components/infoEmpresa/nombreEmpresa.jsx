@@ -4,8 +4,8 @@ function infoEmpresa({nombreLargo, nombreCorto}) {
   return (
     <Fragment>
         <ContainerInfoEmpresa>
-            <h1>{nombreLargo}</h1>
-             <h2>{nombreCorto}</h2>
+            <h1>{nombreCorto}</h1>
+             <h2>{nombreLargo}</h2>
         </ContainerInfoEmpresa>
     </Fragment>
   );

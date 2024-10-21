@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import BaseUI from "../../../../components/baseUI/baseUI";
+import { styled } from '@mui/material';
 
 function ObtenerEstudiantesPorGrupo() {
   const idGrupo = 1; // Hardcodeado
@@ -7,10 +8,9 @@ function ObtenerEstudiantesPorGrupo() {
   
   const [estudiantes, setEstudiantes] = useState([]);
   const [error, setError] = useState(null);
-  
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
-  const estudiantesPorPagina = 10;
+  const estudiantesPorPagina = 20;
 
   // Función para obtener estudiantes
   const fetchEstudiantes = async () => {
@@ -27,6 +27,13 @@ function ObtenerEstudiantesPorGrupo() {
       }
 
       const data = await response.json();
+      // Ordenar alfabéticamente por el nombre
+      data.sort((a, b) => {
+        const nombreA = `${a.nombreEstudiante} ${a.apellidoPaternoEstudiante} ${a.apellidoMaternoEstudiante}`.toLowerCase();
+        const nombreB = `${b.nombreEstudiante} ${b.apellidoPaternoEstudiante} ${a.apellidoMaternoEstudiante}`.toLowerCase();
+        return nombreA.localeCompare(nombreB);
+      });
+
       setEstudiantes(data);
     } catch (error) {
       console.error('Error en la solicitud:', error);
@@ -65,6 +72,13 @@ function ObtenerEstudiantesPorGrupo() {
         }
 
         const result = await response.json();
+        // Ordenar alfabéticamente por el nombre
+        result.sort((a, b) => {
+          const nombreA = `${a.nombreEstudiante} ${a.apellidoPaternoEstudiante} ${a.apellidoMaternoEstudiante}`.toLowerCase();
+          const nombreB = `${b.nombreEstudiante} ${b.apellidoPaternoEstudiante} ${a.apellidoMaternoEstudiante}`.toLowerCase();
+          return nombreA.localeCompare(nombreB);
+        });
+
         setEstudiantes(result);
       } catch (error) {
         console.error('Error en la solicitud:', error);
@@ -101,71 +115,117 @@ function ObtenerEstudiantesPorGrupo() {
       confirmarAtras={false}
       dirBack={`/`}
     >
-      <h1>LISTA DE ESTUDIANTES</h1>
 
       {/* Barra de búsqueda */}
       <input
         type="text"
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
-        placeholder="Buscar Estudiante"
-        style={{ marginBottom: '20px', padding: '8px', width: '200px' }}
+        placeholder="Nombre, código sis, Nombre Grupo Empresa"
+        style={{ marginBottom: '20px',marginTop:'50px', padding: '8px', width: '200px' }}
+      />
+      <Tabla>
+        <thead>
+          <tr>
+            <th>ESTUDIANTE</th>
+            <th>CODIGO SIS</th>
+            <th>Nombre Grupo Empresa</th>
+          </tr>
+        </thead>
+        <tbody>
+          {estudiantesActuales.length > 0 ? (
+            estudiantesActuales.map((estudiante) => (
+              <tr key={estudiante.idEstudiante}>
+                <td>
+                  {estudiante.nombreEstudiante} {estudiante.apellidoPaternoEstudiante} {estudiante.apellidoMaternoEstudiante}
+                </td>
+                <td>falta codigo sis</td>
+                <td>{estudiante.nombreEmpresa}</td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="3" style={{ textAlign: 'center' }}>
+                No hay estudiantes inscritos en este momento
+              </td>
+            </tr>
+          )}
+        </tbody>      
+      </Tabla>
+
+      {/* Componente de Paginación */}
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPaginas}
+        totalItems={estudiantes.length}
+        rowsPerPage={estudiantesPorPagina}
+        handlePreviousPage={handlePreviousPage}
+        handleNextPage={handleNextPage}
       />
 
-      <div className='pageBorder'>
-        <div className='pageBorder_interior'>
-          {estudiantesActuales.length === 0 ? (
-            <p>No se encontraron estudiantes.</p>
-          ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-              <table className='excelTable'>
-                <thead>
-                  <tr>
-                    <th>ESTUDIANTE</th>
-                    <th>EMPRESA</th>
-                    <th>ACCIONES</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {estudiantesActuales.map((estudiante) => (
-                    <tr key={estudiante.idEstudiante}>
-                      <td>
-                        {estudiante.nombreEstudiante} {estudiante.apellidoPaternoEstudiante} {estudiante.apellidoMaternoEstudiante}
-                      </td>
-                      <td>{estudiante.nombreEmpresa}</td>
-                      <td>
-                        <button onClick={() => handleDarDeBaja(estudiante.idEstudiante)}>Dar de baja</button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-              <div className='pagination' style={{ marginTop: '20px', display: 'flex', justifyContent: 'flex-end' }}>
-                <button onClick={handlePreviousPage} disabled={currentPage === 1}>Anterior</button>
-                <span>Página {currentPage} de {totalPaginas}</span>
-                <button onClick={handleNextPage} disabled={currentPage === totalPaginas}>Siguiente</button>
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
     </BaseUI>
   );
-
-  function handleDarDeBaja(id) {
-    console.log(`Dar de baja al estudiante con ID: ${id}`);
-  }
 }
 
-// Estilos para la tabla y demás elementos
-const styles = `
-// Estilos aquí
+const Tabla = styled('table')({
+  width: '100%',
+  borderCollapse: 'collapse',
+  textAlign: 'left',
+
+  'th, td': {
+    padding: '12px 15px',
+    textAlign: 'left',
+    border: 'none', 
+  },
+
+  th: {
+    color: 'black',
+    fontWeight: 'bold',
+    backgroundColor: '#f8f9fa',
+    borderBottom: '2px solid #ddd', 
+  },
+
+  'td': {
+    backgroundColor: '#fff',
+    borderBottom: '1px solid #ddd', 
+  },
+
+  'tr:nth-of-type(even)': {
+    backgroundColor: '#f2f2f2', 
+  },
+});
+
+const Boton = styled('button')`
+  box-sizing: border-box;
+  margin-right: 5px;           
+  border: none;                
+  background-color: transparent; 
+  font-size: 16px;            
+  cursor: pointer;            
+  padding: 10px;
+  opacity: ${({ currentPage }) => (currentPage === 1 ? 0.5 : 1)}; 
 `;
 
-// Insertar estilos en el head del documento
-const styleSheet = document.createElement("style");
-styleSheet.type = "text/css";
-styleSheet.innerText = styles;
-document.head.appendChild(styleSheet);
+// eslint-disable-next-line react/prop-types
+const Pagination = ({ currentPage, totalPages, totalItems, rowsPerPage, handlePreviousPage, handleNextPage }) => {
+  const startRow = (currentPage - 1) * rowsPerPage + 1;
+  const endRow = Math.min(currentPage * rowsPerPage, totalItems);
+
+  return (
+    <div className='pagination' style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', borderBottom: '2px solid #ddd', marginTop: '0px' }}>
+      <div style={{ marginRight: '30px' }}>
+        <span style={{ marginRight: '10px' }}>Filas por página:</span>
+        <span>{rowsPerPage}</span>
+      </div>
+      <div style={{ marginRight: '30px' }}>
+        <span>{startRow}-{endRow} de {totalItems}</span>
+      </div>
+      <div>
+        <Boton onClick={handlePreviousPage} disabled={currentPage === 1}>&lt;</Boton>
+        <Boton onClick={handleNextPage} disabled={currentPage === totalPages}>&gt;</Boton>
+      </div>
+    </div>
+  );
+};
 
 export default ObtenerEstudiantesPorGrupo;

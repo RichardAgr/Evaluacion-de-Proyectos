@@ -16,7 +16,7 @@ import SprintsEmpresas from '../../pages/Docente/gestionEmpresasTareas/sprintsEm
 import SprintsSemanas from '../../pages/Docente/gestionEmpresasTareas/sprintsSemanas.jsx';
 import CalificarSprint from '../../pages/Docente/calificarSprint/calificarSprint.jsx';
 import CalificarTarea from '../CalificarTarea/CalificarTarea.jsx';
-
+import CalificarEstSemana from '../../pages/Docente/calificarSprint/calificarEstudiante/calificarEstSemana.jsx';
 
 //archivos estudiante
 import HomeEstudiante from '../../pages/Estudiante/homeEstudiante/homeEstudiante.jsx'
@@ -34,6 +34,9 @@ import InscribirGrupo from '../../pages/Estudiante/gruposDisponibles/inscribirGr
 import ObtenerEstudiantesPorGrupo from '../../pages/Docente/listas/listaEstudiantes/listaEstudiantes.jsx';
 import ObtenerEstudiantesPorGrupoA from '../../pages/Docente/listas/listaEstudiantes/listaEstudiantesA.jsx';
 import EmpresasPorDocente from '../../pages/Docente/listas/listaEmpresas/listaEmpresaPorDocente.jsx';
+
+import CalificacionesHitoEmpresa from '../../pages/Estudiante/grupoEmpresa/calificacionesHitoEmpresa.jsx';
+
 function Nav() {
 
   return (
@@ -55,13 +58,14 @@ function Nav() {
       <Route path='/grupoDocente/calificarTareasEmpresas/empresas/:idEmpresa/:idDocente/sprints' element={<SprintsEmpresas />} />
       <Route path='/grupoDocente/calificarTareasEmpresas/empresas/sprints/:idSprint/:idEmpresa/:idDocente/semanas' element={<SprintsSemanas />} />
       <Route path='/grupoDocente/calificarTareasEmpresas/empresas/sprints/semanas/tareas/:idTarea/:idSprint/:idEmpresa/:idDocente/tarea' element={<TareaPagina />} />
-
-
+      
       {/** Rutas Joaquin*/}
       <Route path ='/homeEstudiante/homeGrupoEstudiante/sprint/:idSprint' element={<VisualizarSprintEst />} />
       <Route path ='/homeEstudiante/homeGrupoEstudiante/sprint/:idSprint/tarea/:idTarea' element={<VisualizarTarea />} />
       <Route path ='/homeEstudiante/homeGrupoEstudiante/crearGrupo' element={<CrearGrupoEmpresa/>}/>
       <Route path ='/homeEstudiante/homeGrupoEstudiante/calificar/:idTarea' element={<CalificarTarea/>}/>
+
+      <Route path = '/pruebasXD' element={<CalificarEstSemana/>}/>
 
 
       {/** Ruta Estudiante*/}
@@ -70,6 +74,10 @@ function Nav() {
       <Route path='/homeEstudiante/homeGrupoEstudiante/PlanificacionDeDesarollo/Empresa/:idEmpresa' element={<VerPlanificacionDeDesarollo />} />
       <Route path='/homeEstudiante/homeGrupoEstudiante/PlanificacionInicial/Empresa/:idEmpresa' element={<EditarPlanificacion />} />
       <Route path='/homeEstudiante/homeGrupoEstudiante/sprint/semana/tareas/:idTarea' element={<ModificarTarea />} />
+
+      <Route path='/homeEstudiante/homeGrupoEstudiante/empresas/:idEmpresa/calificaciones' element={<CalificacionesHitoEmpresa />} />
+      
+      
         {/** Ruta Docente*/}
         <Route path='/grupoDocente/empresa/:idEmpresa/planificacion/calificarSprint/:idSprint' element={<CalificarSprint/>}/>
 
