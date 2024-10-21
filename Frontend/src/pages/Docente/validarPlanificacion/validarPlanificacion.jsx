@@ -196,7 +196,8 @@ function ValidarPlanificacion() {
             />
             {planificacionData.aceptada ? (
               <Redirecting />
-            ) : planificacionData.message !== null ? (
+            ) : planificacionData.message !== null &&  planificacionData.message !== undefined ? (
+
               <Box
                 sx={{
                   display: "flex",
