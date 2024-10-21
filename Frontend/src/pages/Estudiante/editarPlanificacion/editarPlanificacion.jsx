@@ -1,6 +1,7 @@
 import { Fragment, useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+
 import ComentarioNota from "../../../components/comentarioNota/comentarioNota.jsx";
-import { useParams } from "react-router-dom";
 import EditarPlanificacion from "../../../components/editarTablaPlanificacion/editarTablaPlanificacion.jsx";
 import { getPlanificacion } from "../../../api/getPlanificacion.jsx";
 import { getNombreEmpresa } from "../../../api/getNombreEmpresa.jsx";
@@ -8,6 +9,8 @@ import NombreEmpresa from "../../../components/infoEmpresa/nombreEmpresa.jsx";
 import BaseUI from "../../../components/baseUI/baseUI.jsx";
 import Loading from "../../../components/loading/loading.jsx";
 import Error from "../../../components/error/error.jsx";
+
+import Redirecting from "../../../components/redirecting/redirecting.jsx";
 import {
   Button,
   TextField,
@@ -30,6 +33,7 @@ function ModificarPlanificacion() {
   });
   const [planificacionData, setPlanificacionData] = useState();
   const [datosEmpresa, setDatosEmpresa] = useState();
+  const navigate = useNavigate();
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -52,6 +56,16 @@ function ModificarPlanificacion() {
     };
     fetchData();
   }, [idEmpresa]);
+
+  useEffect(() => {
+    if (planificacionData && planificacionData.aceptada) {
+      const timer = setTimeout(() => {
+        navigate(`/visualizarPlanificacion/empresa/${idEmpresa}`);
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [planificacionData, idEmpresa, navigate]);
+
   return (
     <Fragment>
       <BaseUI
@@ -74,22 +88,7 @@ function ModificarPlanificacion() {
               nombreCorto={datosEmpresa.nombreEmpresa}
             />
             {planificacionData.aceptada ? (
-              <>
-                <Box
-                  sx={{
-                    display: "flex",
-                    height: "70%",
-                    width: "100%",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <Typography variant="h5">
-                    Esta planificación ya ha sido validada.
-                  </Typography>
-                </Box>
-              </>
+              <Redirecting />
             ) : (
               <>
                 <EditarPlanificacion

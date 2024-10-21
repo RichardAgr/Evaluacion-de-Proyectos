@@ -14,10 +14,10 @@ export default function Loading() {
         }}
       >
         <CircularProgress size={60} thickness={4} />
-        <Typography variant="h6" sx={{ mt: 2 }}>
+        <Typography variant="h5" sx={{ mt: 2 }}>
           Cargando...
         </Typography>
-        <Typography variant="body2" color="text.secondary" sx={{ mt: 1, textAlign: 'center' }}>
+        <Typography variant="body1" color="text.secondary" sx={{ mt: 1, textAlign: 'center' }}>
           Por favor, espere mientras procesamos su solicitud.
         </Typography>
       </Box>
