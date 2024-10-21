@@ -1,79 +1,163 @@
 <?php
+
 namespace App\Http\Controllers;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\JsonResponse;
 use App\Models\Tarea;
 use App\Models\Estudiante;
 use App\Models\ArchivoTarea;
+use Illuminate\Support\Facades\Storage;
 
 class TareaController extends Controller
 {
-  
-
-    /* Metodos GET*/
     public function obtenerTarea($idTarea)
     {
-        // Obtener la tarea específica
-        $tarea = DB::table('tarea')
-            ->select('idSemana', 'comentario', 'textoTarea', 'fechaEntrega','notaTarea')
-            ->where('idTarea', $idTarea)
-            ->first();
+        $tarea = Tarea::find($idTarea);
 
-        // Si no se encuentra la tarea, devolver un error
         if (!$tarea) {
             return response()->json(['error' => 'Tarea no encontrada'], 404);
         }
 
-        // Obtener los estudiantes relacionados con la tarea
+        // Obtener estudiantes de la tarea
         $estudiantes = DB::table('estudiante')
             ->join('tareasestudiantes', 'tareasestudiantes.idEstudiante', '=', 'estudiante.idEstudiante')
-            ->select('nombreEstudiante', 'primerApellido', 'segundoApellido') // Asumiendo que tienes la columna 'fotoEstudiante' en la tabla 'estudiante'
+            ->join('fotoestudiante', 'fotoestudiante.idEstudiante', '=', 'estudiante.idEstudiante')
+            ->select('estudiante.idEstudiante', 'nombreEstudiante', 'primerApellido', 'segundoApellido', 'fotoestudiante.foto')
             ->where('tareasestudiantes.idTarea', $idTarea)
             ->get();
 
-        // Obtener los archivos relacionados con la tarea
-            $archivosTarea = DB::table('archivostarea')
-            ->select('archivo')
-            ->where('idTarea', $idTarea)
+        // Obtener archivos de la tarea
+        $archivosTarea = ArchivoTarea::where('idTarea', $idTarea)
+            ->select('archivo', 'nombreArchivo')
             ->get();
-        
-        // Convierte el resultado a un array
-        $archivosArray = $archivosTarea->pluck('archivo')->toArray();
 
-
-        // Formar la respuesta
+        // Formar la respuesta, ajustando la URL del archivo para incluir el dominio completo
         $respuesta = [
             'idSemana' => $tarea->idSemana,
             'comentario' => $tarea->comentario,
             'textotarea' => $tarea->textoTarea,
-            'fechaentregado' => $tarea->fechaEntrega,
-            'notatarea' => $tarea->notaTarea,
+            'fechentregado' => $tarea->fechaEntrega,
             'estudiantes' => $estudiantes,
-            'archivotarea' => $archivosArray,
+            'archivotarea' => $archivosTarea->map(function ($archivo) {
+                return [
+                    'archivo' => url(Storage::url($archivo->archivo)),  // Generar la URL completa
+                    'nombreArchivo' => $archivo->nombreArchivo
+                ];
+            }),
         ];
 
         return response()->json($respuesta);
     }
 
-    /* Metodos POST */
-    public function calificarTarea(Request $request, $idTarea)
+
+    //************************************ POSTS*************************** */
+    public function store(Request $request)
     {
- 
-        $tarea = Tarea::find($idTarea);
-    
-        
-        if (!$tarea) {
-            return response()->json(['error' => 'Tarea no encontrada'], 404);
+        // Validar la entrada
+        $request->validate([
+            'idSemana' => 'required|integer',
+            'textotarea' => 'required|string',
+            'fechentregado' => 'required|date',
+            'archivotarea' => 'nullable|array',
+            'archivotarea.*' => 'file|mimes:pdf,zip,rar,7z', // Archivos permitidos
+        ]);
+
+        // Crear la tarea
+        $tarea = Tarea::create([
+            'idSemana' => $request->idSemana,
+            'comentario' => '',
+            'textoTarea' => $request->textotarea,
+            'fechaEntrega' => $request->fechentregado,
+            'notaTarea' => 0,
+        ]);
+
+        // Guardar los archivos en el disco y en la base de datos
+        $archivosGuardados = [];
+        if ($request->hasFile('archivotarea')) {
+            foreach ($request->file('archivotarea') as $archivo) {
+                $nombreArchivo = $archivo->getClientOriginalName();
+                $rutaArchivo = $archivo->storeAs("public/uploads/{$tarea->idTarea}", $nombreArchivo);
+
+                $archivoTarea = ArchivoTarea::create([
+                    'idTarea' => $tarea->idTarea,
+                    'archivo' => $rutaArchivo,
+                    'nombreArchivo' => $nombreArchivo,
+                    'fechaEntrega' => $request->fechentregado,
+                ]);
+
+                $archivosGuardados[] = $archivoTarea;
+            }
         }
-    
-    
-        $tarea->comentario = $request->comentario_docente;
-        $tarea->notaTarea = $request->nota; 
-    
-        $tarea->save();
-    
-        return response()->json(['message' => 'Tarea calificada con éxito', 'tarea' => $tarea]);
+
+        return response()->json([
+            'tarea' => $tarea,
+            'archivos' => $archivosGuardados,
+        ], 201);
     }
-    
+
+    public function update(Request $request, $idTarea)
+    {
+        try {
+            $request->validate([
+                'textotarea' => 'required|string',
+                'archivotarea' => 'nullable|array',
+                'archivotarea.*' => 'file|mimes:pdf,zip,rar,7z,txt,png,jpg,jpeg,doc,docx,xls,xlsx',
+                'archivosEliminados' => 'nullable|array',
+            ]);
+
+            $tarea = Tarea::find($idTarea);
+
+            if (!$tarea) {
+                return response()->json(['error' => 'Tarea no encontrada'], 404);
+            }
+
+            // Actualizar la descripción de la tarea
+            $tarea->textoTarea = $request->input('textotarea');
+            $tarea->save();
+
+            // Eliminar archivos si es necesario
+            if ($request->has('archivosEliminados')) {
+                foreach ($request->input('archivosEliminados') as $archivoNombre) {
+                    $archivoTarea = ArchivoTarea::where('idTarea', $idTarea)
+                        ->where('nombreArchivo', $archivoNombre)
+                        ->first();
+
+                    if ($archivoTarea) {
+                        Storage::delete($archivoTarea->archivo);
+                        $archivoTarea->delete();
+                    }
+                }
+            }
+
+            // Guardar archivos nuevos si es necesario
+            if ($request->hasFile('archivotarea')) {
+                foreach ($request->file('archivotarea') as $archivo) {
+                    $nombreArchivo = $archivo->getClientOriginalName();
+
+                    // Comprobar si el archivo ya existe en la base de datos
+                    $archivoExistente = ArchivoTarea::where('idTarea', $idTarea)
+                        ->where('nombreArchivo', $nombreArchivo)
+                        ->first();
+
+                    // Si no existe, guardarlo
+                    if (!$archivoExistente) {
+                        $rutaArchivo = $archivo->storeAs("public/uploads/$idTarea", $nombreArchivo);
+
+                        ArchivoTarea::create([
+                            'idTarea' => $idTarea,
+                            'archivo' => $rutaArchivo,
+                            'nombreArchivo' => $nombreArchivo,
+                            'fechaEntrega' => now(),
+                        ]);
+                    }
+                }
+            }
+
+            return response()->json(['message' => 'Tarea actualizada correctamente'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
 }

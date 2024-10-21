@@ -1,32 +1,68 @@
 import React from "react";
-import { Snackbar, Alert } from "@mui/material";
+import { Snackbar, Alert, Slide } from "@mui/material";
+import { styled } from "@mui/system";
+
+const StyledAlert = styled(Alert)(({ theme, severity }) => ({
+  borderRadius: '8px',
+  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+  fontWeight: 'bold',
+  fontSize: '1rem',
+  padding: '12px 24px',
+  '& .MuiAlert-icon': {
+    fontSize: '24px',
+  },
+  ...(severity === 'success' && {
+    backgroundColor: '#4caf50',
+    color: '#fff',
+  }),
+  ...(severity === 'error' && {
+    backgroundColor: '#f44336',
+    color: '#fff',
+  }),
+  ...(severity === 'warning' && {
+    backgroundColor: '#ff9800',
+    color: '#fff',
+  }),
+  ...(severity === 'info' && {
+    backgroundColor: '#2196f3',
+    color: '#fff',
+  }),
+}));
 
 const InfoSnackbar = ({
   openSnackbar,
   setOpenSnackbar,
   message = "This is a default message",
   severity = "info",
+  autoHide,
 }) => {
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
     }
-    setOpenSnackbar(false); // Cierra el Snackbar desde el padre
+    setOpenSnackbar(false);
   };
 
   return (
     <Snackbar
       anchorOrigin={{
         vertical: "bottom",
-        horizontal: "left",
+        horizontal: "center",
       }}
       open={openSnackbar}
-      autoHideDuration={6000} // Se cierra automáticamente tras 6 segundos
+      autoHideDuration={autoHide}
       onClose={handleClose}
+      TransitionComponent={Slide}
+      TransitionProps={{ direction: "up" }}
     >
-      <Alert onClose={handleClose} severity={severity} sx={{ width: "100%" }}>
+      <StyledAlert 
+        onClose={handleClose} 
+        severity={severity} 
+        variant="filled"
+        elevation={6}
+      >
         {message}
-      </Alert>
+      </StyledAlert>
     </Snackbar>
   );
 };

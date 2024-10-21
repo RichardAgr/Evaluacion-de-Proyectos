@@ -10,6 +10,7 @@ use App\Models\Planificacion; // Importa tu modelo Planificacion
 use App\Models\Sprint; // Importa tu modelo Sprint
 use App\Models\Empresa; // Asegúrate de importar el modelo Empresa
 use Illuminate\Support\Facades\Validator;
+use Carbon\Carbon;
 use Exception;
 
 class PlanificacionController extends Controller
@@ -46,31 +47,26 @@ class PlanificacionController extends Controller
         // Retornar la respuesta JSON con los datos de empresas aceptadas
         return response()->json($data);
     }
-    public function planificacionRechazadas(): JsonResponse
+    public function planificacionesSinValidar(): JsonResponse
     {
-        // Obtener todas las empresas
+        // Obtener todas las empresas, en el futuro debera filtrar las empresas por docente
         $empresas = Empresa::all();
-
-        // Inicializar un array para almacenar los datos de planificación
         $data = [];
-
         foreach ($empresas as $empresa) {
             // Obtener la planificación de la empresa
-            $planificacion = Planificacion::with('sprints')
-                ->orderBy('fechaEntrega', 'desc')
-                ->where('idEmpresa', $empresa->idEmpresa)
+            $planificacion = Planificacion::where('idEmpresa', $empresa->idEmpresa)
                 ->first();
 
-            // Verificar si la planificación existe y está aceptada
-            if ($planificacion && !$planificacion->aceptada) {
-                // Si la planificación existe y está aceptada, devolver el número de sprints
+            // Verificar si la planificación existe y si fue rechazada
+            if ($planificacion && $planificacion->aceptada == 0) {
+                // Si la planificación existe y fue rechazada, guarda sus datos
                 $data[] = [
                     'idPlanificacion' => $planificacion->idPlanificacion,
                     'nombreEmpresa' => $empresa->nombreEmpresa,
                     'nombreLargo' => $empresa->nombreLargo,
                     'idEmpresa' => $planificacion->idEmpresa,
                     'aceptada' => $planificacion->aceptada,
-                    'numeroSprints' => $planificacion->sprints->count(), // Contar el número de sprints
+                    'numeroSprints' => $planificacion->sprints->count(), // Contar el número de sprints, innecesario
                 ];
             }
         }
@@ -89,13 +85,13 @@ class PlanificacionController extends Controller
 
         // Obtener la planificación de la empresa si existe
         $planificacion = Planificacion::with(['empresa', 'sprints'])
-            ->orderBy('fechaEntrega', 'desc')
             ->where('idEmpresa', $idEmpresa)
             ->first();
 
         if (!$planificacion) {
-            // Si no hay planificación, devolver datos por defecto
+            // Si no hay planificación, devolver datos por defecto, indicando que en realidad no se tiene planificacion
             return response()->json([
+                'message' => 'La empresa no envió su planificación aún.',
                 'idEmpresa' => $empresa->idEmpresa,
                 'idPlanificacion' => -1,
                 'aceptada' => 0,
@@ -103,9 +99,7 @@ class PlanificacionController extends Controller
                 'comentarioDocente' => 'Comentario Docente',
                 'sprints' => [
                     ['idSprint' => null, 'fechaIni' => '2024-09-06', 'fechaFin' => '2024-09-06', 'cobro' => 12, 'fechaEntrega' => '2024-09-06', 'entregables' => 'esto es un ejemplo'],
-                    ['idSprint' => null, 'fechaIni' => '2024-09-06', 'fechaFin' => '2024-09-06', 'cobro' => 12, 'fechaEntrega' => '2024-09-06', 'entregables' => 'esto es un ejemplo'],
-                    ['idSprint' => null, 'fechaIni' => '2024-09-06', 'fechaFin' => '2024-09-06', 'cobro' => 12, 'fechaEntrega' => '2024-09-06', 'entregables' => 'esto es un ejemplo'],
-                ],  // Array de sprints con 3 filas vacías  
+                ],  // Array de sprints con 1 filas vacías  
             ], 200);  // Código 200 ya que la empresa existe
         }
 
@@ -116,7 +110,6 @@ class PlanificacionController extends Controller
             'idEmpresa' => $planificacion->idEmpresa,
             'aceptada' => $planificacion->aceptada,
             'fechaEntrega' => $planificacion->fechaEntrega,
-            'notaPlanificacion' => $planificacion->notaplanificacion,
             'comentarioDocente' => $planificacion->comentariodocente,
             'sprints' => $planificacion->sprints->map(function ($sprint) {
                 return [
@@ -126,7 +119,6 @@ class PlanificacionController extends Controller
                     'cobro' => $sprint->cobro,
                     'fechaEntrega' => $sprint->fechaEntrega,
                     'entregables' => $sprint->entregables,
-                    'notasprint' => $sprint->notasprint,
                     'comentariodocente' => $sprint->comentariodocente
                 ];
             })->toArray()
@@ -155,13 +147,13 @@ class PlanificacionController extends Controller
         return response()->json($data);
     }
 
+    
     public function addRevision(Request $request)
     {
         try {
             // validar datos
             $validator = Validator::make($request->all(), [
                 'idEmpresa' => 'required|integer',
-                'nota' => 'numeric|min:0|max:100',
                 'comentario' => 'nullable|string',
             ]);
             if ($validator->fails()) {
@@ -178,10 +170,6 @@ class PlanificacionController extends Controller
                 return response()->json([
                     'message' => 'No se encontró la planificación para la empresa especificada.'
                 ], 404);
-            }
-            // Añadir nota de planificación
-            if (isset($validatedData['nota'])) {
-                $planificacion->notaplanificacion = $validatedData['nota'];
             }
             // Añadir comentario del docente
             if (isset($validatedData['comentario'])) {
@@ -222,137 +210,68 @@ class PlanificacionController extends Controller
         }
     }
 
-
-
-
-    public function crearPlanificacion(Request $request): JsonResponse
+    public function modificarPlanificacion(Request $request): JsonResponse
     {
-        // Validar los datos de entrada
-        $request->validate([
+        //validar datos
+        $validator = Validator::make($request->all(), [
             'aceptada' => 'required|boolean',
-            'comentarioDocente' => 'required|string',
-            'fechaEntrega' => 'required|date_format:Y-m-d H:i:s',
+            'comentarioDocente' => 'string',
             'idEmpresa' => 'required|integer|exists:empresa,idEmpresa',
-            'notaPlanificacion' => 'required|integer',
-            'sprints' => 'required|array',
-            'sprints.*.fechaIni' => 'required|date',
-            'sprints.*.fechaFin' => 'required|date|after_or_equal:sprints.*.fechaIni',
-            'sprints.*.cobro' => 'required|integer',
-            'sprints.*.fechaEntrega' => 'required|date',
-            'sprints.*.entregables' => 'required|string',
-        ], [
-            'sprints.*.fechaFin.after_or_equal' => 'La fecha de fin debe ser después o igual a la fecha de inicio.',
         ]);
-
-        try {
-            // Comenzar la transacción
-            DB::beginTransaction();
-
-            // Crear la planificación
-            $planificacion = Planificacion::create([
-                'aceptada' => $request->aceptada,
-                'comentarioDocente' => $request->comentarioDocente,
-                'fechaEntrega' => $request->fechaEntrega,
-                'idEmpresa' => $request->idEmpresa,
-                'notaPlanificacion' => $request->notaPlanificacion,
-            ]);
-
-            // Insertar los sprints
-            foreach ($request->sprints as $sprintData) {
-                Sprint::create([
-                    'idPlanificacion' => $planificacion->idPlanificacion,
-                    'notasprint' => 0, // Cambia esto si tienes un valor específico
-                    'comentariodocente' => $request->comentarioDocente,
-                    'entregables' => $sprintData['entregables'],
-                    'fechaEntrega' => $sprintData['fechaEntrega'],
-                    'cobro' => $sprintData['cobro'],
-                    'fechaFin' => $sprintData['fechaFin'],
-                    'fechaIni' => $sprintData['fechaIni'],
-                ]);
-            }
-
-            // Confirmar la transacción
-            DB::commit();
-
-            // Retornar una respuesta exitosa
+        // si no valida, devuelve error
+        if ($validator->fails()) {
             return response()->json([
-                'message' => 'Planificación y sprints creados exitosamente',
-                'idPlanificacion' => $planificacion->idPlanificacion,
-                'sprints' => $planificacion->sprints,
+                'message' => 'Los datos proporcionados no son válidos.',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+        //consigue los datos validados
+        $validatedData = $validator->validated();
+        try {
+            // verifica que  la planificación exista
+            $planificacion = Planificacion::where('idEmpresa', $validatedData['idEmpresa'])->first();
+
+            if ($planificacion !== null) {
+                // si la planificacion existe, se actualiza la fechaEntrega y se eliminan los campos de notaplanificacion y comentariodocente
+                $planificacion->fechaEntrega = Carbon::now('America/Caracas')->format('Y-m-d H:i:s'); // ajustado a la zona horaria de Bolivia
+                $planificacion->notaPlanificacion = null;
+                $planificacion->comentarioDocente = null;
+                $planificacion->save();
+            } else {
+                // si la planificacion no existe, se crea una nueva planificacion
+                $planificacion = new Planificacion();
+                $planificacion->idEmpresa = $validatedData['idEmpresa'];
+                $planificacion->aceptada = 0;
+                $planificacion->fechaEntrega = Carbon::now('America/Caracas')->format('Y-m-d H:i:s');
+                $planificacion->save();
+            }
+            DB::commit();
+            return response()->json([
+                'message' => 'La Planificación fue modificada correctamente',
             ], 200);
         } catch (\Exception $e) {
-            // Revertir la transacción en caso de error
             DB::rollBack();
-
-            // Retornar un mensaje de error
             return response()->json([
-                'message' => 'Error al crear la planificación: ' . $e->getMessage(),
+                'message' => 'Hubo un error al modificar la Planificación',
+                'error' => $e->getMessage()
             ], 500);
         }
     }
-<<<<<<< HEAD
-    
-    public function obtenerDocentePorEmpresa($idEmpresa): JsonResponse
+    public function testModificarPlanificacion()
     {
-        // Obtener el primer estudiante asociado a la empresa
-        $estudianteEmpresa = EstudiantesEmpresas::where('idEmpresa', $idEmpresa)->first();
-
-        if (!$estudianteEmpresa) {
-            return response()->json(['error' => 'No se encontraron estudiantes para esta empresa'], 404);
-        }
-
-        // Obtener el ID del estudiante
-        $idEstudiante = $estudianteEmpresa->idEstudiante;
-
-        // Obtener el grupo del estudiante
-        $grupo = Grupo::whereHas('estudiantes', function ($query) use ($idEstudiante) {
-            $query->where('idEstudiante', $idEstudiante);
-        })->first();
-
-        if (!$grupo) {
-            return response()->json(['error' => 'El estudiante no pertenece a ningún grupo'], 404);
-        }
-
-        // Obtener el docente del grupo
-        $docente = $grupo->docente;
-
-        if ($docente) {
-            return response()->json([
-                $docente->nombreDocente,$docente->primerApellido,$docente->segundoApellido,
-            ]);
-        }
-
-        return response()->json(['error' => 'Docente no encontrado'], 404);
-    }
-
-    public function obtenerDetallesSprint($idSprint): JsonResponse
-    {
-        // Obtener el sprint con sus semanas y las tareas de cada semana
-        $sprint = Sprint::with(['semanas.tareas'])->find($idSprint);
-
-        if (!$sprint) {
-            return response()->json(['error' => 'Sprint no encontrado'], 404);
-        }
-
-        // Estructurar la respuesta
-        $response = [
-            'semanas' => $sprint->semanas->map(function ($semana) {
-                return [
-                    'idSemana' => $semana->idSemana,
-                    'tareas' => $semana->tareas->map(function ($tarea) {
-                        return [
-                            'idTarea' => $tarea->idTarea
-                        ];
-                    }),
-                ];
-            }),
-            'sprintComentario' => $sprint->comentariodocente, // Comentario del docente del sprint
-            'sprintNota' => $sprint->notasprint // Nota del sprint
+        // Simular una solicitud con datos de prueba
+        $requestData = [
+            'aceptada' => true,
+            'comentarioDocente' => 'Comentario de prueba',
+            'idEmpresa' => 1, // Asegúrate de que este ID exista en tu base de datos
+            'notaPlanificacion' => 85
         ];
 
-        return response()->json($response);
+        // Crear una nueva instancia de Request con los datos de prueba
+        $request = new Request($requestData);
+
+        // Llamar a la función modificarPlanificacion
+        $response = $this->modificarPlanificacion($request);
+        return $response;
     }
-    
-=======
->>>>>>> jhair
 }
