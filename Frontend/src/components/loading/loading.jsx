@@ -1,5 +1,5 @@
-import React from 'react';
-import { Box, CircularProgress, Typography, Paper } from '@mui/material';
+import React from "react";
+import { Box, CircularProgress, Typography, Paper } from "@mui/material";
 
 export default function Loading() {
   return (
@@ -17,7 +17,11 @@ export default function Loading() {
         <Typography variant="h5" sx={{ mt: 2 }}>
           Cargando...
         </Typography>
-        <Typography variant="body1" color="text.secondary" sx={{ mt: 1, textAlign: 'center' }}>
+        <Typography
+          variant="body1"
+          color="text.secondary"
+          sx={{ mt: 1, textAlign: "center" }}
+        >
           Por favor, espere mientras procesamos su solicitud.
         </Typography>
       </Box>

@@ -49,14 +49,6 @@ function ValidarPlanificacion() {
     severity: "info",
   });
 
-  const triggerSnackbar = (message, severity) => {
-    setSnackbar({
-      open: true,
-      message,
-      severity,
-    });
-  };
-
   const errorTranslations = {
     "The comentario field must be a string.":
       "El comentario para el grupo no debe estar vacio.",
@@ -100,7 +92,6 @@ function ValidarPlanificacion() {
       return () => clearTimeout(timer);
     }
   }, [planificacionData, idEmpresa, navigate]);
-
 
   const handleValidate = () => {
     setOpenValidateDialog(true);
@@ -204,9 +195,24 @@ function ValidarPlanificacion() {
               nombreCorto={empresaData.nombreEmpresa}
             />
             {planificacionData.aceptada ? (
-              <Redirecting/>
+              <Redirecting />
+            ) : planificacionData.message !== null ? (
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  minHeight: "200px",
+                }}
+              >
+                <Typography variant="h5" sx={{ mt: 2 }}>
+                  {planificacionData.message}
+                </Typography>
+              </Box>
             ) : (
               <>
+
                 <TablaPlanificacion sprints={planificacionData.sprints} />
                 <CuadroComentario
                   title="Comentario para el grupo"
@@ -219,7 +225,6 @@ function ValidarPlanificacion() {
                   maxChars={400}
                   onTextChange={(text) => setPrivateComment(text)}
                 />
-                <CuadroNota onNoteChange={(value) => setNota(value)} />
                 <DecisionButtons
                   rejectButtonText="Rechazar Planificación"
                   validateButtonText="Validar Planificación"

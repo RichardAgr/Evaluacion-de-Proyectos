@@ -90,8 +90,9 @@ class PlanificacionController extends Controller
             ->first();
 
         if (!$planificacion) {
-            // Si no hay planificación, devolver datos por defecto
+            // Si no hay planificación, devolver datos por defecto, indicando que en realidad no se tiene planificacion
             return response()->json([
+                'message' => 'La empresa no envió su planificación aún.',
                 'idEmpresa' => $empresa->idEmpresa,
                 'idPlanificacion' => -1,
                 'aceptada' => 0,
