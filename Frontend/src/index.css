@@ -42,6 +42,9 @@
 .pageBorder_interior{
   width: 90%;
 }
+h1{
+  font-size: 2.5rem;
+}
 h1,h2,h3{
   margin-top: 0;
   margin-bottom: 0;
@@ -120,3 +123,50 @@ h1,h2,h3{
 
   justify-content: end;
  }
+ .collapse-header {
+  display: flex;  
+  width: 83%; 
+  cursor: pointer; 
+  padding: 17px; 
+  background-color: #d0d4e4; 
+  user-select: none; 
+  margin: auto;
+  margin-bottom: 0.2rem;
+  margin-top: 0.2rem;
+  overflow: auto;
+}
+.collapse-child {
+  display: flex; 
+  min-height: 1vw;
+  max-width: 83%;
+  cursor: pointer; 
+  padding: 17px; 
+  background-color: #d0d4e4; 
+  user-select: none; 
+  margin:  0.4vw; 
+  margin-left: 10%; 
+}
+
+.prueba{
+  display: flex; 
+
+}
+
+.visualizarSprint{
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.descripcion_inputText{
+  display: block;
+  min-height: 14vw;
+  padding: 1rem;
+  border-radius: 0.3rem;
+  -webkit-border-radius: 0.3rem;
+  -moz-border-radius: 0.3rem;
+  -ms-border-radius: 0.3rem;
+  -o-border-radius: 0.3rem;
+  border: 0.3rem solid black;
+}

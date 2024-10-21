@@ -10,7 +10,6 @@ use App\Models\Planificacion; // Importa tu modelo Planificacion
 use App\Models\Sprint; // Importa tu modelo Sprint
 use App\Models\Empresa; // Asegúrate de importar el modelo Empresa
 use Illuminate\Support\Facades\Validator;
-
 use Carbon\Carbon;
 use Exception;
 
@@ -139,8 +138,8 @@ class PlanificacionController extends Controller
 
         $data = [
 
-            'notaPlanificacion' => $planificacion->notaPlanificacion ?? null,
-            'comentarioDocente' => $planificacion->comentarioDocente ?? null,
+            'notaplanificacion' => $planificacion->notaplanificacion ?? null,
+            'comentarioocente' => $planificacion->comentariodocente ?? null,
             'fechaEntrega' => $planificacion->fechaEntrega
         ];
 
@@ -148,6 +147,7 @@ class PlanificacionController extends Controller
         return response()->json($data);
     }
 
+    
     public function addRevision(Request $request)
     {
         try {
