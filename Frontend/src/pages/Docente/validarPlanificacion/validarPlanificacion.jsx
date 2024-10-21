@@ -1,5 +1,5 @@
 import { Fragment, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import {
   Button,
   TextField,
@@ -25,6 +25,7 @@ import Loading from "../../../components/loading/loading.jsx";
 import NombreEmpresa from "../../../components/infoEmpresa/nombreEmpresa.jsx";
 import CuadroDialogo from "../../../components/cuadroDialogo/cuadroDialogo.jsx";
 import DecisionButtons from "../../../components/Buttons/decisionButtons.jsx";
+import Redirecting from "../../../components/redirecting/redirecting.jsx";
 
 function ValidarPlanificacion() {
   const [openValidateDialog, setOpenValidateDialog] = useState(false);
@@ -32,6 +33,7 @@ function ValidarPlanificacion() {
   const [groupComment, setGroupComment] = useState("");
   const [privateComment, setPrivateComment] = useState("");
   const [nota, setNota] = useState("");
+  const navigate = useNavigate();
 
   let { idEmpresa } = useParams();
   const [empresaData, setEmpresaData] = useState(null);
@@ -46,14 +48,6 @@ function ValidarPlanificacion() {
     message: "",
     severity: "info",
   });
-
-  const triggerSnackbar = (message, severity) => {
-    setSnackbar({
-      open: true,
-      message,
-      severity,
-    });
-  };
 
   const errorTranslations = {
     "The comentario field must be a string.":
@@ -89,6 +83,15 @@ function ValidarPlanificacion() {
     };
     fetchData();
   }, [idEmpresa]);
+
+  useEffect(() => {
+    if (planificacionData && planificacionData.aceptada) {
+      const timer = setTimeout(() => {
+        navigate(`/visualizarPlanificacion/empresa/${idEmpresa}`);
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [planificacionData, idEmpresa, navigate]);
 
   const handleValidate = () => {
     setOpenValidateDialog(true);
@@ -185,69 +188,73 @@ function ValidarPlanificacion() {
           <p>Error: {error}</p>
         ) : loading ? (
           <Loading />
-        ) : planificacionData.aceptada ? (
-          <>
-            <Box
-              sx={{
-                display: "flex",
-                height: "100%",
-                width: "100%",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Typography variant="h5">
-                Esta planificación ya ha sido validada.
-              </Typography>
-            </Box>
-          </>
         ) : (
           <>
             <NombreEmpresa
               nombreLargo={empresaData.nombreLargo}
               nombreCorto={empresaData.nombreEmpresa}
             />
-            <TablaPlanificacion sprints={planificacionData.sprints} />
-            <CuadroComentario
-              title="Comentario para el grupo"
-              maxChars={200}
-              onTextChange={(text) => setGroupComment(text)}
-            />
+            {planificacionData.aceptada ? (
+              <Redirecting />
+            ) : planificacionData.message !== null &&  planificacionData.message !== undefined ? (
 
-            <CuadroComentario
-              title="Comentario privado"
-              maxChars={400}
-              onTextChange={(text) => setPrivateComment(text)}
-            />
-            <CuadroNota onNoteChange={(value) => setNota(value)} />
-            <DecisionButtons
-              rejectButtonText="Rechazar Planificación"
-              validateButtonText="Validar Planificación"
-              onReject={handleReject}
-              onValidate={handleValidate}
-            />
-            <CuadroDialogo
-              open={openValidateDialog}
-              onClose={() => setOpenValidateDialog(false)}
-              title="Confirmar Validar planificación"
-              description="¿Está seguro de que desea validar esta planificación?"
-              onConfirm={confirmValidate}
-            />
-            <CuadroDialogo
-              open={openRejectDialog}
-              onClose={() => setOpenRejectDialog(false)}
-              title="Confirmar Rechazar Planificacion"
-              description="¿Está seguro de que desea rechazar esta planificación?"
-              onConfirm={confirmReject}
-            />
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  minHeight: "200px",
+                }}
+              >
+                <Typography variant="h5" sx={{ mt: 2 }}>
+                  {planificacionData.message}
+                </Typography>
+              </Box>
+            ) : (
+              <>
 
-            <InfoSnackbar
-              openSnackbar={snackbar.open}
-              setOpenSnackbar={(open) => setSnackbar({ ...snackbar, open })}
-              message={snackbar.message}
-              severity={snackbar.severity}
-            />
+                <TablaPlanificacion sprints={planificacionData.sprints} />
+                <CuadroComentario
+                  title="Comentario para el grupo"
+                  maxChars={200}
+                  onTextChange={(text) => setGroupComment(text)}
+                />
+
+                <CuadroComentario
+                  title="Comentario privado"
+                  maxChars={400}
+                  onTextChange={(text) => setPrivateComment(text)}
+                />
+                <DecisionButtons
+                  rejectButtonText="Rechazar Planificación"
+                  validateButtonText="Validar Planificación"
+                  onReject={handleReject}
+                  onValidate={handleValidate}
+                />
+                <CuadroDialogo
+                  open={openValidateDialog}
+                  onClose={() => setOpenValidateDialog(false)}
+                  title="Confirmar Validar planificación"
+                  description="¿Está seguro de que desea validar esta planificación?"
+                  onConfirm={confirmValidate}
+                />
+                <CuadroDialogo
+                  open={openRejectDialog}
+                  onClose={() => setOpenRejectDialog(false)}
+                  title="Confirmar Rechazar Planificacion"
+                  description="¿Está seguro de que desea rechazar esta planificación?"
+                  onConfirm={confirmReject}
+                />
+
+                <InfoSnackbar
+                  openSnackbar={snackbar.open}
+                  setOpenSnackbar={(open) => setSnackbar({ ...snackbar, open })}
+                  message={snackbar.message}
+                  severity={snackbar.severity}
+                />
+              </>
+            )}
           </>
         )}
       </BaseUI>
