@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -26,12 +27,12 @@ class Empresa extends Model
     public function sprints()
     {
         return $this->hasManyThrough(
-            Sprint::class,       
-            Planificacion::class, 
-            'idEmpresa',          
-            'idPlanificacion',    
-            'idEmpresa',          
-            'idPlanificacion'   
+            Sprint::class,
+            Planificacion::class,
+            'idEmpresa', // Foreign key en Planificacion
+            'idPlanificacion', // Foreign key en Sprint
+            'idEmpresa', // Local key en Empresa
+            'idPlanificacion' // Local key en Planificacion
         );
     }
 }

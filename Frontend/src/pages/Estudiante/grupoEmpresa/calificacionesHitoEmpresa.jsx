@@ -16,12 +16,17 @@ function CalificacionesHitoEmpresa() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [empresaData, setEmpresaData] = useState(null);
+  const [mensaje, setMensaje] = useState(null); // Para manejar los mensajes
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const data = await getEmpresaCalificaciones(idEmpresa);
-        setEmpresaData(data);
+        if (data.mensaje) {
+          setMensaje(data.mensaje);
+        } else {
+          setEmpresaData(data);
+        }
         setLoading(false);
       } catch (error) {
         setError("Error al cargar las calificaciones");
@@ -33,6 +38,7 @@ function CalificacionesHitoEmpresa() {
 
   if (loading) return <p>Cargando datos...</p>;
   if (error) return <p>Error: {error}</p>;
+  if (mensaje) return <p>{mensaje}</p>; // Mostrar mensaje si no hay datos
 
   const { nombre, nombreLargo, calificaciones } = empresaData;
 
@@ -49,13 +55,11 @@ function CalificacionesHitoEmpresa() {
           nombreCorto={nombre}
         ></NombreEmpresa>
 
-        {/* Tabla de Calificaciones */}
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="calificaciones table">
             <TableHead>
               <TableRow>
                 <TableCell align="center">Nombre del Integrante</TableCell>
-                {/* Solo mapeamos los hitos desde el primer estudiante, una sola vez */}
                 {calificaciones[0]?.promediosPorSprint.map((_, index) => (
                   <TableCell key={index} align="center">
                     Hito {index + 1}
@@ -88,13 +92,12 @@ function CalificacionesHitoEmpresa() {
   );
 }
 
-// Función para calcular el promedio final (suma de todos los hitos dividida por la cantidad de hitos)
 const calcularPromedioFinal = (promediosPorSprint) => {
   const suma = promediosPorSprint.reduce(
     (acc, hito) => acc + (hito.promedio !== null ? hito.promedio : 0),
     0
   );
-  return (suma / promediosPorSprint.length); // Redondear a 2 decimales
+  return (suma / promediosPorSprint.length).toFixed(2);
 };
 
 export default CalificacionesHitoEmpresa;
