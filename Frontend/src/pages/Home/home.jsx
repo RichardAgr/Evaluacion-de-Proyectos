@@ -60,6 +60,9 @@ function Home() {
   const handleNavigateVisualizarSprint = () => {
     navigate("/homeEstudiante/homeGrupoEstudiante/sprint/1");
   };
+  const handleNavigateResultadosAlumnos = () => {
+    navigate("/homeDcoente/visCalificar");
+  };
   return (
     <Fragment>
       <Header />
@@ -152,7 +155,7 @@ function Home() {
           Modificar tarea
         </Button>
       </div>
-      <div>
+      <div style={{gridAutoColumns:'auto'}}>
         <Button
           variant="contained"
           color="primary"
@@ -223,6 +226,20 @@ function Home() {
           }}
         >
           VisualizarSprintPrueba
+        </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          size="large"
+          onClick={handleNavigateResultadosAlumnos}
+          style={{
+            padding: "15px 30px",
+            fontSize: "10px",
+            margin: "10px",
+            marginTop: "-20em",
+          }}
+        >
+          VisualizarEstNota
         </Button>
         <Button
           variant="contained"
