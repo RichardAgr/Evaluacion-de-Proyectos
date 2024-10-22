@@ -12,9 +12,7 @@ function Home() {
     navigate("/visualizarPlanificacion");
   };
   const handleNavigateToModificarPlanificacion = () => {
-    navigate(
-      "/modificarPlanificacion/empresa/1"
-    );
+    navigate("/modificarPlanificacion/empresa/1");
   };
   const handleNavigateToValidarEmpresas = () => {
     navigate("/validarPlanificacion/");
@@ -26,22 +24,22 @@ function Home() {
     navigate("/modificarListaTareas/empresa/1/sprint/1/semana/1");
   };
   const handleNavigateToEmpresasLista = () => {
-    navigate( '/homeGrupoDocente/listaEmpresas/1');
+    navigate("/homeGrupoDocente/listaEmpresas/1");
   };
 
   const handleNavigateToListaEstudiantes = () => {
-    navigate( '/homeGrupoDocente/listaEstudiantes/1/2024-2');
+    navigate("/homeGrupoDocente/listaEstudiantes/1/2024-2");
   };
   const handleNavigateToListaEstudiantesA = () => {
-    navigate( '/homeGrupoDocente/listaEstudiantesA/1/2024-2');
+    navigate("/homeGrupoDocente/listaEstudiantesA/1/2024-2");
   };
 
   const handleNavigateToCrearEmpresa = () => {
-    navigate( '/homeEstudiante/homeGrupoEstudiante/crearGrupo');
+    navigate("/homeEstudiante/homeGrupoEstudiante/crearGrupo");
   };
 
   const handleNavigateToGruposDisponibles = () => {
-    navigate( '/homeEstudiante/gruposDisponibles');
+    navigate("/homeEstudiante/gruposDisponibles");
   };
   const handleNavigateToNotaSprint = () => {
     navigate( 'homeEstudiante/homeGrupoEstudiante/empresas/1/calificaciones');
@@ -51,8 +49,14 @@ function Home() {
   };
 
 
- 
-  
+  const handleNavigateEditarTarea = () => {
+    navigate("/homeEstudiante/homeGrupoEstudiante/sprint/semana/tareas/1");
+  };
+
+  const handleNavigateCalificacionesHito = () => {
+    navigate("/homeEstudiante/homeGrupoEstudiante/empresas/1/calificaciones");
+  };
+
   return (
     <Fragment>
       <Header />
@@ -63,7 +67,6 @@ function Home() {
           justifyContent: "center",
           alignItems: "center",
           minHeight: "calc(100vh - 200px)", // Adjust this value based on your header and footer height
-          
         }}
       >
         <Button
@@ -74,7 +77,7 @@ function Home() {
           style={{
             padding: "15px 30px",
             fontSize: "1.2rem",
-            margin: "10px", 
+            margin: "10px",
           }}
         >
           Ir a Ver Planificacion
@@ -87,7 +90,7 @@ function Home() {
           style={{
             padding: "15px 30px",
             fontSize: "1.2rem",
-            margin: "10px", 
+            margin: "10px",
           }}
         >
           Ir a Modificar Planificacion
@@ -100,7 +103,7 @@ function Home() {
           style={{
             padding: "15px 30px",
             fontSize: "1.2rem",
-            margin: "10px", 
+            margin: "10px",
           }}
         >
           Ir a Validar Empresas
@@ -113,7 +116,7 @@ function Home() {
           style={{
             padding: "15px 30px",
             fontSize: "1.2rem",
-            margin: "10px", 
+            margin: "10px",
           }}
         >
           Ir a Evaluacion Semanal
@@ -126,7 +129,7 @@ function Home() {
           style={{
             padding: "15px 30px",
             fontSize: "1.2rem",
-            margin: "10px", 
+            margin: "10px",
           }}
         >
           Ir a Modificar Lista de Tareas
@@ -147,7 +150,7 @@ function Home() {
         </Button>
       </div>
       <div>
-      <Button
+        <Button
           variant="contained"
           color="primary"
           size="large"
@@ -156,7 +159,7 @@ function Home() {
             padding: "15px 30px",
             fontSize: "10px",
             margin: "10px",
-            marginTop: "-20em" 
+            marginTop: "-20em",
           }}
         >
           Ir a Lista Empresas
@@ -170,13 +173,12 @@ function Home() {
             padding: "15px 30px",
             fontSize: "10px",
             margin: "10px",
-            marginTop: "-20em"  
+            marginTop: "-20em",
           }}
         >
           Ir a Lista Estudiantes
         </Button>
-        
-      
+
         <Button
           variant="contained"
           color="primary"
@@ -186,7 +188,7 @@ function Home() {
             padding: "15px 30px",
             fontSize: "10px",
             margin: "10px",
-            marginTop: "-20em" 
+            marginTop: "-20em",
           }}
         >
           Ir a Crear Empresa
@@ -200,10 +202,39 @@ function Home() {
             padding: "15px 30px",
             fontSize: "10px",
             margin: "10px",
-            marginTop: "-20em" 
+            marginTop: "-20em",
           }}
         >
           Ir a Grupos Disponibles
+        </Button>
+
+        <Button
+          variant="contained"
+          color="primary"
+          size="large"
+          onClick={handleNavigateEditarTarea}
+          style={{
+            padding: "15px 30px",
+            fontSize: "10px",
+            margin: "10px",
+            marginTop: "-20em",
+          }}
+        >
+          Ir a Editar Tarea
+        </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          size="large"
+          onClick={handleNavigateCalificacionesHito}
+          style={{
+            padding: "15px 30px",
+            fontSize: "10px",
+            margin: "10px",
+            marginTop: "-20em",
+          }}
+        >
+          Ir a Ver Calificaciones
         </Button>
         <Button
           variant="contained"
