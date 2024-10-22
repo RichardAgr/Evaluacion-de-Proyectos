@@ -14,7 +14,7 @@ use App\Http\Controllers\PlanificacionController;
 use App\Http\Controllers\DocenteController;
 use App\Http\Controllers\SprintController;
 use App\Http\Controllers\EstudiantesEmpresasController;
-
+use App\Http\Controllers\NotaSprintController;
 
 Route::get('/empresa/{id}', [EmpresaController::class, 'getEmpresaData']);
 Route::get('/nombreEmpresa/{id}', [EmpresaController::class, 'getNombreEmpresa']);
@@ -48,6 +48,7 @@ Route::get('/estudiante/sprint/semana/{idSprint}',[SprintController::class, 'spr
 Route::get('/docente/obtenerEmpresasPorGrupoYDocente',[GrupoController::class, 'obtenerEmpresasPorGrupoYDocente']);
 Route::get('/estudiante/getEstudiante/{idEstudiante}',[EstudianteController::class, 'obtenerEstudiantesParaEmpresa']);
 Route::get('/empresas/{idEmpresa}/calificaciones', [EmpresaController::class, 'getCalificacionesEmpresa']);
+Route::get('/empresas/notaSprint', [NotaSprintController::class, 'notaSprint']);
 
 /**
  * TODOS LOS POST VAN 
