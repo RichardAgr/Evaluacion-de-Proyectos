@@ -46,6 +46,9 @@ function Home() {
   const handleNavigateToNotaSprint = () => {
     navigate( 'homeEstudiante/homeGrupoEstudiante/empresas/1/calificaciones');
   };
+  const handleNavigateToModificarTarea = () => {
+    navigate( '/homeEstudiante/homeGrupoEstudiante/sprint/semana/tareas/1');
+  };
 
 
  
@@ -128,6 +131,20 @@ function Home() {
         >
           Ir a Modificar Lista de Tareas
         </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          size="large"
+          onClick={handleNavigateToModificarTarea}
+          style={{
+            padding: "15px 30px",
+            fontSize: "10px",
+            margin: "10px",
+            marginTop: "-20em" 
+          }}
+        >
+          Modificar tarea
+        </Button>
       </div>
       <div>
       <Button
@@ -202,6 +219,7 @@ function Home() {
         >
           Nota Sprint
         </Button>
+        
       </div>
       <Footer />
     </Fragment>
