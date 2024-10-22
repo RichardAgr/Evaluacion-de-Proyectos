@@ -1,110 +1,276 @@
-/* eslint-disable no-unused-vars */
-import { Fragment, useState } from 'react';
-import BaseUI from '../../../../components/baseUI/baseUI';
-import { styled } from '@mui/material';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import { Avatar, FormControl, Button, TextField, IconButton } from '@mui/material';
-import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
-import FolderZipIcon from '@mui/icons-material/FolderZip';
-import DeleteIcon from '@mui/icons-material/Delete';
+import { Fragment, useState, useEffect } from "react";
+import BaseUI from "../../../../components/baseUI/baseUI";
+import { styled } from "@mui/material";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import {
+  Avatar,
+  FormControl,
+  Button,
+  TextField,
+  IconButton,
+  Alert,
+  AlertTitle,
+} from "@mui/material";
+import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
+import FolderZipIcon from "@mui/icons-material/FolderZip";
+import ImageIcon from "@mui/icons-material/Image"; // Ícono para imágenes
+import TextSnippetIcon from "@mui/icons-material/TextSnippet"; // Ícono para archivos de texto
+import DeleteIcon from "@mui/icons-material/Delete";
+import {
+  getTareaData,
+  updateTarea,
+} from "../../../../api/validarTareas/tareas";
+import PopUpDialog from "../../../../components/popUPDialog/popUpDialog";
+import { useParams, useNavigate } from "react-router-dom";
 
 function ModificarTarea() {
-  const [descripcion, setDescripcion] = useState('Descripcion...');
-  const [responsables, setResponsables] = useState([
-    { idEstudiante: -1, foto: null },
-    { idEstudiante: -1, foto: null },
-    { idEstudiante: -1, foto: null }
-  ]);
-  const [files, setFiles] = useState([]);
+  const [descripcion, setDescripcion] = useState("");
+  const [deletedFiles, setDeletedFiles] = useState([]);
+  const [responsables, setResponsables] = useState([]);
+  const [existingFiles, setExistingFiles] = useState([]); // Archivos ya existentes en la tarea
+  const [newFiles, setNewFiles] = useState([]); // Archivos nuevos subidos
   const [descripcionError, setDescripcionError] = useState(false);
-  const [filesError, setFilesError] = useState(false);
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  const [loading, setLoading] = useState(true);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [openCancelDialog, setOpenCancelDialog] = useState(false);
+  const [alertInfo, setAlertInfo] = useState(null);
+  const { idTarea } = useParams();
+  const navigate = useNavigate();
 
-    setDescripcionError(false);
-    if (descripcion === '') {
+  useEffect(() => {
+    const fetchTareaData = async () => {
+      try {
+        const data = await getTareaData(idTarea);
+        setDescripcion(data.textotarea);
+        setResponsables(data.estudiantes);
+        setExistingFiles(
+          data.archivotarea.map((file) => ({
+            name: file.nombreArchivo,
+            url: file.archivo,
+          }))
+        );
+        setLoading(false);
+      } catch (error) {
+        console.error("Error al cargar la tarea:", error);
+        setLoading(false);
+      }
+    };
+
+    fetchTareaData();
+  }, [idTarea]);
+
+  const handleGuardar = async () => {
+    try {
+      const formData = new FormData();
+      formData.append("textotarea", descripcion);
+
+      // Agregar archivos nuevos
+      newFiles.forEach((file) => {
+        formData.append("archivotarea[]", file); // Archivos recién subidos
+      });
+
+      // Agregar archivos eliminados si es necesario
+      if (deletedFiles.length > 0) {
+        deletedFiles.forEach((file) => {
+          formData.append("archivosEliminados[]", file.name);
+        });
+      }
+
+      await updateTarea(idTarea, formData);
+
+      setAlertInfo({
+        type: "success",
+        message: "Tarea guardada correctamente.",
+      });
+    } catch (error) {
+      console.error("Error al actualizar la tarea:", error);
+      setAlertInfo({
+        type: "error",
+        message: "Hubo un error al guardar la tarea.",
+      });
+    } finally {
+      setOpenDialog(false);
+    }
+  };
+
+  const handleValidarCampos = () => {
+    if (!descripcion) {
       setDescripcionError(true);
-    }
-
-    if (descripcion) {
-      console.log(descripcion);
+      setAlertInfo({
+        type: "warning",
+        message: "La descripción no debe estar vacía.",
+      });
+    } else if (newFiles.length === 0 && existingFiles.length === 0) {
+      setAlertInfo({
+        type: "warning",
+        message: "Debes subir al menos un archivo.",
+      });
+    } else {
+      setOpenDialog(true);
     }
   };
 
-  const handleDeleteFile = (index) => {
-    setFiles(files.filter((_, i) => i !== index));
+  const handleCloseAlert = () => {
+    setAlertInfo(null);
   };
+
+  const handleCancel = () => {
+    setOpenCancelDialog(true);
+  };
+
+  const handleConfirmCancel = () => {
+    navigate(`/ruta-a-la-pagina-anterior`);
+  };
+
+  const handleDeleteFile = (index, isNewFile = false) => {
+    if (isNewFile) {
+      setNewFiles(newFiles.filter((_, i) => i !== index));
+    } else {
+      const fileToDelete = existingFiles[index];
+      setDeletedFiles([...deletedFiles, fileToDelete]);
+      setExistingFiles(existingFiles.filter((_, i) => i !== index));
+    }
+  };
+
+  const handleFileChange = (e) => {
+    const inputFiles = e.target.files;
+    setNewFiles([...newFiles, ...inputFiles]);
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    const droppedFiles = Array.from(e.dataTransfer.files);
+    setNewFiles([...newFiles, ...droppedFiles]);
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+  };
+
+  const renderIconForFileType = (fileName) => {
+    if (!fileName || typeof fileName !== "string") {
+      return <TextSnippetIcon style={{ fontSize: 30 }} />; // Ícono por defecto si el nombre de archivo es indefinido
+    }
+    if (fileName.endsWith(".pdf")) {
+      return <PictureAsPdfIcon style={{ fontSize: 30 }} />;
+    }
+    if (fileName.endsWith(".zip") || fileName.endsWith(".rar")) {
+      return <FolderZipIcon style={{ fontSize: 30 }} />;
+    }
+    if (
+      fileName.endsWith(".png") ||
+      fileName.endsWith(".jpg") ||
+      fileName.endsWith(".jpeg")
+    ) {
+      return <ImageIcon style={{ fontSize: 30 }} />;
+    }
+    if (
+      fileName.endsWith(".txt") ||
+      fileName.endsWith(".doc") ||
+      fileName.endsWith(".docx") ||
+      fileName.endsWith(".xls") ||
+      fileName.endsWith(".xlsx")
+    ) {
+      return <TextSnippetIcon style={{ fontSize: 30 }} />;
+    }
+    return <TextSnippetIcon style={{ fontSize: 30 }} />; // Ícono por defecto para otros tipos
+  };
+
+  if (loading) {
+    return <div>Cargando...</div>;
+  }
 
   return (
     <Fragment>
       <BaseUI
-        titulo={'MODIFICAR TAREA'}
+        titulo={"MODIFICAR TAREA"}
         ocultarAtras={false}
         confirmarAtras={false}
-        dirBack={'/'}
+        dirBack={"/"}
       >
         <ContainerdropZone>
-          <form autoComplete="off" onSubmit={handleSubmit}>
+          <form autoComplete="off" onSubmit={(e) => e.preventDefault()}>
             <FormControl className="formControl">
               <h1>MockUps</h1>
-              <h3>Archivos:</h3>
-              <div className="form_inputFiles">
-                <div className="inputFiles_dropzone" onClick={() => document.querySelector(".dropzone").click()}>
-                  {files.length > 0 ? (
-                    <div className="uploadedFiles">
-                      {files.map((file, index) => (
-                        <div key={index} className="fileItem">
-                          {file.type === 'application/pdf' ? (
-                            <PictureAsPdfIcon style={{ fontSize: 30 }} />
-                          ) : (
-                            <FolderZipIcon style={{ fontSize: 30 }} />
-                          )}
-                          <IconButton
-                            color="primary"
-                            onClick={() => handleDeleteFile(index)}
-                          >
-                            <DeleteIcon />
-                          </IconButton>
-                          <p className='fileName'>{file.name}</p>
-                        </div>
-                      ))}
+              <h3>Archivos Existentes:</h3>
+              <div className="uploadedFiles">
+                {existingFiles.length > 0 ? (
+                  existingFiles.map((file, index) => (
+                    <div key={index} className="fileItem">
+                      {renderIconForFileType(file.name)}
+                      <IconButton
+                        color="secondary"
+                        onClick={() => handleDeleteFile(index, false)}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                      <a
+                        href={file.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <p className="fileName">
+                          {file?.name || "Nombre desconocido"}
+                        </p>
+                      </a>
                     </div>
-                  ) : (
-                    <div className='textUpload'>
-                      <h3>AQUI ARRASTRA Y SUELTA ARCHIVOS</h3>
-                      <div className='iconUpload'>
-                        <CloudUploadIcon style={{ fontSize: 40 }}/>
-                      </div>  
-                    </div>              
-                  )}
-
-                  <input
-                    type="file"
-                    accept=".pdf,.zip,.rar,.7z"
-                    hidden
-                    className="dropzone"
-                    onChange={({ target: { files: inputFiles } }) => {
-                      const newFiles = Array.from(inputFiles).map((file) => ({
-                        name: file.name,
-                        type: file.type,
-                        url: URL.createObjectURL(file)
-                      }));
-                      setFiles([...files, ...newFiles]);
-                    }}
-                  />
-                </div>
-                <div className="inputFiles_button">
-                  <Button variant="contained" onClick={() => document.querySelector(".dropzone").click()}>
-                    Elegir Archivo
-                  </Button>
-                </div>
-                <div className="form_fotos">
-                  {responsables.map((responsable, index) => (
-                    <Avatar alt={`responsable${index}`} src={responsable.foto} key={index} />
-                  ))}
-                </div>
+                  ))
+                ) : (
+                  <p>No hay archivos existentes</p>
+                )}
               </div>
-              <h3>Descripcion Tarea:</h3>
+
+              <h3>Archivos Nuevos:</h3>
+              <div
+                className="inputFiles_dropzone"
+                onDrop={handleDrop}
+                onDragOver={handleDragOver}
+              >
+                <div className="textUpload">
+                  <h3>Aquí arrastra y suelta archivos</h3>
+                  <div className="iconUpload">
+                    <CloudUploadIcon style={{ fontSize: 40 }} />
+                  </div>
+                </div>
+                <input
+                  type="file"
+                  accept=".txt,.png,.jpg,.jpeg,.pdf,.zip,.rar,.doc,.docx,.xls,.xlsx"
+                  multiple
+                  hidden
+                  className="dropzone"
+                  onChange={handleFileChange}
+                />
+              </div>
+              <div className="inputFiles_button_right">
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => document.querySelector(".dropzone").click()}
+                >
+                  Elegir Archivo
+                </Button>
+              </div>
+
+              <div className="uploadedFiles">
+                {newFiles.length > 0 ? (
+                  newFiles.map((file, index) => (
+                    <div key={index} className="fileItem">
+                      {renderIconForFileType(file.name)}
+                      <IconButton
+                        color="secondary"
+                        onClick={() => handleDeleteFile(index, true)}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                      <p className="fileName">{file.name || "Archivo nuevo"}</p>
+                    </div>
+                  ))
+                ) : (
+                  <p>No hay archivos nuevos</p>
+                )}
+              </div>
+
+              <h3>Descripción Tarea:</h3>
               <div className="form_inputText">
                 <StyledTextField
                   value={descripcion}
@@ -116,14 +282,55 @@ function ModificarTarea() {
                   multiline
                 />
               </div>
-              <div className="form_buttons">
-                <Button variant="contained" color="secondary" className="buttons">
-                  No Guardar
-                </Button>
-                <Button variant="contained" type="submit" className="buttons">
-                  Guardar
-                </Button>
-              </div>
+
+              <NotaYBotonesSection>
+                <BotonesSection>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    className="btn-cancelar"
+                    onClick={handleCancel}
+                  >
+                    No Guardar
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleValidarCampos}
+                  >
+                    Guardar
+                  </Button>
+                </BotonesSection>
+              </NotaYBotonesSection>
+
+              <PopUpDialog
+                openDialog={openDialog}
+                setOpenDialog={setOpenDialog}
+                titleDialog="Confirmación"
+                textDialog="¿Estás seguro de guardar los cambios?"
+                especial={handleGuardar}
+              />
+
+              <PopUpDialog
+                openDialog={openCancelDialog}
+                setOpenDialog={setOpenCancelDialog}
+                especial={() => window.location.reload()}
+                titleDialog={
+                  "¿Estás seguro de que quieres descartar los cambios?"
+                }
+                textDialog={
+                  "Esta acción no se puede deshacer. Todos los cambios realizados se perderán."
+                }
+              />
+
+              {alertInfo && (
+                <Alert severity={alertInfo.type} onClose={handleCloseAlert}>
+                  <AlertTitle>
+                    {alertInfo.type === "success" ? "Éxito" : "Error"}
+                  </AlertTitle>
+                  {alertInfo.message}
+                </Alert>
+              )}
             </FormControl>
           </form>
         </ContainerdropZone>
@@ -134,7 +341,7 @@ function ModificarTarea() {
 
 export default ModificarTarea;
 
-const ContainerdropZone = styled('div')`
+const ContainerdropZone = styled("div")`
   margin-top: 1rem;
   margin-bottom: 1rem;
   h3 {
@@ -143,7 +350,7 @@ const ContainerdropZone = styled('div')`
   .textUpload {
     display: block;
   }
-  .iconUpload{
+  .iconUpload {
     display: flex;
     justify-content: center;
   }
@@ -179,30 +386,24 @@ const ContainerdropZone = styled('div')`
     width: 100%;
     height: 100%;
   }
-  .inputFiles_button {
+  .inputFiles_button_right {
     display: flex;
-    align-items: end;
+    justify-content: flex-end;
+    margin-top: 1rem;
   }
-  .form_fotos {
-    flex-grow: 1;
-    display: flex;
-    justify-content: end;
-    align-items: center;
-    align-content: center;
-  }
-  .uploadedFiles{
+  .uploadedFiles {
     width: 95%;
     display: flex;
     align-content: center;
   }
-  .fileItem{
+  .fileItem {
     display: block;
-  }  
-  .fileName{
+  }
+  .fileName {
     width: 65px;
     white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis; 
+    text-overflow: ellipsis;
   }
 `;
 
@@ -225,4 +426,17 @@ const StyledTextField = styled(TextField)`
       border-color: blue;
     }
   }
+`;
+
+const NotaYBotonesSection = styled("div")`
+  display: flex;
+  justify-content: flex-end; /* Alinear los botones a la derecha */
+  align-items: center;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+`;
+
+const BotonesSection = styled("div")`
+  display: flex;
+  gap: 1rem;
 `;
