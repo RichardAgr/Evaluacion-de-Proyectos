@@ -57,6 +57,9 @@ function Home() {
     navigate("/homeEstudiante/homeGrupoEstudiante/empresas/1/calificaciones");
   };
 
+  const handleNavigateVisualizarSprint = () => {
+    navigate("/homeEstudiante/homeGrupoEstudiante/sprint/1");
+  };
   return (
     <Fragment>
       <Header />
@@ -168,6 +171,20 @@ function Home() {
           variant="contained"
           color="primary"
           size="large"
+          onClick={handleNavigateToEmpresasLista}
+          style={{
+            padding: "15px 30px",
+            fontSize: "10px",
+            margin: "10px",
+            marginTop: "-20em",
+          }}
+        >
+          Ir a Lista Empresas
+        </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          size="large"
           onClick={handleNavigateToListaEstudiantes}
           style={{
             padding: "15px 30px",
@@ -192,6 +209,20 @@ function Home() {
           }}
         >
           Ir a Crear Empresa
+        </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          size="large"
+          onClick={handleNavigateVisualizarSprint}
+          style={{
+            padding: "15px 30px",
+            fontSize: "10px",
+            margin: "10px",
+            marginTop: "-20em",
+          }}
+        >
+          VisualizarSprintPrueba
         </Button>
         <Button
           variant="contained"
