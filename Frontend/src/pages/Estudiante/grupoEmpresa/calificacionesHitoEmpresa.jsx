@@ -1,100 +1,130 @@
-import { Fragment, useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import { getEmpresaCalificaciones } from "../../../api/getEmpresa";
+import React, { useState, useEffect } from 'react';
 import BaseUI from "../../../components/baseUI/baseUI";
-import NombreEmpresa from "../../../components/infoEmpresa/nombreEmpresa";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
+import { styled } from '@mui/material';
+import InfoEmpresa from '../../../components/infoEmpresa/nombreEmpresa'; // Ajusta la ruta según tu estructura de archivos
 
-function CalificacionesHitoEmpresa() {
-  const { idEmpresa } = useParams();
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [empresaData, setEmpresaData] = useState(null);
+const NotaSprintTable = () => {
+  const empresaId = 1; // Hardcodeado como 1
+  const [notas, setNotas] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [nombreEmpresa, setNombreEmpresa] = useState({ nombreCorto: '', nombreLargo: '' });
+
+  const fetchNotas = async () => {
+    setLoading(true);
+    setError('');
+    try {
+      const response = await fetch(`http://localhost:8000/api/empresas/notasSprint/${empresaId}`);
+      if (!response.ok) {
+        throw new Error('Error al obtener datos.');
+      }
+      const data = await response.json();
+      setNotas(data);
+    } catch (err) {
+      setError('Error al obtener datos. Verifica el ID de la empresa.');
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getNombreEmpresa = async (empresaId) => {
+    try {
+      const response = await fetch(`http://127.0.0.1:8000/api/nombreEmpresa/${empresaId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al obtener los datos de la empresa');
+      }
+
+      const data = await response.json();    
+      setNombreEmpresa({ nombreCorto: data.nombreEmpresa, nombreLargo: data.nombreLargo });
+    } catch (error) {
+      setError('Error al obtener el nombre de la empresa.');
+      console.error('Error en la solicitud:', error);
+    }
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await getEmpresaCalificaciones(idEmpresa);
-        setEmpresaData(data);
-        setLoading(false);
-      } catch (error) {
-        setError("Error al cargar las calificaciones");
-        setLoading(false);
+    getNombreEmpresa(empresaId); // Obtener el nombre de la empresa al montar el componente
+    fetchNotas(); // Llama a la función al montar el componente
+  }, []);
+
+  // Obtener los nombres de los sprints para las columnas
+  const sprints = Object.keys(notas).reduce((acc, idEstudiante) => {
+    const estudiante = notas[idEstudiante];
+    Object.keys(estudiante.sprints).forEach(sprint => {
+      if (!acc.includes(sprint)) {
+        acc.push(sprint);
       }
-    };
-    fetchData();
-  }, [idEmpresa]);
-
-  if (loading) return <p>Cargando datos...</p>;
-  if (error) return <p>Error: {error}</p>;
-
-  const { nombre, nombreLargo, calificaciones } = empresaData;
+    });
+    return acc;
+  }, []);
 
   return (
-    <Fragment>
-      <BaseUI
-        titulo="VISUALIZAR CALIFICACIONES DE LA GRUPO EMPRESA"
-        ocultarAtras={false}
-        confirmarAtras={false}
-        dirBack="/"
-      >
-        <NombreEmpresa
-          nombreLargo={nombreLargo}
-          nombreCorto={nombre}
-        ></NombreEmpresa>
+    <BaseUI
+      titulo="VISUALIZAR CALIFICACIONES DE LA GRUPO EMPRESA"
+      ocultarAtras={false}
+      confirmarAtras={false}
+      dirBack="/"
+    >
+      <Container>
+        <InfoEmpresa nombreCorto={nombreEmpresa.nombreCorto} nombreLargo={nombreEmpresa.nombreLargo} />
+        {loading && <p>Cargando...</p>}
+        {error && <ErrorMessage>{error}</ErrorMessage>}
 
-        {/* Tabla de Calificaciones */}
-        <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650 }} aria-label="calificaciones table">
-            <TableHead>
-              <TableRow>
-                <TableCell align="center">Nombre del Integrante</TableCell>
-                {/* Solo mapeamos los hitos desde el primer estudiante, una sola vez */}
-                {calificaciones[0]?.promediosPorSprint.map((_, index) => (
-                  <TableCell key={index} align="center">
-                    Hito {index + 1}
-                  </TableCell>
+        {Object.keys(notas).length > 0 && (
+          <Table>
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                {sprints.map((sprint, index) => (
+                  <th key={index}>{sprint}</th>
                 ))}
-                <TableCell align="center">Evaluación Final</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {calificaciones.map((calificacion, index) => (
-                <TableRow key={index}>
-                  <TableCell align="center">
-                    {`${calificacion.estudiante.nombre} ${calificacion.estudiante.primerApellido} ${calificacion.estudiante.segundoApellido}`}
-                  </TableCell>
-                  {calificacion.promediosPorSprint.map((hito, hitoIndex) => (
-                    <TableCell key={hitoIndex} align="center">
-                      {hito.promedio !== null ? hito.promedio : 0}
-                    </TableCell>
+              </tr>
+            </thead>
+            <tbody>
+              {Object.entries(notas).map(([idEstudiante, estudiante]) => (
+                <tr key={idEstudiante}>
+                  <td>{estudiante.nombre}</td>
+                  {sprints.map((sprint) => (
+                    <td key={sprint}>
+                      {estudiante.sprints[sprint] !== undefined ? estudiante.sprints[sprint] : 'N/A'}
+                    </td>
                   ))}
-                  <TableCell align="center">
-                    {calcularPromedioFinal(calificacion.promediosPorSprint)}
-                  </TableCell>
-                </TableRow>
+                </tr>
               ))}
-            </TableBody>
+            </tbody>
           </Table>
-        </TableContainer>
-      </BaseUI>
-    </Fragment>
+        )}
+      </Container>
+    </BaseUI>
   );
-}
-
-// Función para calcular el promedio final (suma de todos los hitos dividida por la cantidad de hitos)
-const calcularPromedioFinal = (promediosPorSprint) => {
-  const suma = promediosPorSprint.reduce(
-    (acc, hito) => acc + (hito.promedio !== null ? hito.promedio : 0),
-    0
-  );
-  return (suma / promediosPorSprint.length); // Redondear a 2 decimales
 };
 
-export default CalificacionesHitoEmpresa;
+const Container = styled('div')({
+  padding: '20px',
+});
+
+const Table = styled('table')({
+  width: '100%',
+  borderCollapse: 'collapse',
+  'th, td': {
+    border: '1px solid #ddd',
+    padding: '8px',
+    textAlign: 'left',
+  },
+  'th': {
+    backgroundColor: '#f2f2f2',
+  },
+});
+
+const ErrorMessage = styled('p')({
+  color: 'red',
+});
+
+export default NotaSprintTable;

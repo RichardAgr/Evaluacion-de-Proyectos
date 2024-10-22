@@ -43,6 +43,10 @@ function Home() {
   const handleNavigateToGruposDisponibles = () => {
     navigate( '/homeEstudiante/gruposDisponibles');
   };
+  const handleNavigateToNotaSprint = () => {
+    navigate( 'homeEstudiante/homeGrupoEstudiante/empresas/1/calificaciones');
+  };
+
 
  
   
@@ -183,6 +187,20 @@ function Home() {
           }}
         >
           Ir a Grupos Disponibles
+        </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          size="large"
+          onClick={handleNavigateToNotaSprint}
+          style={{
+            padding: "15px 30px",
+            fontSize: "10px",
+            margin: "10px",
+            marginTop: "-20em" 
+          }}
+        >
+          Nota Sprint
         </Button>
       </div>
       <Footer />

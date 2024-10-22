@@ -49,6 +49,7 @@ Route::get('/docente/obtenerEmpresasPorGrupoYDocente',[GrupoController::class, '
 Route::get('/estudiante/getEstudiante/{idEstudiante}',[EstudianteController::class, 'obtenerEstudiantesParaEmpresa']);
 Route::get('/empresas/{idEmpresa}/calificaciones', [EmpresaController::class, 'getCalificacionesEmpresa']);
 Route::get('/empresas/notaSprint', [NotaSprintController::class, 'notaSprint']);
+Route::get('/empresas/notasSprint/{idEmpresa}', [NotaSprintController::class, 'notasSprint']);
 
 /**
  * TODOS LOS POST VAN 
