@@ -9,21 +9,21 @@ function Home() {
   const navigate = useNavigate();
 
   const handleNavigateToVerPlanificacion = () => {
-    navigate("/homeDocente/homeGrupoDocente/verPlanificacionDeEmpresas");
+    navigate("/visualizarPlanificacion");
   };
-  const handleNavigateToEditarPlanificacion = () => {
+  const handleNavigateToModificarPlanificacion = () => {
     navigate(
-      "/homeEstudiante/homeGrupoEstudiante/PlanificacionInicial/Empresa/1"
+      "/modificarPlanificacion/empresa/1"
     );
   };
   const handleNavigateToValidarEmpresas = () => {
-    navigate("/grupoDocente/validarPlanificacion/");
+    navigate("/validarPlanificacion/");
   };
-  const handleNavigateToCalificarSprint = () => {
-    navigate("/grupoDocente/empresa/1/planificacion/calificarSprint/1");
+  const handleNavigateToEvaluacionSemanal = () => {
+    navigate("/evaluacionSemanal/empresa/1/sprint/1/");
   };
   const handleNavigateToModificarLista = () => {
-    navigate("/grupoEstudiante/sprint/semana/1/modificarListaTareas");
+    navigate("/modificarListaTareas/empresa/1/sprint/1/semana/1");
   };
   const handleNavigateToEmpresasLista = () => {
     navigate( '/homeGrupoDocente/listaEmpresas/1');
@@ -76,14 +76,14 @@ function Home() {
           variant="contained"
           color="primary"
           size="large"
-          onClick={handleNavigateToEditarPlanificacion}
+          onClick={handleNavigateToModificarPlanificacion}
           style={{
             padding: "15px 30px",
             fontSize: "1.2rem",
             margin: "10px", 
           }}
         >
-          Ir a Editar Planificacion
+          Ir a Modificar Planificacion
         </Button>
         <Button
           variant="contained"
@@ -102,14 +102,14 @@ function Home() {
           variant="contained"
           color="primary"
           size="large"
-          onClick={handleNavigateToCalificarSprint}
+          onClick={handleNavigateToEvaluacionSemanal}
           style={{
             padding: "15px 30px",
             fontSize: "1.2rem",
             margin: "10px", 
           }}
         >
-          Ir a Calificar Sprint
+          Ir a Evaluacion Semanal
         </Button>
         <Button
           variant="contained"
@@ -155,20 +155,7 @@ function Home() {
           Ir a Lista Estudiantes
         </Button>
         
-      <Button
-          variant="contained"
-          color="primary"
-          size="large"
-          onClick={handleNavigateToListaEstudiantesA}
-          style={{
-            padding: "15px 30px",
-            fontSize: "10px",
-            margin: "10px",
-            marginTop: "-20em" 
-          }}
-        >
-          Ir a Lista Estudiantes Automatico
-        </Button>
+      
         <Button
           variant="contained"
           color="primary"

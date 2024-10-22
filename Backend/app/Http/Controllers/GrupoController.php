@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
+use function Laravel\Prompts\select;
+
 class GrupoController extends Controller
 {
     public function obtenerTodosLosGrupos()
@@ -47,7 +49,8 @@ class GrupoController extends Controller
             ->where('grupo.idGrupo',"=",   $idGrupo)
             ->where('grupo.gestionGrupo',$gestionGrupo)
             ->select(
-                //'grupo.numGrupo', 
+                'grupo.numGrupo', 
+                'estudiante.idEstudiante',
                 'estudiante.nombreEstudiante as nombreEstudiante', 
                 'estudiante.primerApellido as apellidoPaternoEstudiante', 
                 'estudiante.segundoApellido as apellidoMaternoEstudiante',
@@ -193,6 +196,26 @@ class GrupoController extends Controller
         }
 
         return response()->json($datosGrupo, 200);
+    }
+
+    public function darDeBaja(Request $request) {
+        $request->validate([
+            'idGrupo' => 'required|integer',
+            'idEstudiante' => 'required|integer',
+        ]);
+    
+        // Realizar la eliminación después de aplicar la condición 'where'
+        $idBaja = DB::table('estudiantesgrupos')
+            ->where('idGrupo', $request->idGrupo)  // Condición para el grupo
+            ->where('idEstudiante', $request->idEstudiante)  // Condición para el estudiante
+            ->delete();
+    
+        // Verificar si se eliminó alguna fila
+        if ($idBaja) {
+            return response()->json(['success' => 'Estudiante dado de baja exitosamente'], 200);
+        } else {
+            return response()->json(['error' => 'No se pudo dar de baja al estudiante'], 400);
+        }
     }
 
 }

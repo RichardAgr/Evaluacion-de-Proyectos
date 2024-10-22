@@ -2,28 +2,41 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class NotasSemana extends Model
 {
+    use HasFactory;
+
+    // Nombre de la tabla
     protected $table = 'notassemana';
+
+    // Clave primaria (opcional si no usas 'id')
     protected $primaryKey = 'idNota';
-    public $incrementing = false;
-    public $timestamps = false;
+
+    // Campos que se pueden asignar en masa
     protected $fillable = [
         'idSemana',
         'idEstudiante',
-        'nota'
+        'nota',
+        'semana', // La columna que agregaste recientemente
     ];
 
-    public function estudiante()
-    {
-        return $this->belongsTo(Estudiante::class, 'idEstudiante');
-    }
+    // Deshabilitar timestamps si no usas created_at y updated_at
+    public $timestamps = false;
 
+    // Si las relaciones están definidas, puedes agregar las relaciones como métodos:
+
+    // Relación con la tabla 'semana'
     public function semana()
     {
-        return $this->belongsTo(Semana::class, 'idSemana');
+        return $this->belongsTo(Semana::class, 'idSemana', 'idSemana');
+    }
+
+    // Relación con la tabla 'estudiante'
+    public function estudiante()
+    {
+        return $this->belongsTo(Estudiante::class, 'idEstudiante', 'idEstudiante');
     }
 }

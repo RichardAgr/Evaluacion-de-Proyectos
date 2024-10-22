@@ -1,19 +1,26 @@
-import { Fragment, useEffect } from 'react';
-import { useState } from 'react';
-import { useParams} from "react-router-dom";
-import InfoEmpresa from '../../../components/infoEmpresa/infoEmpresa.jsx'
-import TablaNotasPlanificacion from '../../../components/tablaPlanificacionNotas/tablaPlanificacionNotas.jsx';
-import TablaPlanificacion from '../../../components/tablaPlanificacionDeDesarollo/tablaPlanificacion.jsx';
-import { getEmpresaData } from '../../../api/getEmpresa.jsx';
-import { getPlanificacion} from '../../../api/getPlanificacion.jsx'
-import BaseUI from '../../../components/baseUI/baseUI.jsx';
+import { Fragment, useEffect } from "react";
+import { useState } from "react";
+import { useParams } from "react-router-dom";
+import InfoEmpresa from "../../../components/infoEmpresa/infoEmpresa.jsx";
+import TablaNotasPlanificacion from "../../../components/tablaPlanificacionNotas/tablaPlanificacionNotas.jsx";
+import TablaPlanificacion from "../../../components/tablaPlanificacionDeDesarollo/tablaPlanificacion.jsx";
+import { getEmpresaData } from "../../../api/getEmpresa.jsx";
+import { getPlanificacion } from "../../../api/getPlanificacion.jsx";
+import BaseUI from "../../../components/baseUI/baseUI.jsx";
+import Error from "../../../components/error/error.jsx";
+import Loading from "../../../components/loading/loading.jsx";
+
 function PlanificacionDeDesarollo() {
-  
   const [empresaData, setEmpresaData] = useState(null);
   let { idEmpresa } = useParams();
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [planificacionData, setPlanificacionData] = useState({aceptada:false})
+  const [error, setError] = useState({
+    errorMessage: "",
+    errorDetails: "",
+  });
+  const [planificacionData, setPlanificacionData] = useState({
+    aceptada: false,
+  });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -25,38 +32,52 @@ function PlanificacionDeDesarollo() {
         setEmpresaData(empresa);
         setPlanificacionData(planificacion);
       } catch (error) {
-        console.error('Error en la solicitud:', error.message);
-        setError(`Error en la solicitud: ${error.message}`);
-      }finally {
+        console.error("Error en la solicitud:", error.message);
+        setError({
+          errorMessage: "Ha ocurrido un error",
+          errorDetails: error.message,
+        });
+      } finally {
         setLoading(false);
       }
     };
     fetchData();
-  }, [idEmpresa])
-  if (loading) return <p>Cargando datos...</p>;
-  if (error) return <p>Error: {error}</p>;
+  }, [idEmpresa]);
   return (
     <Fragment>
       <BaseUI
-        titulo = {'PLANIFICACION DE DESAROLLO'}
-        ocultarAtras = {false}
-        confirmarAtras = {false}
-        dirBack = {'/'}
+        titulo={"VISUALIZAR PLANIFICACION DE DESARROLLO"}
+        ocultarAtras={false}
+        confirmarAtras={false}
+        dirBack={"/"}
       >
-        <InfoEmpresa nombreLargo= {empresaData.nombreLargo} nombreCorto = {empresaData.nombreEmpresa} integrantes={empresaData.integrantes}></InfoEmpresa>
-        {!planificacionData.aceptada?
-          <div className='divContainerPlani'>
-            <h1>TODAVIA NO SE FUE ACEPTADA</h1>
-          </div>
-        :
-            <TablaPlanificacion sprints = {planificacionData.sprints} ocultarBotones = {true}></TablaPlanificacion>
-        }
-        <TablaNotasPlanificacion 
-          numeroDeFaltas={empresaData.numeroDeFaltas} 
-          sprints={planificacionData.sprints}
-          notaProductoFinal= {empresaData.notaProductoFinal}
-        ></TablaNotasPlanificacion>
-      </BaseUI> 
+        {error.errorMessage || error.errorDetails ? (
+          <Error
+            errorMessage={error.errorMessage}
+            errorDetails={error.errorDetails}
+          />
+        ) : loading ? (
+          <Loading />
+        ) : (
+          <>
+            <InfoEmpresa
+              nombreLargo={empresaData.nombreLargo}
+              nombreCorto={empresaData.nombreEmpresa}
+              integrantes={empresaData.integrantes}
+            />
+            {!planificacionData.aceptada ? (
+              <div className="divContainerPlani">
+                <h1>TODAVIA NO SE FUE ACEPTADA</h1>
+              </div>
+            ) : (
+              <TablaPlanificacion
+                sprints={planificacionData.sprints}
+                ocultarBotones={true}
+              />
+            )}
+          </>
+        )}
+      </BaseUI>
     </Fragment>
   );
 }
