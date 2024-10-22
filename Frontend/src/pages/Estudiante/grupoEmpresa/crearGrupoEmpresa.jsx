@@ -177,6 +177,14 @@ const CrearGrupoEmpresa = () => {
                         <BotonRojo onClick={manejarSubmit}>PUBLICAR GRUPO EMPRESA</BotonRojo>
                     </div>
 
+                    <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={manejarSubmit}
+                  >
+                    Guardar
+                  </Button>
+
                     {/* Modal para agregar integrante */}
                     <Modal open={openModal} onClose={() => setOpenModal(false)}>
                         <div style={{ padding: "20px", backgroundColor: "white", margin: "auto", marginTop: "20%", width: "300px", borderRadius: "8px" }}>
