@@ -1,11 +1,61 @@
-import { Fragment } from "react";
+import { Fragment, useState, useEffect } from "react";
 import BaseUI from "../../../../components/baseUI/baseUI";
 import { styled } from "@mui/material";
+import InfoEmpresa from "../../../../components/infoEmpresa/nombreEmpresa";
 
 function CalificarEstSemana() {
-    // Nombres de la empresa
-    const nombreLargoEmpresa = "Nombre Largo de la Empresa";
-    const nombreCortoEmpresa = "Nombre Corto";
+    const empresaId = 1; // Hardcodeado como 1
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
+    const [nombreEmpresa, setNombreEmpresa] = useState({ nombreCorto: '', nombreLargo: '' });
+    const [notas, setNotas] = useState([]);
+
+    const fetchNotas = async () => {
+        setLoading(true);
+        setError('');
+        try {
+          const response = await fetch(`http://localhost:8000/api/empresas/notasSprint/${empresaId}`);
+          if (!response.ok) {
+            throw new Error('Error al obtener datos.');
+          }
+          const data = await response.json();
+          setNotas(data);
+          console.log(notas)
+        } catch (err) {
+          setError('Error al obtener datos. Verifica el ID de la empresa.');
+          console.error(err);
+        } finally {
+          setLoading(false);
+        }
+      };
+    
+
+    const getNombreEmpresa = async (empresaId) => {
+        try {
+          const response = await fetch(`http://127.0.0.1:8000/api/nombreEmpresa/${empresaId}`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+    
+          if (!response.ok) {
+            throw new Error('Error al obtener los datos de la empresa');
+          }
+    
+          const data = await response.json();    
+          setNombreEmpresa({ nombreCorto: data.nombreEmpresa, nombreLargo: data.nombreLargo });
+        } catch (error) {
+          setError('Error al obtener el nombre de la empresa.');
+          console.error('Error en la solicitud:', error);
+        }
+      };
+
+      useEffect(() => {
+        getNombreEmpresa(empresaId); // Obtener el nombre de la empresa al montar el componente
+        fetchNotas(); // Llama a la función al montar el componente
+      }, []);
+    
     const Sprint = "1";
 
     const datosLLenos = [
@@ -35,7 +85,6 @@ function CalificarEstSemana() {
         },
     ];
 
-    const datosVacios = [];
 
     const datos = datosLLenos;
 
@@ -45,12 +94,7 @@ function CalificarEstSemana() {
                 titulo={'RESULTADOS EVALUACIONES SEMANALES PREVIAS'}
                 dirBack={'/'}>
                 <NombreSprint><h2>SPRINT {Sprint}</h2></NombreSprint>
-                <Cuadrado>
-                    <NombreEmpresa>
-                        <h3>{nombreLargoEmpresa}</h3>
-                        <h4>{nombreCortoEmpresa}</h4>
-                    </NombreEmpresa>
-                </Cuadrado>
+                <InfoEmpresa nombreCorto={nombreEmpresa.nombreCorto} nombreLargo={nombreEmpresa.nombreLargo} />
                 {datos.length > 0 && (
                     <TablaContainer>
                         <Tabla>
@@ -107,18 +151,6 @@ const NombreSprint = styled('div')({
     justifyContent: 'flex-start',
 });
 
-const Cuadrado = styled('div')({
-    overflow: 'auto',
-    border: '4px solid black',
-    minHeight: '40px',
-    width: '100%',
-    textAlign: 'center',
-    margin: '10px auto',
-});
-
-const NombreEmpresa = styled('div')({
-    marginBottom: '10px',
-});
 
 const TablaContainer = styled('div')({
     overflowX: 'auto', 

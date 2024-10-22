@@ -25,6 +25,7 @@ const NotaSprintTable = () => {
       console.error(err);
     } finally {
       setLoading(false);
+      console.log(notas.data)
     }
   };
 
