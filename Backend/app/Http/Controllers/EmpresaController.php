@@ -6,6 +6,8 @@ use App\Models\Empresa;
 use App\Models\Semana;
 use App\Models\NotasSemana;
 use App\Models\Estudiante;
+use App\Models\Sprint;
+use App\Models\Planificacion;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 
@@ -114,16 +116,36 @@ class EmpresaController extends Controller
     public function getCalificacionesEmpresa($idEmpresa)
     {
         try {
-            // Obtener la empresa y sus estudiantes
+            // Obtener la empresa y verificar si tiene estudiantes
             $empresa = Empresa::with('estudiantes')->findOrFail($idEmpresa);
 
-            // Obtener todos los sprints asociados a la empresa
-            $sprints = $empresa->sprints;
+            if ($empresa->estudiantes->isEmpty()) {
+                return response()->json([
+                    'mensaje' => 'No hay estudiantes asignados a esta empresa.'
+                ], 200);
+            }
+
+            // Verificar si la empresa tiene planificaciones
+            $planificacion = Planificacion::where('idEmpresa', $idEmpresa)->first();
+
+            if (!$planificacion) {
+                return response()->json([
+                    'mensaje' => 'No hay planificaciones asociadas a esta empresa.'
+                ], 200);
+            }
+
+            // Obtener los sprints relacionados a la planificación
+            $sprints = Sprint::where('idPlanificacion', $planificacion->idPlanificacion)->get();
+
+            if ($sprints->isEmpty()) {
+                return response()->json([
+                    'mensaje' => 'No hay sprints disponibles para esta planificación.'
+                ], 200);
+            }
 
             // Crear un arreglo para almacenar las calificaciones por estudiante y sprint
             $calificaciones = [];
 
-            // Iterar sobre cada estudiante en la empresa
             foreach ($empresa->estudiantes as $estudiante) {
                 $calificacionesEstudiante = [
                     'estudiante' => [
@@ -134,7 +156,6 @@ class EmpresaController extends Controller
                     'promediosPorSprint' => []
                 ];
 
-                // Obtener el promedio de notas por sprint para el estudiante
                 foreach ($sprints as $sprint) {
                     $semanas = Semana::where('idSprint', $sprint->idSprint)->get();
                     $totalNotas = 0;
@@ -151,10 +172,8 @@ class EmpresaController extends Controller
                         }
                     }
 
-                    // Calcular el promedio de las notas en este sprint
                     $promedio = $cantidadNotas > 0 ? $totalNotas / $cantidadNotas : 0;
 
-                    // Almacenar el promedio en el arreglo
                     $calificacionesEstudiante['promediosPorSprint'][] = [
                         'sprint' => $sprint->idSprint,
                         'promedio' => $promedio
@@ -164,7 +183,6 @@ class EmpresaController extends Controller
                 $calificaciones[] = $calificacionesEstudiante;
             }
 
-            // Retornar las calificaciones en formato JSON
             return response()->json([
                 'nombre' => $empresa->nombreEmpresa,
                 'nombreLargo' => $empresa->nombreLargo,

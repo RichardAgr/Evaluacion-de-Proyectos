@@ -1,7 +1,7 @@
 import { Fragment, useState, useEffect } from "react";
 import BaseUI from "../../../components/baseUI/baseUI";
 import { styled } from "@mui/material"; 
-import { Modal, Button, TextField, Autocomplete } from "@mui/material";
+import { Modal, Button, TextField, Autocomplete,Snackbar, Alert } from "@mui/material";
 
 const CrearGrupoEmpresa = () => {
 
@@ -12,13 +12,15 @@ const CrearGrupoEmpresa = () => {
     const [mensajeError, setMensajeError] = useState("");
     const [openModal, setOpenModal] = useState(false);
     const [selectedIntegrante, setSelectedIntegrante] = useState(null); 
-    const [options, setOptions] = useState([]); // Estado para los integrantes recuperados
+    const [options, setOptions] = useState([]); 
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState("");
 
     useEffect(() => {
         // Función para obtener los integrantes desde la API
         const fetchIntegrantes = async () => {
             try {
-                const response = await fetch('http://localhost:8000/api/estudiante/getEstudiante/1'); // Cambia la URL según tu API
+                const response = await fetch('http://localhost:8000/api/estudiante/getEstudiante/1'); 
                 if (!response.ok) throw new Error('Error al recuperar integrantes');
                 const data = await response.json();
                 // Asegúrate que los datos estén en el formato correcto
@@ -54,7 +56,9 @@ const CrearGrupoEmpresa = () => {
     
                 const result = await response.json();
                 console.log('Grupo creado con éxito:', result);
-                // Aquí puedes manejar la respuesta después de crear el grupo
+                setSnackbarMessage("¡Grupo creado con éxito!");
+                setSnackbarOpen(true); // Mostrar el snackbar
+
             } catch (error) {
                 console.error(error);
                 setMensajeError("Error al crear el grupo.");
@@ -66,6 +70,7 @@ const CrearGrupoEmpresa = () => {
             // Agrega aquí otras validaciones según sea necesario
         }
     };
+    
     
 
     const agregarIntegrante = () => {
@@ -175,6 +180,7 @@ const CrearGrupoEmpresa = () => {
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                         <BotonRojo onClick={manejarSubmit}>PUBLICAR GRUPO EMPRESA</BotonRojo>
+
                     </div>
 
                     <Button
@@ -207,6 +213,15 @@ const CrearGrupoEmpresa = () => {
                             </div>
                         </div>
                     </Modal>
+                    <Snackbar 
+                        open={snackbarOpen} 
+                        autoHideDuration={3000} 
+                        onClose={() => setSnackbarOpen(false)}
+                    >
+                        <Alert onClose={() => setSnackbarOpen(false)} severity="success">
+                            {snackbarMessage}
+                        </Alert>
+                    </Snackbar>
                 </div>
             </BaseUI>
         </Fragment>
