@@ -10,6 +10,7 @@ import ListaVerPlanificacion from "../../pages/Docente/listas/seleccionarEmpresa
 import SeleccionarEmpresaSinValidar from "../../pages/Docente/listas/seleccionarEmpresaSinValidar/seleccionarEmpresaSinValidar.jsx";
 import ValidarPlanificacion from "../../pages/Docente/validarPlanificacion/validarPlanificacion.jsx";
 import EvaluacionSemanal from "../../pages/Docente/evaluacionSemanal/evaluacionSemanal.jsx";
+import CalificarEstSemana from "../../pages/Docente/calificarSprint/calificarEstudiante/calificarEstSemana.jsx";
 
 //archivos estudiante
 import HomeEstudiante from "../../pages/Estudiante/homeEstudiante/homeEstudiante.jsx";
@@ -139,6 +140,11 @@ function Nav() {
         path="/homeGrupoDocente/listaEmpresas/:idDocente"
         element={<EmpresasPorDocente />}
       />
+      <Route
+        path="/homeDcoente/visCalificar"
+        element={<CalificarEstSemana />}
+      />
+
     </Routes>
   );
 }
