@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import Paper from '@mui/material/Paper';
-import { Fragment, useState } from 'react';
-import Autocomplete from '@mui/material/Autocomplete';
+import { Fragment, useState, useEffect } from 'react';
+import Autocomplete from '@mui/material/Autocomplete';  
 import TextField from '@mui/material/TextField';
 import BaseUI from '../../../../components/baseUI/baseUI';
 
@@ -16,13 +16,13 @@ const columns = [
     valueGetter: (value, row) => `${row.nombreEstudiante || ''} ${row.apellidoPaternoEstudiante || ''} ${row.apellidoMaternoEstudiante || ''}`,
   },
   {
-    field: 'equipo',
+    field: 'nombreEmpresa',
     headerName: 'Equipo',
     type: 'string',
     width: 90,
   },
   {
-    field: 'grupo',
+    field: 'numGrupo',
     headerName: 'Grupo',
     type: 'number',
     width: 90,
@@ -33,7 +33,7 @@ const rows = [
   { id: 1, nombreEstudiante: 'Jon', apellidoPaternoEstudiante: 'Snow', apellidoMaternoEstudiante: 'Stark', equipo: 'prueba1', grupo: 35 },
   { id: 2, nombreEstudiante: 'Cersei', apellidoPaternoEstudiante: 'Lannister', apellidoMaternoEstudiante: 'Baratheon', equipo: 'prueba1', grupo: 42 },
   { id: 3, nombreEstudiante: 'Jaime', apellidoPaternoEstudiante: 'Lannister', apellidoMaternoEstudiante: 'Baratheon', equipo: 'prueba1', grupo: 45 },
-  { id: 4, nombreEstudiante: 'Arya', apellidoPaternoEstudiante: 'Stark', apellidoMaternoEstudiante: 'Stark', equipo: 'prueba1', aggrupoe: 16 },
+  { id: 4, nombreEstudiante: 'Arya', apellidoPaternoEstudiante: 'Stark', apellidoMaternoEstudiante: 'Stark', equipo: 'prueba1', grupo: 16 }, // Asegúrate de que sea 'grupo' en lugar de 'aggrupoe'
   { id: 5, nombreEstudiante: 'Daenerys', apellidoPaternoEstudiante: 'Targaryen', apellidoMaternoEstudiante: 'Targaryen', equipo: 'prueba1', grupo: null },
   { id: 6, nombreEstudiante: 'Tyrion', apellidoPaternoEstudiante: 'Lannister', apellidoMaternoEstudiante: 'Tytos', equipo: 'prueba2', grupo: 38 },
   { id: 7, nombreEstudiante: 'Bran', apellidoPaternoEstudiante: 'Stark', apellidoMaternoEstudiante: 'Stark', equipo: 'prueba2', grupo: 12 },
@@ -52,22 +52,60 @@ const rows = [
   { id: 20, nombreEstudiante: 'Ellaria', apellidoPaternoEstudiante: 'Sand', apellidoMaternoEstudiante: 'Unknown', equipo: 'prueba6', grupo: 39 },
 ];
 
-
-const paginationModel = { page: 0, pageSize: 5 };
+const paginationModel = { page: 0, pageSize: 20 };
 
 export default function DataTable() {
   const [filteredRows, setFilteredRows] = useState(rows); 
   const [searchValue, setSearchValue] = useState(''); 
+  const [estudiantes, setEstudiantes] = useState([]);
+  const [loading, setLoading] = useState(true); 
+  const [error, setError] = useState(null);
+  const [hasFetchedData, setHasFetchedData] = useState(false);
+  const idGrupo = 1; // Hardcodeado
+  const gestionGrupo = '2024-2'; // Hardcodeado
+
+
+
+  
+  const fetchEstudiantes = async () => {
+    try {
+      const response = await fetch(`http://localhost:8000/api/grupo/estudiantes/${idGrupo}/${gestionGrupo}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Error de grupo');
+      }
+
+      const data = await response.json();
+      if (!hasFetchedData) {
+        setEstudiantes(data);
+        setFilteredRows(data);
+        setHasFetchedData(true); // Indica que los datos han sido cargados
+      }
+    } catch (error) {
+      console.error('Error en la solicitud:', error);
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchEstudiantes();
+  }, []);
 
   const handleSearchChange = (event, value) => {
     setSearchValue(value);
     if (value) {
-      const filtered = rows.filter((row) => {
+      const filtered = estudiantes.filter((row) => {
         const fullName = `${row.nombreEstudiante} ${row.apellidoPaternoEstudiante} ${row.apellidoMaternoEstudiante}`.toLowerCase();
         const equipo = row.equipo.toLowerCase();
-        const grup = row.grup ? row.grup.toString() : ''; // Si hay un campo grupo
+        const grup = row.grupo ? row.grupo.toString() : '';
         
-        // Realizamos la búsqueda en los campos deseados
         return (
           fullName.includes(value.toLowerCase()) ||
           equipo.includes(value.toLowerCase()) ||
@@ -76,34 +114,37 @@ export default function DataTable() {
       });
       setFilteredRows(filtered);
     } else {
-      setFilteredRows(rows); 
+      setFilteredRows(estudiantes);
     }
   };
-  
+
+  if (loading) return <div>Cargando...</div>; // Manejo de carga
+  if (error) return <div>Error: {error}</div>; // Manejo de errores
+
 
   return (
     <Fragment>
       <BaseUI>
         <Autocomplete
-        freeSolo
-        disablePortal
-        disableListWrap
-        options={[]}
-        sx={{ width: 300, marginBottom: '16px' }}
-        onInputChange={handleSearchChange}
-        renderInput={(params) => <TextField {...params} label="Buscar estudiante, equipo o grupo" />}
+          freeSolo
+          disablePortal
+          disableListWrap
+          options={[]}
+          sx={{ width: 300, marginBottom: '16px' }}
+          onInputChange={handleSearchChange}
+          renderInput={(params) => <TextField {...params} label="Buscar estudiante, equipo o grupo" />}
         />
-
-
 
         <Paper sx={{ height: 700, width: '100%' }}>
           <DataGrid
             rows={filteredRows} 
             columns={columns}
+            getRowId={(row) => row.idEstudiante} 
             initialState={{ pagination: { paginationModel } }}
-            pageSizeOptions={[5, 10]}
+            pageSizeOptions={[2, 10]}
             disableColumnMenu
             sx={{ border: 0 }}
+            sortingOrder={['asc', 'desc']} // Orden ascendente y descendente
           />
         </Paper>
       </BaseUI>
