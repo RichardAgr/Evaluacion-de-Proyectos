@@ -66,8 +66,8 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
         hito: `SPRINT ` + (index + 1),
         fechaIni: sprint.fechaIni,
         fechaFin: sprint.fechaFin,
-        cobro: sprint.cobro,
         fechaEntrega: sprint.fechaEntrega,
+        cobro: sprint.cobro,
         entregables: sprint.entregables,
       };
     });
@@ -79,8 +79,8 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
       hito: `SPRINT ${newSprint}`,
       fechaIni: "",
       fechaFin: "",
-      cobro: "",
       fechaEntrega: "",
+      cobro: "",
       entregables: "",
     };
     setRows([...rows, newRow]);
@@ -192,8 +192,8 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
       sprints: rows.map((row) => ({
         fechaIni: row.fechaIni,
         fechaFin: row.fechaFin,
-        cobro: Number(row.cobro),
         fechaEntrega: row.fechaEntrega,
+        cobro: Number(row.cobro),
         entregables: row.entregables,
       })),
     };
