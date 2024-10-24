@@ -14,14 +14,15 @@ class CreateEstudianteTable extends Migration
     public function up()
     {
         Schema::create('estudiante', function (Blueprint $table) {
-            $table->integer('idEstudiante');
-            $table->string('nombreCuenta', 15)->nullable();
+            $table->id('idEstudiante');
+            $table->string('nombreCuenta', 15)->unique()->nullable();
             $table->string('nombreEstudiante', 12)->nullable();
             $table->string('primerApellido', 10)->nullable();
             $table->string('segundoApellido', 10)->nullable();
             $table->string('contrasena', 60)->nullable();
             $table->tinyInteger('numerodefaltasest')->nullable();
             $table->boolean('disponible')->nullable();
+
 
             $table->charset = 'utf8mb4';
             $table->collation = 'utf8mb4_unicode_ci';

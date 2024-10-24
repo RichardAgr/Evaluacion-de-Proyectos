@@ -17,7 +17,13 @@ class CreatePlanificacionTable extends Migration
             $table->boolean('aceptada')->nullable();
             $table->dateTime('fechaEntrega');
             $table->tinyInteger('notaplanificacion')->nullable();
-            $table->text('comentariodocente')->nullable();
+            $table->text('comentarioprivado')->nullable();
+            $table->text('comentariopublico')->nullable();
+            // * Llave foranea idEmpresa
+            $table->foreign('idEmpresa')
+                ->references('idEmpresa')
+                ->on('empresa')
+                ->onDelete('cascade');
 
             $table->charset = 'utf8mb4';
             $table->collation = 'utf8mb4_unicode_ci';

@@ -4,23 +4,18 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateEstudiantesgruposTable extends Migration
+class CreateTareasestudiantesTable extends Migration
 {
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-        Schema::create('estudiantesgrupos', function (Blueprint $table) {
-            
+        Schema::create('tareasestudiantes', function (Blueprint $table) {
             $table->unsignedBigInteger('idEstudiante');
-            $table->unsignedBigInteger('idGrupo');
+            $table->unsignedBigInteger('idTarea');
+            $table->primary(['idEstudiante', 'idTarea' ]);
 
-            $table->primary(['idEstudiante', 'idGrupo' ]);
-
-            // * indice relationship 12
-            $table->index('idGrupo','FK_Relationship_12');
-            
             $table->charset = 'utf8mb4';
             $table->collation = 'utf8mb4_general_ci';
             $table->engine = 'InnoDB';
@@ -32,6 +27,6 @@ class CreateEstudiantesgruposTable extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('estudiantesgrupos');
+        Schema::dropIfExists('tareasestudiantes');
     }
 };

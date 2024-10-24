@@ -13,11 +13,12 @@ class CreateEmpresaTable extends Migration
     {
         Schema::create('empresa', function (Blueprint $table) {
             $table->id('idEmpresa');
-            $table->string('nombreEmpresa',24)->nullable();
-            $table->string('nombreLargo',30)->nullable();
+            $table->string('nombreEmpresa',24)->unique()->nullable();
+            $table->string('nombreLargo',30)->unique()->nullable();
             $table->tinyInteger('numeroFaltasEmpresa')->nullable();
             $table->tinyInteger('notaProductoFinal')->nullable();
             $table->timestamps();
+            
         });
     }
 

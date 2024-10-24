@@ -19,6 +19,13 @@ class CreateGrupoTable extends Migration
             $table->string('codigoAcceso',20)->nullable();
             $table->longText('descripcion')->nullable();
 
+            // * Llave foranea idDocente
+            $table->foreign('idDocente')
+                  ->references('idDocente')
+                  ->on('docente')
+                  ->onDelete('cascade');
+
+
             $table->charset = 'utf8mb4';
             $table->collation = 'utf8mb4_unicode_ci';
             $table->engine = 'InnoDB';
