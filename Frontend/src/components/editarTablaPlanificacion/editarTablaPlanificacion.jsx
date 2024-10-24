@@ -172,12 +172,11 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
 
     const dataPlanificacion = {
       idEmpresa: Number(idEmpresa),
-      comentarioDocente: String(
-        planificacionData.comentarioDocente
-          ? planificacionData.comentarioDocente
+      comentarioprivado: String(
+        planificacionData.comentarioprivado
+          ? planificacionData.comentarioprivado
           : null
       ),
-      notaPlanificacion: 0,
       aceptada: 0,
     };
     const dataSprint = {

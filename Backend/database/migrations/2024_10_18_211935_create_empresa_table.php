@@ -14,9 +14,9 @@ class CreateEmpresaTable extends Migration
         Schema::create('empresa', function (Blueprint $table) {
             $table->id('idEmpresa');
             $table->string('nombreEmpresa',24)->unique()->nullable();
-            $table->string('nombreLargo',30)->unique()->nullable();
-            $table->tinyInteger('numeroFaltasEmpresa')->nullable();
-            $table->tinyInteger('notaProductoFinal')->nullable();
+            $table->string('nombreLargo',50)->unique()->nullable();
+            $table->tinyInteger('numerodefaltasempresa')->nullable();
+            $table->tinyInteger('notaproductofinal')->nullable();
             $table->timestamps();
             
         });

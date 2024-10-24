@@ -21,5 +21,13 @@ class DatabaseSeeder extends Seeder
 
         // * Poblar clase docente
         $this->call(DocenteSeeder::class);
+        $this->call(EmpresaSeeder::class);
+        $this->call(GrupoSeeder::class);
+        $this->call(EstudianteSeeder::class);
+
+
+        $this->call(EstudiantesEmpresasSeeder::class);
+        $this->call(EstudiantesGruposSeeder::class);
+
     }
 }

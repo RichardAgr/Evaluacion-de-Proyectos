@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('semana', function (Blueprint $table) {
             $table->id('idSemana');
             $table->unsignedBigInteger('idSprint');
-
+            $table->tinyInteger('numeroSemana');
+            
             // * Llave foranea idSprint
             $table->foreign('idSprint')
                 ->references('idSprint')

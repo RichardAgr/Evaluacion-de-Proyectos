@@ -14,7 +14,7 @@ class CreateSprintTable extends Migration
         Schema::create('sprint', function (Blueprint $table) {
             $table->id('idSprint');
             $table->unsignedBigInteger('idPlanificacion');
-
+            $table->tinyInteger('numeroSprint');
             $table->date('fechaIni')->nullable();
             $table->date('fechaFin')->nullable();
             $table->integer('cobro')->nullable();

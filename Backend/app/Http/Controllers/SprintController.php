@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Planificacion;
 use App\Models\Sprint;
+use App\Models\Semana;
+use App\Models\Tarea;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
@@ -33,7 +35,6 @@ class SprintController extends Controller
                 'date',
                 'after_or_equal:sprints.*.fechaFin',
             ],
-            'sprints.*.entregables' => 'required|string',
         ]);
         //verificar que ninguno  de los sprints tenga la
         //fecha de inicio anterior a la fecha fin del anterior sprint
@@ -67,19 +68,18 @@ class SprintController extends Controller
 
             // buscar y eliminar todos los sprints antiguos
             Sprint::where('idPlanificacion', $idPlanificacion)->delete();
-
+            $numeroSprint=1;
             // insertar los sprints actuales
             foreach ($validatedData['sprints'] as $sprintData) {
                 $sprint = new Sprint();
                 $sprint->idPlanificacion = $idPlanificacion;
+                $sprint->numeroSprint = $numeroSprint;
                 $sprint->fechaIni = $sprintData['fechaIni'];
                 $sprint->fechaFin = $sprintData['fechaFin'];
                 $sprint->cobro = $sprintData['cobro'];
                 $sprint->fechaEntrega = $sprintData['fechaEntrega'];
-                $sprint->entregables = $sprintData['entregables'];
-                $sprint->notaSprint = $sprintData['notaSprint'] ?? null;
-                $sprint->comentariodocente = $sprintData['comentariodocente'] ?? null;
                 $sprint->save();
+                $numeroSprint++;
             }
 
             DB::commit();

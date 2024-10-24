@@ -16,7 +16,6 @@ class CreatePlanificacionTable extends Migration
             $table->unsignedBigInteger('idEmpresa');
             $table->boolean('aceptada')->nullable();
             $table->dateTime('fechaEntrega');
-            $table->tinyInteger('notaplanificacion')->nullable();
             $table->text('comentarioprivado')->nullable();
             $table->text('comentariopublico')->nullable();
             // * Llave foranea idEmpresa
