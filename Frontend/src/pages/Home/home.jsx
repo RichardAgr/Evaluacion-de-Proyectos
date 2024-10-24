@@ -265,7 +265,7 @@ function Home() {
             padding: "15px 30px",
             fontSize: "10px",
             margin: "10px",
-            marginTop: "-20em",
+            marginTop: "-10em",
           }}
         >
           Ir a Editar Tarea
@@ -279,7 +279,7 @@ function Home() {
             padding: "15px 30px",
             fontSize: "10px",
             margin: "10px",
-            marginTop: "-20em",
+            marginTop: "-10em",
           }}
         >
           Ir a Ver Calificaciones
@@ -293,7 +293,7 @@ function Home() {
             padding: "15px 30px",
             fontSize: "10px",
             margin: "10px",
-            marginTop: "-20em" 
+            marginTop: "-10em" 
           }}
         >
           Nota Sprint
