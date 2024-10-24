@@ -14,7 +14,23 @@ class CreateTareasestudiantesTable extends Migration
         Schema::create('tareasestudiantes', function (Blueprint $table) {
             $table->unsignedBigInteger('idEstudiante');
             $table->unsignedBigInteger('idTarea');
-            $table->primary(['idEstudiante', 'idTarea' ]);
+
+            $table->primary(['idEstudiante', 'idTarea']);
+
+            // * Definir las claves foráneas
+            $table->foreign('idEstudiante')
+                ->references('idEstudiante')
+                ->on('estudiante')
+                ->onDelete('cascade');
+
+            $table->foreign('idTarea')
+                ->references('idTarea')
+                ->on('tarea')
+                ->onDelete('cascade');
+
+            // * Índices de llave foranea
+            $table->index('idEstudiante', 'FK_Relationship_18');
+            $table->index('idEmpresa', 'FK_Relationship_17');
 
             $table->charset = 'utf8mb4';
             $table->collation = 'utf8mb4_general_ci';

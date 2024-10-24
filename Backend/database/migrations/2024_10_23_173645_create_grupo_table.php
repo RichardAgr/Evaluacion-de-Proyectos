@@ -13,9 +13,10 @@ class CreateGrupoTable extends Migration
     {
         Schema::create('grupo', function (Blueprint $table) {
             $table->id('idGrupo');
+            $table->unsignedBigInteger('idDocente');
+            
             $table->integer('numGrupo')->nullable();
             $table->string('gestionGrupo',6)->nullable();
-            $table->unsignedBigInteger('idDocente');
             $table->string('codigoAcceso',20)->nullable();
             $table->longText('descripcion')->nullable();
 

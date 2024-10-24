@@ -14,13 +14,18 @@ class CreateSprintTable extends Migration
         Schema::create('sprint', function (Blueprint $table) {
             $table->id('idSprint');
             $table->unsignedBigInteger('idPlanificacion');
+
             $table->date('fechaIni')->nullable();
             $table->date('fechaFin')->nullable();
             $table->integer('cobro')->nullable();
             $table->date('fechaEntrega')->nullable();
-            $table->string('entregables', 255)->nullable(); // ! hay que añadir una tabla de entregables con id del Sprint
-            //$table->tinyInteger('notasprint')->nullable();  // ! ya no hay nota Sprint
-            //$table->text('comentariodocente')->nullable();  // ! ya no hay comentario docente para cada Sprint
+            
+            // * Llave foranea idPlanificacion
+            $table->foreign('idPlanificacion')
+                ->references('idPlanificacion')
+                ->on('planificacion')
+                ->onDelete('cascade');
+
 
             $table->charset = 'utf8mb4';
             $table->collation = 'utf8mb4_unicode_ci';
