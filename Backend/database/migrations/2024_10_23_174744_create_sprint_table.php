@@ -15,10 +15,10 @@ class CreateSprintTable extends Migration
             $table->id('idSprint');
             $table->unsignedBigInteger('idPlanificacion');
             $table->tinyInteger('numeroSprint');
-            $table->date('fechaIni')->nullable();
-            $table->date('fechaFin')->nullable();
-            $table->integer('cobro')->nullable();
-            $table->date('fechaEntrega')->nullable();
+            $table->date('fechaIni');
+            $table->date('fechaFin');
+            $table->date('fechaEntrega');
+            $table->decimal('cobro',8,2);
             
             // * Llave foranea idPlanificacion
             $table->foreign('idPlanificacion')
