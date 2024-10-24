@@ -31,5 +31,7 @@ class DatabaseSeeder extends Seeder
         $this->call(PlanificacionSeeder::class);
         $this->call(SprintSeeder::class);
         $this->call(SemanaSeeder::class);
+        $this->call(TareaSeeder::class);
+        $this->call(TareasEstudiantesSeeder::class);
     }
 }

@@ -18,8 +18,8 @@ class PlanificacionSeeder extends Seeder
                 'idEmpresa' => 1,
                 'aceptada' => false,
                 'fechaEntrega' => Carbon::now()->addDays(30),
-                'comentarioprivado' => 'Comentario privado para la empresa 1',
-                'comentariopublico' => 'Buen trabajo, sigan así',
+                'comentarioprivado' => 'Requiere una revisión completa',
+                'comentariopublico' => 'Por favor, revisen y corrijan los puntos señalados',
             ],
             [
                 'idEmpresa' => 2,
@@ -46,8 +46,8 @@ class PlanificacionSeeder extends Seeder
                 'idEmpresa' => 5,
                 'aceptada' => true,
                 'fechaEntrega' => Carbon::now()->addDays(50),
-                'comentarioprivado' => 'Requiere una revisión completa',
-                'comentariopublico' => 'Por favor, revisen y corrijan los puntos señalados',
+                'comentarioprivado' => 'Comentario privado para la empresa 5',
+                'comentariopublico' => 'Buen trabajo, sigan así',
             ],
         ];
 
