@@ -9,7 +9,7 @@ import NombreEmpresa from "../../../components/infoEmpresa/nombreEmpresa.jsx";
 import BaseUI from "../../../components/baseUI/baseUI.jsx";
 import Loading from "../../../components/loading/loading.jsx";
 import Error from "../../../components/error/error.jsx";
-
+import EstadoPlanificacion from "../../../components/estadoPlanificacion/estadoPlanificacion.jsx";
 import Redirecting from "../../../components/redirecting/redirecting.jsx";
 import {
   Button,
@@ -86,6 +86,9 @@ function ModificarPlanificacion() {
             <NombreEmpresa
               nombreLargo={datosEmpresa.nombreLargo}
               nombreCorto={datosEmpresa.nombreEmpresa}
+            />
+            <EstadoPlanificacion
+              estado={planificacionData.aceptada}
             />
             {planificacionData.aceptada ? (
               <Redirecting />
