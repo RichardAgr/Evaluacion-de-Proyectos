@@ -93,28 +93,57 @@ export default function DataTable() {
       setLoading(false);
     }
   };
-
+  // Función para manejar la búsqueda en tiempo real
   useEffect(() => {
-    fetchEstudiantes();
-  }, []);
+    const handleSearch = async () => {
+      if (!searchTerm.trim()) {
+        fetchEstudiantes(); // Volver a cargar todos los estudiantes si el término está vacío
+        return;
+      }
 
-  const handleSearchChange = (event, value) => {
-    setSearchValue(value);
-    if (value) {
-      const filtered = estudiantes.filter((row) => {
-        const fullName = `${row.nombreEstudiante} ${row.apellidoPaternoEstudiante} ${row.apellidoMaternoEstudiante}`.toLowerCase();
-        const equipo = row.equipo.toLowerCase();
-        const grup = row.grupo ? row.grupo.toString() : '';
-        
-        return (
-          fullName.includes(value.toLowerCase()) ||
-          equipo.includes(value.toLowerCase()) ||
-          grup.includes(value.toLowerCase())
-        );
-      });
-      setFilteredRows(filtered);
-    } else {
-      setFilteredRows(estudiantes);
+      try {
+        const response = await fetch(`http://localhost:8000/api/grupo/estudiante/barraBusqueda`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ 
+            idGrupo, 
+            gestionGrupo, 
+            termino: searchTerm 
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Error en la búsqueda');
+        }
+
+        const result = await response.json();
+        // Ordenar alfabéticamente por el nombre
+        result.sort((a, b) => {
+          const nombreA = `${a.nombreEstudiante} ${a.apellidoPaternoEstudiante} ${a.apellidoMaternoEstudiante}`.toLowerCase();
+          const nombreB = `${b.nombreEstudiante} ${b.apellidoPaternoEstudiante} ${a.apellidoMaternoEstudiante}`.toLowerCase();
+          return nombreA.localeCompare(nombreB);
+        });
+
+        setEstudiantes(result);
+      } catch (error) {
+        console.error('Error en la solicitud:', error);
+        setError(error.message);
+      }
+    };
+
+    handleSearch(); // Llamar a la búsqueda inmediatamente
+  }, [searchTerm]); // Solo se ejecuta cuando searchTerm cambia
+
+  const totalPaginas = Math.ceil(estudiantes.length / estudiantesPorPagina);
+  const indexOfLastEstudiante = currentPage * estudiantesPorPagina;
+  const indexOfFirstEstudiante = indexOfLastEstudiante - estudiantesPorPagina;
+  const estudiantesActuales = estudiantes.slice(indexOfFirstEstudiante, indexOfLastEstudiante);
+
+  const handleNextPage = () => {
+    if (currentPage < totalPaginas) {
+      setCurrentPage(currentPage + 1);
     }
   };
 

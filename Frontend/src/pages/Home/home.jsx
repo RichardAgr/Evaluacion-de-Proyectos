@@ -232,6 +232,12 @@ function Home() {
           color="primary"
           size="large"
           onClick={handleNavigateEditarTarea}
+          style={{
+            padding: "15px 30px",
+            fontSize: "10px",
+            margin: "10px",
+            marginTop: "-10em",
+          }}
         >
           Ir a Editar Tarea
         </Button>
@@ -242,6 +248,12 @@ function Home() {
           color="primary"
           size="large"
           onClick={handleNavigateCalificacionesHito}
+          style={{
+            padding: "15px 30px",
+            fontSize: "10px",
+            margin: "10px",
+            marginTop: "-10em",
+          }}
         >
           Ir a Ver Calificaciones
         </Button>
@@ -252,6 +264,12 @@ function Home() {
           color="primary"
           size="large"
           onClick={handleNavigateToNotaSprint}
+          style={{
+            padding: "15px 30px",
+            fontSize: "10px",
+            margin: "10px",
+            marginTop: "-10em" 
+          }}
         >
           Nota Sprint
         </Button>
