@@ -15,9 +15,8 @@ class DocenteController extends Controller
         if (!$docente) {
             return response()->json(['error' => 'Docente no encontrado'], 404);
         }
-
         $empresas = $docente->empresas;
-
+        //$id = session()->put('key', 'value');
         return response()->json([
             'docente' => $docente->nombreDocente,
             'empresas' => $empresas
