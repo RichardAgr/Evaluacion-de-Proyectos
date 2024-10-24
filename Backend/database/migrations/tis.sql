@@ -803,6 +803,39 @@ CREATE TABLE IF NOT EXISTS entregables (
     FOREIGN KEY (idSprint) REFERENCES sprint(idSprint) ON DELETE CASCADE
 );
 
+-- -----------------------------------------------------
+-- Table `tis`.`personal_access_tokens`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `tis`.`personal_access_tokens` (
+  `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `tokenable_type` VARCHAR(255) CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_unicode_ci' NOT NULL,
+  `tokenable_id` BIGINT(20) UNSIGNED NOT NULL,
+  `name` VARCHAR(255) CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_unicode_ci' NOT NULL,
+  `token` VARCHAR(64) CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_unicode_ci' NOT NULL,
+  `abilities` TEXT CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_unicode_ci' NULL DEFAULT NULL,
+  `last_used_at` TIMESTAMP NULL DEFAULT NULL,
+  `expires_at` TIMESTAMP NULL DEFAULT NULL,
+  `created_at` TIMESTAMP NULL DEFAULT NULL,
+  `updated_at` TIMESTAMP NULL DEFAULT NULL,
+  PRIMARY KEY USING BTREE (`id`),
+  UNIQUE INDEX `personal_access_tokens_token_unique` USING BTREE (`token`) ,
+  INDEX `personal_access_tokens_tokenable_type_tokenable_id_index` USING BTREE (`tokenable_type`, `tokenable_id`) )
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+ROW_FORMAT = DYNAMIC;
+-- -----------------------------------------------------
+-- Table `tis`.`migrations`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `tis`.`migrations` (
+  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `migration` VARCHAR(255) CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_unicode_ci' NOT NULL,
+  `batch` INT(11) NOT NULL,
+  PRIMARY KEY USING BTREE (`id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 5
+DEFAULT CHARACTER SET = utf8mb4
+ROW_FORMAT = DYNAMIC;
+
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
