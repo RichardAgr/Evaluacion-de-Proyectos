@@ -28,6 +28,8 @@ class DatabaseSeeder extends Seeder
 
         $this->call(EstudiantesEmpresasSeeder::class);
         $this->call(EstudiantesGruposSeeder::class);
-
+        $this->call(PlanificacionSeeder::class);
+        $this->call(SprintSeeder::class);
+        $this->call(SemanaSeeder::class);
     }
 }
