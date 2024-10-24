@@ -19,9 +19,15 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import InfoSnackbar from "../infoSnackbar/infoSnackbar";
 import CuadroDialogo from "../cuadroDialogo/cuadroDialogo";
 import DecisionButtons from "../Buttons/decisionButtons";
+import AnadirEntregables from "../anadirEntregables/anadirEntregables";
 
 export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
   const [rows, setRows] = useState([]);
+  const [openEntregables, setOpenEntregables] = useState(false);
+  const [entregables, setEntregables] = useState([
+    "Entregable 1",
+    "Entregable 2",
+  ]);
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",
@@ -33,6 +39,8 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
     title: "",
     description: "",
   });
+  const handleOpenEntregables = () => setOpenEntregables(true);
+  const handleCloseEntregables = () => setOpenEntregables(false);
   const handleCancel = () => {
     setCuadroDialogo({
       open: true,
@@ -270,8 +278,8 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
                 <TableCell>Hito</TableCell>
                 <TableCell align="left">Fecha Inicio</TableCell>
                 <TableCell align="left">Fecha Fin</TableCell>
-                <TableCell align="left">Cobro</TableCell>
                 <TableCell align="left">Fecha Entrega</TableCell>
+                <TableCell align="left">Cobro</TableCell>
                 <TableCell align="left">Entregables</TableCell>
                 <TableCell align="left"></TableCell>
               </TableRow>
@@ -284,18 +292,31 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
                 >
                   {Object.keys(row).map((field) => (
                     <TableCell key={field} align="left">
-                      <TextField
-                        value={row[field] ?? ""}
-                        onChange={(e) =>
-                          handleCellChange(index, field, e.target.value)
-                        }
-                        type={field.includes("fecha") ? "date" : "text"}
-                        fullWidth
-                        variant="standard"
-                        inputProps={{
-                          "aria-label": `${field} for ${row.hito}`,
-                        }}
-                      />
+                      {field.includes("entregables") ? (
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          size="small"
+                          startIcon={<AddIcon />}
+                          sx={{ maxWidth: '200px', maxHeight: '50px' }}
+                          onClick={() => handleOpenEntregables(index)}
+                        >
+                          Añadir Entregables
+                        </Button>
+                      ) : (
+                        <TextField
+                          value={row[field] ?? ""}
+                          onChange={(e) =>
+                            handleCellChange(index, field, e.target.value)
+                          }
+                          type={field.includes("fecha") ? "date" : "text"}
+                          fullWidth
+                          variant="standard"
+                          inputProps={{
+                            "aria-label": `${field} for ${row.hito}`,
+                          }}
+                        />
+                      )}
                     </TableCell>
                   ))}
                   <TableCell align="left">
@@ -344,6 +365,11 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
         setOpenSnackbar={(open) => setSnackbar({ ...snackbar, open })}
         message={snackbar.message}
         severity={snackbar.severity}
+      />
+      <AnadirEntregables
+        open={openEntregables}
+        handleClose={handleCloseEntregables}
+        initialEntregables={entregables}
       />
     </>
   );
