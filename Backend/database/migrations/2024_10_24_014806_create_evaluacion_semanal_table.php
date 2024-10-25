@@ -11,10 +11,11 @@ class CreateEvaluacionsemanalTable extends Migration
      */
     public function up(): void
     {
-        Schema::create('evaluacionsemanal', function (Blueprint $table) {
+        Schema::create('notaSprint', function (Blueprint $table) {
             $table->id('idEvaluacionsemanal');
             $table->unsignedBigInteger('idSprint');
             $table->unsignedBigInteger('idEstudiante');
+            $table->unsignedBigInteger('idEmpresa');
             $table->tinyInteger('nota');
             $table->text('comentario');
 
@@ -27,7 +28,12 @@ class CreateEvaluacionsemanalTable extends Migration
             // *   idEstudiante
             $table->foreign('idEstudiante')
                   ->references('idEstudiante')
-                  ->on('estudiante')
+                  ->on('estudiantesempresas')
+                  ->onDelete('cascade');
+            // * idEmpresa
+            $table->foreign('idEmpresa')
+                  ->references('idEmpresa')
+                  ->on('estudiantesempresas')
                   ->onDelete('cascade');
 
 
@@ -39,6 +45,6 @@ class CreateEvaluacionsemanalTable extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('evaluacion_semanal');
+        Schema::dropIfExists('notaSprint');
     }
 };

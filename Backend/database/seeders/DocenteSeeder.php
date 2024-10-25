@@ -7,28 +7,11 @@ use Illuminate\Support\Facades\DB;
 
 class DocenteSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
-    public function run(): void
+    public function run()
     {
         DB::table('docente')->insert([
-            [
-                'idDocente' => 1,
-                'nombreCuenta' => 'letiGod',
-                'nombreDocente' => 'Leticia',
-                'primerApellido' => 'Blanco',
-                'segundoApellido' => 'Coca',
-                'contrasena' => bcrypt('password1'),
-            ],
-            [
-                'idDocente' => 2,
-                'nombreCuenta' => 'corina123',
-                'nombreDocente' => 'Carlos',
-                'primerApellido' => 'Flores',
-                'segundoApellido' => 'Villaroel',
-                'contrasena' => bcrypt('password2'),
-            ],
+            ['idDocente' => 1, 'nombreCuenta' => 'letiGod', 'nombreDocente' => 'Leticia', 'primerApellido' => 'Blanco', 'segundoApellido' => 'Coca', 'contrasena' => 'password1'],
+            ['idDocente' => 2, 'nombreCuenta' => 'corina123', 'nombreDocente' => 'Carlos', 'primerApellido' => 'Flores', 'segundoApellido' => 'Villaroel', 'contrasena' => 'password2'],
         ]);
     }
 }
