@@ -68,7 +68,6 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
         fechaFin: sprint.fechaFin,
         fechaEntrega: sprint.fechaEntrega,
         cobro: sprint.cobro,
-        entregables: sprint.entregables,
       };
     });
     setRows(newRows);
@@ -81,7 +80,6 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
       fechaFin: "",
       fechaEntrega: "",
       cobro: "",
-      entregables: "",
     };
     setRows([...rows, newRow]);
   };
@@ -193,8 +191,8 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
         fechaIni: row.fechaIni,
         fechaFin: row.fechaFin,
         fechaEntrega: row.fechaEntrega,
-        cobro: Number(row.cobro),
-        entregables: row.entregables,
+          cobro: Number(row.cobro),
+          entregables: row.entregables,
       })),
     };
     const response = await fetch(
@@ -271,7 +269,7 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
   return (
     <>
       <Box>
-        <TableContainer component={Paper}>
+      <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="tabla de planificación">
             <TableHead>
               <TableRow>
@@ -286,38 +284,34 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
             </TableHead>
             <TableBody>
               {rows.map((row, index) => (
-                <TableRow
-                  key={index}
-                >
-                  {Object.keys(row).map((field) => (
+                <TableRow key={index}>
+                  <TableCell>{`Sprint ${index+1}`}</TableCell>
+                  {['fechaIni', 'fechaFin', 'fechaEntrega', 'cobro'].map((field) => (
                     <TableCell key={field} align="left">
-                      {field.includes("entregables") ? (
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          size="small"
-                          startIcon={<AddIcon />}
-                          sx={{ maxWidth: '200px', maxHeight: '50px' }}
-                          onClick={() => handleOpenEntregables(index)}
-                        >
-                          Añadir Entregables
-                        </Button>
-                      ) : (
-                        <TextField
-                          value={row[field] ?? ""}
-                          onChange={(e) =>
-                            handleCellChange(index, field, e.target.value)
-                          }
-                          type={field.includes("fecha") ? "date" : "text"}
-                          fullWidth
-                          variant="standard"
-                          inputProps={{
-                            "aria-label": `${field} for ${row.hito}`,
-                          }}
-                        />
-                      )}
+                      <TextField
+                        value={row[field] ?? ""}
+                        onChange={(e) => handleCellChange(index, field, e.target.value)}
+                        type={field.includes("fecha") ? "date" : "text"}
+                        fullWidth
+                        variant="standard"
+                        inputProps={{
+                          "aria-label": `${field} for ${row.hito}`,
+                        }}
+                      />
                     </TableCell>
                   ))}
+                  <TableCell align="left">
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      size="small"
+                      startIcon={<AddIcon />}
+                      sx={{ maxWidth: '200px', maxHeight: '50px' }}
+                      onClick={() => setOpenEntregables(true)}
+                    >
+                      Añadir Entregables
+                    </Button>
+                  </TableCell>
                   <TableCell align="left">
                     {rows.length > 1 && (
                       <Button

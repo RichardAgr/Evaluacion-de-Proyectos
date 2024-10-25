@@ -95,7 +95,6 @@ class PlanificacionController extends Controller
                 'idEmpresa' => $empresa->idEmpresa,
                 'idPlanificacion' => -1,
                 'aceptada' => null,
-                'notaPlanificacion' => 0,
                 'comentariopublico' => null,
                 'sprints' => [
                     ['idSprint' => null, 'fechaIni' => '2025-02-06', 'fechaFin' => '2025-02-12', 'cobro' => 13, 'fechaEntrega' => '2025-02-12', 'entregables' => 'esto es un ejemplo'],
@@ -253,8 +252,7 @@ class PlanificacionController extends Controller
             if ($planificacion !== null) {
                 // si la planificacion existe, se actualiza la fechaEntrega y se eliminan los campos de notaplanificacion y comentariodocente
                 $planificacion->fechaEntrega = Carbon::now('America/Caracas')->format('Y-m-d H:i:s'); // ajustado a la zona horaria de Bolivia
-                $planificacion->notaPlanificacion = null;
-                $planificacion->comentarioDocente = null;
+                $planificacion->comentariopublico = null;
                 $planificacion->save();
             } else {
                 // si la planificacion no existe, se crea una nueva planificacion
@@ -281,9 +279,8 @@ class PlanificacionController extends Controller
         // Simular una solicitud con datos de prueba
         $requestData = [
             'aceptada' => true,
-            'comentarioDocente' => 'Comentario de prueba',
+            'comentariopublico' => 'Comentario de prueba',
             'idEmpresa' => 1, // Asegúrate de que este ID exista en tu base de datos
-            'notaPlanificacion' => 85
         ];
 
         // Crear una nueva instancia de Request con los datos de prueba

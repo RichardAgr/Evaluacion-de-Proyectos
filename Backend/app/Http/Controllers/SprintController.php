@@ -35,7 +35,7 @@ class SprintController extends Controller
                 'date',
                 'after_or_equal:sprints.*.fechaFin',
             ],
-            'sprints.*.cobro' => 'required|integer',
+            'sprints.*.cobro' => 'required|numeric|regex:/^\d+(\.\d{1,2})?$/',
 
         ]);
         // * verificar que ninguno  de los sprints tenga la
