@@ -288,7 +288,6 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
               {rows.map((row, index) => (
                 <TableRow
                   key={index}
-                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
                   {Object.keys(row).map((field) => (
                     <TableCell key={field} align="left">

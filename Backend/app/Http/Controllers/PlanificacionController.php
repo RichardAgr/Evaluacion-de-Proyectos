@@ -96,7 +96,7 @@ class PlanificacionController extends Controller
                 'idPlanificacion' => -1,
                 'aceptada' => null,
                 'notaPlanificacion' => 0,
-                'comentarioDocente' => 'Comentario Docente',
+                'comentariopublico' => null,
                 'sprints' => [
                     ['idSprint' => null, 'fechaIni' => '2025-02-06', 'fechaFin' => '2025-02-12', 'cobro' => 13, 'fechaEntrega' => '2025-02-12', 'entregables' => 'esto es un ejemplo'],
                 ],  // Array de sprints con 1 filas vacías  
@@ -110,7 +110,7 @@ class PlanificacionController extends Controller
             'idEmpresa' => $planificacion->idEmpresa,
             'aceptada' => $planificacion->aceptada,
             'fechaEntrega' => $planificacion->fechaEntrega,
-            'comentarioDocente' => $planificacion->comentariodocente,
+            'comentariopublico' => $planificacion->comentariopublico,
             'sprints' => $planificacion->sprints->map(function ($sprint) {
                 return [
                     'idSprint' => $sprint->idSprint,

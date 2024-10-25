@@ -1,7 +1,7 @@
 import { Fragment, useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
-import ComentarioNota from "../../../components/comentarioNota/comentarioNota.jsx";
+import Comentario from "../../../components/comentario/comentario.jsx";
 import EditarPlanificacion from "../../../components/editarTablaPlanificacion/editarTablaPlanificacion.jsx";
 import { getPlanificacion } from "../../../api/getPlanificacion.jsx";
 import { getNombreEmpresa } from "../../../api/getNombreEmpresa.jsx";
@@ -98,15 +98,11 @@ function ModificarPlanificacion() {
                   planificacionData={planificacionData}
                   idEmpresa={planificacionData.idEmpresa}
                 />
-                {planificacionData.comentarioDocente != null &&
-                  planificacionData.comentarioDocente != "" && (
+                {planificacionData.comentariopublico != null &&
+                  planificacionData.comentariopublico != "" && (
                     <>
-                      <ComentarioNota
-                        comentario={planificacionData.comentarioDocente}
-                        nota={
-                          planificacionData.notaPlanificacion || "Sin Calificar"
-                        }
-                        linkDir={"ocultar"}
+                      <Comentario
+                        comentariopublico={planificacionData.comentariopublico}
                       />
                     </>
                   )}
