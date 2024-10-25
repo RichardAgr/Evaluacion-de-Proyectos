@@ -1,8 +1,12 @@
-import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import {useParams } from 'react-router-dom';
 import BaseUI from '../../../components/baseUI/baseUI.jsx';
-import { styled } from '@mui/material';
+import { styled, Box, Button, Stack, Snackbar } from '@mui/material';
+import MuiAlert from '@mui/material/Alert';
 
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 const getGrupoDescripcion = async (idGrupo) => {
   try {
@@ -36,17 +40,15 @@ const enviarClave = async (idGrupo, clave, idEstudiante) => {
   }
 };
 
-function GrupoDescripcion() {
-  const [clave, setClave] = useState('');
-  const { idGrupo } = useParams();
-  const [datos, setDatos] = useState({});
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [modalOpen, setModalOpen] = useState(false); 
-  const [modalMessage, setModalMessage] = useState(''); 
 
-  const esCodigoValido = clave.length === 8;
-  const idEstudiante = "24"; // Hardcodear el idEstudiante aquí
+
+function GrupoDescripcion() {
+  const { idGrupo } = useParams();
+  const [codigo, setCodigo] = useState('');
+  const [datos, setDatos] = useState(null); 
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -62,124 +64,111 @@ function GrupoDescripcion() {
     fetchData();
   }, [idGrupo]);
 
-  const handleEnviarClave = async (e) => {
-    e.preventDefault();
+  const validarCodigo = async () => {
+  
+      try {
+        const idEstudiante = "2";
+        const response = await enviarClave(idGrupo, codigo, idEstudiante);
+  
+        if (response.status === 200) {
+          setSnackbar({ open: true, message: 'Se matriculó correctamente', severity: 'success' });
+        } else if(response.status === 201) {
+          setSnackbar({ open: true, message:'Código de Acceso inválido.', severity: 'error' });
+        }else {
+          setSnackbar({ open: true, message: response.message || 'Error al matricularse', severity: 'error' });
+        }       
+      } catch (error) {
+        setSnackbar({ open: true, message: 'Error al matricularse', severity: 'error' });
+      }
+  };
+  
 
-    if (!esCodigoValido) {
-      setError('Código de Acceso inválido.'); 
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === 'clickaway') {
       return;
     }
-
-    try {
-      const response = await enviarClave(idGrupo, clave, idEstudiante);
-
-      if (response.status === 200) {
-        setModalMessage('Matriculación exitosa: ' + response.message);
-      } else {
-        setModalMessage('Matriculación fallida: ' + response.message);
-      }
-      setModalOpen(true); // Abrir el modal
-      setClave('');
-      setError(null);
-    } catch (error) {
-      setError(error.message);
-    }
+    setSnackbar({ ...snackbar, open: false });
   };
 
-  const handleCloseModal = () => {
-    setModalOpen(false);
-  };
+  if (error) {
+    return (
+      <BaseUI titulo="MATRICULARSE CON UN DOCENTE" ocultarAtras={false} confirmarAtras={true} dirBack={`/`}>
+        <Box sx={{ p: 2, color: 'red' }}>{error}</Box>
+      </BaseUI>
+    );
+  }
 
-  if (loading) return <p>Cargando descripción...</p>;
-  if (error) return <p>Error: {error}</p>;
+  if (loading) {
+    return (
+      <BaseUI titulo="MATRICULARSE CON UN DOCENTE" ocultarAtras={false} confirmarAtras={true} dirBack={`/`}>
+        <Box sx={{ p: 2 }}>Cargando...</Box>
+      </BaseUI>
+    );
+  }
 
   return (
     <BaseUI titulo="MATRICULARSE CON UN DOCENTE" ocultarAtras={false} confirmarAtras={true} dirBack={`/`}>
-      <h1 style={{ fontSize: '25px' }}>
-        {datos.apellidoPaternoDocente} {datos.apellidoMaternoDocente} {datos.nombreDocente} G{datos.numGrupo}
-      </h1>
-      <div style={{ padding: '10px', margin: '20px 10px 0px', minHeight: '200px', overflowY: 'auto', }}>
+      <Box component="section" sx={{ p: 2, pb: 0, border: '1p' }}>
+        <h1 style={{ fontSize: '25px' }}>
+          {datos.apellidoPaternoDocente} {datos.apellidoMaternoDocente} {datos.nombreDocente} G{datos.numGrupo}
+        </h1>
+      </Box>
+      <Box component="section" m={2.8} minHeight={150} sx={{ p: 0.5, fontSize: '0.8rem' }}>
         {datos.descripcion}
-      </div>
-      <PagCentrpo>
-        <form onSubmit={handleEnviarClave} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <div style={{ margin: '100px 10px 0px', display: 'flex', alignItems: 'center' }}>
-            <label style={{ marginRight: '15px' }} htmlFor="clave">Código de Acceso:</label>
-            <InputCentro
-              type="text"
-              id="clave"
-              placeholder='CODIGO'
-              value={clave}
-              onChange={(e) => setClave(e.target.value)}
-              maxLength={8}
-            />
-          </div>
-          <BotonRojo type="submit" disabled={!esCodigoValido}>MATRICULARSE</BotonRojo>
-        </form>
-        {error && <p style={{ color: 'red' }}>{error}</p>}
-      </PagCentrpo>
-
-      {/* Modal para mostrar el mensaje */}
-      {modalOpen && (
-        <ModalOverlay>
-          <ModalContent>
-            <h2>{modalMessage}</h2>
-            <BotonRojo onClick={handleCloseModal}>Cerrar</BotonRojo>
-          </ModalContent>
-        </ModalOverlay>
-      )}
+      </Box>
+      <Stack direction='row' spacing={2} pt={8} sx={{ justifyContent: "center", alignItems: "center" }}>
+        <Box>Código de Acceso:</Box>
+        <StyledWrapper>
+          <input
+            placeholder="CODIGO"
+            className="input"
+            value={codigo}
+            onChange={(e) => setCodigo(e.target.value)}
+          />
+        </StyledWrapper>
+      </Stack>
+      <Box pt={1} sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+        <Button
+          variant="contained"
+          color="primary"
+          sx={{ minWidth: 50, width: '200px', height: '30px' }}
+          onClick={validarCodigo}
+          disabled={!codigo}>
+          MATRICULARSE
+        </Button>
+      </Box>
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={5000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert onClose={handleCloseSnackbar} severity={snackbar.severity} sx={{ width: '100%' }}>
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </BaseUI>
   );
 }
 
 export default GrupoDescripcion;
 
-// Estilos para el modal
-const ModalOverlay = styled('div')`
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
+const StyledWrapper = styled('div')`
+  .input {
+    border: 2px solid transparent;
+    width: 15em;
+    height: 2.5em;
+    padding-left: 0.8em;
+    outline: none;
+    overflow: hidden;
+    background-color: #cfd4e1;
+    border-radius: 3px;
+    transition: all 0.5s;
+  }
 
-const ModalContent = styled('div')`
-  background: white;
-  padding: 10px;
-  border-radius: 5px;
-  text-align: center;
-`;
-
-const PagCentrpo = styled('div')`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`;
-
-const BotonRojo = styled('button')`
-  justify-content: center;
-  background-color: #e30613; 
-  color: white; 
-  width: 170px;
-  height: 26px;
-  border: none;
-  cursor: pointer;
-  margin: 20px 10px;
-`;
-
-const InputCentro = styled('input')`
-  color: black;
-  box-sizing: border-box;
-  justify-content: center;
-  width: 150px;
-  height: 30px;
-  background-color: #d0d4e4; 
-  border: none;
-  border-radius: 2px;
-  padding-left: 5px;
+  .input:hover,
+  .input:focus {
+    border: 2px solid #4A9DEC;
+    background-color: white;
+  }
 `;

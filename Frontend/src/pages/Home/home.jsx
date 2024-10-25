@@ -3,7 +3,9 @@ import Footer from "../../components/Footer/footer.jsx";
 import Header from "../../components/Header/header.jsx";
 
 import { useNavigate } from "react-router-dom";
-import { Button, Grid  } from "@mui/material";
+import { Button, Grid2  } from "@mui/material";
+
+
 
 function Home() {
   const navigate = useNavigate();
@@ -147,16 +149,15 @@ function Home() {
           onClick={handleNavigateToModificarTarea}
           style={{
             padding: "15px 30px",
-            fontSize: "10px",
+            fontSize: "1.2rem",
             margin: "10px",
-            marginTop: "-20em" 
           }}
         >
           Modificar tarea
         </Button>
       </div>
-      <Grid container spacing={2} style={{ marginTop: '20px' }}>
-      <Grid item>
+      <Grid2 container spacing={1} style={{ marginTop: '20px' }}>
+      <Grid2 item xs={12} sm={6} md={4}>
         <Button
           variant="contained"
           color="primary"
@@ -165,8 +166,8 @@ function Home() {
         >
           Ir a Lista Empresas
         </Button>
-      </Grid>
-      <Grid item>
+      </Grid2>
+      <Grid2 item xs={12} sm={6} md={4}>
         <Button
           variant="contained"
           color="primary"
@@ -175,8 +176,8 @@ function Home() {
         >
           Ir a Lista Empresas
         </Button>
-      </Grid>
-      <Grid item>
+      </Grid2>
+      <Grid2 item xs={12} sm={6} md={4}>
         <Button
           variant="contained"
           color="primary"
@@ -185,8 +186,18 @@ function Home() {
         >
           Ir a Lista Estudiantes
         </Button>
-      </Grid>
-      <Grid item>
+      </Grid2>
+      <Grid2 item xs={12} sm={6} md={4}>
+        <Button
+          variant="contained"
+          color="primary"
+          size="large"
+          onClick={handleNavigateToListaEstudiantesA}
+        >
+          Ir a Lista Estudiantes mejorado
+        </Button>
+      </Grid2>
+      <Grid2 item xs={12} sm={6} md={4}>
         <Button
           variant="contained"
           color="primary"
@@ -195,8 +206,8 @@ function Home() {
         >
           Ir a Crear Empresa
         </Button>
-      </Grid>
-      <Grid item>
+      </Grid2>
+      <Grid2 item xs={12} sm={6} md={4}>
         <Button
           variant="contained"
           color="primary"
@@ -205,8 +216,8 @@ function Home() {
         >
           Visualizar Sprint Prueba
         </Button>
-      </Grid>
-      <Grid item>
+      </Grid2>
+      <Grid2 item xs={12} sm={6} md={4}>
         <Button
           variant="contained"
           color="primary"
@@ -215,8 +226,8 @@ function Home() {
         >
           Visualizar Est Nota
         </Button>
-      </Grid>
-      <Grid item>
+      </Grid2>
+      <Grid2 item xs={12} sm={6} md={4}>
         <Button
           variant="contained"
           color="primary"
@@ -225,56 +236,39 @@ function Home() {
         >
           Ir a Grupos Disponibles
         </Button>
-      </Grid>
-      <Grid item>
+      </Grid2>
+      <Grid2 item xs={12} sm={6} md={4}>
         <Button
           variant="contained"
           color="primary"
           size="large"
           onClick={handleNavigateEditarTarea}
-          style={{
-            padding: "15px 30px",
-            fontSize: "10px",
-            margin: "10px",
-            marginTop: "-10em",
-          }}
         >
           Ir a Editar Tarea
         </Button>
-      </Grid>
-      <Grid item>
+      </Grid2>
+      <Grid2 item xs={12} sm={6} md={4}>
         <Button
           variant="contained"
           color="primary"
           size="large"
           onClick={handleNavigateCalificacionesHito}
-          style={{
-            padding: "15px 30px",
-            fontSize: "10px",
-            margin: "10px",
-            marginTop: "-10em",
-          }}
         >
           Ir a Ver Calificaciones
         </Button>
-      </Grid>
-      <Grid item>
+      </Grid2>
+      <Grid2 item xs={12} sm={6} md={4}>
         <Button
           variant="contained"
           color="primary"
           size="large"
           onClick={handleNavigateToNotaSprint}
-          style={{
-            padding: "15px 30px",
-            fontSize: "10px",
-            margin: "10px",
-            marginTop: "-10em" 
-          }}
+
         >
           Nota Sprint
         </Button>
-      </Grid>
-    </Grid>
+      </Grid2>
+    </Grid2>
       <Footer />
     </Fragment>
   );
