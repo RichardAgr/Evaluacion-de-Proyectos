@@ -1,7 +1,13 @@
 import { Fragment, useState, useEffect } from "react";
 import BaseUI from "../../../components/baseUI/baseUI";
 import { styled } from "@mui/material"; 
-import { Modal, Button, TextField, Autocomplete,Snackbar, Alert } from "@mui/material";
+import { Modal, TextField, Autocomplete,Snackbar, Alert,Grid2 } from "@mui/material";
+import Box from '@mui/material/Box';
+import { Button } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import AddIcon from "@mui/icons-material/Add";
+
+
 
 const CrearGrupoEmpresa = () => {
 
@@ -121,67 +127,110 @@ const CrearGrupoEmpresa = () => {
             >
                 <div style={{ display: 'grid' }}>
                     <NombreEmpresaCompleto>
+                        <Box component="section" sx={{ p: 2 }}>
                         <h3>NOMBRE LARGO:</h3>
-                        <InputCentro
-                            placeholder="Nombre Largo"
-                            value={nombreLargo}
-                            onChange={(e) => setNombreLargo(e.target.value)}
-                        />
-                            {intentoEnviar && (
-                            nombreLargo === "" 
-                            ? <Mensaje>No hay nombre largo</Mensaje>
-                            : nombreLargo.length < 5
-                            ? <Mensaje>debe tener un mínimo de 5 caracteres y un máximo de 100 caracteres.</Mensaje>
-                            : null
-                        )} 
+                        </Box>
+                        <StyledWrapper>
+                                <input
+                                    placeholder="Nombre Largo"
+                                    className="input"
+                                    value={nombreLargo}
+                                    onChange={(e) => setNombreLargo(e.target.value)}
+                                />
+                                    {intentoEnviar && (
+                                        nombreLargo === "" 
+                                        ? <Mensaje>No hay nombre largo</Mensaje>
+                                        : nombreLargo.length < 5
+                                        ? <Mensaje>debe tener un mínimo de 5 caracteres y un máximo de 100 caracteres.</Mensaje>
+                                        : null
+                                    )}
+                        </StyledWrapper>
                     </NombreEmpresaCompleto>
-
                     <NombreEmpresaCompleto>
-                        <h3>NOMBRE CORTO:</h3>
-                        <InputCentro 
-                            placeholder="Nombre Corto"
-                            value={nombreCorto}
-                            onChange={(e) => setNombreCorto(e.target.value)} 
-                        />
-                            {intentoEnviar && (
-                            nombreCorto === "" 
-                            ? <Mensaje>No hay nombre largo</Mensaje>
-                            : nombreCorto.length < 2
-                            ? <Mensaje>debe tener un mínimo de 5 caracteres y un máximo de 100 caracteres.</Mensaje>
-                            : null
-                        )} 
+                        <Box component="section" sx={{ p: 2 }}>
+                            <h3>NOMBRE CORTO:</h3>
+                        </Box>
+                        <StyledWrapper>
+                                <input
+                                    placeholder="Nombre Corto"
+                                    className="input"
+                                    value={nombreCorto}
+                                    onChange={(e) => setNombreCorto(e.target.value)} 
+                                />
+                                    {intentoEnviar && (
+                                        nombreCorto === "" 
+                                        ? <Mensaje>No hay nombre corto</Mensaje>
+                                        : nombreCorto.length < 2
+                                        ? <Mensaje>debe tener un mínimo de 5 caracteres y un máximo de 100 caracteres.</Mensaje>
+                                        : null
+                                    )}
+                        </StyledWrapper>
                     </NombreEmpresaCompleto>
-                    
-                    <div>
-                        <h2 style={{marginTop: '6vw'}}>Integrantes</h2>
-                        <h6 style={{ color: '#979797', fontSize: '1.5vw', padding: '0.4vw'}}>MAXIMO 6 - MINIMO 3</h6>
-                    </div>
-
-                    {integrantes.map((integrante, index) => (
-                        <Integrante key={integrante.id}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', padding: '10px' }}>
-                                <h3>{integrante.nombre}</h3>
-                                {index === 0 && (
-                                    <span style={{ color: 'black' }}>Representante Legal</span>
+                    <Box pt={10}>
+                        <h2>Integrantes</h2>
+                        <h6 style={{ color: '#979797', fontSize: '15px'}}>MAXIMO 6 - MINIMO 3</h6>
+                    </Box>
+                    <Grid2 item xs={12}>
+                        {integrantes.map((integrante, index) => (
+                            <Box
+                                key={integrante.id}
+                                sx={{
+                                    width: "100%",
+                                    height: 70,
+                                    borderRadius: 1,
+                                    bgcolor: '#cfd4e1',
+                                    '&:hover': {
+                                        bgcolor: '#BFC4D1',
+                                    },
+                                    display: 'flex',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center',
+                                    marginBottom: '12px',
+                                }}
+                            >
+                                <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+                                    <h3 style={{paddingLeft: '35px'}}>{integrante.nombre}</h3>
+                                    {index === 0 && (
+                                        <span style={{ color: 'black',paddingRight: '20px' }}>Representante Legal</span>
+                                    )}
+                                </div>
+                                {!integrante.fijo && (
+                                    <Button
+                                        variant="contained"
+                                        color="secondary"
+                                        startIcon={<DeleteIcon />}
+                                        onClick={() => eliminarIntegrante(integrante.id)}
+                                    >
+                                        Eliminar
+                                    </Button>
                                 )}
-                            </div>
-                            {!integrante.fijo && (
-                                <BotonAzul onClick={() => eliminarIntegrante(integrante.id)}>
-                                    Eliminar
-                                </BotonAzul>
-                            )}
-                        </Integrante>
-                    ))}
+                            </Box>
+                        ))}
+                    </Grid2>
+
 
                     {mensajeError && <Mensaje>{mensajeError}</Mensaje>}
-
-                    <div style={{ display: 'flex', justifyContent: 'flex-start', marginTop: '1vw' }}>
-                        <BotonRojo onClick={agregarIntegrante}>+ Añadir Integrante</BotonRojo>
-                    </div>
+                    <Button 
+                        variant="contained"
+                        color="primary"
+                        startIcon={<AddIcon />}
+                        sx={{ minWidth: 50, width: '240px', height: '30px' }}
+                        onClick={agregarIntegrante}
+                        >
+                        Anadir Integrante
+                    </Button>
                     <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                        <BotonRojo onClick={manejarSubmit}>PUBLICAR GRUPO EMPRESA</BotonRojo>
-
+                        <Button  
+                        justifyContent="flex-end"
+                        variant="contained"
+                        color="primary"
+                        onClick={manejarSubmit}
+                        sx={{ minWidth: 50, width: '240px', height: '30px', marginTop:'50px' }}
+                    >
+                        Publicar Grupo Empresa
+                    </Button>
                     </div>
+
 
                     {/* Modal para agregar integrante */}
                     <Modal open={openModal} onClose={() => setOpenModal(false)}>
@@ -196,7 +245,11 @@ const CrearGrupoEmpresa = () => {
                                 )}
                             />
                             <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '10px' }}>
-                                <Button variant="contained" color="primary" onClick={confirmarAgregarIntegrante}>
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={confirmarAgregarIntegrante} // Asegúrate de que esta función esté definida
+                                >
                                     Añadir
                                 </Button>
                                 <Button variant="outlined" onClick={() => setOpenModal(false)}>
@@ -205,6 +258,7 @@ const CrearGrupoEmpresa = () => {
                             </div>
                         </div>
                     </Modal>
+
                     <Snackbar 
                         open={snackbarOpen} 
                         autoHideDuration={3000} 
@@ -230,16 +284,7 @@ const NombreEmpresaCompleto = styled('div')`
     margin-bottom: 1vw;
 `;
 
-const InputCentro = styled('input')`
-    box-sizing: border-box;
-    justify-content: center;
-    width: 221px;
-    height: 34px;
-    background-color: #d0d4e4; 
-    border: none;
-    margin-left: 10px;
-    margin-right: 10px;
-`;
+
 
 const Mensaje = styled('div')`
     color: red; 
@@ -248,35 +293,24 @@ const Mensaje = styled('div')`
     max-width: 300px;
 `;
 
-const BotonAzul = styled('button')`
-    margin-left: auto;
-    background-color: #114093; 
-    color: white; 
-    width: 122px;
-    height: 28px;
-    border: none;
-    cursor: pointer;
-    border-radius: 0.3vw;
-`;
 
-const BotonRojo = styled('button')`
-    background-color: #e30613; 
-    color: white; 
-    width: 25%;
-    height: 3vw;
-    border: none;
-    padding: 0.7vw; 
-    cursor: pointer;
-    margin-top: 1vw;
-    margin-bottom: 1vw;
-    border-radius: 0.3vw;
-`;
 
-const Integrante = styled('div')`
-    display: flex;
-    justify-content: space-between; 
-    align-items: center; 
-    background-color: #d6dbe5; 
-    padding: 10px;
-    margin-bottom: 10px;
+const StyledWrapper = styled('div')`
+  .input {
+    border: 2px solid transparent;
+    width: 15em;
+    height: 2.5em;
+    padding-left: 0.8em;
+    outline: none;
+    overflow: hidden;
+    background-color: #cfd4e1;
+    border-radius: 3px;
+    transition: all 0.5s;
+  }
+
+  .input:hover,
+  .input:focus {
+    border: 2px solid #4A9DEC;
+    background-color: white;
+  }
 `;

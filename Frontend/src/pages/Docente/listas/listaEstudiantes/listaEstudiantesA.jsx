@@ -1,18 +1,46 @@
-import { useEffect, useState } from 'react';
-import BaseUI from "../../../../components/baseUI/baseUI";
-import { styled } from '@mui/material';
+import * as React from 'react';
+import { DataGrid } from '@mui/x-data-grid';
+import Paper from '@mui/material/Paper';
+import { Fragment, useState, useEffect } from 'react';
+import Autocomplete from '@mui/material/Autocomplete';  
+import TextField from '@mui/material/TextField';
+import BaseUI from '../../../../components/baseUI/baseUI';
+import Alert from '@mui/material/Alert';
 
-function ObtenerEstudiantesPorGrupo() {
-  const idGrupo = 1; // Hardcodeado
-  const gestionGrupo = '2024-2'; // Hardcodeado
-  
+const columns = [
+  {
+    field: 'nombreCompleto',
+    headerName: 'Nombre',
+    sortable: true,
+    flex: 2,
+    valueGetter: (value, row) => `${row.nombreEstudiante || ''} ${row.apellidoPaternoEstudiante || ''} ${row.apellidoMaternoEstudiante || ''}`,
+  },
+  {
+    field: 'nombreEmpresa',
+    headerName: 'Equipo',
+    type: 'string',
+    flex: 2,
+  },
+  {
+    field: 'numGrupo',
+    headerName: 'Grupo',
+    type: 'number',
+    headerAlign: 'left',
+    align: 'left',
+    flex: 1.5,
+  },
+];
+
+export default function DataTable() {
   const [estudiantes, setEstudiantes] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [searchTerm, setSearchTerm] = useState('');
-  const estudiantesPorPagina = 20;
+  const [searchValue, setSearchValue] = useState(''); // Estado para el valor de búsqueda
+  const [notFound, setNotFound] = useState(''); // Estado para almacenar el mensaje de "no encontrado"
 
-  // Función para obtener estudiantes
+  const idGrupo = 1; 
+  const gestionGrupo = '2024-2'; 
+
   const fetchEstudiantes = async () => {
     try {
       const response = await fetch(`http://localhost:8000/api/grupo/estudiantes/${idGrupo}/${gestionGrupo}`, {
@@ -27,199 +55,96 @@ function ObtenerEstudiantesPorGrupo() {
       }
 
       const data = await response.json();
-      // Ordenar alfabéticamente por el nombre
-      data.sort((a, b) => {
-        const nombreA = `${a.nombreEstudiante} ${a.apellidoPaternoEstudiante} ${a.apellidoMaternoEstudiante}`.toLowerCase();
-        const nombreB = `${b.nombreEstudiante} ${b.apellidoPaternoEstudiante} ${a.apellidoMaternoEstudiante}`.toLowerCase();
-        return nombreA.localeCompare(nombreB);
-      });
-
-      setEstudiantes(data);
+      setEstudiantes(data); 
     } catch (error) {
       console.error('Error en la solicitud:', error);
-      setError(error.message);
+      setError(error.message); 
+    } finally {
+      setLoading(false); 
     }
   };
-  // Función para manejar la búsqueda en tiempo real
+
   useEffect(() => {
-    const handleSearch = async () => {
-      if (!searchTerm.trim()) {
-        fetchEstudiantes(); // Volver a cargar todos los estudiantes si el término está vacío
-        return;
+    fetchEstudiantes();
+  }, []);
+
+  const paginationModel = { page: 0, pageSize: 20 };
+
+  // Filtrar los estudiantes según el valor de búsqueda
+  const filteredEstudiantes = estudiantes.filter((estudiante) => {
+    const nombreCompleto = `${estudiante.nombreEstudiante} ${estudiante.apellidoPaternoEstudiante} ${estudiante.apellidoMaternoEstudiante}`.toLowerCase();
+    const nombreEmpresa = estudiante.nombreEmpresa?.toLowerCase() || '';
+    const numGrupo = estudiante.numGrupo?.toString() || '';
+
+    return (
+      nombreCompleto.includes(searchValue.toLowerCase()) || 
+      nombreEmpresa.includes(searchValue.toLowerCase()) || 
+      numGrupo.includes(searchValue)
+    );
+  });
+
+  // Verificar si no se encontró ningún estudiante, equipo o grupo
+  useEffect(() => {
+    if (filteredEstudiantes.length === 0) {
+      if (searchValue.trim() === '') {
+        setNotFound(''); // No hay búsqueda activa
+      } else {
+        setNotFound('No se encontró ningún alumno, equipo o grupo con esa búsqueda.');
       }
-
-      try {
-        const response = await fetch(`http://localhost:8000/api/grupo/estudiante/barraBusqueda`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ 
-            idGrupo, 
-            gestionGrupo, 
-            termino: searchTerm 
-          }),
-        });
-
-        if (!response.ok) {
-          throw new Error('Error en la búsqueda');
-        }
-
-        const result = await response.json();
-        // Ordenar alfabéticamente por el nombre
-        result.sort((a, b) => {
-          const nombreA = `${a.nombreEstudiante} ${a.apellidoPaternoEstudiante} ${a.apellidoMaternoEstudiante}`.toLowerCase();
-          const nombreB = `${b.nombreEstudiante} ${b.apellidoPaternoEstudiante} ${a.apellidoMaternoEstudiante}`.toLowerCase();
-          return nombreA.localeCompare(nombreB);
-        });
-
-        setEstudiantes(result);
-      } catch (error) {
-        console.error('Error en la solicitud:', error);
-        setError(error.message);
-      }
-    };
-
-    handleSearch(); // Llamar a la búsqueda inmediatamente
-  }, [searchTerm]); // Solo se ejecuta cuando searchTerm cambia
-
-  const totalPaginas = Math.ceil(estudiantes.length / estudiantesPorPagina);
-  const indexOfLastEstudiante = currentPage * estudiantesPorPagina;
-  const indexOfFirstEstudiante = indexOfLastEstudiante - estudiantesPorPagina;
-  const estudiantesActuales = estudiantes.slice(indexOfFirstEstudiante, indexOfLastEstudiante);
-
-  const handleNextPage = () => {
-    if (currentPage < totalPaginas) {
-      setCurrentPage(currentPage + 1);
+    } else {
+      setNotFound(''); // Resetear si se encuentran resultados
     }
-  };
-
-  const handlePreviousPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
-
-  if (error) return <p>Error: {error}</p>;
+  }, [searchValue, filteredEstudiantes.length]);
 
   return (
-    <BaseUI
-      titulo={`LISTA DE ESTUDIANTES`}
-      ocultarAtras={false}
-      confirmarAtras={false}
-      dirBack={`/`}
-    >
+    <Fragment>
+      <BaseUI
+        titulo={"LISTA DE ESTUDIANTES"}
+        ocultarAtras={false} 
+        confirmarAtras={true} 
+        dirBack={`/`}
+      >
+        <Autocomplete
+          freeSolo
+          disablePortal
+          disableListWrap
+          options={[]}
+          inputValue={searchValue} // Valor actual del input
+          onInputChange={(event, newValue) => setSearchValue(newValue)} // Actualiza el valor de búsqueda
+          sx={{ mt:10, width: 300, marginBottom: '16px' }}
+          renderInput={(params) => <TextField {...params} label="Buscar estudiante, equipo o grupo" />}
+        />
 
-      {/* Barra de búsqueda */}
-      <input
-        type="text"
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        placeholder="Nombre, código sis, Nombre Grupo Empresa"
-        style={{ marginBottom: '20px',marginTop:'50px', padding: '8px', width: '200px' }}
-      />
-      <Tabla>
-        <thead>
-          <tr>
-            <th>ESTUDIANTE</th>
-            <th>CODIGO SIS</th>
-            <th>Nombre Grupo Empresa</th>
-          </tr>
-        </thead>
-        <tbody>
-          {estudiantesActuales.length > 0 ? (
-            estudiantesActuales.map((estudiante) => (
-              <tr key={estudiante.idEstudiante}>
-                <td>
-                  {estudiante.nombreEstudiante} {estudiante.apellidoPaternoEstudiante} {estudiante.apellidoMaternoEstudiante}
-                </td>
-                <td>falta codigo sis</td>
-                <td>{estudiante.nombreEmpresa}</td>
-              </tr>
-            ))
+        <Paper sx={{ height: 700, width: '100%' }}>
+          {loading ? (
+            <p>Cargando...</p>
+          ) : error ? (
+            <p>Error: {error}</p>
           ) : (
-            <tr>
-              <td colSpan="3" style={{ textAlign: 'center' }}>
-                No hay estudiantes inscritos en este momento
-              </td>
-            </tr>
+            <>
+              {notFound ? (
+                <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+                  <Alert severity="warning" style={{ width: 'fit-content', textAlign: 'center' }}>
+                    {notFound}
+                  </Alert>
+                </div>
+              ) : (
+                <DataGrid
+                  rows={filteredEstudiantes} 
+                  columns={columns}
+                  getRowId={(row) => row.idEstudiante}
+                  initialState={{ pagination: { paginationModel } }}
+                  pageSizeOptions={[2, 10]}
+                  disableColumnMenu
+                  isRowSelectable={() => false}
+                  sx={{ border: 0 }}
+                  sortingOrder={['asc', 'desc']} 
+                />
+              )}
+            </>
           )}
-        </tbody>      
-      </Tabla>
-
-      {/* Componente de Paginación */}
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPaginas}
-        totalItems={estudiantes.length}
-        rowsPerPage={estudiantesPorPagina}
-        handlePreviousPage={handlePreviousPage}
-        handleNextPage={handleNextPage}
-      />
-
-    </BaseUI>
+        </Paper>
+      </BaseUI>
+    </Fragment>
   );
 }
-
-const Tabla = styled('table')({
-  width: '100%',
-  borderCollapse: 'collapse',
-  textAlign: 'left',
-
-  'th, td': {
-    padding: '12px 15px',
-    textAlign: 'left',
-    border: 'none', 
-  },
-
-  th: {
-    color: 'black',
-    fontWeight: 'bold',
-    backgroundColor: '#f8f9fa',
-    borderBottom: '2px solid #ddd', 
-  },
-
-  'td': {
-    backgroundColor: '#fff',
-    borderBottom: '1px solid #ddd', 
-  },
-
-  'tr:nth-of-type(even)': {
-    backgroundColor: '#f2f2f2', 
-  },
-});
-
-const Boton = styled('button')`
-  box-sizing: border-box;
-  margin-right: 5px;           
-  border: none;                
-  background-color: transparent; 
-  font-size: 16px;            
-  cursor: pointer;            
-  padding: 10px;
-  opacity: ${({ currentPage }) => (currentPage === 1 ? 0.5 : 1)}; 
-`;
-
-// eslint-disable-next-line react/prop-types
-const Pagination = ({ currentPage, totalPages, totalItems, rowsPerPage, handlePreviousPage, handleNextPage }) => {
-  const startRow = (currentPage - 1) * rowsPerPage + 1;
-  const endRow = Math.min(currentPage * rowsPerPage, totalItems);
-
-  return (
-    <div className='pagination' style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', borderBottom: '2px solid #ddd', marginTop: '0px' }}>
-      <div style={{ marginRight: '30px' }}>
-        <span style={{ marginRight: '10px' }}>Filas por página:</span>
-        <span>{rowsPerPage}</span>
-      </div>
-      <div style={{ marginRight: '30px' }}>
-        <span>{startRow}-{endRow} de {totalItems}</span>
-      </div>
-      <div>
-        <Boton onClick={handlePreviousPage} disabled={currentPage === 1}>&lt;</Boton>
-        <Boton onClick={handleNextPage} disabled={currentPage === totalPages}>&gt;</Boton>
-      </div>
-    </div>
-  );
-};
-
-export default ObtenerEstudiantesPorGrupo;

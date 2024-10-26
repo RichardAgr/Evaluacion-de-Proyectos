@@ -3,7 +3,9 @@ import Footer from "../../components/Footer/footer.jsx";
 import Header from "../../components/Header/header.jsx";
 
 import { useNavigate } from "react-router-dom";
-import { Button } from "@mui/material";
+import { Button, Grid2  } from "@mui/material";
+
+
 
 function Home() {
   const navigate = useNavigate();
@@ -147,159 +149,126 @@ function Home() {
           onClick={handleNavigateToModificarTarea}
           style={{
             padding: "15px 30px",
-            fontSize: "10px",
+            fontSize: "1.2rem",
             margin: "10px",
-            marginTop: "-20em" 
           }}
         >
           Modificar tarea
         </Button>
       </div>
-      <div style={{gridAutoColumns:'auto'}}>
+      <Grid2 container spacing={1} style={{ marginTop: '20px' }}>
+      <Grid2 item xs={12} sm={6} md={4}>
         <Button
           variant="contained"
           color="primary"
           size="large"
           onClick={handleNavigateToEmpresasLista}
-          style={{
-            padding: "15px 30px",
-            fontSize: "10px",
-            margin: "10px",
-            marginTop: "-20em",
-          }}
         >
           Ir a Lista Empresas
         </Button>
+      </Grid2>
+      <Grid2 item xs={12} sm={6} md={4}>
         <Button
           variant="contained"
           color="primary"
           size="large"
           onClick={handleNavigateToEmpresasLista}
-          style={{
-            padding: "15px 30px",
-            fontSize: "10px",
-            margin: "10px",
-            marginTop: "-20em",
-          }}
         >
           Ir a Lista Empresas
         </Button>
+      </Grid2>
+      <Grid2 item xs={12} sm={6} md={4}>
         <Button
           variant="contained"
           color="primary"
           size="large"
           onClick={handleNavigateToListaEstudiantes}
-          style={{
-            padding: "15px 30px",
-            fontSize: "10px",
-            margin: "10px",
-            marginTop: "-20em",
-          }}
         >
           Ir a Lista Estudiantes
         </Button>
-
+      </Grid2>
+      <Grid2 item xs={12} sm={6} md={4}>
+        <Button
+          variant="contained"
+          color="primary"
+          size="large"
+          onClick={handleNavigateToListaEstudiantesA}
+        >
+          Ir a Lista Estudiantes mejorado
+        </Button>
+      </Grid2>
+      <Grid2 item xs={12} sm={6} md={4}>
         <Button
           variant="contained"
           color="primary"
           size="large"
           onClick={handleNavigateToCrearEmpresa}
-          style={{
-            padding: "15px 30px",
-            fontSize: "10px",
-            margin: "10px",
-            marginTop: "-20em",
-          }}
         >
           Ir a Crear Empresa
         </Button>
+      </Grid2>
+      <Grid2 item xs={12} sm={6} md={4}>
         <Button
           variant="contained"
           color="primary"
           size="large"
           onClick={handleNavigateVisualizarSprint}
-          style={{
-            padding: "15px 30px",
-            fontSize: "10px",
-            margin: "10px",
-            marginTop: "-20em",
-          }}
         >
-          VisualizarSprintPrueba
+          Visualizar Sprint Prueba
         </Button>
+      </Grid2>
+      <Grid2 item xs={12} sm={6} md={4}>
         <Button
           variant="contained"
           color="primary"
           size="large"
           onClick={handleNavigateResultadosAlumnos}
-          style={{
-            padding: "15px 30px",
-            fontSize: "10px",
-            margin: "10px",
-            marginTop: "-20em",
-          }}
         >
-          VisualizarEstNota
+          Visualizar Est Nota
         </Button>
+      </Grid2>
+      <Grid2 item xs={12} sm={6} md={4}>
         <Button
           variant="contained"
           color="primary"
           size="large"
           onClick={handleNavigateToGruposDisponibles}
-          style={{
-            padding: "15px 30px",
-            fontSize: "10px",
-            margin: "10px",
-            marginTop: "-20em",
-          }}
         >
           Ir a Grupos Disponibles
         </Button>
-
+      </Grid2>
+      <Grid2 item xs={12} sm={6} md={4}>
         <Button
           variant="contained"
           color="primary"
           size="large"
           onClick={handleNavigateEditarTarea}
-          style={{
-            padding: "15px 30px",
-            fontSize: "10px",
-            margin: "10px",
-            marginTop: "-10em",
-          }}
         >
           Ir a Editar Tarea
         </Button>
+      </Grid2>
+      <Grid2 item xs={12} sm={6} md={4}>
         <Button
           variant="contained"
           color="primary"
           size="large"
           onClick={handleNavigateCalificacionesHito}
-          style={{
-            padding: "15px 30px",
-            fontSize: "10px",
-            margin: "10px",
-            marginTop: "-10em",
-          }}
         >
           Ir a Ver Calificaciones
         </Button>
+      </Grid2>
+      <Grid2 item xs={12} sm={6} md={4}>
         <Button
           variant="contained"
           color="primary"
           size="large"
           onClick={handleNavigateToNotaSprint}
-          style={{
-            padding: "15px 30px",
-            fontSize: "10px",
-            margin: "10px",
-            marginTop: "-10em" 
-          }}
+
         >
           Nota Sprint
         </Button>
-        
-      </div>
+      </Grid2>
+    </Grid2>
       <Footer />
     </Fragment>
   );
