@@ -34,7 +34,8 @@ function ModificarTarea() {
 
   const [fileCounter, setFileCounter] = useState(0);
   const [uploadProgress, setUploadProgress] = useState({});
-  const [deletedFiles, setDeletedFiles] = useState([])
+  const [deletedFiles, setDeletedFiles] = useState([]);
+  const [deletedResponsables, setDeletedResponsables] = useState([]);
 
   const [modalVisible, setModalVisible] = useState(false);
   const [loading, setLoading] = useState(true);  
@@ -118,6 +119,7 @@ function ModificarTarea() {
     setListaEstu([...listaEstu, responsables[index]])
     const newResponsables = (responsables.filter((_, i) => i !== index));
     setResponsables(newResponsables);
+    setDeletedResponsables([...deletedResponsables, responsables[index].idEstudiante])
     setResponsablesError(newResponsables.length === 0);
   };
   const handleChangeDescripcion = (e) =>{
@@ -146,8 +148,8 @@ function ModificarTarea() {
           setSnackbarOpen(true);
           return false;
         }
-        if (files.length === 9) {
-          setSnackbarMessage('Máximo 9 archivos');
+        if (files.length === 10) {
+          setSnackbarMessage('Máximo 10 archivos');
           setSnackbarOpen(true);
           return false;
         }
@@ -166,11 +168,12 @@ function ModificarTarea() {
         };
       });
     setFiles((prevFiles) => [...prevFiles, ...newFiles]);
-  
+    console.log(newFiles)
+    console.log(files)
     if (!snackbarOpen) {
       newFiles.forEach((file) => {
         let progress = 0;
-        const intervalDuration = 1000 / Math.sqrt(file.size / (1024 * 1024));
+        const intervalDuration = 500 / Math.sqrt(file.size / (1024 * 1024));
   
         const interval = setInterval(() => {
           progress += 10;
@@ -179,7 +182,7 @@ function ModificarTarea() {
             [file.id]: progress, 
           }));
           if (progress >= 100) {
-            clearInterval(interval);
+            setTimeout(interval);
           }
         }, intervalDuration);
       });
@@ -218,33 +221,29 @@ function ModificarTarea() {
       onConfirm: handleSubmit,
     });
   };
-  const handleSubmit = async (event) =>{
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    setDescripcionError(descripcion === '')
+    setDescripcionError(descripcion === '');
     setResponsablesError(responsables.length === 0);
-    if(descripcionError){
-      return true;
+  
+    if (descripcionError || responsablesError) {
+      return;
     }
-    if(responsablesError){
-      return true;
-    }
+  
     try {
-      const formData = new FormData();
-      formData.append("textotarea", descripcion);
-
-      files.forEach((file) => {
-        formData.append("archivotarea[]", file);
-      });
-      if (deletedFiles.length > 0) {
-        deletedFiles.forEach((file) => {
-          formData.append("archivosEliminados[]", file.name);
-        });
-      }
+      const formData = {
+        idTarea,
+        files,
+        deletedFiles,
+        responsables,
+        descripcion
+      };
+  
       const response = await updateTarea(idTarea, formData);
-      if(response.ok){
+      if (response.ok) {
         setSnackbar({
           open: true,
-          message: `Se subio correctamente todo`,
+          message: "Se subió correctamente todo",
           severity: "success",
           autoHide: true,
         });
@@ -253,29 +252,45 @@ function ModificarTarea() {
       console.error("Error al actualizar la tarea:", error);
       setSnackbar({
         open: true,
-        message: `Hubo un error al momento de subir, error:${error}`,
+        message: `Hubo un error al momento de subir, error: ${error}`,
         severity: "error",
         autoHide: false,
       });
-
-    }    
-  }
+    }
+  };
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
   };
   const renderImg = (file) => {
-    if (file.type === 'application/pdf') {
+    
+    if (file.type === 'application/pdf' || file.name.endsWith('.pdf')) {
       return <PictureAsPdfIcon style={{ fontSize: 30 }} />;
     }
-    if (file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') { // Cambiado para .docx
+    if (file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || file.name.endsWith('.docx')) {
       return <DescriptionIcon style={{ fontSize: 30 }} />;
     }
-    if (file.type === 'image/png' || file.type === 'image/jpeg') { // Cambiado para png y jpg
+    if (file.type === 'image/png' || file.type === 'image/jpeg' || file.name.endsWith('.png') || file.name.endsWith('.jpg')) {
       return <ImageIcon style={{ fontSize: 30 }} />;
-    } else {
-      return <FolderZipIcon style={{ fontSize: 30 }} />;
     }
+    return <FolderZipIcon style={{ fontSize: 30 }} />;
+  };  
+  
+  const downloadFile = (file) => {
+    if (!file.url) {
+      setSnackbarMessage('La URL del archivo no esta disponible.');
+      setSnackbarOpen(true);
+      return;
+    }
+    
+  const link = document.createElement('a');
+    link.href = file.url; // Usa file.archivo si es el URL real
+    link.download = file.name; // Nombre con el que se descargará el archivo
+    document.body.appendChild(link);
+    link.click(); // Simular un clic en el enlace
+    document.body.removeChild(link); // Remover el enlace temporal
   };
+  
+  
   if (loading) {
     return <Loading></Loading>
   }
@@ -336,8 +351,10 @@ function ModificarTarea() {
                               >
                                 <CancelRoundedIcon/>
                               </IconButton>
-                              {renderImg(file)}
-                              <p>{file.name}</p>
+                              <IconButton onClick={() => downloadFile(file)}>
+                                {renderImg(file)}
+                              </IconButton>
+                              <a onClick={() => downloadFile(file)}>{file.name}</a>
                             </>
                           )}
                         </div>
