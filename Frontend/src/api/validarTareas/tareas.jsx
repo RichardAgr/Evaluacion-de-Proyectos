@@ -56,15 +56,14 @@ export const updateTarea = async (idTarea, formData) => {
 
     // Agregar archivos a FormData
     formData.files.forEach((file, index) => {
-      // Si `file` es un objeto `File` (para archivos nuevos), se añade con FormData
-      console.log(file)
-      if (file.idArchivo === "-1" && file.file instanceof File) {
-        data.append(`files[${index}][file]`, file.file); 
+      console.log(file);
+      if (file.idArchivo === "-1") { 
+        // Archivos nuevos (con archivoBase64)
         data.append(`files[${index}][name]`, file.name); 
         data.append(`files[${index}][idArchivo]`, file.idArchivo);
-        data.append(`files[${index}][url]`, file.url);
+        data.append(`files[${index}][archivoBase64]`, file.archivoBase64);
       } else {
-        // Si no es un archivo nuevo, solo agrega `idArchivo` y otros metadatos
+        // Archivos existentes (solo metadatos)
         data.append(`files[${index}][idArchivo]`, file.idArchivo);
         data.append(`files[${index}][name]`, file.name);
       }
@@ -72,6 +71,7 @@ export const updateTarea = async (idTarea, formData) => {
 
     // Agregar IDs de archivos eliminados
     formData.deletedFiles.forEach((idArchivo, index) => {
+      console.log(idArchivo)
       data.append(`deletedFiles[${index}]`, idArchivo);
     });
 
@@ -83,7 +83,7 @@ export const updateTarea = async (idTarea, formData) => {
     // Enviar solicitud con FormData
     const response = await fetch(`http://127.0.0.1:8000/api/tarea/${idTarea}/guardar`, {
       method: "POST",
-      body: data, // Usar FormData como cuerpo
+      body: data,
     });
 
     if (!response.ok) {

@@ -134,7 +134,8 @@ function ModificarTarea() {
       event.preventDefault();
       const inputFiles = event.dataTransfer.files; 
       handleFileInput(inputFiles);
-  };  
+  };
+
   const handleFileInput = (inputFiles) => {
     const newFiles = Array.from(inputFiles)
       .filter((file) => {
@@ -154,48 +155,66 @@ function ModificarTarea() {
           return false;
         }
         return true;
-      })
-      .map((file) => {
-        const fileId = `${file.name}-${fileCounter}`;
-        setFileCounter((prevCounter) => prevCounter + 1);
-        return {
+      });
+  
+    newFiles.forEach((file) => {
+      const fileId = `${file.name}-${fileCounter}`;
+      setFileCounter((prevCounter) => prevCounter + 1);
+  
+      // Convertir archivo a Base64
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        const base64String = reader.result.replace(/^data:(.*?);base64,/, '');
+        
+        const newFile = {
           idArchivo: '-1',
           id: fileId,
           name: file.name,
           type: file.type,
           url: URL.createObjectURL(file),
           size: file.size,
+          archivoBase64: base64String, // Asignar el archivo en Base64
         };
-      });
-    setFiles((prevFiles) => [...prevFiles, ...newFiles]);
-    console.log(newFiles)
-    console.log(files)
-    if (!snackbarOpen) {
-      newFiles.forEach((file) => {
-        let progress = 0;
-        const intervalDuration = 500 / Math.sqrt(file.size / (1024 * 1024));
   
-        const interval = setInterval(() => {
-          progress += 10;
-          setUploadProgress((prevProgress) => ({
-            ...prevProgress,
-            [file.id]: progress, 
-          }));
-          if (progress >= 100) {
-            setTimeout(interval);
-          }
-        }, intervalDuration);
-      });
-    }
+        // Agregar archivo convertido al estado
+        setFiles((prevFiles) => [...prevFiles, newFile]);
+  
+        // Simular progreso de carga
+        if (!snackbarOpen) {
+          let progress = 0;
+          const intervalDuration = 500 / Math.sqrt(file.size / (1024 * 1024));
+  
+          const interval = setInterval(() => {
+            progress += 10;
+            setUploadProgress((prevProgress) => ({
+              ...prevProgress,
+              [fileId]: progress,
+            }));
+  
+            if (progress >= 100) {
+              clearInterval(interval);
+            }
+          }, intervalDuration);
+        }
+      };
+  
+      reader.onerror = () => {
+        setSnackbarMessage('Error al leer el archivo.');
+        setSnackbarOpen(true);
+      };
+    });
   };
   
-  const handleDeleteFile = (event, fileId, idTarea) => {
+  
+  const handleDeleteFile = (event, fileId, idArchivo) => {
     event.stopPropagation();//previene doble click
     setFiles((prevFiles) => {
       const newFiles = prevFiles.filter((file) => file.id !== fileId);
       return newFiles;
     });
-    setDeletedFiles([...deletedFiles, idTarea]);
+    setDeletedFiles([...deletedFiles, idArchivo]);
+    console.log([...deletedFiles, idArchivo])
     setUploadProgress((prevProgress) => {
       const updatedProgress = { ...prevProgress };
       delete updatedProgress[fileId]; 
@@ -236,7 +255,7 @@ function ModificarTarea() {
         files,
         deletedFiles,
         responsables,
-        descripcion
+        descripcion,
       };
   
       const response = await updateTarea(idTarea, formData);
@@ -347,7 +366,7 @@ function ModificarTarea() {
                             <IconButton
                               className='fileItem__icon'
                                 color="secondary"
-                                onClick={(event) => handleDeleteFile(event, file.id,file.idTarea)}
+                                onClick={(event) => handleDeleteFile(event, file.id, file.idArchivo)}
                               >
                                 <CancelRoundedIcon/>
                               </IconButton>

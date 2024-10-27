@@ -116,7 +116,6 @@ class TareaController extends Controller
             $request->validate([
                 'textotarea' => 'required|string',
                 'files' => 'nullable|array',
-                'files.*.file' => 'file|mimes:pdf,zip,rar,7z,txt,png,jpg,jpeg,doc,docx,xls,xlsx|max:2048',
                 'deletedFiles' => 'nullable|array',
                 'responsables' => 'nullable|array',
             ]);
@@ -149,18 +148,13 @@ class TareaController extends Controller
             // Procesar y guardar archivos nuevos
             if ($request->has('files')) {
                 foreach ($request->input('files') as $fileData) {
-                    if ($fileData['idArchivo'] === "-1" && isset($fileData['url'])) {
-                        // Convertir la URL a base64
-                        $fileContent = file_get_contents($fileData['url']);
-                        $base64File = base64_encode($fileContent);
-                        $nombreArchivo = $fileData['name'];
-
+                    if ($fileData['idArchivo'] === "-1") {
                         // Guardar el archivo en la base de datos
                         ArchivoTarea::create([
                             'idTarea' => $idTarea,
-                            'archivo' => $base64File, // Guardar el contenido base64
+                            'archivo' => $fileData['archivoBase64'], // Guardar el contenido base64
                             'fechaEntrega' => now(),
-                            'nombreArchivo' => $nombreArchivo
+                            'nombreArchivo' => $fileData['name']
                         ]);
                     }
                 }
