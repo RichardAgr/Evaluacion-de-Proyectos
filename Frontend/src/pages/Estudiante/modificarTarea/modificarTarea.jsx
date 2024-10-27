@@ -67,7 +67,8 @@ function ModificarTarea() {
         setTitulo(data.nombreTarea)
         setDescripcion(data.textotarea);
         setResponsables(data.estudiantes);
-        
+        console.log(data)
+        console.log(empresaData)
         const filesWithId = data.archivotarea.map((file, index) => ({
             idArchivo: file.idArchivo,
             id: `${file.nombreArchivo}-${index}`, 
@@ -164,7 +165,6 @@ function ModificarTarea() {
           size: file.size,
         };
       });
-    setFilesError(newFiles === null)
     setFiles((prevFiles) => [...prevFiles, ...newFiles]);
   
     if (!snackbarOpen) {
@@ -190,7 +190,6 @@ function ModificarTarea() {
     event.stopPropagation();//previene doble click
     setFiles((prevFiles) => {
       const newFiles = prevFiles.filter((file) => file.id !== fileId);
-      setFilesError(newFiles.length === 0);
       return newFiles;
     });
     setDeletedFiles([...deletedFiles, idTarea]);
@@ -223,11 +222,7 @@ function ModificarTarea() {
     event.preventDefault();
     setDescripcionError(descripcion === '')
     setResponsablesError(responsables.length === 0);
-    setFilesError(files.length === 0)
     if(descripcionError){
-      return true;
-    }
-    if(filesError){
       return true;
     }
     if(responsablesError){
@@ -334,13 +329,14 @@ function ModificarTarea() {
                             </div>
                           ) : (
                             <>
-                              {renderImg(file)}
-                              <IconButton
+                            <IconButton
+                              className='fileItem__icon'
                                 color="secondary"
                                 onClick={(event) => handleDeleteFile(event, file.id,file.idTarea)}
                               >
-                                <DeleteIcon />
+                                <CancelRoundedIcon/>
                               </IconButton>
+                              {renderImg(file)}
                               <p>{file.name}</p>
                             </>
                           )}
@@ -378,7 +374,6 @@ function ModificarTarea() {
                 <div className="form_fotos">                  
                 </div>
               </div>
-              {filesError? <helperText style={{ color: 'red' }}>Se debe subir un archivo como minimo</helperText>:<></>}
               <h3>Descripcion Tarea:</h3>
               <div className="form_inputText">
                 <StyledTextField
@@ -542,9 +537,11 @@ const ContainerdropZone = styled('div')`
     margin-bottom: 1rem;
   }
   .fileItem{
-    display: block;
+    display: flex;
     width: 95%;
-    height: 10vh;
+    height: 5vh;
+    align-content: center;
+    align-items: center;
   }
   .fileItem__progressBar{
     display: flex;

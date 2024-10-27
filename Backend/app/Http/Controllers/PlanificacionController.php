@@ -98,7 +98,7 @@ class PlanificacionController extends Controller
                 'notaPlanificacion' => 0,
                 'comentarioDocente' => 'Comentario Docente',
                 'sprints' => [
-                    ['idSprint' => null, 'fechaIni' => '2024-09-06', 'fechaFin' => '2024-09-06', 'cobro' => 12, 'fechaEntrega' => '2024-09-06', 'entregables' => 'esto es un ejemplo'],
+                    ['idSprint' => null, 'fechaIni' => '2025-02-06', 'fechaFin' => '2025-02-12', 'cobro' => 13, 'fechaEntrega' => '2025-02-12', 'entregables' => 'esto es un ejemplo'],
                 ],  // Array de sprints con 1 filas vacías  
             ], 200);  // Código 200 ya que la empresa existe
         }

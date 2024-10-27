@@ -2,18 +2,27 @@
 
 namespace Database\Seeders;
 
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+
 use Illuminate\Support\Facades\DB;
 
 class EstudiantesGruposSeeder extends Seeder
 {
-    public function run()
+    /**
+     * Run the database seeds.
+     */
+    public function run(): void
     {
-        DB::table('estudiantesgrupos')->insert([
-            ['idEstudiante' => 1, 'idGrupo' => 1],
-            ['idEstudiante' => 1, 'idGrupo' => 3],
-            // Agrega el resto de los registros aquí...
-            ['idEstudiante' => 27, 'idGrupo' => 1],
-        ]);
+        $estudiantes = range(1, 24); 
+        $grupo = 1;
+
+        foreach ($estudiantes as $estudiante) {
+            
+            DB::table('estudiantesgrupos')->insert([
+                'idGrupo' => $grupo,
+                'idEstudiante' => $estudiante,
+            ]);
+        }
     }
 }
