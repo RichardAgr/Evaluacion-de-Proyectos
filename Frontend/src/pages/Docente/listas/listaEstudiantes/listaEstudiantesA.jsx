@@ -40,12 +40,6 @@ function ObtenerEstudiantesPorGrupo() {
       setError(error.message);
     }
   };
-
-  // Efecto para cargar los estudiantes al montar el componente
-  useEffect(() => {
-    fetchEstudiantes();
-  }, []); // Solo se ejecuta una vez al montar
-
   // Función para manejar la búsqueda en tiempo real
   useEffect(() => {
     const handleSearch = async () => {
