@@ -36,6 +36,7 @@ class TareaController extends Controller
         // Formar la respuesta, ajustando la URL del archivo para incluir el dominio completo
         $respuesta = [
             'idSemana' => $tarea->idSemana,
+            'nombreTarea' => $tarea->nombreTarea,
             'comentario' => $tarea->comentario,
             'textotarea' => $tarea->textoTarea,
             'fechentregado' => $tarea->fechaEntrega,

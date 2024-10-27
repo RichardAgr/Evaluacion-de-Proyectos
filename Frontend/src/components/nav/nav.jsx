@@ -28,7 +28,7 @@ import InscribirGrupo from "../../pages/Estudiante/gruposDisponibles/inscribirGr
 import ObtenerEstudiantesPorGrupo from "../../pages/Docente/listas/listaEstudiantes/listaEstudiantes.jsx";
 import ObtenerEstudiantesPorGrupoA from "../../pages/Docente/listas/listaEstudiantes/listaEstudiantesA.jsx";
 import EmpresasPorDocente from "../../pages/Docente/listas/listaEmpresas/listaEmpresaPorDocente.jsx";
-
+import ModificarTarea2 from "../../pages/Estudiante/modificarTarea/modificarTarea.jsx";
 import CalificacionesHitoEmpresa from "../../pages/Estudiante/grupoEmpresa/calificacionesHitoEmpresa.jsx";
 import SeleccionarEmpresaVisualizar from "../../pages/Docente/listas/seleccionarEmpresaVisualizar/seleccionarEmpresaVisualizar.jsx";
 
@@ -99,10 +99,14 @@ function Nav() {
       />
 
       <Route
-        path="/homeEstudiante/homeGrupoEstudiante/sprint/semana/tareas/:idTarea"
+        path="/homeEstudiante/homeGrupoEstudiante/sprint/semana/tareas2/:idTarea"
         element={<ModificarTarea />}
       />
-
+      
+      <Route
+        path="/homeEstudiante/homeGrupoEstudiante/sprint/semana/tareas/:idTarea"
+        element={<ModificarTarea2 />}
+      />
       <Route
         path="/homeEstudiante/homeGrupoEstudiante/empresas/:idEmpresa/calificaciones"
         element={<CalificacionesHitoEmpresa />}

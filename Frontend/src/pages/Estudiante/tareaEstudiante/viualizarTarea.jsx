@@ -2,7 +2,6 @@ import { useParams} from "react-router-dom";
 import { Fragment,useEffect,useState } from 'react';
 import { styled } from '@mui/material';
 import BaseUI from '../../../components/baseUI/baseUI';
-import Comentario from '../../../components/comentarioNota/comentario';
 import {getTareaData} from "../../../api/validarTareas/tareas";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import FolderZipIcon from "@mui/icons-material/FolderZip";

@@ -3,7 +3,6 @@ import BaseUI from "../../../../components/baseUI/baseUI";
 import { styled } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import {
-  Avatar,
   FormControl,
   Button,
   TextField,

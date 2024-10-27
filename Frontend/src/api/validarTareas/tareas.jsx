@@ -63,9 +63,7 @@ export const updateTarea = async (idTarea, formData) => {
     if (!response.ok) {
       throw new Error("Error al actualizar la tarea");
     }
-
-    const data = await response.json();
-    return data;
+    return response;
   } catch (error) {
     console.error("Error en la solicitud:", error);
     throw error;
