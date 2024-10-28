@@ -16,7 +16,6 @@ import CalificarEstSemana from "../../pages/Docente/calificarSprint/calificarEst
 import HomeEstudiante from "../../pages/Estudiante/homeEstudiante/homeEstudiante.jsx";
 import HomeGrupoEstudiante from "../../pages/Estudiante/homeGrupoEstudiante/homeGrupoEstudiante.jsx";
 import ModificarPlanificacion from "../../pages/Estudiante/editarPlanificacion/editarPlanificacion.jsx";
-import ModificarTarea from "../../pages/Estudiante/editarPlanificacion/modificarTarea/modificarTarea.jsx";
 
 import VisualizarSprintEst from "../../pages/Estudiante/visualizarSprintEstudiante/visualizarSprint.jsx";
 import VisualizarTarea from "../../pages/Estudiante/tareaEstudiante/viualizarTarea.jsx";
@@ -28,7 +27,8 @@ import InscribirGrupo from "../../pages/Estudiante/gruposDisponibles/inscribirGr
 import ObtenerEstudiantesPorGrupo from "../../pages/Docente/listas/listaEstudiantes/listaEstudiantes.jsx";
 import ObtenerEstudiantesPorGrupoA from "../../pages/Docente/listas/listaEstudiantes/listaEstudiantesA.jsx";
 import EmpresasPorDocente from "../../pages/Docente/listas/listaEmpresas/listaEmpresaPorDocente.jsx";
-import ModificarTarea2 from "../../pages/Estudiante/modificarTarea/modificarTarea.jsx";
+import ModificarTarea from "../../pages/Estudiante/modificarTarea/modificarTarea.jsx";
+import ListaTareas from "../../pages/Estudiante/modificarTarea/listaTareas.jsx";
 import CalificacionesHitoEmpresa from "../../pages/Estudiante/grupoEmpresa/calificacionesHitoEmpresa.jsx";
 import SeleccionarEmpresaVisualizar from "../../pages/Docente/listas/seleccionarEmpresaVisualizar/seleccionarEmpresaVisualizar.jsx";
 
@@ -97,16 +97,16 @@ function Nav() {
         path="/homeEstudiante/homeGrupoEstudiante"
         element={<HomeGrupoEstudiante />}
       />
-
       <Route
-        path="/homeEstudiante/homeGrupoEstudiante/sprint/semana/tareas2/:idTarea"
+        path="/homeEstudiante/homeGrupoEstudiante/sprintE/:idSprint/semana/editarTarea/:idTarea"
         element={<ModificarTarea />}
       />
-      
+
       <Route
-        path="/homeEstudiante/homeGrupoEstudiante/sprint/semana/tareas/:idTarea"
-        element={<ModificarTarea2 />}
+        path="/homeEstudiante/homeGrupoEstudiante/sprintE/:idSprint"
+        element={<ListaTareas />}
       />
+
       <Route
         path="/homeEstudiante/homeGrupoEstudiante/empresas/:idEmpresa/calificaciones"
         element={<CalificacionesHitoEmpresa />}

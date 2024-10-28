@@ -22,7 +22,7 @@ import ImageIcon from '@mui/icons-material/Image';
 import DescriptionIcon from '@mui/icons-material/Description';
 
 function ModificarTarea() {
-  const { idTarea } = useParams();
+  const { idTarea, idSprint } = useParams();
   const [responsables, setResponsables] = useState([]);
   const [responsablesError, setResponsablesError] = useState(false);
   const [files, setFiles] = useState([]);
@@ -322,7 +322,7 @@ function ModificarTarea() {
         titulo={'MODIFICAR TAREA'}
         ocultarAtras={false}
         confirmarAtras={true}
-        dirBack={'/'}
+        dirBack={`/homeEstudiante/homeGrupoEstudiante/sprintE/${idSprint}`}
       >
         <ContainerdropZone>
           <form autoComplete="off" onSubmit={handleSubmit}>

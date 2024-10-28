@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 /* eslint-disable react/prop-types */
 
-const SprintSemanas = ({ title, semana, idSprint }) => {
+const SprintSemanas = ({ title, semana, idSprint, navigateLink }) => {
     const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(false);
 
@@ -13,7 +13,7 @@ const SprintSemanas = ({ title, semana, idSprint }) => {
 
     const clickBoton = (tarea) => {
         console.log("click", tarea)
-        navigate(`/homeEstudiante/homeGrupoEstudiante/sprint/${idSprint}/tarea/${tarea.idTarea}`); 
+        navigate(navigateLink?navigateLink+`${tarea.idTarea}`:`/homeEstudiante/homeGrupoEstudiante/sprint/${idSprint}/tarea/${tarea.idTarea}`); 
     }
 
     return (
