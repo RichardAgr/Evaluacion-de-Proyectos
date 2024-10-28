@@ -12,6 +12,9 @@ import {
   TextField,
   Box,
   Alert,
+  List,
+  ListItem,
+  ListItemText,
   AlertTitle,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
@@ -19,9 +22,13 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import InfoSnackbar from "../infoSnackbar/infoSnackbar";
 import CuadroDialogo from "../cuadroDialogo/cuadroDialogo";
 import DecisionButtons from "../Buttons/decisionButtons";
+import AnadirEntregables from "../anadirEntregables/anadirEntregables";
 
 export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
   const [rows, setRows] = useState([]);
+  const [openEntregables, setOpenEntregables] = useState(false);
+  const [currentSprintIndex, setCurrentSprintIndex] = useState(-1);
+
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",
@@ -33,6 +40,24 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
     title: "",
     description: "",
   });
+  const handleOpenEntregables = (index) => {
+    setCurrentSprintIndex(index);
+    setOpenEntregables(true);
+  };
+
+  const handleCloseEntregables = (newEntregables) => {
+    if (currentSprintIndex !== -1) {
+      const newRows = [...rows];
+      newRows[currentSprintIndex].entregables = newEntregables;
+      setRows(newRows);
+    }
+    setOpenEntregables(false);
+    setCurrentSprintIndex(-1);
+
+    console.log(currentSprintIndex);
+    console.log(newEntregables);
+    console.log(rows);
+  };
   const handleCancel = () => {
     setCuadroDialogo({
       open: true,
@@ -58,9 +83,9 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
         hito: `SPRINT ` + (index + 1),
         fechaIni: sprint.fechaIni,
         fechaFin: sprint.fechaFin,
-        cobro: sprint.cobro,
         fechaEntrega: sprint.fechaEntrega,
-        entregables: sprint.entregables,
+        cobro: sprint.cobro,
+        entregables: sprint.entregables || [],
       };
     });
     setRows(newRows);
@@ -71,9 +96,9 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
       hito: `SPRINT ${newSprint}`,
       fechaIni: "",
       fechaFin: "",
-      cobro: "",
       fechaEntrega: "",
-      entregables: "",
+      cobro: "",
+      entregables: [],
     };
     setRows([...rows, newRow]);
   };
@@ -172,12 +197,11 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
 
     const dataPlanificacion = {
       idEmpresa: Number(idEmpresa),
-      comentarioDocente: String(
-        planificacionData.comentarioDocente
-          ? planificacionData.comentarioDocente
+      comentarioprivado: String(
+        planificacionData.comentarioprivado
+          ? planificacionData.comentarioprivado
           : null
       ),
-      notaPlanificacion: 0,
       aceptada: 0,
     };
     const dataSprint = {
@@ -185,8 +209,8 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
       sprints: rows.map((row) => ({
         fechaIni: row.fechaIni,
         fechaFin: row.fechaFin,
-        cobro: Number(row.cobro),
         fechaEntrega: row.fechaEntrega,
+        cobro: Number(row.cobro),
         entregables: row.entregables,
       })),
     };
@@ -271,34 +295,83 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
                 <TableCell>Hito</TableCell>
                 <TableCell align="left">Fecha Inicio</TableCell>
                 <TableCell align="left">Fecha Fin</TableCell>
-                <TableCell align="left">Cobro</TableCell>
                 <TableCell align="left">Fecha Entrega</TableCell>
+                <TableCell align="left">Cobro</TableCell>
                 <TableCell align="left">Entregables</TableCell>
                 <TableCell align="left"></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {rows.map((row, index) => (
-                <TableRow
-                  key={index}
-                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                >
-                  {Object.keys(row).map((field) => (
-                    <TableCell key={field} align="left">
-                      <TextField
-                        value={row[field] ?? ""}
-                        onChange={(e) =>
-                          handleCellChange(index, field, e.target.value)
-                        }
-                        type={field.includes("fecha") ? "date" : "text"}
-                        fullWidth
-                        variant="standard"
-                        inputProps={{
-                          "aria-label": `${field} for ${row.hito}`,
-                        }}
-                      />
-                    </TableCell>
-                  ))}
+                <TableRow key={index}>
+                  <TableCell>{`Sprint ${index + 1}`}</TableCell>
+                  {["fechaIni", "fechaFin", "fechaEntrega", "cobro"].map(
+                    (field) => (
+                      <TableCell key={field} align="left" style={{ minWidth: field === "cobro" ? 100 : 100}}>
+                        <TextField
+                          value={row[field] ?? ""}
+                          onChange={(e) => {
+                            let value = e.target.value;
+                            if (field === "cobro") {
+                              // Permitir solo números y un punto decimal
+                              value = value.replace(/[^0-9.]/g, "");
+                              // Asegurar que solo haya un punto decimal
+                              const parts = value.split(".");
+                              if (parts.length > 2) {
+                                value =
+                                  parts[0] + "." + parts.slice(1).join("");
+                              }
+                              // Limitar a dos decimales
+                              if (parts[1] && parts[1].length > 2) {
+                                value = parseFloat(value).toFixed(2);
+                              }
+                            }
+                            handleCellChange(index, field, value);
+                          }}
+                          type={
+                            field.includes("fecha")
+                              ? "date"
+                              : field === "cobro"
+                              ? "number"
+                              : "text"
+                          }
+                          fullWidth
+                          variant="standard"
+                          inputProps={{
+                            "aria-label": `${field} for ${row.hito}`,
+                            ...(field === "cobro" && {
+                              step: "0.01",
+                              min: "0",
+                              pattern: "^\\d+(\\.\\d{1,2})?$",
+                            }),
+                          }}
+                        />
+                      </TableCell>
+                    )
+                  )}
+                  <TableCell align="left">
+                    {row.entregables.length > 0 && (
+                      <List dense sx={{ mb: 0.5 }}>
+                        {row.entregables.map((entregable, i) => (
+                          <ListItem key={i}>
+                            <ListItemText primary={`${i + 1}. ${entregable}`} />
+                          </ListItem>
+                        ))}
+                      </List>
+                    )}
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      size="small"
+                      startIcon={<AddIcon />}
+                      sx={{ minWidth: "250px", maxHeight: "50px" }}
+                      onClick={() => handleOpenEntregables(index)}
+                    >
+                      {row.entregables.length > 0
+                        ? "Modificar Entregables"
+                        : "Añadir Entregables"}
+                    </Button>
+                  </TableCell>
                   <TableCell align="left">
                     {rows.length > 1 && (
                       <Button
@@ -306,8 +379,9 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
                         color="secondary"
                         startIcon={<DeleteIcon />}
                         onClick={() => dialogoEliminar(index, row.hito)}
+                        sx={{ minWidth: "170px", maxHeight: "50px" }}
                       >
-                        Eliminar
+                        Eliminar Hito
                       </Button>
                     )}
                   </TableCell>
@@ -345,6 +419,13 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
         setOpenSnackbar={(open) => setSnackbar({ ...snackbar, open })}
         message={snackbar.message}
         severity={snackbar.severity}
+      />
+      <AnadirEntregables
+        open={openEntregables}
+        handleClose={handleCloseEntregables}
+        initialEntregables={
+          currentSprintIndex !== -1 ? rows[currentSprintIndex].entregables : []
+        }
       />
     </>
   );

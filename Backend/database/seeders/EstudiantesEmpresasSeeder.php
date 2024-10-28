@@ -7,13 +7,21 @@ use Illuminate\Support\Facades\DB;
 
 class EstudiantesEmpresasSeeder extends Seeder
 {
-    public function run()
+    /**
+     * Run the database seeds.
+     */
+    public function run(): void
     {
-        DB::table('estudiantesempresas')->insert([
-            ['idEmpresa' => 1, 'idEstudiante' => 1],
-            ['idEmpresa' => 1, 'idEstudiante' => 2],
-            // Agrega el resto de los registros aquí...
-            ['idEmpresa' => 6, 'idEstudiante' => 27],
-        ]);
+        $estudiantes = range(1, 24);
+        $empresas = [1, 2, 3, 4, 5];
+ 
+        foreach ($estudiantes as $estudiante) {
+            $empresa = $empresas[array_rand($empresas)];
+            
+            DB::table('estudiantesempresas')->insert([
+                'idEmpresa' => $empresa,
+                'idEstudiante' => $estudiante,
+            ]);
+        }
     }
 }

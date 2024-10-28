@@ -94,11 +94,10 @@ class PlanificacionController extends Controller
                 'message' => 'La empresa no envió su planificación aún.',
                 'idEmpresa' => $empresa->idEmpresa,
                 'idPlanificacion' => -1,
-                'aceptada' => 0,
-                'notaPlanificacion' => 0,
-                'comentarioDocente' => 'Comentario Docente',
+                'aceptada' => null,
+                'comentariopublico' => null,
                 'sprints' => [
-                    ['idSprint' => null, 'fechaIni' => '2024-09-06', 'fechaFin' => '2024-09-06', 'cobro' => 12, 'fechaEntrega' => '2024-09-06', 'entregables' => 'esto es un ejemplo'],
+                    ['idSprint' => null, 'fechaIni' => '2025-02-06', 'fechaFin' => '2025-02-12', 'cobro' => 13, 'fechaEntrega' => '2025-02-12', 'entregables' => 'esto es un ejemplo'],
                 ],  // Array de sprints con 1 filas vacías  
             ], 200);  // Código 200 ya que la empresa existe
         }
@@ -110,7 +109,7 @@ class PlanificacionController extends Controller
             'idEmpresa' => $planificacion->idEmpresa,
             'aceptada' => $planificacion->aceptada,
             'fechaEntrega' => $planificacion->fechaEntrega,
-            'comentarioDocente' => $planificacion->comentariodocente,
+            'comentariopublico' => $planificacion->comentariopublico,
             'sprints' => $planificacion->sprints->map(function ($sprint) {
                 return [
                     'idSprint' => $sprint->idSprint,
@@ -127,7 +126,7 @@ class PlanificacionController extends Controller
         // Retornar la respuesta JSON
         return response()->json($data);
     }
-    public function notaComentario($idPlanificacion): JsonResponse
+    public function getComentario($idPlanificacion): JsonResponse
     {
         $planificacion = Planificacion::find($idPlanificacion);
 
@@ -137,9 +136,7 @@ class PlanificacionController extends Controller
 
 
         $data = [
-
-            'notaplanificacion' => $planificacion->notaplanificacion ?? null,
-            'comentarioocente' => $planificacion->comentariodocente ?? null,
+            'comentariopublico' => $planificacion->comentariodocente ?? null,
             'fechaEntrega' => $planificacion->fechaEntrega
         ];
 
@@ -190,6 +187,7 @@ class PlanificacionController extends Controller
         }
     }
 
+
     public function validar(Request $request)
     {
         $validatedData = $request->validate([
@@ -205,6 +203,26 @@ class PlanificacionController extends Controller
             $planificacion->save();
             return response()->json([
                 'message' => 'Planificación aceptada con éxito',
+                'planificacion' => $planificacion
+            ]);
+        }
+    }
+    
+    public function rechazar(Request $request)
+    {
+        $validatedData = $request->validate([
+            'idEmpresa' => 'required|integer',
+        ]);
+
+        $planificacion = Planificacion::where('idEmpresa', $validatedData['idEmpresa'])->first();
+
+        if ($planificacion === null) {
+            return response()->json(['error' => 'Planificación no encontrada para esta empresa'], 404);
+        } else {
+            $planificacion->aceptada = 0;
+            $planificacion->save();
+            return response()->json([
+                'message' => 'Planificación rechazada con éxito',
                 'planificacion' => $planificacion
             ]);
         }
@@ -234,14 +252,13 @@ class PlanificacionController extends Controller
             if ($planificacion !== null) {
                 // si la planificacion existe, se actualiza la fechaEntrega y se eliminan los campos de notaplanificacion y comentariodocente
                 $planificacion->fechaEntrega = Carbon::now('America/Caracas')->format('Y-m-d H:i:s'); // ajustado a la zona horaria de Bolivia
-                $planificacion->notaPlanificacion = null;
-                $planificacion->comentarioDocente = null;
+                $planificacion->comentariopublico = null;
                 $planificacion->save();
             } else {
                 // si la planificacion no existe, se crea una nueva planificacion
                 $planificacion = new Planificacion();
                 $planificacion->idEmpresa = $validatedData['idEmpresa'];
-                $planificacion->aceptada = 0;
+                $planificacion->aceptada = null;
                 $planificacion->fechaEntrega = Carbon::now('America/Caracas')->format('Y-m-d H:i:s');
                 $planificacion->save();
             }
@@ -262,9 +279,8 @@ class PlanificacionController extends Controller
         // Simular una solicitud con datos de prueba
         $requestData = [
             'aceptada' => true,
-            'comentarioDocente' => 'Comentario de prueba',
+            'comentariopublico' => 'Comentario de prueba',
             'idEmpresa' => 1, // Asegúrate de que este ID exista en tu base de datos
-            'notaPlanificacion' => 85
         ];
 
         // Crear una nueva instancia de Request con los datos de prueba
