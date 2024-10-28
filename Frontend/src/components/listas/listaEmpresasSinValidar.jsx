@@ -10,6 +10,7 @@ import { getPlanificacionesSinValidar } from "../../api/getPlanificacionesSinVal
 import { useNavigate } from "react-router-dom";
 import Loading from "../loading/loading";
 import Error from "../error/error";
+import { Typography } from "@mui/material";
 
 function ListaEmpresasSinValidar() {
   const [loading, setLoading] = useState(true);
@@ -51,7 +52,7 @@ function ListaEmpresasSinValidar() {
         />
       ) : loading ? (
         <Loading />
-      ) : (
+      ) : listaEmpresas.length > 0 ? (
         <>
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -83,6 +84,12 @@ function ListaEmpresasSinValidar() {
               </TableBody>
             </Table>
           </TableContainer>
+        </>
+      ) : (
+        <>
+          <Typography>
+            Actualmente no hay planificaciones sin validar
+          </Typography>
         </>
       )}
     </>

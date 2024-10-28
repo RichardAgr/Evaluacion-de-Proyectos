@@ -42,7 +42,7 @@ function Nav() {
       {/** Seleccionar una planificacion para visualizar*/}
       <Route
         path="/visualizarPlanificacion"
-        element={<ListaVerPlanificacion />}
+        element={<SeleccionarEmpresaVisualizar />}
       />
 
       {/** Visualizar Planificacion*/}
@@ -97,6 +97,12 @@ function Nav() {
         path="/homeEstudiante/homeGrupoEstudiante"
         element={<HomeGrupoEstudiante />}
       />
+      
+      {/** Modificar Planificacion */}
+      <Route
+        path="/modificarPlanificacion/Empresa/:idEmpresa"
+        element={<ModificarPlanificacion />}
+      />
 
       <Route
         path="/homeEstudiante/homeGrupoEstudiante/sprint/semana/tareas/:idTarea"
@@ -106,12 +112,6 @@ function Nav() {
       <Route
         path="/homeEstudiante/homeGrupoEstudiante/empresas/:idEmpresa/calificaciones"
         element={<CalificacionesHitoEmpresa />}
-      />
-
-      {/** Modificar Planificacion */}
-      <Route
-        path="/modificarPlanificacion/Empresa/:idEmpresa"
-        element={<ModificarPlanificacion />}
       />
 
       {/** Modificar Lista de Tareas */}

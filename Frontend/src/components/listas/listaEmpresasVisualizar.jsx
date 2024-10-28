@@ -40,21 +40,19 @@ function ListaEmpresasVisualizar() {
   }, []);
 
   const handleRowClick = (idEmpresa) => {
-    navigate(
-      `/visualizarPlanificacion/empresa/${idEmpresa}`
-    );
+    navigate(`/visualizarPlanificacion/empresa/${idEmpresa}`);
   };
 
   return (
     <>
-        {error.errorMessage || error.errorDetails ? (
-          <Error
-            errorMessage={error.errorMessage}
-            errorDetails={error.errorDetails}
-          />
-        ) : loading ? (
-          <Loading />
-        ) : (
+      {error.errorMessage || error.errorDetails ? (
+        <Error
+          errorMessage={error.errorMessage}
+          errorDetails={error.errorDetails}
+        />
+      ) : loading ? (
+        <Loading />
+      ) : listaEmpresas.length > 0 ? (
         <>
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -86,8 +84,15 @@ function ListaEmpresasVisualizar() {
               </TableBody>
             </Table>
           </TableContainer>
-          </>
-        )}
+        </>
+      ) : (
+        <>
+          <Typography>
+            Actualmente no hay planificaciones que hayan sido validadas, intente
+            más tarde.
+          </Typography>
+        </>
+      )}
     </>
   );
 }

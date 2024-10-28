@@ -26,6 +26,7 @@ import NombreEmpresa from "../../../components/infoEmpresa/nombreEmpresa.jsx";
 import CuadroDialogo from "../../../components/cuadroDialogo/cuadroDialogo.jsx";
 import DecisionButtons from "../../../components/Buttons/decisionButtons.jsx";
 import Redirecting from "../../../components/redirecting/redirecting.jsx";
+import EstadoPlanificacion from "../../../components/estadoPlanificacion/estadoPlanificacion.jsx";
 
 function ValidarPlanificacion() {
   const [openValidateDialog, setOpenValidateDialog] = useState(false);
@@ -193,6 +194,9 @@ function ValidarPlanificacion() {
             <NombreEmpresa
               nombreLargo={empresaData.nombreLargo}
               nombreCorto={empresaData.nombreEmpresa}
+            />
+            <EstadoPlanificacion
+              estado={planificacionData.aceptada}
             />
             {planificacionData.aceptada ? (
               <Redirecting />
