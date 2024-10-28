@@ -42,12 +42,21 @@ class SprintController extends Controller
         // * fecha de inicio anterior a la fecha fin del anterior sprint
         $validator->after(function ($validator) use ($request) {
             $sprints = $request->input('sprints');
-            for ($i = 1; $i < count($sprints); $i++) {
-                $prevSprintEnd = Carbon::parse($sprints[$i - 1]['fechaFin']);
-                $currentSprintStart = Carbon::parse($sprints[$i]['fechaIni']);
+            for ($i = 0; $i < count($sprints); $i++) {
+                $startDate = Carbon::parse($sprints[$i]['fechaIni']);
+                $endDate = Carbon::parse($sprints[$i]['fechaFin']);
 
-                if ($currentSprintStart->lt($prevSprintEnd)) {
-                    $validator->errors()->add("sprints.{$i}.fechaIni", 'La fecha de inicio no puede ser anterior a la fecha de fin del sprint anterior.');
+                // Verificar que la fecha de fin sea al menos 7 días después de la fecha de inicio
+                if ($endDate->diffInDays($startDate) < 7) {
+                    $validator->errors()->add("sprint.{$i}.fechaFin", 'La fecha de fin debe ser al menos 7 días después de la fecha de inicio.');
+                }
+
+                // Verificar que la fecha de inicio no sea anterior a la fecha fin del sprint anterior
+                if ($i > 0) {
+                    $prevSprintEnd = Carbon::parse($sprints[$i - 1]['fechaFin']);
+                    if ($startDate->lt($prevSprintEnd)) {
+                        $validator->errors()->add("sprints.{$i}.fechaIni", 'La fecha de inicio no puede ser anterior a la fecha de fin del sprint anterior.');
+                    }
                 }
             }
         });

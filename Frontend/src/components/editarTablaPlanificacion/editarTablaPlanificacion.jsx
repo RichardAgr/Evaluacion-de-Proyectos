@@ -44,7 +44,22 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
     setCurrentSprintIndex(index);
     setOpenEntregables(true);
   };
+  
+  const errorTranslations = {
+    "The comentario field must be a string.":
+      "El comentario para el grupo no debe estar vacio.",
+    "The nota field must be at least 0.": "La nota debe ser al menos 0.",
+    "The nota field must not be greater than 100.":
+      "La nota no debe ser mayor que 100.",
+    "The nota field must be a number.": "El campo nota está vacío.",
+    "The group comment field is required.":
+      "El campo de comentario para el grupo es obligatorio.",
+    // aca se añaden los demas errores de ser necesario
+  };
 
+  const translateError = (error) => {
+    return errorTranslations[error] || `Error: ${error}`;
+  };
   const handleCloseEntregables = (newEntregables) => {
     if (currentSprintIndex !== -1) {
       const newRows = [...rows];
@@ -282,16 +297,21 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
         responseDataSprint.errors !== undefined &&
         responseDataSprint.errors !== null
       ) {
+        const errorMessages = Object.keys(responseDataSprint.errors)
+          .map((key) => {
+            const errors = responseDataSprint.errors[key];
+            return errors
+              .map((error) => `${key}: ${translateError(error)}`)
+              .join("\n");
+          })
+          .join("\n");
+        console.log(errorMessages);
         setSnackbar({
           open: true,
-          message: `Los datos en la planicacion no son validos, proximamente se podra decir exactamente que esta mal`,
+          message: errorMessages,
           severity: "error",
-          autoHide: false,
         });
       } else {
-        {
-          /** Aun no se manejan los errores tipo {responseDataSprint.errors} */
-        }
         console.log("Sprints modificados con exito.");
         setSnackbar({
           open: true,
@@ -340,11 +360,19 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
             dataEntregables.errors !== undefined &&
             dataEntregables.errors !== null
           ) {
+            const errorMessages = Object.keys(dataEntregables.errors)
+              .map((key) => {
+                const errors = dataEntregables.errors[key];
+                return errors
+                  .map((error) => `${key}: ${translateError(error)}`)
+                  .join("\n");
+              })
+              .join("\n");
+            console.log(errorMessages);
             setSnackbar({
               open: true,
-              message: `Los datos en los entregables no son validos, proximamente se podra decir exactamente que esta mal`,
+              message: errorMessages,
               severity: "error",
-              autoHide: false,
             });
           } else {
             {
@@ -434,7 +462,7 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
                     )
                   )}
                   <TableCell align="left">
-                    <Box sx={{ maxHeight: 200 ,overflowY: 'auto'}}>
+                    <Box sx={{ maxHeight: 200, overflowY: "auto" }}>
                       {row.entregables.length > 0 && (
                         <List dense sx={{ mb: 0.5 }}>
                           {row.entregables.map((entregable, i) => (
