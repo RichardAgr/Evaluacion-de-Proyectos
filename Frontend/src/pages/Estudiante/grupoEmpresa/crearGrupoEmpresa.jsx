@@ -1,11 +1,10 @@
 import { Fragment, useState, useEffect } from "react";
 import BaseUI from "../../../components/baseUI/baseUI";
 import { styled } from "@mui/material"; 
-import { Modal, TextField, Autocomplete,Snackbar, Alert,Grid2 } from "@mui/material";
+import {Snackbar, Alert,Grid2 } from "@mui/material";
 import Box from '@mui/material/Box';
 import { Button } from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
-import AddIcon from "@mui/icons-material/Add";
+
 
 
 
@@ -14,7 +13,7 @@ const CrearGrupoEmpresa = () => {
     const [nombreLargo, setNombreLargo] = useState("");
     const [nombreCorto, setNombreCorto] = useState("");
     const [intentoEnviar, setIntentoEnviar] = useState(false);
-    const [integrantes, setIntegrantes] = useState([{ id: 1, nombre: "Jhon Corrales", fijo: true }]); // El estudiante hardcodeado con id=1
+    const [integrantes, setIntegrantes] = useState([{ id: 1, nombre: "Jhon Corrales", fijo: true }]); 
     const [mensajeError, setMensajeError] = useState("");
     const [openModal, setOpenModal] = useState(false);
     const [selectedIntegrante, setSelectedIntegrante] = useState(null); 
@@ -23,7 +22,6 @@ const CrearGrupoEmpresa = () => {
     const [snackbarMessage, setSnackbarMessage] = useState("");
 
     useEffect(() => {
-        // Función para obtener los integrantes desde la API
         const fetchIntegrantes = async () => {
             try {
                 const response = await fetch('http://localhost:8000/api/estudiante/getEstudiante/1'); 
@@ -43,9 +41,9 @@ const CrearGrupoEmpresa = () => {
 
     const manejarSubmit = async () => {
         setIntentoEnviar(true);
-        if (nombreLargo && nombreCorto && integrantes.length >= 3) {
+        if (nombreLargo && nombreCorto && integrantes.length >= 1) {
             try {
-                const estudiantesIds = integrantes.map(integrante => integrante.id); // Obtener los IDs de los integrantes
+                const estudiantesIds = integrantes.map(integrante => integrante.id);
                 const response = await fetch('http://localhost:8000/api/estudiante/crearEmpresa', {
                     method: 'POST',
                     headers: {
@@ -54,7 +52,7 @@ const CrearGrupoEmpresa = () => {
                     body: JSON.stringify({
                         nombreLargo,
                         nombreCorto,
-                        estudiantes: estudiantesIds, // Incluir los IDs de los estudiantes
+                        estudiantes: estudiantesIds,
                     }),
                 });
     
@@ -63,59 +61,19 @@ const CrearGrupoEmpresa = () => {
                 const result = await response.json();
                 console.log('Grupo creado con éxito:', result);
                 setSnackbarMessage("¡Grupo creado con éxito!");
-                setSnackbarOpen(true); // Mostrar el snackbar
-
+                setSnackbarOpen(true);
             } catch (error) {
                 console.error(error);
                 setMensajeError("Error al crear el grupo.");
             }
         } else {
-            if (integrantes.length < 3) {
-                setMensajeError("Debe haber al menos 3 integrantes para crear el grupo."); 
-            } 
-            // Agrega aquí otras validaciones según sea necesario
-        }
-    };
-    
-    
-
-    const agregarIntegrante = () => {
-        if (integrantes.length < 6) {
-            setOpenModal(true); 
-        } else {
-            setMensajeError("No puedes agregar más de 6 integrantes.");
-        }
-    };
-
-    const confirmarAgregarIntegrante = () => {
-        if (selectedIntegrante) {
-            // Verifica si el integrante ya está en la lista
-            const existe = integrantes.some(integrante => integrante.id === selectedIntegrante.id);
-            if (existe) {
-                setMensajeError("Este integrante ya ha sido agregado.");
-                return;
+            if (integrantes.length < 1) {
+                setMensajeError("Debe haber al menos 1 integrante para crear el grupo."); 
             }
-    
-            // Agregar el integrante al grupo
-            const nuevoIntegrante = { id: selectedIntegrante.id, nombre: selectedIntegrante.label, fijo: false };
-            setIntegrantes([...integrantes, nuevoIntegrante]);
-    
-            // Eliminar el integrante seleccionado de las opciones disponibles
-            const nuevasOpciones = options.filter(option => option.id !== selectedIntegrante.id);
-            setOptions(nuevasOpciones); 
-    
-            // Limpiar la selección y cerrar el modal
-            setSelectedIntegrante(null);
-            setOpenModal(false);
-        } else {
-            setMensajeError("Debe seleccionar un integrante.");
         }
     };
     
-
-    const eliminarIntegrante = (id) => {
-        setIntegrantes(integrantes.filter(integrante => integrante.id !== id));
-    };
+    
 
     return (
         <Fragment>
@@ -126,49 +84,59 @@ const CrearGrupoEmpresa = () => {
                 dirBack={`/`}
             >
                 <div style={{ display: 'grid' }}>
-                    <NombreEmpresaCompleto>
-                        <Box component="section" sx={{ p: 2 }}>
+                <NombreEmpresaCompleto>
+                    <Box component="section" sx={{ p: 2 }}>
                         <h3>NOMBRE LARGO:</h3>
-                        </Box>
-                        <StyledWrapper>
-                                <input
-                                    placeholder="Nombre Largo"
-                                    className="input"
-                                    value={nombreLargo}
-                                    onChange={(e) => setNombreLargo(e.target.value)}
-                                />
-                                    {intentoEnviar && (
-                                        nombreLargo === "" 
-                                        ? <Mensaje>No hay nombre largo</Mensaje>
-                                        : nombreLargo.length < 5
-                                        ? <Mensaje>debe tener un mínimo de 5 caracteres y un máximo de 100 caracteres.</Mensaje>
-                                        : null
-                                    )}
-                        </StyledWrapper>
-                    </NombreEmpresaCompleto>
+                    </Box>
+                    <StyledWrapper>
+                        <div style={{ display: "flex", alignItems: "center" }}>
+                            <input
+                                placeholder="Nombre Largo"
+                                className="input"
+                                value={nombreLargo}
+                                onChange={(e) => setNombreLargo(e.target.value)}
+                            />
+                            {intentoEnviar && (
+                                nombreLargo === "" 
+                                ? <Alert severity="error" sx={{ ml: 1, pt: 0, pb: 0 }}>No hay nombre Largo</Alert>
+                                : (nombreLargo.length < 5 || nombreLargo.length > 100) && (
+                                    <Alert severity="warning" sx={{ ml: 1, pt: 0, pb: 0 }}>
+                                        Debe tener entre 5 y 100 caracteres.
+                                    </Alert>
+                                )
+                            )}
+                        </div>
+                    </StyledWrapper>
+                </NombreEmpresaCompleto>
+
+
                     <NombreEmpresaCompleto>
                         <Box component="section" sx={{ p: 2 }}>
                             <h3>NOMBRE CORTO:</h3>
                         </Box>
                         <StyledWrapper>
+                            <div style={{ display: "flex", alignItems: "center" }}>
                                 <input
                                     placeholder="Nombre Corto"
                                     className="input"
                                     value={nombreCorto}
                                     onChange={(e) => setNombreCorto(e.target.value)} 
                                 />
-                                    {intentoEnviar && (
-                                        nombreCorto === "" 
-                                        ? <Mensaje>No hay nombre corto</Mensaje>
-                                        : nombreCorto.length < 2
-                                        ? <Mensaje>debe tener un mínimo de 5 caracteres y un máximo de 100 caracteres.</Mensaje>
-                                        : null
-                                    )}
+                                {intentoEnviar && (
+                                    nombreLargo === "" 
+                                    ? <Alert severity="error" sx={{ ml: 1, pt: 0, pb: 0 }}>No hay nombre Corto</Alert>
+                                    : (nombreLargo.length < 2 || nombreLargo.length > 20) && (
+                                        <Alert severity="warning" sx={{ ml: 1, pt: 0, pb: 0 }}>
+                                            Debe tener entre 2 y 20 caracteres.
+                                        </Alert>
+                                    )
+                                )}
+                            </div>
                         </StyledWrapper>
                     </NombreEmpresaCompleto>
                     <Box pt={10}>
                         <h2>Integrantes</h2>
-                        <h6 style={{ color: '#979797', fontSize: '15px'}}>MAXIMO 6 - MINIMO 3</h6>
+                        <h6 style={{ color: '#979797', fontSize: '15px'}}>MAXIMO 6 - MINIMO 1</h6>
                     </Box>
                     <Grid2 item xs={12}>
                         {integrantes.map((integrante, index) => (
@@ -194,70 +162,25 @@ const CrearGrupoEmpresa = () => {
                                         <span style={{ color: 'black',paddingRight: '20px' }}>Representante Legal</span>
                                     )}
                                 </div>
-                                {!integrante.fijo && (
-                                    <Button
-                                        variant="contained"
-                                        color="secondary"
-                                        startIcon={<DeleteIcon />}
-                                        onClick={() => eliminarIntegrante(integrante.id)}
-                                    >
-                                        Eliminar
-                                    </Button>
-                                )}
                             </Box>
                         ))}
                     </Grid2>
 
 
                     {mensajeError && <Mensaje>{mensajeError}</Mensaje>}
-                    <Button 
-                        variant="contained"
-                        color="primary"
-                        startIcon={<AddIcon />}
-                        sx={{ minWidth: 50, width: '240px', height: '30px' }}
-                        onClick={agregarIntegrante}
-                        >
-                        Anadir Integrante
-                    </Button>
                     <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                         <Button  
                         justifyContent="flex-end"
                         variant="contained"
                         color="primary"
                         onClick={manejarSubmit}
-                        sx={{ minWidth: 50, width: '240px', height: '30px', marginTop:'50px' }}
+                        sx={{ minWidth: 50, width: '100px', height: '30px', marginTop:'50px' }}
                     >
-                        Publicar Grupo Empresa
+                        CREAR
                     </Button>
                     </div>
 
 
-                    {/* Modal para agregar integrante */}
-                    <Modal open={openModal} onClose={() => setOpenModal(false)}>
-                        <div style={{ padding: "20px", backgroundColor: "white", margin: "auto", marginTop: "20%", width: "300px", borderRadius: "8px" }}>
-                            <h2>Añadir Integrante</h2>
-                            <Autocomplete
-                                options={options} // Usar las opciones recuperadas
-                                getOptionLabel={(option) => option.label}
-                                onChange={(event, newValue) => setSelectedIntegrante(newValue)}
-                                renderInput={(params) => (
-                                    <TextField {...params} label="Selecciona un integrante" />
-                                )}
-                            />
-                            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '10px' }}>
-                                <Button
-                                    variant="contained"
-                                    color="primary"
-                                    onClick={confirmarAgregarIntegrante} // Asegúrate de que esta función esté definida
-                                >
-                                    Añadir
-                                </Button>
-                                <Button variant="outlined" onClick={() => setOpenModal(false)}>
-                                    Cancelar
-                                </Button>
-                            </div>
-                        </div>
-                    </Modal>
 
                     <Snackbar 
                         open={snackbarOpen} 
@@ -280,8 +203,8 @@ const NombreEmpresaCompleto = styled('div')`
     display: flex;
     box-sizing: border-box;
     align-items: center; 
-    margin-top: 1vw;
-    margin-bottom: 1vw;
+    margin-top: 0.5vw;
+    margin-bottom: 0.5vw;
 `;
 
 
