@@ -25,7 +25,7 @@ function Comentario({ comentariopublico }) {
       </Box>
       <Box>
       <Paper
-        elevation={3}
+        elevation={1}
         sx={{
           p: 5,
           backgroundColor: 'background.paper',
@@ -33,7 +33,7 @@ function Comentario({ comentariopublico }) {
           borderColor: 'divider',
         }}
       >
-          <Typography variant="body1">{comentariopublico}</Typography>
+          <Typography variant="body1" component="h1">{comentariopublico}</Typography>
         </Paper>
       </Box>
     </>

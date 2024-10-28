@@ -12,6 +12,9 @@ import {
   TextField,
   Box,
   Alert,
+  List,
+  ListItem,
+  ListItemText,
   AlertTitle,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
@@ -24,10 +27,8 @@ import AnadirEntregables from "../anadirEntregables/anadirEntregables";
 export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
   const [rows, setRows] = useState([]);
   const [openEntregables, setOpenEntregables] = useState(false);
-  const [entregables, setEntregables] = useState([
-    "Entregable 1",
-    "Entregable 2",
-  ]);
+  const [currentSprintIndex, setCurrentSprintIndex] = useState(-1);
+
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",
@@ -39,8 +40,24 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
     title: "",
     description: "",
   });
-  const handleOpenEntregables = () => setOpenEntregables(true);
-  const handleCloseEntregables = () => setOpenEntregables(false);
+  const handleOpenEntregables = (index) => {
+    setCurrentSprintIndex(index);
+    setOpenEntregables(true);
+  };
+
+  const handleCloseEntregables = (newEntregables) => {
+    if (currentSprintIndex !== -1) {
+      const newRows = [...rows];
+      newRows[currentSprintIndex].entregables = newEntregables;
+      setRows(newRows);
+    }
+    setOpenEntregables(false);
+    setCurrentSprintIndex(-1);
+
+    console.log(currentSprintIndex);
+    console.log(newEntregables);
+    console.log(rows);
+  };
   const handleCancel = () => {
     setCuadroDialogo({
       open: true,
@@ -68,6 +85,7 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
         fechaFin: sprint.fechaFin,
         fechaEntrega: sprint.fechaEntrega,
         cobro: sprint.cobro,
+        entregables: sprint.entregables || [],
       };
     });
     setRows(newRows);
@@ -80,6 +98,7 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
       fechaFin: "",
       fechaEntrega: "",
       cobro: "",
+      entregables: [],
     };
     setRows([...rows, newRow]);
   };
@@ -191,8 +210,8 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
         fechaIni: row.fechaIni,
         fechaFin: row.fechaFin,
         fechaEntrega: row.fechaEntrega,
-          cobro: Number(row.cobro),
-          entregables: row.entregables,
+        cobro: Number(row.cobro),
+        entregables: row.entregables,
       })),
     };
     const response = await fetch(
@@ -269,7 +288,7 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
   return (
     <>
       <Box>
-      <TableContainer component={Paper}>
+        <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="tabla de planificación">
             <TableHead>
               <TableRow>
@@ -285,31 +304,72 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
             <TableBody>
               {rows.map((row, index) => (
                 <TableRow key={index}>
-                  <TableCell>{`Sprint ${index+1}`}</TableCell>
-                  {['fechaIni', 'fechaFin', 'fechaEntrega', 'cobro'].map((field) => (
-                    <TableCell key={field} align="left">
-                      <TextField
-                        value={row[field] ?? ""}
-                        onChange={(e) => handleCellChange(index, field, e.target.value)}
-                        type={field.includes("fecha") ? "date" : "text"}
-                        fullWidth
-                        variant="standard"
-                        inputProps={{
-                          "aria-label": `${field} for ${row.hito}`,
-                        }}
-                      />
-                    </TableCell>
-                  ))}
+                  <TableCell>{`Sprint ${index + 1}`}</TableCell>
+                  {["fechaIni", "fechaFin", "fechaEntrega", "cobro"].map(
+                    (field) => (
+                      <TableCell key={field} align="left" style={{ minWidth: field === "cobro" ? 100 : 100}}>
+                        <TextField
+                          value={row[field] ?? ""}
+                          onChange={(e) => {
+                            let value = e.target.value;
+                            if (field === "cobro") {
+                              // Permitir solo números y un punto decimal
+                              value = value.replace(/[^0-9.]/g, "");
+                              // Asegurar que solo haya un punto decimal
+                              const parts = value.split(".");
+                              if (parts.length > 2) {
+                                value =
+                                  parts[0] + "." + parts.slice(1).join("");
+                              }
+                              // Limitar a dos decimales
+                              if (parts[1] && parts[1].length > 2) {
+                                value = parseFloat(value).toFixed(2);
+                              }
+                            }
+                            handleCellChange(index, field, value);
+                          }}
+                          type={
+                            field.includes("fecha")
+                              ? "date"
+                              : field === "cobro"
+                              ? "number"
+                              : "text"
+                          }
+                          fullWidth
+                          variant="standard"
+                          inputProps={{
+                            "aria-label": `${field} for ${row.hito}`,
+                            ...(field === "cobro" && {
+                              step: "0.01",
+                              min: "0",
+                              pattern: "^\\d+(\\.\\d{1,2})?$",
+                            }),
+                          }}
+                        />
+                      </TableCell>
+                    )
+                  )}
                   <TableCell align="left">
+                    {row.entregables.length > 0 && (
+                      <List dense sx={{ mb: 0.5 }}>
+                        {row.entregables.map((entregable, i) => (
+                          <ListItem key={i}>
+                            <ListItemText primary={`${i + 1}. ${entregable}`} />
+                          </ListItem>
+                        ))}
+                      </List>
+                    )}
                     <Button
                       variant="contained"
                       color="primary"
                       size="small"
                       startIcon={<AddIcon />}
-                      sx={{ maxWidth: '200px', maxHeight: '50px' }}
-                      onClick={() => setOpenEntregables(true)}
+                      sx={{ minWidth: "250px", maxHeight: "50px" }}
+                      onClick={() => handleOpenEntregables(index)}
                     >
-                      Añadir Entregables
+                      {row.entregables.length > 0
+                        ? "Modificar Entregables"
+                        : "Añadir Entregables"}
                     </Button>
                   </TableCell>
                   <TableCell align="left">
@@ -319,8 +379,9 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
                         color="secondary"
                         startIcon={<DeleteIcon />}
                         onClick={() => dialogoEliminar(index, row.hito)}
+                        sx={{ minWidth: "170px", maxHeight: "50px" }}
                       >
-                        Eliminar
+                        Eliminar Hito
                       </Button>
                     )}
                   </TableCell>
@@ -362,7 +423,9 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
       <AnadirEntregables
         open={openEntregables}
         handleClose={handleCloseEntregables}
-        initialEntregables={entregables}
+        initialEntregables={
+          currentSprintIndex !== -1 ? rows[currentSprintIndex].entregables : []
+        }
       />
     </>
   );
