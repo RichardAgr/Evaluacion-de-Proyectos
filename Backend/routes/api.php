@@ -80,3 +80,9 @@ Route::post('/docente/darDeBaja', [GrupoController::class, 'darDeBaja']);
 // Ruta para modificar una tarea con sus archivos
 Route::post('/tarea/{idTarea}/guardar', [TareaController::class, 'update']);
 
+
+
+Route::post('/empresas/notasSprint/modificar', [NotaSprintController::class, 'actualizarNotaSprint']);
+
+
+
