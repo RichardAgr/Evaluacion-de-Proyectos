@@ -7,9 +7,6 @@ use Illuminate\Support\Facades\DB;
 
 class GrupoSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
         DB::table('grupo')->insert([

@@ -36,7 +36,7 @@ class NotaSprintController extends Controller{
                 'estudiante.segundoApellido',// Nombre del estudiante
                 'tarea.textotarea',
                 'notaSprint.nota',                        // Nota del estudiante
-                'notaSprint.comentarioDocente'               // Comentario del docente (si existe)
+                'notaSprint.comentario'               // Comentario del docente (si existe)
             )
             ->where('notaSprint.idEmpresa' ,'=',$empresa)
             ->where('Sprint.numSprint','=',$semana)

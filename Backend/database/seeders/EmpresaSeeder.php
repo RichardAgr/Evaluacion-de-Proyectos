@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 class EmpresaSeeder extends Seeder
 {
+
     /**
      * Run the database seeds.
      */
