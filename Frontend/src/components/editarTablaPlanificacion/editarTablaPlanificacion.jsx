@@ -91,16 +91,26 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
     setRows(newRows);
   }, [planificacionData]);
   const addRow = () => {
-    const newSprint = rows.length + 1;
-    const newRow = {
-      hito: `SPRINT ${newSprint}`,
-      fechaIni: "",
-      fechaFin: "",
-      fechaEntrega: "",
-      cobro: "",
-      entregables: [],
-    };
-    setRows([...rows, newRow]);
+    if (rows.length >= 10) {
+      setSnackbar({
+        open: true,
+        message: "No se pueden añadir más de 10 sprints.",
+        severity: "warning",
+        autoHide: true,
+      });
+      return;
+    } else {
+      const newSprint = rows.length + 1;
+      const newRow = {
+        hito: `SPRINT ${newSprint}`,
+        fechaIni: "",
+        fechaFin: "",
+        fechaEntrega: "",
+        cobro: "",
+        entregables: [],
+      };
+      setRows([...rows, newRow]);
+    }
   };
 
   const deleteRow = (index) => {
@@ -181,8 +191,8 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
     fechaFin: "Fecha de Fin",
     fechaEntrega: "Fecha de Entrega",
     cobro: "Cobro",
-    entregables: "Entregables"
-  }
+    entregables: "Entregables",
+  };
 
   const subir = async () => {
     setCuadroDialogo({
@@ -191,18 +201,20 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
     });
     let rowIndex = 0;
     for (const row of rows) {
-      rowIndex++
+      rowIndex++;
       for (const [key, value] of Object.entries(row)) {
         if (value === "" || value === null) {
-          console.error(`Campo vacío encontrado en Sprint ${rowIndex}: ${key}`)
-          const fieldName = fieldNames[key] || key
-          console.error(`Campo vacío encontrado en Sprint ${rowIndex}: ${fieldName}`)
+          console.error(`Campo vacío encontrado en Sprint ${rowIndex}: ${key}`);
+          const fieldName = fieldNames[key] || key;
+          console.error(
+            `Campo vacío encontrado en Sprint ${rowIndex}: ${fieldName}`
+          );
           setSnackbar({
             open: true,
             message: `Sprint ${rowIndex}: El campo "${fieldName}" está vacío`,
             severity: "warning",
             autoHide: false,
-          })
+          });
           return;
         }
       }
@@ -317,10 +329,16 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
             <TableBody>
               {rows.map((row, index) => (
                 <TableRow key={index}>
-                  <TableCell>{`Sprint ${index + 1}`}</TableCell>
+                  <TableCell sx={{ minWidth: "70px", maxHeight: "50px" }}>
+                    {`Hito ${index + 1}`}
+                  </TableCell>
                   {["fechaIni", "fechaFin", "fechaEntrega", "cobro"].map(
                     (field) => (
-                      <TableCell key={field} align="left" style={{ minWidth: field === "cobro" ? 100 : 100}}>
+                      <TableCell
+                        key={field}
+                        align="left"
+                        style={{ minWidth: field === "cobro" ? 100 : 100 }}
+                      >
                         <TextField
                           value={row[field] ?? ""}
                           onChange={(e) => {
@@ -403,15 +421,17 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
             </TableBody>
           </Table>
         </TableContainer>
-        <Button
-          variant="contained"
-          color="primary"
-          startIcon={<AddIcon />}
-          onClick={addRow}
-          sx={{ marginTop: "20px" }}
-        >
-          Añadir fila
-        </Button>
+        {rows.length < 10 && (
+          <Button
+            variant="contained"
+            color="primary"
+            startIcon={<AddIcon />}
+            onClick={addRow}
+            sx={{ marginTop: "20px" }}
+          >
+            Añadir fila
+          </Button>
+        )}
 
         <DecisionButtons
           rejectButtonText="Descartar"
