@@ -36,7 +36,7 @@ const SprintSemanas = ({ title, semana, idSprint, navigateLink }) => {
                 <div className="collapse-panel" style={{ padding:'1px'}} >
                     {semana.tareas.map((tarea) => (
                         <div className='collapse-child'onClick={() => {clickBoton(tarea)}} key={tarea.idTarea}>
-                            <p style={{ fontSize: '25px' }} >{tarea.textoTarea}</p>
+                            <p style={{ fontSize: '25px' }} >{tarea.nombreTarea}</p>
                         </div>
                     ))}
                 </div>
