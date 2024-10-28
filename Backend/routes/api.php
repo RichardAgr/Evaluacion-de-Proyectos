@@ -51,6 +51,8 @@ Route::get('/empresas/{idEmpresa}/calificaciones', [EmpresaController::class, 'g
 Route::get('/empresas/notaSprint', [NotaSprintController::class, 'notaSprint']);
 Route::get('/empresas/notasSprint/{idEmpresa}', [NotaSprintController::class, 'notasSprint']);
 
+Route::get('/docente/obtenerTareas', [NotaSprintController::class, 'obtenerTareaYEstudiante']);
+
 /**
  * TODOS LOS POST VAN 
  *
