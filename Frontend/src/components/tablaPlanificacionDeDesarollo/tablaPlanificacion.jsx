@@ -5,7 +5,7 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import TableFooter from '@mui/material/TableFooter';
+import TableFooter from "@mui/material/TableFooter";
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 import { Box, Typography, List, ListItem, ListItemText } from "@mui/material";
@@ -51,21 +51,28 @@ function TablaPlanificacion({ sprints, ocultarBotones }) {
                     <TableCell align="left">{sprint.fechaEntrega}</TableCell>
                     <TableCell align="left">{sprint.cobro}</TableCell>
                     <TableCell align="left">
-                      <List dense disablePadding>
-                        {sprint.entregables.map((entregable, entregableIndex) => (
-                          <ListItem key={entregableIndex} disableGutters>
-                            <ListItemText 
-                              primary={`${entregableIndex + 1}. ${entregable.descripcionEntregable}`}
-                              primaryTypographyProps={{ variant: 'body2' }}
-                            />
-                          </ListItem>
-                        ))}
-                      </List>
+                      <Box sx={{ maxHeight: 200 , overflowY: "auto" }}>
+
+                        <List dense disablePadding>
+                          {sprint.entregables.map(
+                            (entregable, entregableIndex) => (
+                              <ListItem key={entregableIndex} disableGutters>
+                                <ListItemText
+                                  primary={`${entregableIndex + 1}. ${
+                                    entregable.descripcionEntregable
+                                  }`}
+                                  primaryTypographyProps={{ variant: "body2" }}
+                                />
+                              </ListItem>
+                            )
+                          )}
+                        </List>
+                      </Box>
                     </TableCell>
                     {!ocultarBotones && (
                       <TableCell align="left">
                         {fechaActual >= fechaInicioSprint && (
-                          <Button variant='contained'>Ver Sprint</Button>
+                          <Button variant="contained">Ver Sprint</Button>
                         )}
                       </TableCell>
                     )}
@@ -76,12 +83,20 @@ function TablaPlanificacion({ sprints, ocultarBotones }) {
             <TableFooter>
               <TableRow>
                 <TableCell colSpan={4} align="right">
-                  <Typography variant="subtitle1" fontWeight="bold" style={{ color: 'black' }}>
+                  <Typography
+                    variant="subtitle1"
+                    fontWeight="bold"
+                    style={{ color: "black" }}
+                  >
                     Cobro Total:
                   </Typography>
                 </TableCell>
                 <TableCell align="left">
-                  <Typography variant="subtitle1" fontWeight="bold" style={{ color: 'black' }}>
+                  <Typography
+                    variant="subtitle1"
+                    fontWeight="bold"
+                    style={{ color: "black" }}
+                  >
                     {totalCharge.toFixed(2)} Bs
                   </Typography>
                 </TableCell>

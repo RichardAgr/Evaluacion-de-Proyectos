@@ -5,7 +5,7 @@ import {
   Typography,
 } from "@mui/material";
 import BaseUI from "../../../components/baseUI/baseUI.jsx";
-import TablaPlanificacion from "../../../components/vistaTablaPlanificacion/vistaTablaPlanificacion.jsx";
+import TablaPlanificacion from "../../../components/tablaPlanificacionDeDesarollo/tablaPlanificacion.jsx";
 import { getEmpresaData } from "../../../api/getEmpresa.jsx";
 import { getPlanificacion } from "../../../api/getPlanificacion.jsx";
 import { validar } from "../../../api/validarPlanificacion/validar.jsx";

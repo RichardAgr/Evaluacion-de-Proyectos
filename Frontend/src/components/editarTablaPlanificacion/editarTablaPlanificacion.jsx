@@ -434,15 +434,19 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
                     )
                   )}
                   <TableCell align="left">
-                    {row.entregables.length > 0 && (
-                      <List dense sx={{ mb: 0.5 }}>
-                        {row.entregables.map((entregable, i) => (
-                          <ListItem key={i}>
-                            <ListItemText primary={`${i + 1}. ${entregable}`} />
-                          </ListItem>
-                        ))}
-                      </List>
-                    )}
+                    <Box sx={{ maxHeight: 200 ,overflowY: 'auto'}}>
+                      {row.entregables.length > 0 && (
+                        <List dense sx={{ mb: 0.5 }}>
+                          {row.entregables.map((entregable, i) => (
+                            <ListItem key={i}>
+                              <ListItemText
+                                primary={`${i + 1}. ${entregable}`}
+                              />
+                            </ListItem>
+                          ))}
+                        </List>
+                      )}
+                    </Box>
                     <Button
                       variant="contained"
                       color="primary"
