@@ -10,12 +10,17 @@ import {
     TableRow,
     Paper,
     Box,
+    CircularProgress,
+    Typography,
 } from "@mui/material";
 
 function CalificarEstSemana() {
-    const empresaId = 1; 
+    const empresaId = 2; 
     const Sprint = "1";
     const [nombreEmpresa, setNombreEmpresa] = useState({ nombreCorto: '', nombreLargo: '' });
+    const [teamData, setTeamData] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     const getNombreEmpresa = async (empresaId) => {
         try {
@@ -26,65 +31,47 @@ function CalificarEstSemana() {
                 },
             });
 
-            if (!response.ok) {
-                throw new Error('Error al obtener los datos de la empresa');
-            }
+            if (!response.ok) throw new Error('Error al obtener los datos de la empresa');
 
             const data = await response.json();    
             setNombreEmpresa({ nombreCorto: data.nombreEmpresa, nombreLargo: data.nombreLargo });
         } catch (error) {
             console.error('Error en la solicitud:', error);
+            setError(error.message);
         }
     };
 
+    const getNotasSprint = async (empresaId, Sprint) => {
+        try {
+            const response = await fetch(`http://127.0.0.1:8000/api/empresas/notaSprint?empresa=${empresaId}&numeroSprint=${Sprint}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+    
+            if (!response.ok) throw new Error('Error al obtener las notas del sprint');
+    
+            const data = await response.json();
+            setTeamData(data);
+        } catch (error) {
+            console.error('Error en la solicitud:', error);
+            setError(error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+    
     useEffect(() => {
         getNombreEmpresa(empresaId);
+        getNotasSprint(empresaId, Sprint);
     }, []);
-    
-    const [teamData] = useState([
-        {
-            id: 1, 
-            name: 'Alejandro Rodríguez', 
-            tasks: ['Desarrollo Backend'], 
-            note: 0, 
-            comments: 'Buen trabajo en general.', 
-        },
-        {
-            id: 2, 
-            name: 'María García', 
-            tasks: ['Diseño UI/UX'], 
-            note: 70, 
-            comments: 'Excelente creatividad.', 
-        },
-        {
-            id: 3, 
-            name: 'Joaquín Pérez', 
-            tasks: ['Testing y QA'], 
-            note: 45, 
-            comments: 'Cumplió con todas las tareas asignadas.', 
-        },
-        {
-            id: 4, 
-            name: 'Jhok Corrales', 
-            tasks: [], // No tiene tareas
-            note: 100, 
-            comments: 'Cumplió con todas las tareas asignadas.', 
-        },
-        {
-            id: 5, 
-            name: 'Sabrina Fernadez', 
-            tasks: ['Diseño UI/UX'], 
-            note: 70, 
-            comments: 'Excelente creatividad.', 
-        },
-        {
-            id: 6, 
-            name: 'Melani Pérez', 
-            tasks: ['Testing y QA','Documentacion'], 
-            note: 25, 
-            comments: 'Cumplió con todas las tareas asignadas.Cumplió con todas las tareas asignadas.Cumplió con todas las tareas asignadas.Cumplió con todas las tareas asignadas.Cumplió con todas las tareas asignadas.', 
-        },
-    ]);
+
+    if (loading) {
+        return <CircularProgress />;
+    }
+
+    console.log(nombreEmpresa);
 
     return (
         <Fragment>
@@ -93,6 +80,7 @@ function CalificarEstSemana() {
                 dirBack={'/'}>
                 <NombreSprint><h1>SPRINT {Sprint}</h1></NombreSprint>
                 <InfoEmpresa nombreCorto={nombreEmpresa.nombreCorto} nombreLargo={nombreEmpresa.nombreLargo} />
+                {error && <Typography color="error">{error}</Typography>}
                 <TablaContainer component={Paper}>
                     <Table aria-label="team evaluation table" size="small">
                         <TableHead>
@@ -104,54 +92,76 @@ function CalificarEstSemana() {
                             </TableRow>
                         </TableHead>  
                         <TableBody>
-                            {teamData.map((member) => (
-                                <TableRow key={member.id}>
-                                    <TableCell>{member.name}</TableCell>
-                                    {member.tasks.length > 0 ? (
-                                        <>
-                                            <TableCell sx={{ py: 1 }}>
-                                                <ul style={{ margin: 0, paddingInlineStart: "20px" }}>
-                                                    {member.tasks.map((task, taskIndex) => (
-                                                        <li key={taskIndex}>{task}</li>
-                                                    ))}
-                                                </ul>
-                                            </TableCell>
-                                            <TableCell sx={{ py: 2 }}>
-                                                <Box
-                                                    sx={{
-                                                        width: "40px",
-                                                        textAlign: 'left',
-                                                        padding: '8px',
-                                                        border: '1px solid #e0e0e0',
-                                                        borderRadius: '4px',
-                                                        color: member.note < 50 ? 'red' : 'black'
-                                                    }}
-                                                >
-                                                    {member.note}
-                                                </Box>
-                                            </TableCell>
-                                            <TableCell sx={{ py: 1 }}>
-                                                <Box
-                                                    fullWidth
-                                                    sx={{
-                                                        textAlign: 'left',
-                                                        minHeight: '70px',
-                                                        padding: '8px',
-                                                        border: '1px solid #e0e0e0',
-                                                        borderRadius: '4px'
-                                                    }}
-                                                >
-                                                    {member.comments}
-                                                </Box>
-                                            </TableCell>
-                                        </>
-                                    ) : (
-                                        <TableCell colSpan={4} sx={{ color: 'Black', textAlign: 'center', py: 2 }}>
-                                            Sin tareas asignadas.
+                            {teamData.length > 0 ? (
+                                teamData.map((member) => (
+                                    <TableRow key={member.idEstudiante}>
+                                        <TableCell>{`${member.nombreEstudiante} ${member.primerApellido} ${member.segundoApellido}`}</TableCell>
+                                        <TableCell sx={{ py: 1 }}>
+                                            <ul style={{ margin: 0, paddingInlineStart: "20px" }}>
+                                                {Array.isArray(member.tareas) && member.tareas.length > 0 && member.tareas[0] !== null ? (
+                                                    member.tareas.map((tarea, index) => (
+                                                        <li key={index}>{tarea}</li>
+                                                    ))
+                                                ) : (
+                                                    <TableRow>
+                                                        <TableCell colSpan={4} sx={{ textAlign: 'center', py: 2 }}>
+                                                            No hay tareas
+                                                        </TableCell>
+                                                    </TableRow>
+                                                )}
+                                            </ul>
                                         </TableCell>
-                                    )}
+                                        {member.tareas.length > 0 && member.tareas[0] !== null ? (
+                                            <>
+                                                <TableCell sx={{ py: 2 }}>
+                                                    <Box
+                                                        sx={{
+                                                            width: "40px",
+                                                            textAlign: 'left',
+                                                            padding: '8px',
+                                                            border: '1px solid #e0e0e0',
+                                                            borderRadius: '4px',
+                                                            color: member.nota < 50 ? 'red' : 'black'
+                                                        }}
+                                                    >
+                                                        {member.nota}
+                                                    </Box>
+                                                </TableCell>
+                                                <TableCell sx={{ py: 1 }}>
+                                                    <Box
+                                                        fullWidth
+                                                        sx={{
+                                                            textAlign: 'left',
+                                                            minHeight: '70px',
+                                                            padding: '8px',
+                                                            border: '1px solid #e0e0e0',
+                                                            borderRadius: '4px'
+                                                        }}
+                                                    >
+                                                        {member.comentario}
+                                                    </Box>
+                                                </TableCell>
+                                            </>
+                                        ) : (
+                                            // Si no hay tareas, las celdas de Nota y Comentario estarán vacías
+                                            <>
+                                                <TableCell sx={{ py: 2 }}>
+                                                    <Box sx={{ width: "40px", textAlign: 'left', padding: '8px' }} />
+                                                </TableCell>
+                                                <TableCell sx={{ py: 1 }}>
+                                                    <Box fullWidth sx={{ minHeight: '70px', padding: '8px' }} />
+                                                </TableCell>
+                                            </>
+                                        )}
+                                    </TableRow>
+                                ))
+                            ) : (
+                                <TableRow>
+                                    <TableCell colSpan={4} sx={{ textAlign: 'center', py: 2 }}>
+                                        No se encontraron registros para este sprint.
+                                    </TableCell>
                                 </TableRow>
-                            ))}
+                            )}
                         </TableBody> 
                     </Table>
                 </TablaContainer>

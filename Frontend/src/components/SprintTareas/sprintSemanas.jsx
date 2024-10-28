@@ -74,7 +74,7 @@ const SprintSemanas = ({ title, semana, idSprint, navigateLink }) => {
                                 }}            
                             >
                                 {isOpen ? '>  ' : '>  '}
-                                {tarea.textoTarea}
+                                {tarea.nombreTarea}
                             </Box>
                         ))
                     ) : (
