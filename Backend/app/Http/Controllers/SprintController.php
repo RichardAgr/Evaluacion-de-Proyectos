@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Planificacion;
 use App\Models\Sprint;
-use App\Models\Semana;
-use App\Models\Tarea;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
