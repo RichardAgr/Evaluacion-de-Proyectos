@@ -33,7 +33,7 @@ class NotaSprintController extends Controller{
                 $join->on('p.idPlanificacion', '=', 'sp.idPlanificacion')
                      ->where('p.idEmpresa', '=', $empresa);
             })
-            ->select('t.nombreTarea', DB::raw("CONCAT(e.nombreEstudiante, ' ', e.primerApellido, ' ', e.segundoApellido) as nombre_completo"),'np.nota', 'np.comentario')
+            ->select('t.nombreTarea', DB::raw("CONCAT(e.nombreEstudiante, ' ', e.primerApellido, ' ', e.segundoApellido) as nombre_completo"),'np.nota', 'np.comentario','e.idEstudiante')
             ->where('ep.idEmpresa', $empresa)
             ->where('sp.numeroSprint', $semana)
             ->get();
@@ -44,6 +44,7 @@ class NotaSprintController extends Controller{
                 'tareas' => $items->pluck('nombreTarea')->toArray(),
                 'nota' => $items->first()->nota,
                 'comentario' => $items->first()->comentario,
+                'id' => $items->first()->idEstudiante
             ];
         });
     
