@@ -321,7 +321,7 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
                 <TableCell align="left">Fecha Inicio</TableCell>
                 <TableCell align="left">Fecha Fin</TableCell>
                 <TableCell align="left">Fecha Entrega</TableCell>
-                <TableCell align="left">Cobro</TableCell>
+                <TableCell align="left">Cobro (Bs)</TableCell>
                 <TableCell align="left">Entregables</TableCell>
                 <TableCell align="left"></TableCell>
               </TableRow>

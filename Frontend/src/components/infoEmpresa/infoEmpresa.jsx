@@ -20,15 +20,15 @@ const InfoEmpresa = ({ nombreLargo, nombreCorto, integrantes }) => {
   return (
     <Paper elevation={1} sx={{ p: 2, my: 1 }}>
       <Box sx={{ textAlign: "center", mb: 1 }}>
-        <Typography variant="subtitle1" component="h1" gutterBottom>
+        <Typography variant="title" component="h1" gutterBottom>
           {nombreCorto}
         </Typography>
-        <Typography variant="subtitle2" component="h3" color="text.secondary">
+        <Typography variant="subtitle" component="h3" color="text.secondary">
           {nombreLargo}
         </Typography>
       </Box>
       <Box sx={{ ml: 4 }}>
-        <Typography variant="subtitle1" component="h3" gutterBottom>
+        <Typography variant="subtitle" component="h3" gutterBottom>
           Integrantes:
         </Typography>
         <List dense>
