@@ -182,16 +182,18 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
     });
     let rowIndex = 0;
     for (const row of rows) {
-      rowIndex++;
-      if (Object.values(row).some((value) => value === "" || value === null)) {
-        console.error("Hay campos vacíos en uno de los sprints.");
-        setSnackbar({
-          open: true,
-          message: `Sprint ${rowIndex}: Ninguno de los campos debe estar vacío`,
-          severity: "warning",
-          autoHide: "false",
-        });
-        return;
+      rowIndex++
+      for (const [key, value] of Object.entries(row)) {
+        if (value === "" || value === null) {
+          console.error(`Campo vacío encontrado en Sprint ${rowIndex}: ${key}`)
+          setSnackbar({
+            open: true,
+            message: `Sprint ${rowIndex}: El campo "${key}" está vacío`,
+            severity: "warning",
+            autoHide: false,
+          })
+          return;
+        }
       }
     }
 
