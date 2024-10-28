@@ -1,4 +1,4 @@
-export const addRevision = async (idEmpresa, nota, comentario) => {
+export const addRevision = async (idEmpresa, nota, comentarioprivado,comentariopublico) => {
   const response = await fetch("http://127.0.0.1:8000/api/addRevision", {
     method: "POST",
     headers: {
@@ -8,7 +8,8 @@ export const addRevision = async (idEmpresa, nota, comentario) => {
     body: JSON.stringify({
       idEmpresa: idEmpresa,
       nota: nota,
-      comentario: comentario,
+      comentarioprivado: comentarioprivado,
+      comentariopublico: comentariopublico,
     }),
   });
 

@@ -48,15 +48,7 @@ function tablaPlanificacion({ sprints, ocultarBotones }) {
                     <TableCell align="left">{sprint.fechaEntrega}</TableCell>
                     <TableCell align="left">{sprint.cobro}</TableCell>
                     <TableCell align="left">{sprint.entregables}</TableCell>
-                    {!ocultarBotones && (
-                      <TableCell align="left">
-                        {fechaActual >= fechaInicioSprint ? (
-                          <Button variant="contained">Ver Sprint</Button>
-                        ) : (
-                          <></>
-                        )}
-                      </TableCell>
-                    )}
+{/** aca debera haber el boton de visualizar hito si es necesario */}
                   </TableRow>
                 );
               })}

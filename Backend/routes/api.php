@@ -25,6 +25,10 @@ Route::get('/planificacion/{idEmpresa}', [PlanificacionController::class, 'show'
 // cambia la revision como valida
 Route::put('/validar', [PlanificacionController::class, 'validar']);
 
+// ----publicar planificacion-----
+// publica una planificacion
+Route::put('/publicarPlanificacion', [PlanificacionController::class, 'publicar']);
+
 // añade los comentarios y la nota
 Route::post('/addRevision', [PlanificacionController::class, 'addRevision']);
 

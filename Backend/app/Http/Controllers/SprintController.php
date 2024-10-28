@@ -74,6 +74,7 @@ class SprintController extends Controller
             // * buscar y eliminar los sprints anteriores
             Sprint::where('idPlanificacion', $idPlanificacion)->delete();
             $numeroSprint=1; //contador para indicar el numero del Sprint en el que se encuentra
+            $sprintsInfo = []; // guardar los datos de los  sprints para poder guardar sus entregables en ellos
             // * insertar los sprints actuales
             foreach ($validatedData['sprints'] as $sprintData) {
                 $sprint = new Sprint();
@@ -84,12 +85,19 @@ class SprintController extends Controller
                 $sprint->fechaEntrega = $sprintData['fechaEntrega'];
                 $sprint->cobro = $sprintData['cobro'];
                 $sprint->save();
+                
+                $sprintsInfo[] = [
+                    'idSprint' => $sprint->idSprint,
+                    'numeroSprint' => $sprint->numeroSprint
+                ];
+
                 $numeroSprint++;
             }
-            // * si todo salio bien, devuelve un mensaje de exito
+            // * si todo salio bien, devuelve un mensaje de exito y el id de los sprints
             DB::commit();
             return response()->json([
                 'message' => 'La Planificación fue modificada correctamente',
+                'sprints' => $sprintsInfo
             ], 200);
         } catch (\Exception $e) {
             // * si ocurrio un error, devuelve un mensaje de error y deshace todos los cambios realizados

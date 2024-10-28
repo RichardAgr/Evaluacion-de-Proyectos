@@ -1,15 +1,7 @@
 import { Fragment, useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
-  Button,
-  TextField,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
   Box,
-  CircularProgress,
   Typography,
 } from "@mui/material";
 import BaseUI from "../../../components/baseUI/baseUI.jsx";
@@ -20,7 +12,6 @@ import { validar } from "../../../api/validarPlanificacion/validar.jsx";
 import { addRevision } from "../../../api/validarPlanificacion/addRevision.jsx";
 import InfoSnackbar from "../../../components/infoSnackbar/infoSnackbar.jsx";
 import CuadroComentario from "../../../components/cuadroComentario/cuadroComentario.jsx";
-import CuadroNota from "../../../components/cuadroNota/cuadroNota.jsx";
 import Loading from "../../../components/loading/loading.jsx";
 import NombreEmpresa from "../../../components/infoEmpresa/nombreEmpresa.jsx";
 import CuadroDialogo from "../../../components/cuadroDialogo/cuadroDialogo.jsx";
@@ -105,7 +96,12 @@ function ValidarPlanificacion() {
   const confirmValidate = async () => {
     setOpenValidateDialog(false);
     console.log(idEmpresa);
-    const revisionResult = await addRevision(idEmpresa, nota, groupComment);
+    const revisionResult = await addRevision(
+      idEmpresa,
+      nota,
+      privateComment,
+      groupComment
+    );
 
     if (revisionResult.errors != null) {
       const errorMessages = Object.keys(revisionResult.errors)
@@ -195,13 +191,11 @@ function ValidarPlanificacion() {
               nombreLargo={empresaData.nombreLargo}
               nombreCorto={empresaData.nombreEmpresa}
             />
-            <EstadoPlanificacion
-              estado={planificacionData.aceptada}
-            />
+            <EstadoPlanificacion estado={planificacionData.aceptada} />
             {planificacionData.aceptada ? (
               <Redirecting />
-            ) : planificacionData.message !== null &&  planificacionData.message !== undefined ? (
-
+            ) : planificacionData.message !== null &&
+              planificacionData.message !== undefined ? (
               <Box
                 sx={{
                   display: "flex",
@@ -215,9 +209,23 @@ function ValidarPlanificacion() {
                   {planificacionData.message}
                 </Typography>
               </Box>
+            ) : planificacionData.publicada === 0 ? (
+              <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                minHeight: "200px",
+              }}
+            >
+              <Typography variant="h5" sx={{ mt: 2 }}>
+                La  planificación no ha sido publicada
+
+              </Typography>
+            </Box>
             ) : (
               <>
-
                 <TablaPlanificacion sprints={planificacionData.sprints} />
                 <CuadroComentario
                   title="Comentario para el grupo"

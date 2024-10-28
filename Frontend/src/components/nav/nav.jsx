@@ -16,6 +16,7 @@ import CalificarEstSemana from "../../pages/Docente/calificarSprint/calificarEst
 import HomeEstudiante from "../../pages/Estudiante/homeEstudiante/homeEstudiante.jsx";
 import HomeGrupoEstudiante from "../../pages/Estudiante/homeGrupoEstudiante/homeGrupoEstudiante.jsx";
 import ModificarPlanificacion from "../../pages/Estudiante/editarPlanificacion/editarPlanificacion.jsx";
+import PublicarPlanificacion from "../../pages/Estudiante/publicarPlanificacion/publicarPlanificacion.jsx";
 import ModificarTarea from "../../pages/Estudiante/editarPlanificacion/modificarTarea/modificarTarea.jsx";
 
 import VisualizarSprintEst from "../../pages/Estudiante/visualizarSprintEstudiante/visualizarSprint.jsx";
@@ -102,6 +103,12 @@ function Nav() {
       <Route
         path="/modificarPlanificacion/Empresa/:idEmpresa"
         element={<ModificarPlanificacion />}
+      />
+
+      {/** Publicar Planificacion */}
+            <Route
+        path="/publicarPlanificacion/Empresa/:idEmpresa"
+        element={<PublicarPlanificacion />}
       />
 
       <Route
