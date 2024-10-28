@@ -15,7 +15,8 @@ use App\Models\NotaSprint;
 use PhpParser\Node\Expr\AssignOp\Concat;
 
 class NotaSprintController extends Controller{
-    
+
+    //Obtiene las notas por estudiante y sprint
     public function notaSprint(Request $request)
     {   
         $empresa = $request->input('empresa');
@@ -33,6 +34,10 @@ class NotaSprintController extends Controller{
             ->join('planificacion as p', function($join) use ($empresa) {
                 $join->on('p.idPlanificacion', '=', 'sp.idPlanificacion')
                      ->where('p.idEmpresa', '=', $empresa);
+            })
+            ->join('tareasestudiantes as te', function($join) {
+                $join->on('te.idTarea', '=', 't.idTarea')
+                     ->on('e.idEstudiante', '=', 'te.idEstudiante');
             })
             ->select('t.nombreTarea', DB::raw("CONCAT(e.nombreEstudiante, ' ', e.primerApellido, ' ', e.segundoApellido) as nombre_completo"),'np.nota', 'np.comentario','e.idEstudiante')
             ->where('ep.idEmpresa', $empresa)
@@ -53,7 +58,7 @@ class NotaSprintController extends Controller{
     }
     
 
-
+//Obtiene las notas por sprint de la empresa
     public function notasSprint($empresa)
     {
             
@@ -69,12 +74,12 @@ class NotaSprintController extends Controller{
                     'estudiante.nombreEstudiante',  
                     'estudiante.primerApellido',
                     'estudiante.segundoApellido', 
-                    'sprint.idSprint',                // ID del sprint
+                    'sprint.numeroSprint',                // ID del sprint
                     'notaSprint.nota'                 // Nota del estudiante por sprint
                 )
                 ->where('notaSprint.idEmpresa', '=', $empresa)
                 ->orderBy('estudiante.idEstudiante')
-                ->orderBy('sprint.idSprint')
+                ->orderBy('sprint.numeroSprint')
                 ->get();
 
             // Verificamos si hay datos
@@ -99,12 +104,45 @@ class NotaSprintController extends Controller{
                 }
 
                 // Agregamos la nota del sprint correspondiente
-                $resultadosPivot[$nota->idEstudiante]['sprints']['Sprint ' . $nota->idSprint] = $nota->nota;
+                $resultadosPivot[$nota->idEstudiante]['sprints']['Sprint ' . $nota->numeroSprint] = $nota->nota;
             }
 
             // Devolvemos el resultado pivotado en formato JSON
             return response()->json($resultadosPivot, 200);
         }
+
+//obtiene las las tareas y los nombres (Para la evaluazcion)
+public function obtenerTareaYEstudiante(Request $request){
+    $empresa = $request->input('empresa');
+    $semana = $request->input('numeroSprint');
+    $resultado = DB::table('tarea as t')
+            ->join('semana as s', 't.idSemana', '=', 's.idSemana')
+            ->join('sprint as sp', 's.idSprint', '=', 'sp.idSprint')
+            ->join('notasprint as np', 'np.idSprint', '=', 'sp.idSprint')
+            ->join('estudiantesempresas as ep', function($join) {
+                $join->on('np.idEstudiante', '=', 'ep.idEstudiante')
+                     ->on('np.idEmpresa', '=', 'ep.idEmpresa');
+            })
+            ->join('estudiante as e', 'ep.idEstudiante', '=', 'e.idEstudiante')
+            ->join('planificacion as p', function($join) use ($empresa) {
+                $join->on('p.idPlanificacion', '=', 'sp.idPlanificacion')
+                     ->where('p.idEmpresa', '=', $empresa);
+            })
+            ->select('t.nombreTarea', DB::raw("CONCAT(e.nombreEstudiante, ' ', e.primerApellido, ' ', e.segundoApellido) as nombre_completo"),'e.idEstudiante')
+            ->where('ep.idEmpresa', $empresa)
+            ->where('sp.numeroSprint', $semana)
+            ->get();
+    
+        // Agrupar los resultados por estudiante
+        $resultadoAgrupado = $resultado->groupBy('nombre_completo')->map(function($items) {
+            return [
+                'tareas' => $items->pluck('nombreTarea')->toArray(),
+                'id' => $items->first()->idEstudiante
+            ];
+        });
+    
+        return response()->json($resultadoAgrupado);
+}
 
 public function realizarEvaluacionSemana(Request $request) {
         $empresa = $request->input('empresa');
