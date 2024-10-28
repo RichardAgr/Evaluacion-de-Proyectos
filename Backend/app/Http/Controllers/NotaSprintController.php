@@ -68,12 +68,12 @@ class NotaSprintController extends Controller{
                     'estudiante.nombreEstudiante',  
                     'estudiante.primerApellido',
                     'estudiante.segundoApellido', 
-                    'sprint.idSprint',                // ID del sprint
+                    'sprint.numeroSprint',                // ID del sprint
                     'notaSprint.nota'                 // Nota del estudiante por sprint
                 )
                 ->where('notaSprint.idEmpresa', '=', $empresa)
                 ->orderBy('estudiante.idEstudiante')
-                ->orderBy('sprint.idSprint')
+                ->orderBy('sprint.numeroSprint')
                 ->get();
 
             // Verificamos si hay datos
@@ -98,7 +98,7 @@ class NotaSprintController extends Controller{
                 }
 
                 // Agregamos la nota del sprint correspondiente
-                $resultadosPivot[$nota->idEstudiante]['sprints']['Sprint ' . $nota->idSprint] = $nota->nota;
+                $resultadosPivot[$nota->idEstudiante]['sprints']['Sprint ' . $nota->numeroSprint] = $nota->nota;
             }
 
             // Devolvemos el resultado pivotado en formato JSON
