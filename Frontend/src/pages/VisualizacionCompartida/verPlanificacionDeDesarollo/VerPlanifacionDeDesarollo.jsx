@@ -2,6 +2,7 @@ import { Fragment, useEffect } from "react";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import InfoEmpresa from "../../../components/infoEmpresa/infoEmpresa.jsx";
+import NombreEmpresa from "../../../components/infoEmpresa/nombreEmpresa.jsx";
 import TablaNotasPlanificacion from "../../../components/tablaPlanificacionNotas/tablaPlanificacionNotas.jsx";
 import TablaPlanificacion from "../../../components/tablaPlanificacionDeDesarollo/tablaPlanificacion.jsx";
 import { getEmpresaData } from "../../../api/getEmpresa.jsx";
@@ -9,6 +10,9 @@ import { getPlanificacion } from "../../../api/getPlanificacion.jsx";
 import BaseUI from "../../../components/baseUI/baseUI.jsx";
 import Error from "../../../components/error/error.jsx";
 import Loading from "../../../components/loading/loading.jsx";
+import Comentario from "../../../components/comentario/comentario.jsx";
+
+const loginDocente = true;
 
 function PlanificacionDeDesarollo() {
   const [empresaData, setEmpresaData] = useState(null);
@@ -60,20 +64,40 @@ function PlanificacionDeDesarollo() {
           <Loading />
         ) : (
           <>
-            <InfoEmpresa
-              nombreLargo={empresaData.nombreLargo}
-              nombreCorto={empresaData.nombreEmpresa}
-              integrantes={empresaData.integrantes}
-            />
             {!planificacionData.aceptada ? (
-              <div className="divContainerPlani">
-                <h1>TODAVIA NO SE FUE ACEPTADA</h1>
-              </div>
+              <>
+                <NombreEmpresa
+                  nombreLargo={empresaData.nombreLargo}
+                  nombreCorto={empresaData.nombreEmpresa}
+                />
+                <div className="divContainerPlani">
+                  <h1>TODAVIA NO FUE VALIDADA</h1>
+                </div>
+              </>
             ) : (
-              <TablaPlanificacion
-                sprints={planificacionData.sprints}
-                ocultarBotones={true}
-              />
+              <>
+                <InfoEmpresa
+                  nombreLargo={empresaData.nombreLargo}
+                  nombreCorto={empresaData.nombreEmpresa}
+                  integrantes={empresaData.integrantes}
+                />
+                <TablaPlanificacion
+                  sprints={planificacionData.sprints}
+                  ocultarBotones={true}
+                />
+                {planificacionData.comentariopublico && (
+                  <Comentario
+                    titulo="Comentario:"
+                    comentario={planificacionData.comentariopublico}
+                  />
+                )}
+                {(planificacionData.comentarioprivado && loginDocente) && (
+                  <Comentario
+                    titulo="Comentario Privado:"
+                    comentario={planificacionData.comentarioprivado}
+                  />
+                )}
+              </>
             )}
           </>
         )}

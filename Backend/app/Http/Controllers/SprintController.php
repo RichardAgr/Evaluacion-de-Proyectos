@@ -8,8 +8,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
-use App\Models\Semana;
-use App\Models\Tarea;
 
 class SprintController extends Controller
 {

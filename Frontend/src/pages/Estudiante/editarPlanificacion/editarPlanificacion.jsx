@@ -103,7 +103,8 @@ function ModificarPlanificacion() {
                   planificacionData.comentariopublico != "" && (
                     <>
                       <Comentario
-                        comentariopublico={planificacionData.comentariopublico}
+                        titulo="Comentario:"
+                        comentario={planificacionData.comentariopublico}
                       />
                     </>
                   )}

@@ -91,16 +91,26 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
     setRows(newRows);
   }, [planificacionData]);
   const addRow = () => {
-    const newSprint = rows.length + 1;
-    const newRow = {
-      hito: `SPRINT ${newSprint}`,
-      fechaIni: "",
-      fechaFin: "",
-      fechaEntrega: "",
-      cobro: "",
-      entregables: [],
-    };
-    setRows([...rows, newRow]);
+    if (rows.length >= 10) {
+      setSnackbar({
+        open: true,
+        message: "No se pueden añadir más de 10 sprints.",
+        severity: "warning",
+        autoHide: true,
+      });
+      return;
+    } else {
+      const newSprint = rows.length + 1;
+      const newRow = {
+        hito: `SPRINT ${newSprint}`,
+        fechaIni: "",
+        fechaFin: "",
+        fechaEntrega: "",
+        cobro: "",
+        entregables: [],
+      };
+      setRows([...rows, newRow]);
+    }
   };
 
   const deleteRow = (index) => {
@@ -175,6 +185,15 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
     }
     setRows(newRows);
   };
+
+  const fieldNames = {
+    fechaIni: "Fecha de inicio",
+    fechaFin: "Fecha de Fin",
+    fechaEntrega: "Fecha de Entrega",
+    cobro: "Cobro",
+    entregables: "Entregables",
+  };
+
   const subir = async () => {
     setCuadroDialogo({
       ...cuadroDialogo,
@@ -183,15 +202,21 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
     let rowIndex = 0;
     for (const row of rows) {
       rowIndex++;
-      if (Object.values(row).some((value) => value === "" || value === null)) {
-        console.error("Hay campos vacíos en uno de los sprints.");
-        setSnackbar({
-          open: true,
-          message: `Sprint ${rowIndex}: Ninguno de los campos debe estar vacío`,
-          severity: "warning",
-          autoHide: "false",
-        });
-        return;
+      for (const [key, value] of Object.entries(row)) {
+        if (value === "" || value === null) {
+          console.error(`Campo vacío encontrado en Sprint ${rowIndex}: ${key}`);
+          const fieldName = fieldNames[key] || key;
+          console.error(
+            `Campo vacío encontrado en Sprint ${rowIndex}: ${fieldName}`
+          );
+          setSnackbar({
+            open: true,
+            message: `Sprint ${rowIndex}: El campo "${fieldName}" está vacío`,
+            severity: "warning",
+            autoHide: false,
+          });
+          return;
+        }
       }
     }
 
@@ -296,7 +321,7 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
                 <TableCell align="left">Fecha Inicio</TableCell>
                 <TableCell align="left">Fecha Fin</TableCell>
                 <TableCell align="left">Fecha Entrega</TableCell>
-                <TableCell align="left">Cobro</TableCell>
+                <TableCell align="left">Cobro (Bs)</TableCell>
                 <TableCell align="left">Entregables</TableCell>
                 <TableCell align="left"></TableCell>
               </TableRow>
@@ -304,10 +329,16 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
             <TableBody>
               {rows.map((row, index) => (
                 <TableRow key={index}>
-                  <TableCell>{`Sprint ${index + 1}`}</TableCell>
+                  <TableCell sx={{ minWidth: "70px", maxHeight: "50px" }}>
+                    {`Hito ${index + 1}`}
+                  </TableCell>
                   {["fechaIni", "fechaFin", "fechaEntrega", "cobro"].map(
                     (field) => (
-                      <TableCell key={field} align="left" style={{ minWidth: field === "cobro" ? 100 : 100}}>
+                      <TableCell
+                        key={field}
+                        align="left"
+                        style={{ minWidth: field === "cobro" ? 100 : 100 }}
+                      >
                         <TextField
                           value={row[field] ?? ""}
                           onChange={(e) => {
@@ -390,15 +421,17 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
             </TableBody>
           </Table>
         </TableContainer>
-        <Button
-          variant="contained"
-          color="primary"
-          startIcon={<AddIcon />}
-          onClick={addRow}
-          sx={{ marginTop: "20px" }}
-        >
-          Añadir fila
-        </Button>
+        {rows.length < 10 && (
+          <Button
+            variant="contained"
+            color="primary"
+            startIcon={<AddIcon />}
+            onClick={addRow}
+            sx={{ marginTop: "20px" }}
+          >
+            Añadir fila
+          </Button>
+        )}
 
         <DecisionButtons
           rejectButtonText="Descartar"

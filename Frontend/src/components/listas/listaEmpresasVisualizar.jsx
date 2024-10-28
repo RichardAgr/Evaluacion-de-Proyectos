@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useMemo, useEffect, useState } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -20,6 +20,15 @@ function ListaEmpresasVisualizar() {
   const [listaEmpresas, setListaEmpresas] = useState(null);
   const navigate = useNavigate();
 
+  const sortedListaEmpresas = useMemo(() => {
+    if (!listaEmpresas) return [];
+    return [...listaEmpresas].sort((a, b) =>
+      a.nombreEmpresa.localeCompare(b.nombreEmpresa, "es", {
+        sensitivity: "base",
+      })
+    );
+  }, [listaEmpresas]);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -40,21 +49,19 @@ function ListaEmpresasVisualizar() {
   }, []);
 
   const handleRowClick = (idEmpresa) => {
-    navigate(
-      `/visualizarPlanificacion/empresa/${idEmpresa}`
-    );
+    navigate(`/visualizarPlanificacion/empresa/${idEmpresa}`);
   };
 
   return (
     <>
-        {error.errorMessage || error.errorDetails ? (
-          <Error
-            errorMessage={error.errorMessage}
-            errorDetails={error.errorDetails}
-          />
-        ) : loading ? (
-          <Loading />
-        ) : (
+      {error.errorMessage || error.errorDetails ? (
+        <Error
+          errorMessage={error.errorMessage}
+          errorDetails={error.errorDetails}
+        />
+      ) : loading ? (
+        <Loading />
+      ) : listaEmpresas.length > 0 ? (
         <>
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -65,7 +72,7 @@ function ListaEmpresasVisualizar() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {listaEmpresas.map((empresa) => (
+                {sortedListaEmpresas.map((empresa) => (
                   <TableRow
                     key={empresa.idEmpresa}
                     sx={{
@@ -86,8 +93,15 @@ function ListaEmpresasVisualizar() {
               </TableBody>
             </Table>
           </TableContainer>
-          </>
-        )}
+        </>
+      ) : (
+        <>
+          <Typography>
+            Actualmente no hay planificaciones que hayan sido validadas, intente
+            más tarde.
+          </Typography>
+        </>
+      )}
     </>
   );
 }

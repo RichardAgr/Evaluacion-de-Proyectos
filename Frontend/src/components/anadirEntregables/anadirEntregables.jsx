@@ -8,8 +8,30 @@ import {
   TextField,
   List,
   ListItem,
+  Typography,
+  Box,
+  IconButton,
 } from '@mui/material';
-import { Add as AddIcon, Delete as DeleteIcon } from '@mui/icons-material';
+import { styled } from '@mui/material/styles';
+import { Add as AddIcon, Delete as DeleteIcon, Close as CloseIcon } from '@mui/icons-material';
+
+const StyledDialog = styled(Dialog)(({ theme }) => ({
+  '& .MuiDialogContent-root': {
+    padding: theme.spacing(3),
+  },
+  '& .MuiDialogActions-root': {
+    padding: theme.spacing(2),
+  },
+}));
+
+const StyledDialogTitle = styled(Box)(({ theme }) => ({
+  backgroundColor: theme.palette.primary.main,
+  color: theme.palette.primary.contrastText,
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  padding: theme.spacing(2),
+}));
 
 export default function AnadirEntregables({ open, handleClose, initialEntregables = [] }) {
   const [entregables, setEntregables] = useState(initialEntregables);
@@ -39,30 +61,50 @@ export default function AnadirEntregables({ open, handleClose, initialEntregable
   };
 
   return (
-    <Dialog open={open} onClose={() => handleClose(initialEntregables)} maxWidth="sm" fullWidth>
-      <DialogTitle>Modificar Entregables</DialogTitle>
-      <DialogContent>
+    <StyledDialog 
+      open={open} 
+      onClose={() => handleClose(initialEntregables)} 
+      maxWidth="sm" 
+      fullWidth
+      aria-labelledby="customized-dialog-title"
+    >
+      <StyledDialogTitle>
+        <Typography variant="h6" component="h2" id="customized-dialog-title">
+          Modificar Entregables
+        </Typography>
+        <IconButton
+          aria-label="close"
+          onClick={() => handleClose(initialEntregables)}
+          sx={{
+            color: (theme) => theme.palette.grey[300],
+            '&:hover': {
+              color: (theme) => theme.palette.grey[100],
+            },
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
+      </StyledDialogTitle>
+      <DialogContent dividers>
         <List>
           {entregables.map((entregable, index) => (
-            <ListItem key={index}>
+            <ListItem key={index} sx={{ mb: 2 }}>
               <TextField
                 fullWidth
                 value={entregable}
                 onChange={(e) => handleChangeEntregable(index, e.target.value)}
-             
                 aria-label={`Entregable ${index + 1}`}
               />
               <Button
-                        variant="contained"
-                        color="secondary"
-                        startIcon={<DeleteIcon />}
-                        onClick={() => handleDeleteEntregable(index)}
-                        aria-label={`Eliminar entregable ${index + 1}`}
-                        sx={{maxHeight:"55px",  ml:1}}
-                      >
-                        Eliminar Entregable
-                      </Button>
-
+                variant="contained"
+                color="secondary"
+                startIcon={<DeleteIcon />}
+                onClick={() => handleDeleteEntregable(index)}
+                aria-label={`Eliminar entregable ${index + 1}`}
+                sx={{ maxHeight: "55px", ml: 1 }}
+              >
+                Eliminar
+              </Button>
             </ListItem>
           ))}
         </List>
@@ -72,6 +114,7 @@ export default function AnadirEntregables({ open, handleClose, initialEntregable
           startIcon={<AddIcon />}
           onClick={handleAddEntregable}
           fullWidth
+          sx={{ mt: 2 }}
         >
           Añadir Entregable
         </Button>
@@ -84,6 +127,6 @@ export default function AnadirEntregables({ open, handleClose, initialEntregable
           Guardar
         </Button>
       </DialogActions>
-    </Dialog>
+    </StyledDialog>
   );
 }
