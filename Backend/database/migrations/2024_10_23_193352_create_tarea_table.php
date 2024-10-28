@@ -14,6 +14,7 @@ class CreateTareaTable extends Migration
         Schema::create('tarea', function (Blueprint $table) {
             $table->id('idTarea');
             $table->unsignedBigInteger('idSemana');
+            $table->string('nombreTarea',40)->nullable();
             $table->tinyText('textoTarea')->nullable();
             $table->tinyText('comentario')->nullable();
 

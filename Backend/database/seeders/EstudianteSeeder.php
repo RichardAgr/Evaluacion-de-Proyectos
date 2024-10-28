@@ -53,4 +53,8 @@ class EstudianteSeeder extends Seeder
             ]);
         }
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> origin/jhair

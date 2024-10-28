@@ -9,25 +9,33 @@ import {
 } from "@mui/material";
 
 const InfoEmpresa = ({ nombreLargo, nombreCorto, integrantes }) => {
+  
+  // ordenar por orden alfabetico
+  const sortedIntegrantes = [...integrantes].sort((a, b) => {
+    const fullNameA = `${a.primerApellido} ${a.segundoApellido} ${a.nombreEstudiante}`.toLowerCase();
+    const fullNameB = `${b.primerApellido} ${b.segundoApellido} ${b.nombreEstudiante}`.toLowerCase();
+    return fullNameA.localeCompare(fullNameB);
+  });
+
   return (
     <Paper elevation={1} sx={{ p: 2, my: 1 }}>
       <Box sx={{ textAlign: "center", mb: 1 }}>
-        <Typography variant="subtitle" component="h1" gutterBottom>
+        <Typography variant="subtitle1" component="h1" gutterBottom>
           {nombreCorto}
         </Typography>
-        <Typography variant="subtitle" component="h3" color="text.secondary">
+        <Typography variant="subtitle2" component="h3" color="text.secondary">
           {nombreLargo}
         </Typography>
       </Box>
       <Box sx={{ ml: 4 }}>
-        <Typography variant="subtitle" component="h3" gutterBottom>
+        <Typography variant="subtitle1" component="h3" gutterBottom>
           Integrantes:
         </Typography>
         <List dense>
-          {integrantes.map((integrante, index) => (
+          {sortedIntegrantes.map((integrante, index) => (
             <ListItem key={index} disableGutters>
               <ListItemText
-                primary={`${integrante.nombreEstudiante} ${integrante.primerApellido} ${integrante.segundoApellido}`}
+                primary={`${integrante.primerApellido} ${integrante.segundoApellido} ${integrante.nombreEstudiante} `}
                 primaryTypographyProps={{ variant: 'body2' }}
               />
             </ListItem>
@@ -39,32 +47,3 @@ const InfoEmpresa = ({ nombreLargo, nombreCorto, integrantes }) => {
 };
 
 export default InfoEmpresa;
-
-/* let ContainerInfoEmpresa = styled.div`
-    width: 100%;
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-    border: 0.3rem solid black;
-    border-radius: 0.3rem;
-        -webkit-border-radius: 0.3rem;
-        -moz-border-radius: 0.3rem;
-        -ms-border-radius: 0.3rem;
-        -o-border-radius: 0.3rem;
-    h1,h2{
-        text-align: center;
-    }
-    .integrantes{
-        margin: calc(3vw + 1rem);
-        display: block;
-    }
-    .docente{
-        margin: calc(3vw + 1rem);
-        display: block;        
-    }
-    p{  
-        margin-left: calc(2vw + 8rem);
-    }
-    span{
-        color: darkgray;
-    }
-` */

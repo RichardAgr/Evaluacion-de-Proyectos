@@ -24,4 +24,8 @@ class EstudiantesEmpresasSeeder extends Seeder
             ]);
         }
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> origin/jhair
