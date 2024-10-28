@@ -14,6 +14,7 @@ class SprintController extends Controller
 {
     public function modificarSprint(Request $request): JsonResponse
     {
+        // * Validar todos los datos
         $today = Carbon::today()->toDateString();
         $validator = Validator::make($request->all(), [
             'idEmpresa' => 'required|integer|exists:empresa,idEmpresa',
@@ -28,15 +29,16 @@ class SprintController extends Controller
                 'date',
                 'after_or_equal:sprints.*.fechaIni',
             ],
-            'sprints.*.cobro' => 'required|integer',
             'sprints.*.fechaEntrega' => [
                 'required',
                 'date',
                 'after_or_equal:sprints.*.fechaFin',
             ],
+            'sprints.*.cobro' => 'required|numeric|regex:/^\d+(\.\d{1,2})?$/',
+
         ]);
-        //verificar que ninguno  de los sprints tenga la
-        //fecha de inicio anterior a la fecha fin del anterior sprint
+        // * verificar que ninguno  de los sprints tenga la
+        // * fecha de inicio anterior a la fecha fin del anterior sprint
         $validator->after(function ($validator) use ($request) {
             $sprints = $request->input('sprints');
             for ($i = 1; $i < count($sprints); $i++) {
@@ -48,7 +50,8 @@ class SprintController extends Controller
                 }
             }
         });
-
+        
+        // * devuelve todos los errores en un array error[]
         if ($validator->fails()) {
             return response()->json([
                 'message' => 'Los datos proporcionados no son válidos.',
@@ -56,36 +59,39 @@ class SprintController extends Controller
             ], 422);
         }
 
+        // * si todo salio bien, recibe el ID de la planificacion que tenga la empresa
         $validatedData = $validator->validated();
         $requestPlani = new Request();
         $requestPlani->merge(['idEmpresa' => $validatedData['idEmpresa']]);
         $response = $this->getIdPlanificacion($requestPlani);
         $idPlanificacion = $response->original['idPlanificacion'];
 
+        // * crear todos los sprints para la planificacion
         try {
             DB::beginTransaction();
 
-            // buscar y eliminar todos los sprints antiguos
+            // * buscar y eliminar los sprints anteriores
             Sprint::where('idPlanificacion', $idPlanificacion)->delete();
-            $numeroSprint=1;
-            // insertar los sprints actuales
+            $numeroSprint=1; //contador para indicar el numero del Sprint en el que se encuentra
+            // * insertar los sprints actuales
             foreach ($validatedData['sprints'] as $sprintData) {
                 $sprint = new Sprint();
                 $sprint->idPlanificacion = $idPlanificacion;
                 $sprint->numeroSprint = $numeroSprint;
                 $sprint->fechaIni = $sprintData['fechaIni'];
                 $sprint->fechaFin = $sprintData['fechaFin'];
-                $sprint->cobro = $sprintData['cobro'];
                 $sprint->fechaEntrega = $sprintData['fechaEntrega'];
+                $sprint->cobro = $sprintData['cobro'];
                 $sprint->save();
                 $numeroSprint++;
             }
-
+            // * si todo salio bien, devuelve un mensaje de exito
             DB::commit();
             return response()->json([
                 'message' => 'La Planificación fue modificada correctamente',
             ], 200);
         } catch (\Exception $e) {
+            // * si ocurrio un error, devuelve un mensaje de error y deshace todos los cambios realizados
             DB::rollBack();
             return response()->json([
                 'message' => 'Hubo un error al modificar la Planificación',
