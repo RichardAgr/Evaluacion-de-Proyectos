@@ -12,6 +12,7 @@ class Tarea extends Model
 
     protected $fillable = [
         'idSemana',
+        'nombreTarea',
         'comentario', // Asegúrate de incluir todas las propiedades que quieres permitir
         'textoTarea',
         'fechaEntrega',

@@ -5,16 +5,11 @@ import { getSprintSemanas } from '../../../api/sprintApi.jsx';
 import SprintSemanas from '../../../components/SprintTareas/sprintSemanas';
 import ComentarioNota from '../../../components/comentarioNota/comentarioNota.jsx';
 
-const VisualizarSprintEst = () => {
+const VisualizarSprintEst = ({titulo, navigateLink}) => {
     const { idSprint } = useParams(); 
-    // const navigate = useNavigate();
     const [semanas, setSemanas] = useState([]);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true); 
-
-        // const handleChildClick = (tareaId) => {
-        //     navigate(`/homeEstudiante/homeGrupoEstudiante/sprint/${idSprint}/tarea/${tareaId}`); 
-        // };
     useEffect(() => {
         const fetchSprintData = async () => {
             try {
@@ -37,7 +32,7 @@ const VisualizarSprintEst = () => {
     return (
         <Fragment>
             <BaseUI
-                titulo={'SELECCIONE UNA TAREA PARA VISUALIZAR'}
+                titulo={titulo?titulo:'VISUALIZAR HITO'}
                 ocultarAtras={false}
                 confirmarAtras={false}
                 dirBack={'/'}
@@ -50,7 +45,7 @@ const VisualizarSprintEst = () => {
                 {loading && <p>Cargando semanas...</p>}
                 {error && <p style={{ color: 'red' }}>{error}</p>}
                 {semanas.map((semana, index) => (
-                    <SprintSemanas key={index} title={`Semana ${semana.idSemana}`} semana={semana} idSprint={idSprint}>
+                    <SprintSemanas key={index} title={`Semana ${index + 1}`} semana={semana} idSprint={idSprint} navigateLink={navigateLink}>
                     </SprintSemanas>
                 ))}
             </BaseUI>

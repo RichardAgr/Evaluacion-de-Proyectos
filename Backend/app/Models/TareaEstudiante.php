@@ -10,7 +10,8 @@ class TareaEstudiante extends Model
     public $incrementing = false;
     public $timestamps = false;
 
-  
+    protected $fillable = ['idTarea', 'idEstudiante'];
+
     public function tareas()
     {
         return $this->belongsTo(Tarea::class, 'idTarea');

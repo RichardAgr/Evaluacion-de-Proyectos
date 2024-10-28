@@ -158,8 +158,6 @@ class SprintController extends Controller
         // Preparar la respuesta
         $response = [
             'idSprint' => $sprint->idSprint,
-            // 'comentario' => $sprint->comentariodocente,
-           // 'nota' => $sprint->notasprint,
             'semanas' => []
         ];
     

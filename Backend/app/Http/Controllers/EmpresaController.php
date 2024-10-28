@@ -29,6 +29,7 @@ class EmpresaController extends Controller
             'nombreLargo' => $empresa->nombreLargo,
             'integrantes' => $empresa->estudiantes->map(function ($estudiante) {
                 return [
+                    'idEstudiante'=> $estudiante->idEstudiante,
                     'nombreEstudiante' => $estudiante->nombreEstudiante,
                     'primerApellido' => $estudiante->primerApellido,
                     'segundoApellido' => $estudiante->segundoApellido,
