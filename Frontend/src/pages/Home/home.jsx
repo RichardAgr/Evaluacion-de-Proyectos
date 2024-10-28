@@ -47,7 +47,7 @@ function Home() {
     navigate( 'homeEstudiante/homeGrupoEstudiante/empresas/1/calificaciones');
   };
   const handleNavigateToModificarTarea = () => {
-    navigate( '/homeEstudiante/homeGrupoEstudiante/sprint/semana/tareas/1');
+    navigate( '/homeEstudiante/homeGrupoEstudiante/sprintE/1');
   };
 
 

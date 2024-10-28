@@ -17,7 +17,7 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import FolderZipIcon from '@mui/icons-material/FolderZip';
 import DeleteIcon from '@mui/icons-material/Delete';
-import CancelRoundedIcon from '@mui/icons-material/CancelRounded';
+import CancelRoundedIcon from '@mui/icons-material/Delete';
 import ImageIcon from '@mui/icons-material/Image';
 import DescriptionIcon from '@mui/icons-material/Description';
 
