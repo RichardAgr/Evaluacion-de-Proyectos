@@ -79,6 +79,9 @@ Route::post('/estudiante/crearEmpresa', [EstudiantesEmpresasController::class, '
 Route::post('/docente/darDeBaja', [GrupoController::class, 'darDeBaja']);
 // Ruta para modificar una tarea con sus archivos
 Route::post('/tarea/{idTarea}/guardar', [TareaController::class, 'update']);
+//Realizar evaluacion semanal
+Route::post('/docente/evaluacion', [NotaSprintController::class, 'realizarEvaluacionSemana']);
+
 
 
 

@@ -1,5 +1,5 @@
 <?php
-
+//ESTA ES LA EVALUACION SEMANAL
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 use Exception;
 use App\Models\NotaSprint;
+use PhpParser\Node\Expr\AssignOp\Concat;
 
 class NotaSprintController extends Controller{
     
@@ -20,83 +21,37 @@ class NotaSprintController extends Controller{
         $empresa = $request->input('empresa');
         $semana = $request->input('numeroSprint');
     
-        // Realizar la consulta con joins para unir las tablas estudiante, estudiantesempresas y notasSprint
-        $notasSprint = DB::table('estudiantesempresas')
-            ->leftJoin('notaSprint', function($join) use ($empresa) { // Usamos 'use' para pasar la variable
-                $join->on('estudiantesempresas.idEstudiante', '=', 'notaSprint.idEstudiante')
-                     ->where('notaSprint.idEmpresa', '=', $empresa);
+        $resultado = DB::table('tarea as t')
+            ->join('semana as s', 't.idSemana', '=', 's.idSemana')
+            ->join('sprint as sp', 's.idSprint', '=', 'sp.idSprint')
+            ->join('notasprint as np', 'np.idSprint', '=', 'sp.idSprint')
+            ->join('estudiantesempresas as ep', function($join) {
+                $join->on('np.idEstudiante', '=', 'ep.idEstudiante')
+                     ->on('np.idEmpresa', '=', 'ep.idEmpresa');
             })
-            ->leftJoin('estudiante', 'estudiantesempresas.idEstudiante', '=', 'estudiante.idEstudiante')
-            ->leftJoin('tareasestudiantes', 'estudiante.idEstudiante', '=', 'tareasestudiantes.idEstudiante')
-            ->leftJoin('tarea', 'tarea.idTarea', '=', 'tareasestudiantes.idTarea')
-            ->leftJoin('sprint', 'sprint.idSprint', '=', 'notaSprint.idSprint')
-            ->select(
-                'estudiante.idEstudiante',
-                'estudiante.nombreEstudiante',  
-                'estudiante.primerApellido',
-                'estudiante.segundoApellido',
-                'notaSprint.nota',
-                'notaSprint.comentario', 
-                'tarea.nombreTarea'
-            )
-            ->where('estudiantesempresas.idEmpresa', '=', $empresa)
-            ->where('sprint.numeroSprint', '=', $semana)
+            ->join('estudiante as e', 'ep.idEstudiante', '=', 'e.idEstudiante')
+            ->join('planificacion as p', function($join) use ($empresa) {
+                $join->on('p.idPlanificacion', '=', 'sp.idPlanificacion')
+                     ->where('p.idEmpresa', '=', $empresa);
+            })
+            ->select('t.nombreTarea', DB::raw("CONCAT(e.nombreEstudiante, ' ', e.primerApellido, ' ', e.segundoApellido) as nombre_completo"),'np.nota', 'np.comentario','e.idEstudiante')
+            ->where('ep.idEmpresa', $empresa)
+            ->where('sp.numeroSprint', $semana)
             ->get();
     
-        // Verificamos si hay datos
-        if ($notasSprint->isEmpty()) {
-            return response()->json([
-                'message' => 'No se encontraron registros.'
-            ], 404);
-        }
-    
-        // Transformar los resultados para agrupar las tareas en un array
-        $resultadosAgrupados = $notasSprint->groupBy(function($item) {
-            return $item->idEstudiante; // Agrupar por idEstudiante
-        })->map(function($grupo) {
+        // Agrupar los resultados por estudiante
+        $resultadoAgrupado = $resultado->groupBy('nombre_completo')->map(function($items) {
             return [
-                'idEstudiante' => $grupo[0]->idEstudiante,
-                'nombreEstudiante' => $grupo[0]->nombreEstudiante,
-                'primerApellido' => $grupo[0]->primerApellido,
-                'segundoApellido' => $grupo[0]->segundoApellido,
-                'nota' => $grupo[0]->nota,
-                'comentario' => $grupo[0]->comentario,
-                'tareas' => $grupo->pluck('nombreTarea')->unique()->values() // Acumula las tareas en un array y elimina duplicados
+                'tareas' => $items->pluck('nombreTarea')->toArray(),
+                'nota' => $items->first()->nota,
+                'comentario' => $items->first()->comentario,
+                'id' => $items->first()->idEstudiante
             ];
-        })->values(); // Opcional: reindexar el array para tener índices numéricos
+        });
     
-        // Devolvemos los registros en formato JSON
-        return response()->json($resultadosAgrupados, 200);
+        return response()->json($resultadoAgrupado);
     }
     
-    
-    
-    public function actualizarNotaSprint(Request $request)
-{
-    $request->validate([
-        'idEstudiante' => 'required|exists:estudiante,idEstudiante',
-        'idSprint' => 'required|exists:sprint,idSprint',
-        'idEmpresa' => 'required|exists:empresa,idEmpresa',
-        'nota' => 'required|numeric',
-        'comentario' => 'nullable|string',
-    ]);
-
-    // Actualiza la nota y el comentario
-    $actualizado = DB::table('notaSprint')
-        ->where('idEstudiante', $request->input('idEstudiante'))
-        ->where('idSprint', $request->input('idSprint'))
-        ->where('idEmpresa', $request->input('idEmpresa'))
-        ->update([
-            'nota' => $request->input('nota'),
-            'comentario' => $request->input('comentario'),
-        ]);
-
-    if ($actualizado) {
-        return response()->json(['message' => 'Nota y comentario actualizados correctamente.'], 200);
-    } else {
-        return response()->json(['message' => 'No se pudo actualizar.'], 500);
-    }
-}
 
 
     public function notasSprint($empresa)
@@ -150,4 +105,48 @@ class NotaSprintController extends Controller{
             // Devolvemos el resultado pivotado en formato JSON
             return response()->json($resultadosPivot, 200);
         }
+
+public function realizarEvaluacionSemana(Request $request) {
+        $empresa = $request->input('empresa');
+        $numeroSprint = $request->input('numeroSprint');
+        $notas = $request->input('notas');
+        $estudiantes = $request->input('estudiantes');
+        $comentarios = $request->input('comentarios');
+    
+        // Obtener el idPlanificacion asociado a la empresa
+        $idPlanificacion = DB::table('planificacion')
+            ->where('idEmpresa', $empresa)
+            ->value('idPlanificacion');
+    
+        if (!$idPlanificacion) {
+            return response()->json(['error' => 'No se encontró planificación para esta empresa'], 404);
+        }
+    
+        // Obtener el idSprint usando el idPlanificacion y numeroSprint
+        $idSprint = DB::table('sprint')
+            ->where('idPlanificacion', $idPlanificacion)
+            ->where('numeroSprint', $numeroSprint)
+            ->value('idSprint');
+    
+        if (!$idSprint) {
+            return response()->json(['error' => 'No se encontró sprint para el número especificado'], 404);
+        }
+    
+        $dataToInsert = [];
+    
+        foreach ($estudiantes as $index => $idEstudiante) {
+            $dataToInsert[] = [
+                'idSprint' => $idSprint,
+                'idEstudiante' => $idEstudiante,
+                'idEmpresa' => $empresa,
+                'nota' => $notas[$index],
+                'comentario' => $comentarios[$index]
+            ];
+        }
+    
+        // Insertar todos los registros en notaSprint
+        DB::table('notaSprint')->insert($dataToInsert);
+    
+        return response()->json(['message' => 'Evaluación registrada exitosamente']);
+    }  
 }
