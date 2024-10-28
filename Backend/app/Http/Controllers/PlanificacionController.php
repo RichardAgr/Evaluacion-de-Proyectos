@@ -117,12 +117,17 @@ class PlanificacionController extends Controller
             'sprints' => $planificacion->sprints->map(function ($sprint) {
                 return [
                     'idSprint' => $sprint->idSprint,
+                    'numeroSprint'=> $sprint->numeroSprint,
                     'fechaIni' => $sprint->fechaIni,
                     'fechaFin' => $sprint->fechaFin,
                     'cobro' => $sprint->cobro,
                     'fechaEntrega' => $sprint->fechaEntrega,
-                    'entregables' => $sprint->entregables,
-                    'comentariodocente' => $sprint->comentariodocente
+                    'comentariodocente' => $sprint->comentariodocente,
+                    'entregables' => $sprint->entregables->map(function ($entregable){
+                        return [
+                            'descripcionEntregable' =>  $entregable->descripcionEntregable,
+                        ];
+                    })->toArray()
                 ];
             })->toArray()
         ];

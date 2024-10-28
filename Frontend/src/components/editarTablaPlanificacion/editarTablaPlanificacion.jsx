@@ -81,7 +81,11 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
         fechaFin: sprint.fechaFin,
         fechaEntrega: sprint.fechaEntrega,
         cobro: sprint.cobro,
-        entregables: sprint.entregables || [],
+        entregables: sprint.entregables
+          ? sprint.entregables.map(
+              (entregable) => entregable.descripcionEntregable
+            )
+          : [],
       };
     });
     setRows(newRows);

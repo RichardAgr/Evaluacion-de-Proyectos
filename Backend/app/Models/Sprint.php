@@ -29,4 +29,9 @@ class Sprint extends Model
     {
         return $this->hasMany(Semana::class, 'idSprint');
     }
+
+    public function entregables()
+    {
+        return $this->hasMany(Entregables::class, 'idSprint', 'idSprint');
+    }
 }
