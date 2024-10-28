@@ -1,15 +1,77 @@
-// import { useEffect} from 'react'; 
-// import { useState } from 'react';
 import { useParams} from "react-router-dom";
-import { Fragment } from 'react';
+import { Fragment,useEffect,useState } from 'react';
 import { styled } from '@mui/material';
 import BaseUI from '../../../components/baseUI/baseUI';
 import Comentario from '../../../components/comentarioNota/comentario';
-// import SprintSemanas from '../../../components/SprintTareas/sprintSemanas.jsx';
+import {getTareaData} from "../../../api/validarTareas/tareas";
+import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
+import FolderZipIcon from "@mui/icons-material/FolderZip";
+import ImageIcon from "@mui/icons-material/Image"; // Ícono para imágenes
+import TextSnippetIcon from "@mui/icons-material/TextSnippet"; // Ícono para archivos de texto
 
 function VisualizarTarea() {
+    const [descripcion, setDescripcion] = useState("");
+    const [comentarioD, setComentario] = useState("");
+    const [responsables, setResponsables] = useState([]);
+    const [existingFiles, setExistingFiles] = useState([]); 
     const { idTarea } = useParams();
     const { idSprint } = useParams();
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+      const fetchTareaData = async () => {
+        try {
+          const data = await getTareaData(idTarea);
+          setDescripcion(data.textotarea);
+          setComentario(data.comentario);
+          setResponsables(data.estudiantes);
+          setExistingFiles(
+            data.archivotarea.map((file) => ({
+              name: file.nombreArchivo,
+              url: file.archivo,
+            })),
+            console.log(data.textotarea),
+          );
+          setLoading(false);
+        } catch (error) {
+          console.error("Error al cargar la tarea:", error);
+          setLoading(false);
+        }
+      };
+  
+      fetchTareaData();
+    }, [idTarea]);
+  
+    const renderIconForFileType = (fileName) => {
+      if (!fileName || typeof fileName !== "string") {
+        return <TextSnippetIcon style={{ fontSize: 30 }} />; // Ícono por defecto si el nombre de archivo es indefinido
+      }
+      if (fileName.endsWith(".pdf")) {
+        return <PictureAsPdfIcon style={{ fontSize: 30 }} />;
+      }
+      if (fileName.endsWith(".zip") || fileName.endsWith(".rar")) {
+        return <FolderZipIcon style={{ fontSize: 30 }} />;
+      }
+      if (
+        fileName.endsWith(".png") ||
+        fileName.endsWith(".jpg") ||
+        fileName.endsWith(".jpeg")
+      ) {
+        return <ImageIcon style={{ fontSize: 30 }} />;
+      }
+      if (
+        fileName.endsWith(".txt") ||
+        fileName.endsWith(".doc") ||
+        fileName.endsWith(".docx") ||
+        fileName.endsWith(".xls") ||
+        fileName.endsWith(".xlsx")
+      ) {
+        return <TextSnippetIcon style={{ fontSize: 30 }} />;
+      }
+      return <TextSnippetIcon style={{ fontSize: 30 }} />; // Ícono por defecto para otros tipos
+    };
+  
+
     return (
         <Fragment>
           <BaseUI
@@ -20,27 +82,54 @@ function VisualizarTarea() {
           >
             <div>
             <div><h1>Realizar {idTarea} Sprint {idSprint} </h1></div>
-            <ArchivosSection>
-            <h3>Archivos:</h3>
-            <ArchivosWrapper>
-            <div className="archivos-icons">
-
-            </div>
-
-            </ArchivosWrapper>
-            </ArchivosSection>
             <DescripcionTarea>
                 <h4>Responsables</h4>
                 <Responsables>
-                <p>Jhon Corraleas</p>
-                <p>Jhon Calicho Garcia</p>
-
-                </Responsables>
+                {responsables.length > 0 ? (
+                  responsables.map((responsable, index) => (
+                    <p key={index}>
+                      {responsable.nombreEstudiante} {responsable.primerApellido} {responsable.segundoApellido}
+                    </p>
+                  ))
+                ) : (
+                  <p>No hay responsables asignados</p>
+                )}
+              </Responsables>
             </DescripcionTarea>
-            <Comentario>
-            </Comentario>
-            </div>
+            <ArchivosSection>
+            <h3>Archivos:</h3>
+            <ArchivosWrapper>
+            <div className="uploadedFiles">
+                {existingFiles.length > 0 ? (
+                existingFiles.map((file, index) => (
+                  <div key={index} className="fileItem">
+                    {renderIconForFileType(file.name)}
+                    <a
+                      href={file.url}  // URL al archivo
+                      target="_blank"   // Abrir en una nueva pestaña
+                      rel="noopener noreferrer"
+                    >
+                      <p className="fileName">
+                        {file?.name || "Nombre desconocido"}
+                      </p>
+                    </a>
+                  </div>
+                ))
 
+                ) : (
+                  <p>No hay archivos existentes</p>
+                )}
+              </div>
+
+            </ArchivosWrapper>
+            </ArchivosSection>
+
+
+            </div>
+                <h3>Descripcion de la tarea</h3>
+                <Rectangulo>{descripcion}</Rectangulo>
+                <h3>Comentario del Docente</h3>
+                <Rectangulo>{comentarioD}</Rectangulo>
 
           </BaseUI> 
         </Fragment>
@@ -62,9 +151,8 @@ const ArchivosWrapper = styled('div')`
   box-sizing: border-box;
   padding: 1rem;
   min-height: 8vw;
-  border: 0.4vw dotted black;
   border-radius: 0.1rem;
-  width: 40%;
+  width: 80%;
   .archivos-icons {
     display: flex;
     gap: 1rem;
@@ -78,9 +166,18 @@ const Responsables = styled('div')`
     box-sizing: border-box;
     width: 50%;
     padding: 2.5vw;
-    min-height: 15vw;
+    min-height: 20px;
     width: 40;
-    padding-bottom: 5vw;
+    padding-bottom: 20px;
 
 
 `
+const Rectangulo = styled('div')`
+    box-sizing: border-box;
+    width: 100%;        
+    padding: 2.5vw;     
+    min-height: 200px;  
+    padding-bottom: 20px; 
+    border: 4px solid #000000;  
+    margin: 20px auto;
+`;

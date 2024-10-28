@@ -65,7 +65,7 @@ function GruposDocentes() {
   return (
     <Fragment>
       <BaseUI
-        titulo={`LISTA DE DOCENTES DISPONIBLES`}
+        titulo={`SELECCIONAR UN DOCENTE PARA MATRICULARSE`}
         ocultarAtras={false}
         confirmarAtras={false}
         dirBack={`/`}

@@ -59,6 +59,7 @@ class GrupoController extends Controller
                 'docente.primerApellido as apellidoPaternoDocente', 
                 'docente.segundoApellido as apellidoMaternoDocente'*/
             )
+            ->orderBy('estudiante.nombreEstudiante')
             ->get();
 
         // Si no se encuentran resultados
@@ -68,7 +69,7 @@ class GrupoController extends Controller
 
         return response()->json($datosGrupo, 200);
     }
-    public function obtenerEmpresasPorGrupoYDocente($idDocente)
+    public function obtenerEmpresasPorGrupoYDocente($idDocente, $gestionGrupo)
     {
         // Validar los parámetros de entrada
         /*$request->validate([
@@ -87,10 +88,11 @@ class GrupoController extends Controller
             ->select('emp.nombreEmpresa','emp.nombreLargo', 'g.gestionGrupo', DB::raw('count(eg.idEstudiante) as totalEstudiantes'), 'g.numGrupo')
             ->where('d.idDocente', $idDocente)
            // ->where('g.idGrupo', $request->idGrupo)
-            //->where('g.gestionGrupo', $request->gestionGrupo)
+            ->where('g.gestionGrupo', $gestionGrupo)
             ->groupBy('emp.nombreEmpresa', 'emp.nombreLargo','g.gestionGrupo', 'g.numGrupo')
             -> orderByDesc('g.gestionGrupo')
             ->orderBy('emp.nombreEmpresa')
+            ->orderByDesc('e.nombreEstudiante')
             ->get();
         
     
