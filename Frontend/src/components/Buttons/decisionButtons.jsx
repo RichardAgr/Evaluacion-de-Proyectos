@@ -1,11 +1,11 @@
-import React from 'react';
 import { Box, Button } from '@mui/material';
 
 export default function DecisionButtons({
   rejectButtonText,
   validateButtonText,
   onReject,
-  onValidate
+  onValidate,
+  disabledButton
 }) {
   return (
     <Box
@@ -24,6 +24,7 @@ export default function DecisionButtons({
         {rejectButtonText}
       </Button>
       <Button
+        disabled = {disabledButton !== 0}
         variant="contained"
         color="primary"
         onClick={onValidate}

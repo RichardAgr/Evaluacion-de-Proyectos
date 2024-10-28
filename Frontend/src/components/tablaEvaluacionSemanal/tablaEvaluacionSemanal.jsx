@@ -105,6 +105,7 @@ const TablaEvaluacionSemanal = () => {
         validateButtonText="Guardar Evaluación"
         onReject={() => {}}
         onValidate={() => {}}
+        disabledButton= {1}
       />
     </>
   )

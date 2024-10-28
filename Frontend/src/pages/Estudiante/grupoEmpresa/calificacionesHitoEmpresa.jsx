@@ -30,7 +30,7 @@ const NotaSprintTable = () => {
       }
       const data = await response.json();
       setNotas(data);
-
+      console.log(data)
       const sprints = new Set();
       const datos = Object.entries(data).map(([idEstudiante, estudiante]) => {
         Object.keys(estudiante.sprints).forEach(sprint => sprints.add(sprint));

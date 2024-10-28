@@ -8,6 +8,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import {Typography} from '@mui/material';
 import { useNavigate } from "react-router-dom";
 import { styled } from '@mui/material';
 
@@ -19,7 +20,15 @@ function ListaDefinitiva({ titulo, cabezeraTitulo, cabezeras, datosTabla, oculta
             navigate(`${dirForward}${id}`);
         }
     };
-
+    function esSoloNumeros(str) {
+        // Expresión regular que verifica si el string contiene solo números
+        const regex = /^\d+$/;
+        if(regex.test(str)){
+            return Number(str)
+        }else{
+            return 100;
+        }
+    }
     return (
         <BaseUI        
             titulo={titulo}
@@ -43,15 +52,19 @@ function ListaDefinitiva({ titulo, cabezeraTitulo, cabezeras, datosTabla, oculta
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {datosTabla.map((datos) => (
+                            {datosTabla.map((datos, index) => (
                                 <TableRow
-                                    key={datos.id}
+                                    key={index}
                                     className={`tableRow--body ${dirForward ? 'clickable' : ''}`}
                                     onClick={() => dirForward && handleRowClick(datos.id)}
                                 >
                                     {cabezeras.map((cabezera, cellIndex) => (
                                         <TableCell key={cellIndex} align="left" className="tableCell">
-                                            {datos[cabezera]}
+                                            <Typography 
+                                                className={`${esSoloNumeros(datos[cabezera])< 51 ? 'red' : ''}`}
+                                            >
+                                                {datos[cabezera]}
+                                            </Typography>
                                         </TableCell>
                                     ))}
                                 </TableRow>
@@ -91,5 +104,8 @@ const Container = styled('div')`
         white-space: nowrap;
         padding-top: 2rem;
         padding-bottom: 2rem;
+    }
+    .red{
+        color: red;
     }
 `;
