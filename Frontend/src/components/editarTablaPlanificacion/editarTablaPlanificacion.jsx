@@ -175,6 +175,15 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
     }
     setRows(newRows);
   };
+
+  const fieldNames = {
+    fechaIni: "Fecha de inicio",
+    fechaFin: "Fecha de Fin",
+    fechaEntrega: "Fecha de Entrega",
+    cobro: "Cobro",
+    entregables: "Entregables"
+  }
+
   const subir = async () => {
     setCuadroDialogo({
       ...cuadroDialogo,
@@ -186,9 +195,11 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
       for (const [key, value] of Object.entries(row)) {
         if (value === "" || value === null) {
           console.error(`Campo vacío encontrado en Sprint ${rowIndex}: ${key}`)
+          const fieldName = fieldNames[key] || key
+          console.error(`Campo vacío encontrado en Sprint ${rowIndex}: ${fieldName}`)
           setSnackbar({
             open: true,
-            message: `Sprint ${rowIndex}: El campo "${key}" está vacío`,
+            message: `Sprint ${rowIndex}: El campo "${fieldName}" está vacío`,
             severity: "warning",
             autoHide: false,
           })
