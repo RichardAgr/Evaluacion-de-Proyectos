@@ -167,7 +167,8 @@ class SprintController extends Controller
             $tareas = Tarea::where('idSemana', $semana->idSemana)->get([
                 'idTarea',
                 'idSemana',
-                'textoTarea'
+                'textoTarea',
+                'nombreTarea'
             ]);
             
             // Agregar la semana y sus tareas al response
