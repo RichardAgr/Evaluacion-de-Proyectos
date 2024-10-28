@@ -150,7 +150,7 @@ class SprintController extends Controller
     public function sprintsSemanas(int $idSprint): JsonResponse
     {
         // Obtener el sprint con su comentario y nota
-        $sprint = Sprint::find($idSprint, ['idSprint', 'comentariodocente']);
+        $sprint = Sprint::find($idSprint, ['idSprint']);
         
         // Verificar si el sprint existe
         if (!$sprint) {
@@ -163,8 +163,6 @@ class SprintController extends Controller
         // Preparar la respuesta
         $response = [
             'idSprint' => $sprint->idSprint,
-            'comentario' => $sprint->comentariodocente,
-           // 'nota' => $sprint->notasprint,
             'semanas' => []
         ];
     
@@ -174,7 +172,8 @@ class SprintController extends Controller
             $tareas = Tarea::where('idSemana', $semana->idSemana)->get([
                 'idTarea',
                 'idSemana',
-                'textoTarea'
+                'textoTarea',
+                'nombreTarea'
             ]);
             
             // Agregar la semana y sus tareas al response

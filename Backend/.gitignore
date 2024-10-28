@@ -2,7 +2,10 @@
 /node_modules
 /public/build
 /public/hot
-node_modules
+/public/storage/archivo
+/storage/app/public/archivo
+
+
 /vendor
 .env
 .env.example

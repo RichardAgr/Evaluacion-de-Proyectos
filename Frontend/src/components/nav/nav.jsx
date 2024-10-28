@@ -16,21 +16,22 @@ import CalificarEstSemana from "../../pages/Docente/calificarSprint/calificarEst
 import HomeEstudiante from "../../pages/Estudiante/homeEstudiante/homeEstudiante.jsx";
 import HomeGrupoEstudiante from "../../pages/Estudiante/homeGrupoEstudiante/homeGrupoEstudiante.jsx";
 import ModificarPlanificacion from "../../pages/Estudiante/editarPlanificacion/editarPlanificacion.jsx";
-import ModificarTarea from "../../pages/Estudiante/editarPlanificacion/modificarTarea/modificarTarea.jsx";
 
 import VisualizarSprintEst from "../../pages/Estudiante/visualizarSprintEstudiante/visualizarSprint.jsx";
 import VisualizarTarea from "../../pages/Estudiante/tareaEstudiante/viualizarTarea.jsx";
 import ModificarListaTareas from "../../pages/Estudiante/editarPlanificacion/modificarListaTareas/modificarListaTareas.jsx";
 
-import CrearGrupoEmpresa from "../../pages/Estudiante/grupoEmpresa/crearGrupoEmpresa.jsx";
+import ModificarGrupoEmpresa from "../../pages/Estudiante/grupoEmpresa/modificarGrupoEmpresa.jsx";
 import GruposDisponibles from "../../pages/Estudiante/gruposDisponibles/gruposDisponibles.jsx"; // Import the new page
 import InscribirGrupo from "../../pages/Estudiante/gruposDisponibles/inscribirGrupo.jsx";
 import ObtenerEstudiantesPorGrupo from "../../pages/Docente/listas/listaEstudiantes/listaEstudiantes.jsx";
 import ObtenerEstudiantesPorGrupoA from "../../pages/Docente/listas/listaEstudiantes/listaEstudiantesA.jsx";
 import EmpresasPorDocente from "../../pages/Docente/listas/listaEmpresas/listaEmpresaPorDocente.jsx";
-
+import ModificarTarea from "../../pages/Estudiante/modificarTarea/modificarTarea.jsx";
+import ListaTareas from "../../pages/Estudiante/modificarTarea/listaTareas.jsx";
 import CalificacionesHitoEmpresa from "../../pages/Estudiante/grupoEmpresa/calificacionesHitoEmpresa.jsx";
 import SeleccionarEmpresaVisualizar from "../../pages/Docente/listas/seleccionarEmpresaVisualizar/seleccionarEmpresaVisualizar.jsx";
+import CrearGrupoEmpresa from "../../pages/Estudiante/grupoEmpresa/crearGrupoEmpresa.jsx";
 
 function Nav() {
   return (
@@ -88,8 +89,14 @@ function Nav() {
       />
       <Route
         path="/homeEstudiante/homeGrupoEstudiante/crearGrupo"
+        element={<ModificarGrupoEmpresa />}
+      />
+      <Route
+        path="/homeEstudiante/homeGrupoEstudiante/crearGrupo1"
         element={<CrearGrupoEmpresa />}
       />
+
+
 
       {/** Ruta Estudiante*/}
       <Route path="/homeEstudiante" element={<HomeEstudiante />} />
@@ -105,8 +112,13 @@ function Nav() {
       />
 
       <Route
-        path="/homeEstudiante/homeGrupoEstudiante/sprint/semana/tareas/:idTarea"
+        path="/homeEstudiante/homeGrupoEstudiante/sprintE/:idSprint/semana/editarTarea/:idTarea"
         element={<ModificarTarea />}
+      />
+
+      <Route
+        path="/homeEstudiante/homeGrupoEstudiante/sprintE/:idSprint"
+        element={<ListaTareas />}
       />
 
       <Route
