@@ -8,7 +8,7 @@ import {
     ListItemText,
     Paper,
   } from "@mui/material";
-function infoEmpresa({nombreLargo, nombreCorto}) {
+function NombreEmpresa({nombreLargo, nombreCorto}) {
   return (
     <Paper elevation={1} sx={{ p: 2, my: 1 }}>
       <Box sx={{ textAlign: "center", mb: 1 }}>
@@ -23,5 +23,5 @@ function infoEmpresa({nombreLargo, nombreCorto}) {
   );
 }
 
-export default infoEmpresa;
+export default NombreEmpresa;
 

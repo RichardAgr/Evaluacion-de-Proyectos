@@ -10,17 +10,17 @@ import {
   ListItemText,
   Paper,
 } from "@mui/material";
-function Comentario({ comentariopublico }) {
+function Comentario({titulo, comentario }) {
   return (
     <>
-      <Box display="flex" sx={{ textAlign: "center", mb: 1 }}>
+      <Box display="flex" sx={{ textAlign: "center", mb: 1 , mt:2}}>
         <Typography
           variant="subtitle"
           component="h2"
           gutterBottom
           sx={{ mr: 2 }}
         >
-          Comentario:
+          {titulo}
         </Typography>
       </Box>
       <Box>
@@ -33,7 +33,7 @@ function Comentario({ comentariopublico }) {
           borderColor: 'divider',
         }}
       >
-          <Typography variant="body1" component="h1">{comentariopublico}</Typography>
+          <Typography variant="body1" component="h1">{comentario}</Typography>
         </Paper>
       </Box>
     </>
