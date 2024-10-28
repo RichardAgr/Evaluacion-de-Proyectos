@@ -7,10 +7,6 @@ use Illuminate\Support\Facades\DB;
 
 class GrupoSeeder extends Seeder
 {
-<<<<<<< HEAD
-=======
-
->>>>>>> origin/jhair
     /**
      * Run the database seeds.
      */
@@ -43,8 +39,4 @@ class GrupoSeeder extends Seeder
             ],
         ]);
     }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> origin/jhair

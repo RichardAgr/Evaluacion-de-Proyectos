@@ -10,10 +10,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
-<<<<<<< HEAD
-=======
-
->>>>>>> origin/jhair
 class SprintController extends Controller
 {
     public function modificarSprint(Request $request): JsonResponse

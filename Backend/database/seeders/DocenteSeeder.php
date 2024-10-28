@@ -31,8 +31,4 @@ class DocenteSeeder extends Seeder
             ],
         ]);
     }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> origin/jhair
