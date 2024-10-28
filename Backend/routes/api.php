@@ -15,6 +15,7 @@ use App\Http\Controllers\DocenteController;
 use App\Http\Controllers\SprintController;
 use App\Http\Controllers\EstudiantesEmpresasController;
 use App\Http\Controllers\NotaSprintController;
+use App\Http\Controllers\EntregablesController;
 
 Route::get('/empresa/{id}', [EmpresaController::class, 'getEmpresaData']);
 Route::get('/nombreEmpresa/{id}', [EmpresaController::class, 'getNombreEmpresa']);
@@ -64,13 +65,14 @@ Route::post('/planificacion/guardar2', [PlanificacionController::class, 'crearPl
 
 Route::post('/planificacion/guardar', [PlanificacionController::class, 'modificarPlanificacion']);
 Route::post('/planificacion/guardarSprints', [SprintController::class, 'modificarSprint']);
-
+Route::post('/planificacion/guardarEntregables', [EntregablesController::class, 'guardarEntregables']);
 //tests
 //---Modificar planificacion---
 //tests para ver si los sprints insertados se guardan
 Route::get('/testGuardar', [SprintController::class, 'testModificarSprint']);
 //tests para  ver si la planificacion se actualiza o se crea si no existe
 Route::get('/testGuardarPlanificacion', [PlanificacionController::class, 'testModificarPlanificacion']);
+Route::get('/testGuardarEntregables', [EntregablesController::class, 'testGuardarEntregables']);
 // Ruta para crear una tarea
 Route::post('/tarea/crear', [TareaController::class, 'store']);
 //Para asignar grupos

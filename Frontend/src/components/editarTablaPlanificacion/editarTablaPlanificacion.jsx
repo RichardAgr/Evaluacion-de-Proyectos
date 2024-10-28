@@ -53,10 +53,6 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
     }
     setOpenEntregables(false);
     setCurrentSprintIndex(-1);
-
-    console.log(currentSprintIndex);
-    console.log(newEntregables);
-    console.log(rows);
   };
   const handleCancel = () => {
     setCuadroDialogo({
@@ -164,7 +160,6 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
             severity: "error",
             autoHide: 1000,
           });
-          console.log(newRows[index]);
         }
       } else if (field === "fechaFin" && value < newRows[index].fechaIni) {
         setSnackbar({
@@ -204,7 +199,6 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
       rowIndex++;
       for (const [key, value] of Object.entries(row)) {
         if (value === "" || value === null) {
-          console.error(`Campo vacío encontrado en Sprint ${rowIndex}: ${key}`);
           const fieldName = fieldNames[key] || key;
           console.error(
             `Campo vacío encontrado en Sprint ${rowIndex}: ${fieldName}`
@@ -290,9 +284,6 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
           severity: "error",
           autoHide: false,
         });
-
-        console.log("Respuesta del servidor:");
-        console.log(responseDataSprint);
       } else {
         {
           /** Aun no se manejan los errores tipo {responseDataSprint.errors} */
@@ -304,8 +295,66 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
           severity: "success",
           autoHide: true,
         });
-        console.log("Respuesta del servidor:");
-        console.log(responseDataSprint);
+        if (
+          responseDataSprint.sprints &&
+          responseDataSprint.sprints.length > 0
+        ) {
+          // obtener datos de los entregables
+          const entregables = rows.map((row) => row.entregables);
+
+          // obtener id de los sprints de los entregables
+          const idSprints = responseDataSprint.sprints.map((sprint) => ({
+            idSprint: sprint.idSprint,
+          }));
+          const entregablesData = idSprints.map((sprint, index) => ({
+            idSprint: sprint.idSprint,
+            entregables: entregables[index] || [], // Asignar entregables correspondiente o un array vacío
+          }));
+          const responseEntregables = await fetch(
+            "http://localhost:8000/api/planificacion/guardarEntregables",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ entregables: entregablesData }),
+            }
+          );
+
+          const dataEntregables = await responseEntregables.json();
+          if (
+            dataEntregables.error !== undefined &&
+            dataEntregables.error !== null
+          ) {
+            setSnackbar({
+              open: true,
+              message: `Error al modificar los Sprints: ${responseEntregables.error} ${responseDataSprint.message}`,
+              severity: "error",
+              autoHide: false,
+            });
+          } else if (
+            dataEntregables.errors !== undefined &&
+            dataEntregables.errors !== null
+          ) {
+            setSnackbar({
+              open: true,
+              message: `Los datos en los entregables no son validos, proximamente se podra decir exactamente que esta mal`,
+              severity: "error",
+              autoHide: false,
+            });
+          } else {
+            {
+              /** Aun no se manejan los errores tipo {responseDataSprint.errors} */
+            }
+            console.log("Entregables modificados con exito.");
+            setSnackbar({
+              open: true,
+              message: `${dataEntregables.message}`,
+              severity: "success",
+              autoHide: true,
+            });
+          }
+        }
       }
     }
   };

@@ -11,18 +11,6 @@ import Loading from "../../../components/loading/loading.jsx";
 import Error from "../../../components/error/error.jsx";
 import EstadoPlanificacion from "../../../components/estadoPlanificacion/estadoPlanificacion.jsx";
 import Redirecting from "../../../components/redirecting/redirecting.jsx";
-import {
-  Button,
-  TextField,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  Box,
-  CircularProgress,
-  Typography,
-} from "@mui/material";
 
 function ModificarPlanificacion() {
   let { idEmpresa } = useParams();
