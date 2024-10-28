@@ -21,14 +21,6 @@ const columns = [
     type: 'string',
     flex: 2,
   },
-  {
-    field: 'numGrupo',
-    headerName: 'Grupo',
-    type: 'number',
-    headerAlign: 'left',
-    align: 'left',
-    flex: 1.5,
-  },
 ];
 
 export default function DataTable() {
@@ -74,12 +66,9 @@ export default function DataTable() {
   const filteredEstudiantes = estudiantes.filter((estudiante) => {
     const nombreCompleto = `${estudiante.nombreEstudiante} ${estudiante.apellidoPaternoEstudiante} ${estudiante.apellidoMaternoEstudiante}`.toLowerCase();
     const nombreEmpresa = estudiante.nombreEmpresa?.toLowerCase() || '';
-    const numGrupo = estudiante.numGrupo?.toString() || '';
-
     return (
       nombreCompleto.includes(searchValue.toLowerCase()) || 
-      nombreEmpresa.includes(searchValue.toLowerCase()) || 
-      numGrupo.includes(searchValue)
+      nombreEmpresa.includes(searchValue.toLowerCase())
     );
   });
 

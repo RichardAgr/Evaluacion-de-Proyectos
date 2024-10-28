@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { styled } from '@mui/material/styles';
+import Box from '@mui/material/Box';
 
 /* eslint-disable react/prop-types */
 
@@ -12,37 +14,103 @@ const SprintSemanas = ({ title, semana, idSprint }) => {
     };
 
     const clickBoton = (tarea) => {
-        console.log("click", tarea)
+        console.log("click", tarea);
         navigate(`/homeEstudiante/homeGrupoEstudiante/sprint/${idSprint}/tarea/${tarea.idTarea}`); 
+    };
+
+    if (!semana.tareas) {
+        return null; // No mostrar nada si no hay tareas
     }
 
     return (
-        <div className="collapse-panel" style={{ marginBottom: '2px' }}>
-            {(
-                <div className="collapse-header" onClick={togglePanel}>
-                    <span style={{ fontSize: '1.5em', marginRight: '10px', textAlign: 'center' }}>{isOpen ? '>' : '>'}</span>
-                    <h2 style={{
-                        margin: 0,
-                        textAlign: 'center', 
-                        textTransform: 'uppercase',
-                        fontWeight: 100,
-                        fontFamily: 'Arial, sans-serif'
-                    }}>
-                        {title}
-                    </h2>
-                </div>
-            )}
+        <DivLista>
+            <Box 
+                onClick={togglePanel}
+                sx={{
+                    width: '80%',
+                    height: 60,
+                    borderRadius: 0.6,
+                    margin: 0.7,
+                    marginLeft: 7,
+                    pl: 2,
+                    textAlign: 'center',
+                    fontSize: '1.5rem',
+                    bgcolor: '#d0d4e4', 
+                    textTransform: 'uppercase',
+                    display: 'flex', 
+                    cursor: 'pointer',
+                    justifyContent: 'flex-start', 
+                    alignItems: 'center', 
+                    '&:hover': {
+                        bgcolor: '#c0c4d4', 
+                    },
+                }}            
+            >
+                {isOpen ? '>  ' : '>  '}
+                {title}
+            </Box>
+
             {isOpen && (
-                <div className="collapse-panel" style={{ padding:'1px'}} >
-                    {semana.tareas.map((tarea) => (
-                        <div className='collapse-child'onClick={() => {clickBoton(tarea)}} key={tarea.idTarea}>
-                            <p style={{ fontSize: '25px' }} >{tarea.textoTarea}</p>
-                        </div>
-                    ))}
-                </div>
+                <Box>
+                    {semana.tareas.length > 0 ? (
+                        semana.tareas.map((tarea) => (
+                            <Box 
+                                onClick={() => { clickBoton(tarea); }} 
+                                key={tarea.idTarea}
+                                sx={{
+                                    width: '80%',
+                                    height: 60,
+                                    borderRadius: 0.6,
+                                    margin: 0.7,
+                                    marginLeft: 15,
+                                    pl: 2,
+                                    textAlign: 'center',
+                                    fontSize: '1.5rem',
+                                    bgcolor: '#d0d4e4', 
+                                    textTransform: 'uppercase',
+                                    display: 'flex', 
+                                    cursor: 'pointer',
+                                    justifyContent: 'flex-start', 
+                                    alignItems: 'center', 
+                                    '&:hover': {
+                                        bgcolor: '#c0c4d4', 
+                                    },
+                                }}            
+                            >
+                                {isOpen ? '>  ' : '>  '}
+                                {tarea.textoTarea}
+                            </Box>
+                        ))
+                    ) : (
+                        <Box 
+                            sx={{
+                                width: '80%',
+                                height: 60,
+                                borderRadius: 0.6,
+                                margin: 0.7,
+                                marginLeft: 15,
+                                pl: 2,
+                                textAlign: 'center',
+                                fontSize: '1.5rem',
+                                bgcolor: '#d0d4e4',
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                            }}
+                        >
+                            No hay tareas asignadas para esta semana.
+                        </Box>
+                    )}
+                </Box>
             )}
-        </div>
+        </DivLista>
     );
 };
 
 export default SprintSemanas;
+
+const DivLista = styled("div")`
+    display: flex;
+    flex-direction: column;
+    margin: 0rem;
+`;

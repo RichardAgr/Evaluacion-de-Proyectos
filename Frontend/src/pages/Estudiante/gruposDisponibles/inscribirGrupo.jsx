@@ -67,7 +67,7 @@ function GrupoDescripcion() {
   const validarCodigo = async () => {
   
       try {
-        const idEstudiante = "2";
+        const idEstudiante = "3";
         const response = await enviarClave(idGrupo, codigo, idEstudiante);
   
         if (response.status === 200) {

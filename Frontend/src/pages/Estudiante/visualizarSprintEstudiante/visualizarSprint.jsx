@@ -9,8 +9,6 @@ const VisualizarSprintEst = () => {
     const { idSprint } = useParams(); 
     // const navigate = useNavigate();
     const [semanas, setSemanas] = useState([]);
-    const [comentario, setComentario] = useState('');
-    const [nota, setNota] = useState(null);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true); 
 
@@ -21,9 +19,8 @@ const VisualizarSprintEst = () => {
         const fetchSprintData = async () => {
             try {
                 const data = await getSprintSemanas(idSprint); 
-                setSemanas(data.semanas); 
-                setComentario(data.comentario);
-                setNota(data.nota);
+                setSemanas(data.semanas);
+                console.log(data.semanas), 
                 setError(null);
             } catch (err) {
                 console.error('Error en la solicitud:', err);
@@ -40,25 +37,22 @@ const VisualizarSprintEst = () => {
     return (
         <Fragment>
             <BaseUI
-                titulo={'VISUALIZAR HITO'}
+                titulo={'SELECCIONE UNA TAREA PARA VISUALIZAR'}
                 ocultarAtras={false}
                 confirmarAtras={false}
                 dirBack={'/'}
             >
                 <div>
-                    <h1 style={{ fontSize: '2rem', display: 'flex', overflow: 'hidden', marginBottom: '0.6rem' }}>
+                    <h1 style={{ fontSize: '2rem', display: 'flex', overflow: 'hidden', marginBottom: '0.1rem' }}>
                         HITO {idSprint}
                     </h1>
                 </div>
                 {loading && <p>Cargando semanas...</p>}
                 {error && <p style={{ color: 'red' }}>{error}</p>}
                 {semanas.map((semana, index) => (
-                    <SprintSemanas key={index} title={`Semana ${index + 1}`} semana={semana} idSprint={idSprint}>
+                    <SprintSemanas key={index} title={`Semana ${semana.idSemana}`} semana={semana} idSprint={idSprint}>
                     </SprintSemanas>
                 ))}
-                {comentario && nota && (
-                    <ComentarioNota linkDir={'ocultar'} comentario={comentario} nota={nota}></ComentarioNota>
-                )}
             </BaseUI>
         </Fragment>
     );
