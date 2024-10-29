@@ -147,8 +147,9 @@ const TablaEvaluacionSemanal = ({ idEmpresa }) => {
       <DecisionButtons
         rejectButtonText="Descartar"
         validateButtonText="Guardar Evaluación"
-        onReject={() => {}} 
-        onValidate={handleSubmit} 
+        onReject={() => {}}
+        onValidate={() => {}}
+        disabledButton= {1}
       />
     </>
   );
