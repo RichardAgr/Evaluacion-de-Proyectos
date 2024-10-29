@@ -16,6 +16,9 @@ function Home() {
   const handleNavigateToModificarPlanificacion = () => {
     navigate("/modificarPlanificacion/empresa/1");
   };
+  const handleNavigateToPublicarPlanificacion = () => {
+    navigate("/publicarPlanificacion/empresa/1");
+  };
   const handleNavigateToValidarEmpresas = () => {
     navigate("/validarPlanificacion/");
   };
@@ -114,7 +117,20 @@ function Home() {
             margin: "10px",
           }}
         >
-          Ir a Validar Empresas
+          Ir a Validar planificaciones
+        </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          size="large"
+          onClick={handleNavigateToPublicarPlanificacion}
+          style={{
+            padding: "15px 30px",
+            fontSize: "1.2rem",
+            margin: "10px",
+          }}
+        >
+          Ir a publicar planificacion
         </Button>
         <Button
           variant="contained"

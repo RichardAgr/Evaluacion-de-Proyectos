@@ -44,7 +44,22 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
     setCurrentSprintIndex(index);
     setOpenEntregables(true);
   };
+  
+  const errorTranslations = {
+    "The comentario field must be a string.":
+      "El comentario para el grupo no debe estar vacio.",
+    "The nota field must be at least 0.": "La nota debe ser al menos 0.",
+    "The nota field must not be greater than 100.":
+      "La nota no debe ser mayor que 100.",
+    "The nota field must be a number.": "El campo nota está vacío.",
+    "The group comment field is required.":
+      "El campo de comentario para el grupo es obligatorio.",
+    // aca se añaden los demas errores de ser necesario
+  };
 
+  const translateError = (error) => {
+    return errorTranslations[error] || `Error: ${error}`;
+  };
   const handleCloseEntregables = (newEntregables) => {
     if (currentSprintIndex !== -1) {
       const newRows = [...rows];
@@ -53,10 +68,6 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
     }
     setOpenEntregables(false);
     setCurrentSprintIndex(-1);
-
-    console.log(currentSprintIndex);
-    console.log(newEntregables);
-    console.log(rows);
   };
   const handleCancel = () => {
     setCuadroDialogo({
@@ -85,7 +96,11 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
         fechaFin: sprint.fechaFin,
         fechaEntrega: sprint.fechaEntrega,
         cobro: sprint.cobro,
-        entregables: sprint.entregables || [],
+        entregables: sprint.entregables
+          ? sprint.entregables.map(
+              (entregable) => entregable.descripcionEntregable
+            )
+          : [],
       };
     });
     setRows(newRows);
@@ -164,7 +179,6 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
             severity: "error",
             autoHide: 1000,
           });
-          console.log(newRows[index]);
         }
       } else if (field === "fechaFin" && value < newRows[index].fechaIni) {
         setSnackbar({
@@ -204,7 +218,6 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
       rowIndex++;
       for (const [key, value] of Object.entries(row)) {
         if (value === "" || value === null) {
-          console.error(`Campo vacío encontrado en Sprint ${rowIndex}: ${key}`);
           const fieldName = fieldNames[key] || key;
           console.error(
             `Campo vacío encontrado en Sprint ${rowIndex}: ${fieldName}`
@@ -284,19 +297,21 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
         responseDataSprint.errors !== undefined &&
         responseDataSprint.errors !== null
       ) {
+        const errorMessages = Object.keys(responseDataSprint.errors)
+          .map((key) => {
+            const errors = responseDataSprint.errors[key];
+            return errors
+              .map((error) => `${key}: ${translateError(error)}`)
+              .join("\n");
+          })
+          .join("\n");
+        console.log(errorMessages);
         setSnackbar({
           open: true,
-          message: `Los datos en la planicacion no son validos, proximamente se podra decir exactamente que esta mal`,
+          message: errorMessages,
           severity: "error",
-          autoHide: false,
         });
-
-        console.log("Respuesta del servidor:");
-        console.log(responseDataSprint);
       } else {
-        {
-          /** Aun no se manejan los errores tipo {responseDataSprint.errors} */
-        }
         console.log("Sprints modificados con exito.");
         setSnackbar({
           open: true,
@@ -304,8 +319,74 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
           severity: "success",
           autoHide: true,
         });
-        console.log("Respuesta del servidor:");
-        console.log(responseDataSprint);
+        if (
+          responseDataSprint.sprints &&
+          responseDataSprint.sprints.length > 0
+        ) {
+          // obtener datos de los entregables
+          const entregables = rows.map((row) => row.entregables);
+
+          // obtener id de los sprints de los entregables
+          const idSprints = responseDataSprint.sprints.map((sprint) => ({
+            idSprint: sprint.idSprint,
+          }));
+          const entregablesData = idSprints.map((sprint, index) => ({
+            idSprint: sprint.idSprint,
+            entregables: entregables[index] || [], // Asignar entregables correspondiente o un array vacío
+          }));
+          const responseEntregables = await fetch(
+            "http://localhost:8000/api/planificacion/guardarEntregables",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ entregables: entregablesData }),
+            }
+          );
+
+          const dataEntregables = await responseEntregables.json();
+          if (
+            dataEntregables.error !== undefined &&
+            dataEntregables.error !== null
+          ) {
+            setSnackbar({
+              open: true,
+              message: `Error al modificar los Sprints: ${responseEntregables.error} ${responseDataSprint.message}`,
+              severity: "error",
+              autoHide: false,
+            });
+          } else if (
+            dataEntregables.errors !== undefined &&
+            dataEntregables.errors !== null
+          ) {
+            const errorMessages = Object.keys(dataEntregables.errors)
+              .map((key) => {
+                const errors = dataEntregables.errors[key];
+                return errors
+                  .map((error) => `${key}: ${translateError(error)}`)
+                  .join("\n");
+              })
+              .join("\n");
+            console.log(errorMessages);
+            setSnackbar({
+              open: true,
+              message: errorMessages,
+              severity: "error",
+            });
+          } else {
+            {
+              /** Aun no se manejan los errores tipo {responseDataSprint.errors} */
+            }
+            console.log("Entregables modificados con exito.");
+            setSnackbar({
+              open: true,
+              message: `${dataEntregables.message}`,
+              severity: "success",
+              autoHide: true,
+            });
+          }
+        }
       }
     }
   };
@@ -381,15 +462,19 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
                     )
                   )}
                   <TableCell align="left">
-                    {row.entregables.length > 0 && (
-                      <List dense sx={{ mb: 0.5 }}>
-                        {row.entregables.map((entregable, i) => (
-                          <ListItem key={i}>
-                            <ListItemText primary={`${i + 1}. ${entregable}`} />
-                          </ListItem>
-                        ))}
-                      </List>
-                    )}
+                    <Box sx={{ maxHeight: 200, overflowY: "auto" }}>
+                      {row.entregables.length > 0 && (
+                        <List dense sx={{ mb: 0.5 }}>
+                          {row.entregables.map((entregable, i) => (
+                            <ListItem key={i}>
+                              <ListItemText
+                                primary={`${i + 1}. ${entregable}`}
+                              />
+                            </ListItem>
+                          ))}
+                        </List>
+                      )}
+                    </Box>
                     <Button
                       variant="contained"
                       color="primary"

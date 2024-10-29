@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   Button,
   Dialog,
@@ -11,15 +11,20 @@ import {
   Typography,
   Box,
   IconButton,
-} from '@mui/material';
-import { styled } from '@mui/material/styles';
-import { Add as AddIcon, Delete as DeleteIcon, Close as CloseIcon } from '@mui/icons-material';
+} from "@mui/material";
+import { styled } from "@mui/material/styles";
+import {
+  Add as AddIcon,
+  Delete as DeleteIcon,
+  Close as CloseIcon,
+} from "@mui/icons-material";
+import InfoSnackbar from "../infoSnackbar/infoSnackbar";
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
-  '& .MuiDialogContent-root': {
+  "& .MuiDialogContent-root": {
     padding: theme.spacing(3),
   },
-  '& .MuiDialogActions-root': {
+  "& .MuiDialogActions-root": {
     padding: theme.spacing(2),
   },
 }));
@@ -27,13 +32,22 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
 const StyledDialogTitle = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.primary.main,
   color: theme.palette.primary.contrastText,
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'center',
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
   padding: theme.spacing(2),
 }));
 
-export default function AnadirEntregables({ open, handleClose, initialEntregables = [] }) {
+export default function AnadirEntregables({
+  open,
+  handleClose,
+  initialEntregables = [],
+}) {
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "info",
+  });
   const [entregables, setEntregables] = useState(initialEntregables);
 
   useEffect(() => {
@@ -41,7 +55,7 @@ export default function AnadirEntregables({ open, handleClose, initialEntregable
   }, [initialEntregables]);
 
   const handleAddEntregable = () => {
-    setEntregables([...entregables, '']);
+    setEntregables([...entregables, ""]);
   };
 
   const handleDeleteEntregable = (index) => {
@@ -51,20 +65,36 @@ export default function AnadirEntregables({ open, handleClose, initialEntregable
 
   const handleChangeEntregable = (index, value) => {
     const nuevosEntregables = [...entregables];
-    nuevosEntregables[index] = value;
+    nuevosEntregables[index] = value.slice(0, 80); // Límite de 50 caracteres
     setEntregables(nuevosEntregables);
   };
 
   const handleSaveAndClose = () => {
-    const entregablesFiltrados = entregables.filter(entregable => entregable.trim() !== '');
+    // Convertir todos los entregables a minúsculas y filtrar los vacíos
+    const entregablesFiltrados = entregables
+      .map((entregable) => entregable.trim().toLowerCase()) // Convierte a minúsculas
+      .filter((entregable) => entregable !== ""); // Filtra los entregables vacíos
+
+    // Verificar duplicados
+    const uniqueEntregables = new Set(entregablesFiltrados);
+    if (uniqueEntregables.size !== entregablesFiltrados.length) {
+      setSnackbar({
+        open: true,
+        message: `Hay un entregable repetido`,
+        severity: "error",
+        autoHide: false,
+      });
+      return;
+    }
+
     handleClose(entregablesFiltrados);
   };
 
   return (
-    <StyledDialog 
-      open={open} 
-      onClose={() => handleClose(initialEntregables)} 
-      maxWidth="sm" 
+    <StyledDialog
+      open={open}
+      onClose={() => handleClose(initialEntregables)}
+      maxWidth="sm"
       fullWidth
       aria-labelledby="customized-dialog-title"
     >
@@ -77,7 +107,7 @@ export default function AnadirEntregables({ open, handleClose, initialEntregable
           onClick={() => handleClose(initialEntregables)}
           sx={{
             color: (theme) => theme.palette.grey[300],
-            '&:hover': {
+            "&:hover": {
               color: (theme) => theme.palette.grey[100],
             },
           }}
@@ -94,6 +124,8 @@ export default function AnadirEntregables({ open, handleClose, initialEntregable
                 value={entregable}
                 onChange={(e) => handleChangeEntregable(index, e.target.value)}
                 aria-label={`Entregable ${index + 1}`}
+                inputProps={{ maxLength: 80 }}
+                helperText={`${entregable.length}/80`}
               />
               <Button
                 variant="contained"
@@ -101,32 +133,48 @@ export default function AnadirEntregables({ open, handleClose, initialEntregable
                 startIcon={<DeleteIcon />}
                 onClick={() => handleDeleteEntregable(index)}
                 aria-label={`Eliminar entregable ${index + 1}`}
-                sx={{ maxHeight: "55px", ml: 1 }}
+                sx={{ maxHeight: "55px", ml: 1, mb: 2 }}
               >
                 Eliminar
               </Button>
             </ListItem>
           ))}
         </List>
-        <Button
-          variant="contained"
-          color="primary"
-          startIcon={<AddIcon />}
-          onClick={handleAddEntregable}
-          fullWidth
-          sx={{ mt: 2 }}
-        >
-          Añadir Entregable
-        </Button>
+        {entregables.length < 10 && (
+          <Button
+            variant="contained"
+            color="primary"
+            startIcon={<AddIcon />}
+            onClick={handleAddEntregable}
+            fullWidth
+            sx={{ mt: 2 }}
+          >
+            Añadir Entregable
+          </Button>
+        )}
       </DialogContent>
       <DialogActions>
-        <Button onClick={() => handleClose(initialEntregables)} color="secondary" variant="contained">
+        <Button
+          onClick={() => handleClose(initialEntregables)}
+          color="secondary"
+          variant="contained"
+        >
           Descartar
         </Button>
-        <Button onClick={handleSaveAndClose} color="primary" variant="contained">
+        <Button
+          onClick={handleSaveAndClose}
+          color="primary"
+          variant="contained"
+        >
           Guardar
         </Button>
       </DialogActions>
+      <InfoSnackbar
+        openSnackbar={snackbar.open}
+        setOpenSnackbar={(open) => setSnackbar({ ...snackbar, open })}
+        message={snackbar.message}
+        severity={snackbar.severity}
+      />
     </StyledDialog>
   );
 }

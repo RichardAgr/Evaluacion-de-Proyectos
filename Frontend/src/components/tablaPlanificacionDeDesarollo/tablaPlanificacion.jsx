@@ -5,17 +5,19 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import TableFooter from '@mui/material/TableFooter';
+import TableFooter from "@mui/material/TableFooter";
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
-import { Box, Typography } from "@mui/material";
-function tablaPlanificacion({ sprints, ocultarBotones }) {
+import { Box, Typography, List, ListItem, ListItemText } from "@mui/material";
+
+function TablaPlanificacion({ sprints, ocultarBotones }) {
   const totalCharge = useMemo(() => {
     return sprints.reduce((total, sprint) => {
       const charge = parseFloat(sprint.cobro) || 0;
       return total + charge;
     }, 0);
   }, [sprints]);
+
   return (
     <>
       <Box sx={{ mb: 2 }}>
@@ -29,12 +31,13 @@ function tablaPlanificacion({ sprints, ocultarBotones }) {
                 <TableCell align="left">Fecha Entrega</TableCell>
                 <TableCell align="left">Cobro (Bs)</TableCell>
                 <TableCell align="left">Entregables</TableCell>
-                {ocultarBotones ? <></> : <TableCell align="left"></TableCell>}
+                {!ocultarBotones && <TableCell align="left"></TableCell>}
               </TableRow>
             </TableHead>
             <TableBody>
               {sprints.map((sprint, index) => {
                 const fechaInicioSprint = new Date(sprint.fechaIni);
+                const fechaActual = new Date(); // Define fechaActual
                 return (
                   <TableRow
                     key={index}
@@ -47,13 +50,29 @@ function tablaPlanificacion({ sprints, ocultarBotones }) {
                     <TableCell align="left">{sprint.fechaFin}</TableCell>
                     <TableCell align="left">{sprint.fechaEntrega}</TableCell>
                     <TableCell align="left">{sprint.cobro}</TableCell>
-                    <TableCell align="left">{sprint.entregables}</TableCell>
+                    <TableCell align="left">
+                      <Box sx={{ maxHeight: 200 , overflowY: "auto" }}>
+
+                        <List dense disablePadding>
+                          {sprint.entregables.map(
+                            (entregable, entregableIndex) => (
+                              <ListItem key={entregableIndex} disableGutters>
+                                <ListItemText
+                                  primary={`${entregableIndex + 1}. ${
+                                    entregable.descripcionEntregable
+                                  }`}
+                                  primaryTypographyProps={{ variant: "body2" }}
+                                />
+                              </ListItem>
+                            )
+                          )}
+                        </List>
+                      </Box>
+                    </TableCell>
                     {!ocultarBotones && (
                       <TableCell align="left">
-                        {fechaActual >= fechaInicioSprint ? (
+                        {fechaActual >= fechaInicioSprint && (
                           <Button variant="contained">Ver Sprint</Button>
-                        ) : (
-                          <></>
                         )}
                       </TableCell>
                     )}
@@ -64,12 +83,20 @@ function tablaPlanificacion({ sprints, ocultarBotones }) {
             <TableFooter>
               <TableRow>
                 <TableCell colSpan={4} align="right">
-                  <Typography variant="subtitle1" fontWeight="bold" style={{ color: 'black' }}>
+                  <Typography
+                    variant="subtitle1"
+                    fontWeight="bold"
+                    style={{ color: "black" }}
+                  >
                     Cobro Total:
                   </Typography>
                 </TableCell>
                 <TableCell align="left">
-                  <Typography variant="subtitle1" fontWeight="bold" style={{ color: 'black' }}>
+                  <Typography
+                    variant="subtitle1"
+                    fontWeight="bold"
+                    style={{ color: "black" }}
+                  >
                     {totalCharge.toFixed(2)} Bs
                   </Typography>
                 </TableCell>
@@ -83,4 +110,4 @@ function tablaPlanificacion({ sprints, ocultarBotones }) {
   );
 }
 
-export default tablaPlanificacion;
+export default TablaPlanificacion;
