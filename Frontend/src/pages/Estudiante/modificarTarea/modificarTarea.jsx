@@ -16,8 +16,8 @@ import { Box, FormControl, Button, TextField, IconButton, Modal, Snackbar, Typog
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import FolderZipIcon from '@mui/icons-material/FolderZip';
-import DeleteIcon from '@mui/icons-material/Delete';
-import CancelRoundedIcon from '@mui/icons-material/Delete';
+
+import CancelRoundedIcon from '@mui/icons-material/CancelSharp';;
 import ImageIcon from '@mui/icons-material/Image';
 import DescriptionIcon from '@mui/icons-material/Description';
 

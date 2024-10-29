@@ -17,7 +17,6 @@ import HomeEstudiante from "../../pages/Estudiante/homeEstudiante/homeEstudiante
 import HomeGrupoEstudiante from "../../pages/Estudiante/homeGrupoEstudiante/homeGrupoEstudiante.jsx";
 import ModificarPlanificacion from "../../pages/Estudiante/editarPlanificacion/editarPlanificacion.jsx";
 import PublicarPlanificacion from "../../pages/Estudiante/publicarPlanificacion/publicarPlanificacion.jsx";
-import ModificarTarea from "../../pages/Estudiante/editarPlanificacion/modificarTarea/modificarTarea.jsx";
 
 import VisualizarSprintEst from "../../pages/Estudiante/visualizarSprintEstudiante/visualizarSprint.jsx";
 import VisualizarTarea from "../../pages/Estudiante/tareaEstudiante/viualizarTarea.jsx";
@@ -117,6 +116,11 @@ function Nav() {
         element={<PublicarPlanificacion />}
       />
 
+      
+      <Route  
+        path="/homeEstudiante/homeGrupoEstudiante/sprintE/:idSprint/semana/editarTarea/:idTarea"
+        element={<ModificarTarea />}
+      />
       <Route
         path="/homeEstudiante/homeGrupoEstudiante/sprintE/:idSprint"
         element={<ListaTareas />}
