@@ -85,7 +85,5 @@ Route::post('/docente/evaluacion', [NotaSprintController::class, 'realizarEvalua
 
 
 
-Route::post('/empresas/notasSprint/modificar', [NotaSprintController::class, 'actualizarNotaSprint']);
-
 
 

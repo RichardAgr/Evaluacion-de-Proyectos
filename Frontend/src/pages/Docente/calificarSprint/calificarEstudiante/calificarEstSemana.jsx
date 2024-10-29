@@ -15,7 +15,7 @@ import {
 } from "@mui/material";
 
 function CalificarEstSemana() {
-    const empresaId = 2; 
+    const empresaId = 1; 
     const Sprint = "1";
     const [nombreEmpresa, setNombreEmpresa] = useState({ nombreCorto: '', nombreLargo: '' });
     const [teamData, setTeamData] = useState([]);
@@ -71,8 +71,6 @@ function CalificarEstSemana() {
         return <CircularProgress />;
     }
 
-    console.log(nombreEmpresa);
-
     return (
         <Fragment>
             <BaseUI
@@ -92,67 +90,45 @@ function CalificarEstSemana() {
                             </TableRow>
                         </TableHead>  
                         <TableBody>
-                            {teamData.length > 0 ? (
-                                teamData.map((member) => (
-                                    <TableRow key={member.idEstudiante}>
-                                        <TableCell>{`${member.nombreEstudiante} ${member.primerApellido} ${member.segundoApellido}`}</TableCell>
+                            {Object.keys(teamData).length > 0 ? (
+                                Object.entries(teamData).map(([nombreCompleto, detalles]) => (
+                                    <TableRow key={detalles.id}>
+                                        <TableCell>{nombreCompleto}</TableCell>
                                         <TableCell sx={{ py: 1 }}>
                                             <ul style={{ margin: 0, paddingInlineStart: "20px" }}>
-                                                {Array.isArray(member.tareas) && member.tareas.length > 0 && member.tareas[0] !== null ? (
-                                                    member.tareas.map((tarea, index) => (
-                                                        <li key={index}>{tarea}</li>
-                                                    ))
-                                                ) : (
-                                                    <TableRow>
-                                                        <TableCell colSpan={4} sx={{ textAlign: 'center', py: 2 }}>
-                                                            No hay tareas
-                                                        </TableCell>
-                                                    </TableRow>
-                                                )}
+                                                {detalles.tareas.map((tarea, index) => (
+                                                    <li key={index}>{tarea}</li>
+                                                ))}
                                             </ul>
                                         </TableCell>
-                                        {member.tareas.length > 0 && member.tareas[0] !== null ? (
-                                            <>
-                                                <TableCell sx={{ py: 2 }}>
-                                                    <Box
-                                                        sx={{
-                                                            width: "40px",
-                                                            textAlign: 'left',
-                                                            padding: '8px',
-                                                            border: '1px solid #e0e0e0',
-                                                            borderRadius: '4px',
-                                                            color: member.nota < 50 ? 'red' : 'black'
-                                                        }}
-                                                    >
-                                                        {member.nota}
-                                                    </Box>
-                                                </TableCell>
-                                                <TableCell sx={{ py: 1 }}>
-                                                    <Box
-                                                        fullWidth
-                                                        sx={{
-                                                            textAlign: 'left',
-                                                            minHeight: '70px',
-                                                            padding: '8px',
-                                                            border: '1px solid #e0e0e0',
-                                                            borderRadius: '4px'
-                                                        }}
-                                                    >
-                                                        {member.comentario}
-                                                    </Box>
-                                                </TableCell>
-                                            </>
-                                        ) : (
-                                            // Si no hay tareas, las celdas de Nota y Comentario estarán vacías
-                                            <>
-                                                <TableCell sx={{ py: 2 }}>
-                                                    <Box sx={{ width: "40px", textAlign: 'left', padding: '8px' }} />
-                                                </TableCell>
-                                                <TableCell sx={{ py: 1 }}>
-                                                    <Box fullWidth sx={{ minHeight: '70px', padding: '8px' }} />
-                                                </TableCell>
-                                            </>
-                                        )}
+                                        <TableCell sx={{ py: 2 }}>
+                                            <Box
+                                                sx={{
+                                                    width: "40px",
+                                                    textAlign: 'left',
+                                                    padding: '8px',
+                                                    border: '1px solid #e0e0e0',
+                                                    borderRadius: '4px',
+                                                    color: detalles.nota < 50 ? 'red' : 'black'
+                                                }}
+                                            >
+                                                {detalles.nota}
+                                            </Box>
+                                        </TableCell>
+                                        <TableCell sx={{ py: 1 }}>
+                                            <Box
+                                                fullWidth
+                                                sx={{
+                                                    textAlign: 'left',
+                                                    minHeight: '70px',
+                                                    padding: '8px',
+                                                    border: '1px solid #e0e0e0',
+                                                    borderRadius: '4px'
+                                                }}
+                                            >
+                                                {detalles.comentario}
+                                            </Box>
+                                        </TableCell>
                                     </TableRow>
                                 ))
                             ) : (
