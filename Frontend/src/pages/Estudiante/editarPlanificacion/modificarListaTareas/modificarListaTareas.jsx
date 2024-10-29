@@ -190,6 +190,7 @@ export default function ModificarListaTareas() {
           validateButtonText="Aceptar cambios"
           onReject={handleReject}
           onValidate={handleSave}
+          disabledButton= {1}
         />
         <CuadroDialogo
           open={cuadroDialogo.open}

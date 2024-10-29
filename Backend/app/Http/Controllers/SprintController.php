@@ -10,7 +10,6 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use App\Models\Semana;
 use App\Models\Tarea;
-
 class SprintController extends Controller
 {
     public function modificarSprint(Request $request): JsonResponse

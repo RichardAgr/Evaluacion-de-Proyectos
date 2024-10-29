@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState,useEffect } from "react";
 import {
   Container,
   Typography,
@@ -24,6 +24,30 @@ import NombreEmpresa from  "../../../components/infoEmpresa/nombreEmpresa.jsx";
 
 const EvaluarHito = () => {
 
+  const empresaId =1 ;
+  const [nombreEmpresa, setNombreEmpresa] = useState({ nombreCorto: '', nombreLargo: '' });
+
+  const getNombreEmpresa = async (empresaId) => {
+    try {
+        const response = await fetch(`http://127.0.0.1:8000/api/nombreEmpresa/${empresaId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (!response.ok) throw new Error('Error al obtener los datos de la empresa');
+
+        const data = await response.json();    
+        setNombreEmpresa({ nombreCorto: data.nombreEmpresa, nombreLargo: data.nombreLargo });
+    } catch (error) {
+        console.error('Error en la solicitud:', error);
+        setError(error.message);
+    }
+  };
+    useEffect(() => {
+        getNombreEmpresa(empresaId);
+    }, []);
 
 
   return (
@@ -35,10 +59,10 @@ const EvaluarHito = () => {
         dirBack={"/"}
       > 
         <NombreEmpresa
-          nombreLargo={"Creative Harbor SRL"}
-          nombreCorto={"Creative Harbor"}
+          nombreCorto={nombreEmpresa.nombreCorto}
+          nombreLargo={nombreEmpresa.nombreLargo}
         />
-        <TablaEvaluacionSemanal/>
+        <TablaEvaluacionSemanal idEmpresa={empresaId}/>
       </BaseUI>
     </Fragment>
   );

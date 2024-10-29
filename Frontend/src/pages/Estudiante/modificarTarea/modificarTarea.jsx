@@ -34,12 +34,12 @@ function ModificarTarea() {
 
   const [fileCounter, setFileCounter] = useState(0);
   const [uploadProgress, setUploadProgress] = useState({});
+  const [uploadingFilesCount, setUploadingFilesCount] = useState(0);
   const [deletedFiles, setDeletedFiles] = useState([]);
   const [deletedResponsables, setDeletedResponsables] = useState([]);
 
   const [modalVisible, setModalVisible] = useState(false);
   const [loading, setLoading] = useState(true);  
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [error, setError] = useState({
     error: false,
@@ -50,6 +50,7 @@ function ModificarTarea() {
     open: false,
     message: "",
     severity: "info",
+    autoHide: 6000,
   });
   const [cuadroDialogo, setCuadroDialogo] = useState({
     open: false,
@@ -107,13 +108,15 @@ function ModificarTarea() {
     setModalVisible(false)
   }
   const agregarResponsable =(index)=>{
-      console.log(index);
       const estuElegido = listaEstu[index];
-      console.log(estuElegido);
       const newResponsables = [...responsables, estuElegido]
       setResponsables(newResponsables);      
-      setListaEstu(listaEstu.filter((_, i) => i !== index));
+      const newListaEstu = listaEstu.filter((_, i) => i !== index);
+      setListaEstu(newListaEstu);
       setResponsablesError(newResponsables.length === 0);
+      if(newListaEstu.length === 0){
+        setModalVisible(false);
+      }
   }
   const handleDeleteResponsable = (index) => {
     setListaEstu([...listaEstu, responsables[index]])
@@ -140,27 +143,53 @@ function ModificarTarea() {
     const newFiles = Array.from(inputFiles)
       .filter((file) => {
         if (file.size > 50 * 1024 * 1024) {
-          setSnackbarMessage('El archivo es demasiado grande (máx. 50 MB).');
-          setSnackbarOpen(true);
+          setSnackbar({
+            open: true,
+            message: 'El archivo es demasiado grande (máx. 50 MB).',
+            severity: "info",
+            autoHide: 6000,
+          });
           return false;
         }
-        if (!['application/pdf', 'application/zip', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'image/jpeg', 'image/png'].includes(file.type)) {
-          setSnackbarMessage('Tipo de archivo no permitido.');
-          setSnackbarOpen(true);
+        console.log(file.type)
+        if (!['application/pdf', 'application/x-zip-compressed','application/zip', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'image/jpeg', 'image/png'].includes(file.type)) {
+          setSnackbar({
+            open: true,
+            message: 'Tipo de archivo no permitido.',
+            severity: "info",
+            autoHide: 6000,
+          });
           return false;
         }
         if (files.length === 10) {
-          setSnackbarMessage('Máximo 10 archivos');
-          setSnackbarOpen(true);
+          setSnackbar({
+            open: true,
+            message: 'Máximo 10 archivos',
+            severity: "info",
+            autoHide: 6000,
+          });
           return false;
         }
+
+        // Verificar si el archivo ya existe en el estado
+        const fileExists = files.some(existingFile => existingFile.name === file.name || existingFile.nombreArchivo === file.name);
+        if (fileExists) {
+          setSnackbar({
+            open: true,
+            message: 'Ya se ha subido un archivo con el mismo nombre y tipo.',
+            severity: "info",
+            autoHide: 6000,
+          });
+          return false;
+        }
+
         return true;
       });
   
     newFiles.forEach((file) => {
       const fileId = `${file.name}-${fileCounter}`;
       setFileCounter((prevCounter) => prevCounter + 1);
-  
+      console.log(file)
       // Convertir archivo a Base64
       const reader = new FileReader();
       reader.readAsDataURL(file);
@@ -179,20 +208,22 @@ function ModificarTarea() {
   
         // Agregar archivo convertido al estado
         setFiles((prevFiles) => [...prevFiles, newFile]);
-  
+        
         // Simular progreso de carga
-        if (!snackbarOpen) {
+        if (!snackbar.open) {
+          setUploadingFilesCount((prevCount) => prevCount + 1);
           let progress = 0;
-          const intervalDuration = 500 / Math.sqrt(file.size / (1024 * 1024));
+          const intervalDuration = 100 + (file.size / (1024 * 1024)) * 100;
   
           const interval = setInterval(() => {
-            progress += 10;
+            progress += 1;
             setUploadProgress((prevProgress) => ({
               ...prevProgress,
               [fileId]: progress,
             }));
   
             if (progress >= 100) {
+              setUploadingFilesCount((prevCount) => prevCount - 1);
               clearInterval(interval);
             }
           }, intervalDuration);
@@ -200,8 +231,12 @@ function ModificarTarea() {
       };
   
       reader.onerror = () => {
-        setSnackbarMessage('Error al leer el archivo.');
-        setSnackbarOpen(true);
+        setSnackbar({
+          open: true,
+          message: 'Error al leer el archivo.',
+          severity: "error",
+          autoHide: 60000,
+        });
       };
     });
   };
@@ -237,10 +272,14 @@ function ModificarTarea() {
       title: "Guardar los cambios",
       description:
         "Esta acción guardará todos los cambios realizados en la tarea. ¿Está seguro?",
-      onConfirm: handleSubmit,
+      onConfirm: handleSubmit,  
     });
   };
   const handleSubmit = async (event) => {
+    setCuadroDialogo({
+      ...cuadroDialogo,
+      open: false,
+    });
     event.preventDefault();
     setDescripcionError(descripcion === '');
     setResponsablesError(responsables.length === 0);
@@ -259,12 +298,12 @@ function ModificarTarea() {
       };
   
       const response = await updateTarea(idTarea, formData);
-      if (response.ok) {
+      if (response.ok) { 
         setSnackbar({
           open: true,
           message: "Se subió correctamente todo",
           severity: "success",
-          autoHide: true,
+          autoHide: 6000,
         });
       }
     } catch (error) {
@@ -273,12 +312,9 @@ function ModificarTarea() {
         open: true,
         message: `Hubo un error al momento de subir, error: ${error}`,
         severity: "error",
-        autoHide: false,
+        autoHide: 60000,
       });
     }
-  };
-  const handleSnackbarClose = () => {
-    setSnackbarOpen(false);
   };
   const renderImg = (file) => {
     
@@ -296,8 +332,12 @@ function ModificarTarea() {
   
   const downloadFile = (file) => {
     if (!file.url) {
-      setSnackbarMessage('La URL del archivo no esta disponible.');
-      setSnackbarOpen(true);
+      setSnackbar({
+          open: true,
+          message: 'La URL del archivo no esta disponible.',
+          severity: "error",
+          autoHide: 60000,
+      });
       return;
     }
     
@@ -344,14 +384,26 @@ function ModificarTarea() {
                 ) : null
               ))}
               {responsablesError? <helperText style={{ color: 'red' }}>Debe haber un responsable minimo</helperText>:<></>}
-              <Button variant='contained' sx={{width:'calc(8vw + 8rem)'}} onClick={()=>setModalVisible(true)}>
-                + Añadir Responsables
-              </Button>
+              {listaEstu.length === 0?
+                <></>
+                :
+                
+                <Button variant='contained' sx={{width:'calc(8vw + 8rem)'}} onClick={()=>setModalVisible(true)}>
+                  + Añadir Responsables
+                </Button>
+              }
               <h3>Archivos:</h3>
               <span>{`(solo .pdf, docx, jpg, png o zip)`}</span>
               <div className="uploadedFiles">
                       {files.map((file) => (
                         <div key={file.id} className="fileItem">
+                          <IconButton
+                              className='fileItem__icon'
+                                color="secondary"
+                                onClick={(event) => handleDeleteFile(event, file.id, file.idArchivo)}
+                              >
+                                <CancelRoundedIcon/>
+                          </IconButton>
                           {uploadProgress[file.id] > 0 && uploadProgress[file.id] < 100 ? (
                             <div className='fileItem__progressBar'>
                               <div style={{height:'50%'}}>
@@ -363,17 +415,10 @@ function ModificarTarea() {
                             </div>
                           ) : (
                             <>
-                            <IconButton
-                              className='fileItem__icon'
-                                color="secondary"
-                                onClick={(event) => handleDeleteFile(event, file.id, file.idArchivo)}
-                              >
-                                <CancelRoundedIcon/>
-                              </IconButton>
                               <IconButton onClick={() => downloadFile(file)}>
                                 {renderImg(file)}
                               </IconButton>
-                              <a onClick={() => downloadFile(file)}>{file.name}</a>
+                              <a className='downloadA'onClick={() => downloadFile(file)}>{file.name}</a>
                             </>
                           )}
                         </div>
@@ -430,6 +475,7 @@ function ModificarTarea() {
                   validateButtonText="Guardar cambios"
                   onReject={handleCancel}
                   onValidate={handleSave}
+                  disabledButton={uploadingFilesCount}
                 />
               </div>
             </FormControl>
@@ -446,6 +492,7 @@ function ModificarTarea() {
             setOpenSnackbar={(open) => setSnackbar({ ...snackbar, open })}
             message={snackbar.message}
             severity={snackbar.severity}
+            autoHide={snackbar.autoHide}
           />          
 
           <Modal
@@ -482,17 +529,6 @@ function ModificarTarea() {
               ))}
             </Box>
           </Modal>
-          <Snackbar
-            open={snackbarOpen}
-            autoHideDuration={6000}
-            onClose={handleSnackbarClose}
-            message={snackbarMessage}
-            action={
-              <Button color="inherit" onClick={handleSnackbarClose}>
-                Cerrar
-              </Button>
-            }
-          />
         </ContainerdropZone>
       </BaseUI>
     </Fragment>
@@ -585,6 +621,12 @@ const ContainerdropZone = styled('div')`
     align-content: center;
     width: 20%;
     height: 100%;
+  }
+  
+  .downloadA:hover{
+    cursor: pointer;
+    background-color: #e0e0e0 ;
+    border-radius: 1rem;
   }
 `;
 const StyledTextField = styled(TextField)`

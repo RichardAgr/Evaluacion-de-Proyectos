@@ -104,13 +104,6 @@ function Nav() {
         path="/homeEstudiante/homeGrupoEstudiante"
         element={<HomeGrupoEstudiante />}
       />
-      
-      {/** Modificar Planificacion */}
-      <Route
-        path="/modificarPlanificacion/Empresa/:idEmpresa"
-        element={<ModificarPlanificacion />}
-      />
-
       <Route
         path="/homeEstudiante/homeGrupoEstudiante/sprintE/:idSprint/semana/editarTarea/:idTarea"
         element={<ModificarTarea />}
