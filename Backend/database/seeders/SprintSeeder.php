@@ -24,7 +24,7 @@ class SprintSeeder extends Seeder
                     'numeroSprint' => $i,
                     'fechaIni' => $startDate,
                     'fechaFin' => $startDate->copy()->addDays(14),
-                    'cobro' => rand(1000, 5000),
+                    'cobro' => round(rand(100000, 500000) / 100, 2),
                     'fechaEntrega' => $startDate->copy()->addDays(15),
                 ]);
 

@@ -12,6 +12,9 @@ import {
   TextField,
   Box,
   Alert,
+  List,
+  ListItem,
+  ListItemText,
   AlertTitle,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
@@ -19,9 +22,13 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import InfoSnackbar from "../infoSnackbar/infoSnackbar";
 import CuadroDialogo from "../cuadroDialogo/cuadroDialogo";
 import DecisionButtons from "../Buttons/decisionButtons";
+import AnadirEntregables from "../anadirEntregables/anadirEntregables";
 
 export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
   const [rows, setRows] = useState([]);
+  const [openEntregables, setOpenEntregables] = useState(false);
+  const [currentSprintIndex, setCurrentSprintIndex] = useState(-1);
+
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",
@@ -33,6 +40,35 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
     title: "",
     description: "",
   });
+  const handleOpenEntregables = (index) => {
+    setCurrentSprintIndex(index);
+    setOpenEntregables(true);
+  };
+  
+  const errorTranslations = {
+    "The comentario field must be a string.":
+      "El comentario para el grupo no debe estar vacio.",
+    "The nota field must be at least 0.": "La nota debe ser al menos 0.",
+    "The nota field must not be greater than 100.":
+      "La nota no debe ser mayor que 100.",
+    "The nota field must be a number.": "El campo nota está vacío.",
+    "The group comment field is required.":
+      "El campo de comentario para el grupo es obligatorio.",
+    // aca se añaden los demas errores de ser necesario
+  };
+
+  const translateError = (error) => {
+    return errorTranslations[error] || `Error: ${error}`;
+  };
+  const handleCloseEntregables = (newEntregables) => {
+    if (currentSprintIndex !== -1) {
+      const newRows = [...rows];
+      newRows[currentSprintIndex].entregables = newEntregables;
+      setRows(newRows);
+    }
+    setOpenEntregables(false);
+    setCurrentSprintIndex(-1);
+  };
   const handleCancel = () => {
     setCuadroDialogo({
       open: true,
@@ -58,24 +94,38 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
         hito: `SPRINT ` + (index + 1),
         fechaIni: sprint.fechaIni,
         fechaFin: sprint.fechaFin,
-        cobro: sprint.cobro,
         fechaEntrega: sprint.fechaEntrega,
-        entregables: sprint.entregables,
+        cobro: sprint.cobro,
+        entregables: sprint.entregables
+          ? sprint.entregables.map(
+              (entregable) => entregable.descripcionEntregable
+            )
+          : [],
       };
     });
     setRows(newRows);
   }, [planificacionData]);
   const addRow = () => {
-    const newSprint = rows.length + 1;
-    const newRow = {
-      hito: `SPRINT ${newSprint}`,
-      fechaIni: "",
-      fechaFin: "",
-      cobro: "",
-      fechaEntrega: "",
-      entregables: "",
-    };
-    setRows([...rows, newRow]);
+    if (rows.length >= 10) {
+      setSnackbar({
+        open: true,
+        message: "No se pueden añadir más de 10 sprints.",
+        severity: "warning",
+        autoHide: true,
+      });
+      return;
+    } else {
+      const newSprint = rows.length + 1;
+      const newRow = {
+        hito: `SPRINT ${newSprint}`,
+        fechaIni: "",
+        fechaFin: "",
+        fechaEntrega: "",
+        cobro: "",
+        entregables: [],
+      };
+      setRows([...rows, newRow]);
+    }
   };
 
   const deleteRow = (index) => {
@@ -129,7 +179,6 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
             severity: "error",
             autoHide: 1000,
           });
-          console.log(newRows[index]);
         }
       } else if (field === "fechaFin" && value < newRows[index].fechaIni) {
         setSnackbar({
@@ -150,6 +199,15 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
     }
     setRows(newRows);
   };
+
+  const fieldNames = {
+    fechaIni: "Fecha de inicio",
+    fechaFin: "Fecha de Fin",
+    fechaEntrega: "Fecha de Entrega",
+    cobro: "Cobro",
+    entregables: "Entregables",
+  };
+
   const subir = async () => {
     setCuadroDialogo({
       ...cuadroDialogo,
@@ -158,15 +216,20 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
     let rowIndex = 0;
     for (const row of rows) {
       rowIndex++;
-      if (Object.values(row).some((value) => value === "" || value === null)) {
-        console.error("Hay campos vacíos en uno de los sprints.");
-        setSnackbar({
-          open: true,
-          message: `Sprint ${rowIndex}: Ninguno de los campos debe estar vacío`,
-          severity: "warning",
-          autoHide: "false",
-        });
-        return;
+      for (const [key, value] of Object.entries(row)) {
+        if (value === "" || value === null) {
+          const fieldName = fieldNames[key] || key;
+          console.error(
+            `Campo vacío encontrado en Sprint ${rowIndex}: ${fieldName}`
+          );
+          setSnackbar({
+            open: true,
+            message: `Sprint ${rowIndex}: El campo "${fieldName}" está vacío`,
+            severity: "warning",
+            autoHide: false,
+          });
+          return;
+        }
       }
     }
 
@@ -184,8 +247,8 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
       sprints: rows.map((row) => ({
         fechaIni: row.fechaIni,
         fechaFin: row.fechaFin,
-        cobro: Number(row.cobro),
         fechaEntrega: row.fechaEntrega,
+        cobro: Number(row.cobro),
         entregables: row.entregables,
       })),
     };
@@ -234,19 +297,21 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
         responseDataSprint.errors !== undefined &&
         responseDataSprint.errors !== null
       ) {
+        const errorMessages = Object.keys(responseDataSprint.errors)
+          .map((key) => {
+            const errors = responseDataSprint.errors[key];
+            return errors
+              .map((error) => `${key}: ${translateError(error)}`)
+              .join("\n");
+          })
+          .join("\n");
+        console.log(errorMessages);
         setSnackbar({
           open: true,
-          message: `Los datos en la planicacion no son validos, proximamente se podra decir exactamente que esta mal`,
+          message: errorMessages,
           severity: "error",
-          autoHide: false,
         });
-
-        console.log("Respuesta del servidor:");
-        console.log(responseDataSprint);
       } else {
-        {
-          /** Aun no se manejan los errores tipo {responseDataSprint.errors} */
-        }
         console.log("Sprints modificados con exito.");
         setSnackbar({
           open: true,
@@ -254,8 +319,74 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
           severity: "success",
           autoHide: true,
         });
-        console.log("Respuesta del servidor:");
-        console.log(responseDataSprint);
+        if (
+          responseDataSprint.sprints &&
+          responseDataSprint.sprints.length > 0
+        ) {
+          // obtener datos de los entregables
+          const entregables = rows.map((row) => row.entregables);
+
+          // obtener id de los sprints de los entregables
+          const idSprints = responseDataSprint.sprints.map((sprint) => ({
+            idSprint: sprint.idSprint,
+          }));
+          const entregablesData = idSprints.map((sprint, index) => ({
+            idSprint: sprint.idSprint,
+            entregables: entregables[index] || [], // Asignar entregables correspondiente o un array vacío
+          }));
+          const responseEntregables = await fetch(
+            "http://localhost:8000/api/planificacion/guardarEntregables",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ entregables: entregablesData }),
+            }
+          );
+
+          const dataEntregables = await responseEntregables.json();
+          if (
+            dataEntregables.error !== undefined &&
+            dataEntregables.error !== null
+          ) {
+            setSnackbar({
+              open: true,
+              message: `Error al modificar los Sprints: ${responseEntregables.error} ${responseDataSprint.message}`,
+              severity: "error",
+              autoHide: false,
+            });
+          } else if (
+            dataEntregables.errors !== undefined &&
+            dataEntregables.errors !== null
+          ) {
+            const errorMessages = Object.keys(dataEntregables.errors)
+              .map((key) => {
+                const errors = dataEntregables.errors[key];
+                return errors
+                  .map((error) => `${key}: ${translateError(error)}`)
+                  .join("\n");
+              })
+              .join("\n");
+            console.log(errorMessages);
+            setSnackbar({
+              open: true,
+              message: errorMessages,
+              severity: "error",
+            });
+          } else {
+            {
+              /** Aun no se manejan los errores tipo {responseDataSprint.errors} */
+            }
+            console.log("Entregables modificados con exito.");
+            setSnackbar({
+              open: true,
+              message: `${dataEntregables.message}`,
+              severity: "success",
+              autoHide: true,
+            });
+          }
+        }
       }
     }
   };
@@ -270,34 +401,93 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
                 <TableCell>Hito</TableCell>
                 <TableCell align="left">Fecha Inicio</TableCell>
                 <TableCell align="left">Fecha Fin</TableCell>
-                <TableCell align="left">Cobro</TableCell>
                 <TableCell align="left">Fecha Entrega</TableCell>
+                <TableCell align="left">Cobro (Bs)</TableCell>
                 <TableCell align="left">Entregables</TableCell>
                 <TableCell align="left"></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {rows.map((row, index) => (
-                <TableRow
-                  key={index}
-                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                >
-                  {Object.keys(row).map((field) => (
-                    <TableCell key={field} align="left">
-                      <TextField
-                        value={row[field] ?? ""}
-                        onChange={(e) =>
-                          handleCellChange(index, field, e.target.value)
-                        }
-                        type={field.includes("fecha") ? "date" : "text"}
-                        fullWidth
-                        variant="standard"
-                        inputProps={{
-                          "aria-label": `${field} for ${row.hito}`,
-                        }}
-                      />
-                    </TableCell>
-                  ))}
+                <TableRow key={index}>
+                  <TableCell sx={{ minWidth: "70px", maxHeight: "50px" }}>
+                    {`Hito ${index + 1}`}
+                  </TableCell>
+                  {["fechaIni", "fechaFin", "fechaEntrega", "cobro"].map(
+                    (field) => (
+                      <TableCell
+                        key={field}
+                        align="left"
+                        style={{ minWidth: field === "cobro" ? 100 : 100 }}
+                      >
+                        <TextField
+                          value={row[field] ?? ""}
+                          onChange={(e) => {
+                            let value = e.target.value;
+                            if (field === "cobro") {
+                              // Permitir solo números y un punto decimal
+                              value = value.replace(/[^0-9.]/g, "");
+                              // Asegurar que solo haya un punto decimal
+                              const parts = value.split(".");
+                              if (parts.length > 2) {
+                                value =
+                                  parts[0] + "." + parts.slice(1).join("");
+                              }
+                              // Limitar a dos decimales
+                              if (parts[1] && parts[1].length > 2) {
+                                value = parseFloat(value).toFixed(2);
+                              }
+                            }
+                            handleCellChange(index, field, value);
+                          }}
+                          type={
+                            field.includes("fecha")
+                              ? "date"
+                              : field === "cobro"
+                              ? "number"
+                              : "text"
+                          }
+                          fullWidth
+                          variant="standard"
+                          inputProps={{
+                            "aria-label": `${field} for ${row.hito}`,
+                            ...(field === "cobro" && {
+                              step: "0.01",
+                              min: "0",
+                              pattern: "^\\d+(\\.\\d{1,2})?$",
+                            }),
+                          }}
+                        />
+                      </TableCell>
+                    )
+                  )}
+                  <TableCell align="left">
+                    <Box sx={{ maxHeight: 200, overflowY: "auto" }}>
+                      {row.entregables.length > 0 && (
+                        <List dense sx={{ mb: 0.5 }}>
+                          {row.entregables.map((entregable, i) => (
+                            <ListItem key={i}>
+                              <ListItemText
+                                primary={`${i + 1}. ${entregable}`}
+                              />
+                            </ListItem>
+                          ))}
+                        </List>
+                      )}
+                    </Box>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      size="small"
+                      startIcon={<AddIcon />}
+                      sx={{ minWidth: "250px", maxHeight: "50px" }}
+                      onClick={() => handleOpenEntregables(index)}
+                    >
+                      {row.entregables.length > 0
+                        ? "Modificar Entregables"
+                        : "Añadir Entregables"}
+                    </Button>
+                  </TableCell>
                   <TableCell align="left">
                     {rows.length > 1 && (
                       <Button
@@ -305,8 +495,9 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
                         color="secondary"
                         startIcon={<DeleteIcon />}
                         onClick={() => dialogoEliminar(index, row.hito)}
+                        sx={{ minWidth: "170px", maxHeight: "50px" }}
                       >
-                        Eliminar
+                        Eliminar Hito
                       </Button>
                     )}
                   </TableCell>
@@ -315,21 +506,24 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
             </TableBody>
           </Table>
         </TableContainer>
-        <Button
-          variant="contained"
-          color="primary"
-          startIcon={<AddIcon />}
-          onClick={addRow}
-          sx={{ marginTop: "20px" }}
-        >
-          Añadir fila
-        </Button>
+        {rows.length < 10 && (
+          <Button
+            variant="contained"
+            color="primary"
+            startIcon={<AddIcon />}
+            onClick={addRow}
+            sx={{ marginTop: "20px" }}
+          >
+            Añadir fila
+          </Button>
+        )}
 
         <DecisionButtons
           rejectButtonText="Descartar"
           validateButtonText="Guardar cambios"
           onReject={handleCancel}
           onValidate={handleSave}
+          disabledButton= {0}
         />
       </Box>
       <CuadroDialogo
@@ -344,6 +538,13 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
         setOpenSnackbar={(open) => setSnackbar({ ...snackbar, open })}
         message={snackbar.message}
         severity={snackbar.severity}
+      />
+      <AnadirEntregables
+        open={openEntregables}
+        handleClose={handleCloseEntregables}
+        initialEntregables={
+          currentSprintIndex !== -1 ? rows[currentSprintIndex].entregables : []
+        }
       />
     </>
   );

@@ -4,16 +4,17 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Planificacion;
 use App\Models\Sprint;
-use App\Models\Semana;
-use App\Models\Tarea;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use App\Models\Semana;
+use App\Models\Tarea;
 class SprintController extends Controller
 {
     public function modificarSprint(Request $request): JsonResponse
     {
+        // * Validar todos los datos
         $today = Carbon::today()->toDateString();
         $validator = Validator::make($request->all(), [
             'idEmpresa' => 'required|integer|exists:empresa,idEmpresa',
@@ -28,27 +29,38 @@ class SprintController extends Controller
                 'date',
                 'after_or_equal:sprints.*.fechaIni',
             ],
-            'sprints.*.cobro' => 'required|integer',
             'sprints.*.fechaEntrega' => [
                 'required',
                 'date',
                 'after_or_equal:sprints.*.fechaFin',
             ],
+            'sprints.*.cobro' => 'required|numeric|regex:/^\d+(\.\d{1,2})?$/',
+
         ]);
-        //verificar que ninguno  de los sprints tenga la
-        //fecha de inicio anterior a la fecha fin del anterior sprint
+        // * verificar que ninguno  de los sprints tenga la
+        // * fecha de inicio anterior a la fecha fin del anterior sprint
         $validator->after(function ($validator) use ($request) {
             $sprints = $request->input('sprints');
-            for ($i = 1; $i < count($sprints); $i++) {
-                $prevSprintEnd = Carbon::parse($sprints[$i - 1]['fechaFin']);
-                $currentSprintStart = Carbon::parse($sprints[$i]['fechaIni']);
+            for ($i = 0; $i < count($sprints); $i++) {
+                $startDate = Carbon::parse($sprints[$i]['fechaIni']);
+                $endDate = Carbon::parse($sprints[$i]['fechaFin']);
 
-                if ($currentSprintStart->lt($prevSprintEnd)) {
-                    $validator->errors()->add("sprints.{$i}.fechaIni", 'La fecha de inicio no puede ser anterior a la fecha de fin del sprint anterior.');
+                // Verificar que la fecha de fin sea al menos 7 días después de la fecha de inicio
+                if ($endDate->diffInDays($startDate) < 7) {
+                    $validator->errors()->add("sprint.{$i}.fechaFin", 'La fecha de fin debe ser al menos 7 días después de la fecha de inicio.');
+                }
+
+                // Verificar que la fecha de inicio no sea anterior a la fecha fin del sprint anterior
+                if ($i > 0) {
+                    $prevSprintEnd = Carbon::parse($sprints[$i - 1]['fechaFin']);
+                    if ($startDate->lt($prevSprintEnd)) {
+                        $validator->errors()->add("sprints.{$i}.fechaIni", 'La fecha de inicio no puede ser anterior a la fecha de fin del sprint anterior.');
+                    }
                 }
             }
         });
-
+        
+        // * devuelve todos los errores en un array error[]
         if ($validator->fails()) {
             return response()->json([
                 'message' => 'Los datos proporcionados no son válidos.',
@@ -56,36 +68,47 @@ class SprintController extends Controller
             ], 422);
         }
 
+        // * si todo salio bien, recibe el ID de la planificacion que tenga la empresa
         $validatedData = $validator->validated();
         $requestPlani = new Request();
         $requestPlani->merge(['idEmpresa' => $validatedData['idEmpresa']]);
         $response = $this->getIdPlanificacion($requestPlani);
         $idPlanificacion = $response->original['idPlanificacion'];
 
+        // * crear todos los sprints para la planificacion
         try {
             DB::beginTransaction();
 
-            // buscar y eliminar todos los sprints antiguos
+            // * buscar y eliminar los sprints anteriores
             Sprint::where('idPlanificacion', $idPlanificacion)->delete();
-            $numeroSprint=1;
-            // insertar los sprints actuales
+            $numeroSprint=1; //contador para indicar el numero del Sprint en el que se encuentra
+            $sprintsInfo = []; // guardar los datos de los  sprints para poder guardar sus entregables en ellos
+            // * insertar los sprints actuales
             foreach ($validatedData['sprints'] as $sprintData) {
                 $sprint = new Sprint();
                 $sprint->idPlanificacion = $idPlanificacion;
                 $sprint->numeroSprint = $numeroSprint;
                 $sprint->fechaIni = $sprintData['fechaIni'];
                 $sprint->fechaFin = $sprintData['fechaFin'];
-                $sprint->cobro = $sprintData['cobro'];
                 $sprint->fechaEntrega = $sprintData['fechaEntrega'];
+                $sprint->cobro = $sprintData['cobro'];
                 $sprint->save();
+                
+                $sprintsInfo[] = [
+                    'idSprint' => $sprint->idSprint,
+                    'numeroSprint' => $sprint->numeroSprint
+                ];
+
                 $numeroSprint++;
             }
-
+            // * si todo salio bien, devuelve un mensaje de exito y el id de los sprints
             DB::commit();
             return response()->json([
                 'message' => 'La Planificación fue modificada correctamente',
+                'sprints' => $sprintsInfo
             ], 200);
         } catch (\Exception $e) {
+            // * si ocurrio un error, devuelve un mensaje de error y deshace todos los cambios realizados
             DB::rollBack();
             return response()->json([
                 'message' => 'Hubo un error al modificar la Planificación',
@@ -145,7 +168,7 @@ class SprintController extends Controller
     public function sprintsSemanas(int $idSprint): JsonResponse
     {
         // Obtener el sprint con su comentario y nota
-        $sprint = Sprint::find($idSprint, ['idSprint', 'comentariodocente']);
+        $sprint = Sprint::find($idSprint, ['idSprint']);
         
         // Verificar si el sprint existe
         if (!$sprint) {
@@ -158,8 +181,6 @@ class SprintController extends Controller
         // Preparar la respuesta
         $response = [
             'idSprint' => $sprint->idSprint,
-            'comentario' => $sprint->comentariodocente,
-           // 'nota' => $sprint->notasprint,
             'semanas' => []
         ];
     
@@ -169,7 +190,8 @@ class SprintController extends Controller
             $tareas = Tarea::where('idSemana', $semana->idSemana)->get([
                 'idTarea',
                 'idSemana',
-                'textoTarea'
+                'textoTarea',
+                'nombreTarea'
             ]);
             
             // Agregar la semana y sus tareas al response

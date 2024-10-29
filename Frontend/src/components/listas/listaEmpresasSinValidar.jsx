@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useMemo, useEffect, useState } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -6,10 +6,13 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { getPlanificacionesSinValidar } from "../../api/getPlanificacionesSinValidar";
+import { Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+
+import { getPlanificacionesSinValidar } from "../../api/getPlanificacionesSinValidar";
 import Loading from "../loading/loading";
 import Error from "../error/error";
+
 
 function ListaEmpresasSinValidar() {
   const [loading, setLoading] = useState(true);
@@ -19,6 +22,15 @@ function ListaEmpresasSinValidar() {
   });
   const [listaEmpresas, setListaEmpresas] = useState(null);
   const navigate = useNavigate();
+
+  const sortedListaEmpresas = useMemo(() => {
+    if (!listaEmpresas) return [];
+    return [...listaEmpresas].sort((a, b) =>
+      a.nombreEmpresa.localeCompare(b.nombreEmpresa, "es", {
+        sensitivity: "base",
+      })
+    );
+  }, [listaEmpresas]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -51,7 +63,7 @@ function ListaEmpresasSinValidar() {
         />
       ) : loading ? (
         <Loading />
-      ) : (
+      ) : listaEmpresas.length > 0 ? (
         <>
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -62,7 +74,7 @@ function ListaEmpresasSinValidar() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {listaEmpresas.map((empresa) => (
+                {sortedListaEmpresas.map((empresa) => (
                   <TableRow
                     key={empresa.idEmpresa}
                     sx={{
@@ -83,6 +95,12 @@ function ListaEmpresasSinValidar() {
               </TableBody>
             </Table>
           </TableContainer>
+        </>
+      ) : (
+        <>
+          <Typography>
+            Actualmente no hay planificaciones sin validar
+          </Typography>
         </>
       )}
     </>

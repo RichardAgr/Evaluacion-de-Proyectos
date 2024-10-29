@@ -16,21 +16,23 @@ import CalificarEstSemana from "../../pages/Docente/calificarSprint/calificarEst
 import HomeEstudiante from "../../pages/Estudiante/homeEstudiante/homeEstudiante.jsx";
 import HomeGrupoEstudiante from "../../pages/Estudiante/homeGrupoEstudiante/homeGrupoEstudiante.jsx";
 import ModificarPlanificacion from "../../pages/Estudiante/editarPlanificacion/editarPlanificacion.jsx";
-import ModificarTarea from "../../pages/Estudiante/editarPlanificacion/modificarTarea/modificarTarea.jsx";
+import PublicarPlanificacion from "../../pages/Estudiante/publicarPlanificacion/publicarPlanificacion.jsx";
 
 import VisualizarSprintEst from "../../pages/Estudiante/visualizarSprintEstudiante/visualizarSprint.jsx";
 import VisualizarTarea from "../../pages/Estudiante/tareaEstudiante/viualizarTarea.jsx";
 import ModificarListaTareas from "../../pages/Estudiante/editarPlanificacion/modificarListaTareas/modificarListaTareas.jsx";
 
-import CrearGrupoEmpresa from "../../pages/Estudiante/grupoEmpresa/crearGrupoEmpresa.jsx";
+import ModificarGrupoEmpresa from "../../pages/Estudiante/grupoEmpresa/modificarGrupoEmpresa.jsx";
 import GruposDisponibles from "../../pages/Estudiante/gruposDisponibles/gruposDisponibles.jsx"; // Import the new page
 import InscribirGrupo from "../../pages/Estudiante/gruposDisponibles/inscribirGrupo.jsx";
 import ObtenerEstudiantesPorGrupo from "../../pages/Docente/listas/listaEstudiantes/listaEstudiantes.jsx";
 import ObtenerEstudiantesPorGrupoA from "../../pages/Docente/listas/listaEstudiantes/listaEstudiantesA.jsx";
 import EmpresasPorDocente from "../../pages/Docente/listas/listaEmpresas/listaEmpresaPorDocente.jsx";
-
+import ModificarTarea from "../../pages/Estudiante/modificarTarea/modificarTarea.jsx";
+import ListaTareas from "../../pages/Estudiante/modificarTarea/listaTareas.jsx";
 import CalificacionesHitoEmpresa from "../../pages/Estudiante/grupoEmpresa/calificacionesHitoEmpresa.jsx";
 import SeleccionarEmpresaVisualizar from "../../pages/Docente/listas/seleccionarEmpresaVisualizar/seleccionarEmpresaVisualizar.jsx";
+import CrearGrupoEmpresa from "../../pages/Estudiante/grupoEmpresa/crearGrupoEmpresa.jsx";
 
 function Nav() {
   return (
@@ -42,7 +44,7 @@ function Nav() {
       {/** Seleccionar una planificacion para visualizar*/}
       <Route
         path="/visualizarPlanificacion"
-        element={<ListaVerPlanificacion />}
+        element={<SeleccionarEmpresaVisualizar />}
       />
 
       {/** Visualizar Planificacion*/}
@@ -88,8 +90,14 @@ function Nav() {
       />
       <Route
         path="/homeEstudiante/homeGrupoEstudiante/crearGrupo"
+        element={<ModificarGrupoEmpresa />}
+      />
+      <Route
+        path="/homeEstudiante/homeGrupoEstudiante/crearGrupo1"
         element={<CrearGrupoEmpresa />}
       />
+
+
 
       {/** Ruta Estudiante*/}
       <Route path="/homeEstudiante" element={<HomeEstudiante />} />
@@ -97,21 +105,30 @@ function Nav() {
         path="/homeEstudiante/homeGrupoEstudiante"
         element={<HomeGrupoEstudiante />}
       />
-
       <Route
-        path="/homeEstudiante/homeGrupoEstudiante/sprint/semana/tareas/:idTarea"
+        path="/modificarPlanificacion/Empresa/:idEmpresa"
+        element={<ModificarPlanificacion />}
+      />
+
+      {/** Publicar Planificacion */}
+            <Route
+        path="/publicarPlanificacion/Empresa/:idEmpresa"
+        element={<PublicarPlanificacion />}
+      />
+
+      
+      <Route  
+        path="/homeEstudiante/homeGrupoEstudiante/sprintE/:idSprint/semana/editarTarea/:idTarea"
         element={<ModificarTarea />}
+      />
+      <Route
+        path="/homeEstudiante/homeGrupoEstudiante/sprintE/:idSprint"
+        element={<ListaTareas />}
       />
 
       <Route
         path="/homeEstudiante/homeGrupoEstudiante/empresas/:idEmpresa/calificaciones"
         element={<CalificacionesHitoEmpresa />}
-      />
-
-      {/** Modificar Planificacion */}
-      <Route
-        path="/modificarPlanificacion/Empresa/:idEmpresa"
-        element={<ModificarPlanificacion />}
       />
 
       {/** Modificar Lista de Tareas */}

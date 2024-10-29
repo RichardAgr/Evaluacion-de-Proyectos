@@ -14,7 +14,7 @@ class EstudiantesEmpresasSeeder extends Seeder
     {
         $estudiantes = range(1, 24);
         $empresas = [1, 2, 3, 4, 5];
-
+ 
         foreach ($estudiantes as $estudiante) {
             $empresa = $empresas[array_rand($empresas)];
             
