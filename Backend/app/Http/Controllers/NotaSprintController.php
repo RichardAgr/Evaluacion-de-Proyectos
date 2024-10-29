@@ -145,6 +145,14 @@ public function obtenerTareaYEstudiante(Request $request){
 }
 
 public function realizarEvaluacionSemana(Request $request) {
+
+        $request->validate([
+            'empresa' => 'required|integer',
+            'numeroSprint' => 'required|integer',
+            'estudiantes' => 'required|array',
+            'notas' => 'required|array',
+            'comentarios' => 'required|array',
+        ]);
         $empresa = $request->input('empresa');
         $numeroSprint = $request->input('numeroSprint');
         $notas = $request->input('notas');
@@ -185,6 +193,7 @@ public function realizarEvaluacionSemana(Request $request) {
         // Insertar todos los registros en notaSprint
         DB::table('notaSprint')->insert($dataToInsert);
     
-        return response()->json(['message' => 'Evaluación registrada exitosamente']);
+        return response()->json(['message' => 'Evaluación realizada con éxito'], 200);
+
     }  
 }
