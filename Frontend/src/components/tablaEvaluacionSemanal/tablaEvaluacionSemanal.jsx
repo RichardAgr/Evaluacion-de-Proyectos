@@ -78,7 +78,7 @@ const TablaEvaluacionSemanal = ({ idEmpresa }) => {
       body: JSON.stringify({
         empresa: idEmpresa,
         numeroSprint: Sprint,
-        notas: notes.map((note) => note || ""), // Usa el estado de notas y convierte a vacío si es undefined
+        notas: notes.map((note) => note || "1"), // Usa el estado de notas y convierte a vacío si es undefined
         estudiantes: teamData.map((member) => member.idEstudiante), // Obtén los IDs de estudiantes
         comentarios: comments, // Usa el estado de comentarios
       }),

@@ -182,7 +182,7 @@ class TareaController extends Controller
         $semana = $request->input('semana');
         $nombreTarea = $request->input('nombreTarea');
 
-        $resultado = DB::table('tarea as t')
+        $resultado = DB::table('tarea as t');
        // ->join('semana as s','s.idSemana',)
     }
 }
