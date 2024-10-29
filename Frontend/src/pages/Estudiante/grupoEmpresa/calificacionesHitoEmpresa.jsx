@@ -2,9 +2,10 @@ import { useState, useEffect } from 'react';
 import Loading from '../../../components/loading/loading';
 import Error from '../../../components/error/error';
 import ListaDefinitiva from '../../../components/listaDefinitiva/listaDefinitiva';
+import { useParams } from 'react-router-dom';
 
 const NotaSprintTable = () => {
-  const empresaId = 1;
+  const {idEmpresa} = useParams();
   const [notas, setNotas] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState({
@@ -17,14 +18,14 @@ const NotaSprintTable = () => {
   const [datosTabla, setDatosTabla] = useState([]);
 
   useEffect(() => {
-    getNombreEmpresa(empresaId);
+    getNombreEmpresa(idEmpresa);
     fetchNotas();
   }, []);
 
   const fetchNotas = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`http://localhost:8000/api/empresas/notasSprint/${empresaId}`);
+      const response = await fetch(`http://localhost:8000/api/empresas/notasSprint/${idEmpresa}`);
       if (!response.ok) {
         throw new Error('Error al obtener datos.');
       }
@@ -54,9 +55,9 @@ const NotaSprintTable = () => {
     }
   };
 
-  const getNombreEmpresa = async (empresaId) => {
+  const getNombreEmpresa = async (idEmpresa) => {
     try {
-      const response = await fetch(`http://127.0.0.1:8000/api/nombreEmpresa/${empresaId}`);
+      const response = await fetch(`http://127.0.0.1:8000/api/nombreEmpresa/${idEmpresa}`);
       if (!response.ok) {
         throw new Error('Error al obtener los datos de la empresa');
       }

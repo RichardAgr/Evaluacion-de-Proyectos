@@ -523,7 +523,7 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
           validateButtonText="Guardar cambios"
           onReject={handleCancel}
           onValidate={handleSave}
-          disabledButton= {1}
+          disabledButton= {0}
         />
       </Box>
       <CuadroDialogo

@@ -149,7 +149,7 @@ const TablaEvaluacionSemanal = ({ idEmpresa }) => {
         validateButtonText="Guardar Evaluación"
         onReject={() => {}}
         onValidate={() => {}}
-        disabledButton= {1}
+        disabledButton= {0}
       />
     </>
   );
