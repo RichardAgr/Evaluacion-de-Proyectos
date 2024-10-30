@@ -91,7 +91,7 @@ class EmpresaController extends Controller
         //return response()->json($data);
         return $data;
     }
-    public function obtenerSprints($idEmpresa, $idDocente)
+public function obtenerSprints($idEmpresa, $idDocente)
     {
         try {
 
@@ -114,7 +114,7 @@ class EmpresaController extends Controller
         }
     }
 
-    public function getCalificacionesEmpresa($idEmpresa)
+public function getCalificacionesEmpresa($idEmpresa)
     {
         try {
             // Obtener la empresa y verificar si tiene estudiantes
