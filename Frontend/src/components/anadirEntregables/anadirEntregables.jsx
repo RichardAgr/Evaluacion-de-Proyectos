@@ -82,7 +82,7 @@ export default function AnadirEntregables({
         open: true,
         message: `Hay un entregable repetido`,
         severity: "error",
-        autoHide: false,
+        autoHide: 60000,
       });
       return;
     }
