@@ -30,6 +30,8 @@ Route::put('/validar', [PlanificacionController::class, 'validar']);
 // publica una planificacion
 Route::put('/publicarPlanificacion', [PlanificacionController::class, 'publicar']);
 
+
+
 // añade los comentarios y la nota
 Route::post('/addRevision', [PlanificacionController::class, 'addRevision']);
 
@@ -57,6 +59,8 @@ Route::get('/empresas/notaSprint', [NotaSprintController::class, 'notaSprint']);
 Route::get('/empresas/notasSprint/{idEmpresa}', [NotaSprintController::class, 'notasSprint']);
 
 Route::get('/docente/obtenerTareas', [NotaSprintController::class, 'obtenerTareaYEstudiante']);
+Route::get('/empresa/{idEmpresa}/sprint/{idSprint}/tareas', [SprintController::class, 'getSprintEvaluar']);
+
 
 /**
  * TODOS LOS POST VAN 
@@ -89,6 +93,7 @@ Route::post('/docente/darDeBaja', [GrupoController::class, 'darDeBaja']);
 Route::post('/tarea/{idTarea}/guardar', [TareaController::class, 'update']);
 //Realizar evaluacion semanal
 Route::post('/docente/evaluacion', [NotaSprintController::class, 'realizarEvaluacionSemana']);
+Route::post('/empresa/{idEmpresa}/sprint/{idSprint}/evaluacion', [SprintController::class, 'updateSprintEvaluar']);
 
 
 
