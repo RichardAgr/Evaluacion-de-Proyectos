@@ -188,29 +188,9 @@ function Home() {
           variant="contained"
           color="primary"
           size="large"
-          onClick={handleNavigateToEmpresasLista}
-        >
-          Ir a Lista Empresas
-        </Button>
-      </Grid2>
-      <Grid2 item xs={12} sm={6} md={4}>
-        <Button
-          variant="contained"
-          color="primary"
-          size="large"
-          onClick={handleNavigateToListaEstudiantes}
-        >
-          Ir a Lista Estudiantes
-        </Button>
-      </Grid2>
-      <Grid2 item xs={12} sm={6} md={4}>
-        <Button
-          variant="contained"
-          color="primary"
-          size="large"
           onClick={handleNavigateToListaEstudiantesA}
         >
-          Ir a Lista Estudiantes mejorado
+          Lista Estudiantes
         </Button>
       </Grid2>
       <Grid2 item xs={12} sm={6} md={4}>

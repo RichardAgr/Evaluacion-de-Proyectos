@@ -1,201 +1,161 @@
 import { useEffect, useState } from 'react';
-import BaseUI from "../../../../components/baseUI/baseUI";
-import { styled } from '@mui/material';
+import Autocomplete from '@mui/material/Autocomplete';
+import BaseUI from '../../../../components/baseUI/baseUI';
+import { TextField } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
+import Paper from '@mui/material/Paper';
+import Alert from '@mui/material/Alert';
+import { DataGrid } from '@mui/x-data-grid';
+
+const columns = [
+  {
+    field: 'nombreLargo',
+    headerName: 'Nombre Largo',
+    sortable: true,
+    flex: 2,
+    valueGetter: (value,row) => row.nombreLargo,
+  },
+  {
+    field: 'nombreEmpresa',
+    headerName: 'Nombre Corto',
+    sortable: true,
+    flex: 2,
+    valueGetter: (value,row) => row.nombreEmpresa,
+  },
+  {
+    field: 'totalEstudiantes',
+    headerName: 'Número de Integrantes',
+    sortable: true,
+    flex: 2,
+    valueGetter: (value,row) => row.totalEstudiantes || 0,
+  },
+];
 
 function EmpresasPorGrupo() {
-  const [data, setData] = useState([]);
+  const [empresas, setEmpresas] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchValue, setSearchValue] = useState('');
+  const [notFound, setNotFound] = useState('');
+  const idDocente = 1;
+  const gestionGrupo = '2024-2';
 
-  // Paginación
-  const [currentPage, setCurrentPage] = useState(1);
-  const [rowsPerPage] = useState(10);
-
-  // Initial data fetch with GET request
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
+    const fetchEmpresas = async () => {
       try {
-        const response = await fetch('http://localhost:8000/grupo/empresas/1');
-        if (!response.ok) throw new Error('Error fetching data');
-        const result = await response.json();
-        setData(result);
+        const response = await fetch(
+          `http://localhost:8000/api/docente/obtenerEmpresasPorGrupoYDocente?` +
+            new URLSearchParams({
+              idDocente,
+              gestionGrupo,
+            }).toString(),
+          {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error('Error de grupo');
+        }
+
+        const data = await response.json();
+        setEmpresas(data);
       } catch (error) {
+        console.error('Error en la solicitud:', error);
         setError(error.message);
       } finally {
         setLoading(false);
       }
     };
-    fetchData();
+    fetchEmpresas();
   }, []);
 
-  // Búsqueda en vivo
+  const paginationModel = { page: 0, pageSize: 20 };
+
+  const filteredEmpresas = empresas.filter((empresa) => {
+    return (
+      empresa.nombreLargo.toLowerCase().includes(searchValue.toLowerCase()) ||
+      empresa.nombreEmpresa.toLowerCase().includes(searchValue.toLowerCase()) ||
+      empresa.totalEstudiantes.toString().includes(searchValue)
+    );
+  });
+
   useEffect(() => {
-    const fetchSearchResults = async () => {
-      setLoading(true);
-      setError(null); // Limpiar error antes de hacer la búsqueda
-
-      if (!searchTerm.trim()) {
-        // Si el término de búsqueda está vacío, restablecer los datos
-        const response = await fetch('http://localhost:8000/grupo/empresas/1');
-        const result = await response.json();
-        setData(result); // Restablece los datos a todos
-        setLoading(false);
-        return;
-      }
-
-      try {
-        const response = await fetch('http://localhost:8000/api/grupo/docente/1/barraBusqueda', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ termino: searchTerm }),
-        });
-
-        if (!response.ok) throw new Error('Error en la búsqueda');
-        const result = await response.json();
-        setData(result);
-      } catch (error) {
-        setError(error.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    // Llamar a la función de búsqueda
-    fetchSearchResults();
-  }, [searchTerm]); // Efecto se ejecuta al cambiar `searchTerm`
-
-  // Paginación: cálculos
-  const totalPages = Math.ceil(data.length / rowsPerPage);
-  const indexOfLast = currentPage * rowsPerPage;
-  const indexOfFirst = indexOfLast - rowsPerPage;
-  const currentData = data.slice(indexOfFirst, indexOfLast);
-
-  if (error) return <p>Error: {error}</p>;
+    if (filteredEmpresas.length === 0 && searchValue.trim() !== '') {
+      setNotFound('No se encontraron resultados que coincidan con la búsqueda');
+    } else {
+      setNotFound('');
+    }
+  }, [searchValue, filteredEmpresas.length]);
 
   return (
-    <BaseUI
-      titulo={`LISTADO DE GRUPOS`}
-      ocultarAtras={false}
-      confirmarAtras={false}
-      dirBack={`/`}
-    >
-      <div style={{ margin: '20px' }}>
-        <SearchInput
-          type="text"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)} // Cambia el valor en tiempo real
-          placeholder="Buscar Empresa"
-        />
-      </div>
-      <Tabla>
-        <thead>
-          <tr>
-            <th>Nombre Largo</th>
-            <th>Nombre Corto</th>
-            <th>Total Estudiantes</th>
-          </tr>
-        </thead>
-        <tbody>
-          {currentData.length > 0 ? (
-            currentData.map((empresa, index) => (
-              <tr key={index}>
-                <td>{empresa.nombreLargo}</td>
-                <td>{empresa.nombreEmpresa}</td>
-                <td>{empresa.totalEstudiantes}</td>
-              </tr>
-            ))
+    <>
+      <BaseUI
+        titulo={"LISTA DE GRUPO EMPRESAS"}
+        ocultarAtras={false}
+        confirmarAtras={false}
+        dirBack={`/`}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px', marginTop: '10px' }}>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <Autocomplete
+              freeSolo
+              disablePortal
+              disableListWrap
+              options={[]}
+              inputValue={searchValue}
+              onInputChange={(event, newValue) => setSearchValue(newValue)}
+              sx={{ width: 300 }}
+              renderInput={(params) => (
+                <TextField {...params} label="Buscar por Nombre Largo o Nombre Corto" />
+              )}
+            />
+            <SearchIcon sx={{ marginLeft: '15px', color: 'grey.500', fontSize: 35 }} />
+          </div>
+          <h2>{empresas.length} Empresas</h2>
+        </div>
+
+        <Paper sx={{ height: 700, width: '100%' }}>
+          {loading ? (
+            <p>Cargando...</p>
+          ) : error ? (
+            <p>Error: {error}</p>
+          ) : empresas.length === 0 ? (
+            <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+              <Alert severity="info" style={{ width: 'fit-content', textAlign: 'center' }}>
+                No hay empresas inscritas en este momento.
+              </Alert>
+            </div>
           ) : (
-            <tr>
-              <td colSpan="3">No se encontraron empresas.</td>
-            </tr>
+            <>
+              {notFound ? (
+                <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+                  <Alert severity="warning" style={{ width: 'fit-content', textAlign: 'center' }}>
+                    {notFound}
+                  </Alert>
+                </div>
+              ) : (
+                <DataGrid
+                  rows={filteredEmpresas}
+                  columns={columns}
+                  getRowId={(row) => row.nombreEmpresa}
+                  initialState={{ pagination: { paginationModel } }}
+                  pageSizeOptions={[2, 10]}
+                  disableColumnMenu
+                  isRowSelectable={() => false}
+                  sx={{ border: 0 }}
+                  sortingOrder={['asc', 'desc']}
+                />
+              )}
+            </>
           )}
-        </tbody>
-      </Tabla>
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        totalItems={data.length}
-        rowsPerPage={rowsPerPage}
-        handlePreviousPage={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-        handleNextPage={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-      />
-    </BaseUI>
+        </Paper>
+      </BaseUI>
+    </>
   );
 }
-
-const Tabla = styled('table')({
-  width: '100%',
-  borderCollapse: 'collapse',
-  textAlign: 'left',
-
-  'th, td': {
-    padding: '12px 15px',
-    textAlign: 'left',
-    border: 'none',
-  },
-
-  th: {
-    color: 'black',
-    fontWeight: 'bold',
-    backgroundColor: '#f8f9fa',
-    borderBottom: '2px solid #ddd',
-  },
-
-  'td': {
-    backgroundColor: '#fff',
-    borderBottom: '1px solid #ddd',
-  },
-
-  'tr:nth-of-type(even)': {
-    backgroundColor: '#f2f2f2',
-  },
-});
-
-const Boton = styled('button')`
-  box-sizing: border-box;
-  margin-right: 5px;           
-  border: none;                
-  background-color: transparent; 
-  font-size: 16px;            
-  cursor: pointer;            
-  padding: 10px;
-  opacity: ${({ currentPage }) => (currentPage === 1 ? 0.5 : 1)}; 
-`;
-
-const SearchInput = styled('input')`
-  width: 100%;
-  max-width: 200px; 
-  padding: 10px;    
-  font-size: 16px;  
-  border: 1px solid #ccc;  
-  border-radius: 5px;      
-  outline: none;          
-`;
-
-// eslint-disable-next-line react/prop-types
-const Pagination = ({ currentPage, totalPages, totalItems, rowsPerPage, handlePreviousPage, handleNextPage }) => {
-  const startRow = (currentPage - 1) * rowsPerPage + 1;
-  const endRow = Math.min(currentPage * rowsPerPage, totalItems);
-
-  return (
-    <div className='pagination' style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', borderBottom: '2px solid #ddd', marginTop: '0px' }}>
-      <div style={{ marginRight: '30px' }}>
-        <span style={{ marginRight: '10px' }}>Filas por página:</span>
-        <span>{rowsPerPage}</span>
-      </div>
-      <div style={{ marginRight: '30px' }}>
-        <span>{startRow}-{endRow} of {totalItems}</span>
-      </div>
-      <div>
-        <Boton onClick={handlePreviousPage} disabled={currentPage === 1}>&lt;</Boton>
-        <Boton onClick={handleNextPage} disabled={currentPage === totalPages}>&gt;</Boton>
-      </div>
-    </div>
-  );
-};
 
 export default EmpresasPorGrupo;

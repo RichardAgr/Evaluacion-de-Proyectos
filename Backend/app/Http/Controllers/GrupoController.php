@@ -69,15 +69,13 @@ class GrupoController extends Controller
 
         return response()->json($datosGrupo, 200);
     }
-    public function obtenerEmpresasPorGrupoYDocente($idDocente, $gestionGrupo)
+    public function obtenerEmpresasPorGrupoYDocente(Request $request)
     {
-        // Validar los parámetros de entrada
-        /*$request->validate([
+        $request->validate([
             'idDocente' => 'required|integer',
-            //'gestionGrupo' => 'required|string',
+            'gestionGrupo' => 'required|string',
             //'idGrupo' => 'required|integer'
-        ]);*/
-    
+        ]);
         // Ejecutar la consulta
             $resultados = DB::table('estudiantesgrupos AS eg')
             ->join('grupo AS g', 'eg.idGrupo', '=', 'g.idGrupo')
@@ -86,9 +84,9 @@ class GrupoController extends Controller
             ->join('empresa AS emp', 'ee.idEmpresa', '=', 'emp.idEmpresa')
             ->join('estudiante AS e', 'eg.idEstudiante', '=', 'e.idEstudiante')
             ->select('emp.nombreEmpresa','emp.nombreLargo', 'g.gestionGrupo', DB::raw('count(eg.idEstudiante) as totalEstudiantes'), 'g.numGrupo')
-            ->where('d.idDocente', $idDocente)
+            ->where('d.idDocente', $request->idDocente)
            // ->where('g.idGrupo', $request->idGrupo)
-            ->where('g.gestionGrupo', $gestionGrupo)
+            ->where('g.gestionGrupo', $request->gestionGrupo)
             ->groupBy('emp.nombreEmpresa', 'emp.nombreLargo','g.gestionGrupo', 'g.numGrupo')
             -> orderByDesc('g.gestionGrupo')
             ->orderBy('emp.nombreEmpresa')

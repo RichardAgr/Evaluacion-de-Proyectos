@@ -17,6 +17,7 @@ use App\Http\Controllers\EstudiantesEmpresasController;
 use App\Http\Controllers\NotaSprintController;
 use App\Http\Controllers\EntregablesController;
 
+
 Route::get('/empresa/{id}', [EmpresaController::class, 'getEmpresaData']);
 Route::get('/nombreEmpresa/{id}', [EmpresaController::class, 'getNombreEmpresa']);
 
@@ -34,7 +35,6 @@ Route::put('/publicarPlanificacion', [PlanificacionController::class, 'publicar'
 
 // añade los comentarios y la nota
 Route::post('/addRevision', [PlanificacionController::class, 'addRevision']);
-
 // ----Listar Empresas-----
 // obtiene una lista de todas las empresas
 Route::get('/empresas/', [EmpresaController::class, 'getListaEmpresas']);

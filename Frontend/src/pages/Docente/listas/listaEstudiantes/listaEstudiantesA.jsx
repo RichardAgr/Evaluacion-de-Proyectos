@@ -139,7 +139,7 @@ export default function DataTable() {
                     columns={columns}
                     getRowId={(row) => row.idEstudiante}
                     initialState={{ pagination: { paginationModel } }}
-                    pageSizeOptions={[2, 10]}
+                    pageSizeOptions={[2, 10,20]}
                     disableColumnMenu
                     isRowSelectable={() => false}
                     sx={{ border: 0 }}
@@ -148,7 +148,7 @@ export default function DataTable() {
                 )}
               </>
             )}
-          </Paper>
+        </Paper>
 
       </BaseUI>
     </Fragment>
