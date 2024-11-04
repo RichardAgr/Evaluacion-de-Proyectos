@@ -96,6 +96,11 @@ Route::post('/docente/evaluacion', [NotaSprintController::class, 'realizarEvalua
 Route::post('/empresa/{idEmpresa}/sprint/{idSprint}/evaluacion', [SprintController::class, 'updateSprintEvaluar']);
 
 
+Route::get('/empresa/{idEmpresa}/sprint/{idSprint}/semana/{idSemana}/tareas', [TareaController::class, 'getTareasSemana']);
+Route::put('/empresa/{idEmpresa}/sprint/{idSprint}/semana/{idSemana}/tareas', [TareaController::class, 'updateTareasSemana']);
+
+
+
 
 
 
