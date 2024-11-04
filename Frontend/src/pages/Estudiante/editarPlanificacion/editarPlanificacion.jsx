@@ -11,6 +11,7 @@ import Loading from "../../../components/loading/loading.jsx";
 import Error from "../../../components/error/error.jsx";
 import EstadoPlanificacion from "../../../components/estadoPlanificacion/estadoPlanificacion.jsx";
 import Redirecting from "../../../components/redirecting/redirecting.jsx";
+import { Box, Typography } from "@mui/material";
 
 function ModificarPlanificacion() {
   let { idEmpresa } = useParams();
@@ -80,7 +81,7 @@ function ModificarPlanificacion() {
             />
             {planificacionData.aceptada ? (
               <Redirecting />
-            ) : (
+            ) : planificacionData.publicada==0 ? (
               <>
                 <EditarPlanificacion
                   planificacionData={planificacionData}
@@ -96,6 +97,14 @@ function ModificarPlanificacion() {
                     </>
                   )}
               </>
+            ) :(
+
+              <Box >
+                <Typography  variant="h2" gutterBottom>
+
+                  <strong>Planificación publicada</strong>
+                </Typography>
+              </Box>
             )}
           </>
         )}
