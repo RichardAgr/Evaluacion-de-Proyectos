@@ -10,6 +10,8 @@ class EstudiantesGrupos extends Model
     public $incrementing = false;
     public $timestamps = false;
 
+    protected $fillable = ['idEstudiante', 'idGrupo']; 
+
     public function estudiante()
     {
         return $this->belongsTo(Estudiante::class, 'idEstudiante');

@@ -1,79 +1,139 @@
 <?php
+
 namespace App\Http\Controllers;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\JsonResponse;
 use App\Models\Tarea;
 use App\Models\Estudiante;
 use App\Models\ArchivoTarea;
+use App\Models\TareaEstudiante;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class TareaController extends Controller
 {
-  
-
-    /* Metodos GET*/
     public function obtenerTarea($idTarea)
-    {
-        // Obtener la tarea específica
-        $tarea = DB::table('tarea')
-            ->select('idSemana', 'comentario', 'textoTarea', 'fechaEntrega','notaTarea')
-            ->where('idTarea', $idTarea)
-            ->first();
+{
+    $tarea = Tarea::find($idTarea);
 
-        // Si no se encuentra la tarea, devolver un error
-        if (!$tarea) {
-            return response()->json(['error' => 'Tarea no encontrada'], 404);
-        }
-
-        // Obtener los estudiantes relacionados con la tarea
-        $estudiantes = DB::table('estudiante')
-            ->join('tareasestudiantes', 'tareasestudiantes.idEstudiante', '=', 'estudiante.idEstudiante')
-            ->select('nombreEstudiante', 'primerApellido', 'segundoApellido') // Asumiendo que tienes la columna 'fotoEstudiante' en la tabla 'estudiante'
-            ->where('tareasestudiantes.idTarea', $idTarea)
-            ->get();
-
-        // Obtener los archivos relacionados con la tarea
-            $archivosTarea = DB::table('archivostarea')
-            ->select('archivo')
-            ->where('idTarea', $idTarea)
-            ->get();
-        
-        // Convierte el resultado a un array
-        $archivosArray = $archivosTarea->pluck('archivo')->toArray();
-
-
-        // Formar la respuesta
-        $respuesta = [
-            'idSemana' => $tarea->idSemana,
-            'comentario' => $tarea->comentario,
-            'textotarea' => $tarea->textoTarea,
-            'fechaentregado' => $tarea->fechaEntrega,
-            'notatarea' => $tarea->notaTarea,
-            'estudiantes' => $estudiantes,
-            'archivotarea' => $archivosArray,
-        ];
-
-        return response()->json($respuesta);
+    if (!$tarea) {
+        return response()->json(['error' => 'Tarea no encontrada'], 404);
     }
 
-    /* Metodos POST */
-    public function calificarTarea(Request $request, $idTarea)
+    // Obtener estudiantes de la tarea
+    $estudiantes = DB::table('estudiante')
+        ->join('tareasestudiantes', 'tareasestudiantes.idEstudiante', '=', 'estudiante.idEstudiante')
+        ->select('estudiante.idEstudiante', 'nombreEstudiante', 'primerApellido', 'segundoApellido')
+        ->where('tareasestudiantes.idTarea', $idTarea)
+        ->get();
+
+
+    // Formar la respuesta
+    $respuesta = [
+        'idSemana' => $tarea->idSemana,
+        'nombreTarea' => $tarea->nombreTarea,
+        'comentario' => $tarea->comentario,
+        'textotarea' => $tarea->textoTarea,
+        'fechentregado' => $tarea->fechaEntrega,
+        'estudiantes' => $estudiantes
+    ];
+
+    return response()->json($respuesta);
+}
+
+    //************************************ POSTS*************************** */
+    public function store(Request $request)
     {
- 
-        $tarea = Tarea::find($idTarea);
-    
-        
-        if (!$tarea) {
-            return response()->json(['error' => 'Tarea no encontrada'], 404);
+        // Validar la entrada
+        $request->validate([
+            'idSemana' => 'required|integer',
+            'textotarea' => 'required|string',
+            'fechentregado' => 'required|date',
+            'archivotarea' => 'nullable|array',
+            'archivotarea.*' => 'file|mimes:pdf,zip,rar,7z', // Archivos permitidos
+        ]);
+
+        // Crear la tarea
+        $tarea = Tarea::create([
+            'idSemana' => $request->idSemana,
+            'comentario' => '',
+            'textoTarea' => $request->textotarea,
+            'fechaEntrega' => $request->fechentregado,
+            'notaTarea' => 0,
+        ]);
+
+        // Guardar los archivos en el disco y en la base de datos
+        $archivosGuardados = [];
+        if ($request->hasFile('archivotarea')) {
+            foreach ($request->file('archivotarea') as $archivo) {
+                $nombreArchivo = $archivo->getClientOriginalName();
+                $rutaArchivo = $archivo->storeAs("public/uploads/{$tarea->idTarea}", $nombreArchivo);
+
+                $archivoTarea = ArchivoTarea::create([
+                    'idTarea' => $tarea->idTarea,
+                    'archivo' => $rutaArchivo,
+                    'nombreArchivo' => $nombreArchivo,
+                    'fechaEntrega' => $request->fechentregado,
+                ]);
+
+                $archivosGuardados[] = $archivoTarea;
+            }
         }
-    
-    
-        $tarea->comentario = $request->comentario_docente;
-        $tarea->notaTarea = $request->nota; 
-    
-        $tarea->save();
-    
-        return response()->json(['message' => 'Tarea calificada con éxito', 'tarea' => $tarea]);
+
+        return response()->json([
+            'tarea' => $tarea,
+            'archivos' => $archivosGuardados,
+        ], 201);
     }
-    
+
+    public function update(Request $request, $idTarea)
+    {
+        try {
+            // Validar los datos de entrada
+            $request->validate([
+                'textotarea' => 'required|string',
+                'responsables' => 'nullable|array',
+            ]);
+
+            // Buscar la tarea
+            $tarea = Tarea::find($idTarea);
+            if (!$tarea) {
+                return response()->json(['error' => 'Tarea no encontrada'], 404);
+            }
+
+            // Actualizar la descripción de la tarea
+            $tarea->textoTarea = $request->input('textotarea');
+            $tarea->save();
+
+
+            // Eliminar responsables actuales de la tarea
+            TareaEstudiante::where('idTarea', $idTarea)->delete();
+
+            // Agregar responsables
+            if ($request->has('responsables')) {
+                foreach ($request->input('responsables') as $responsable) {
+                    TareaEstudiante::create([
+                        'idTarea' => $idTarea,
+                        'idEstudiante' => $responsable['idEstudiante'],
+                    ]);
+                }
+            }
+
+            return response()->json(['message' => 'Tarea actualizada correctamente'], 200);
+
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function crearTarea(Request $request){
+        $sprint = $request->input('sprint');
+        $semana = $request->input('semana');
+        $nombreTarea = $request->input('nombreTarea');
+
+        $resultado = DB::table('tarea as t');
+       // ->join('semana as s','s.idSemana',)
+    }
 }

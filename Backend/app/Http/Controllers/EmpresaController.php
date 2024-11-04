@@ -3,6 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Empresa;
+use App\Models\Semana;
+use App\Models\NotasSemana;
+use App\Models\Estudiante;
+use App\Models\Sprint;
+use App\Models\Planificacion;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 
@@ -17,17 +22,17 @@ class EmpresaController extends Controller
         if (!$empresa) {
             return response()->json(['error' => 'Empresa no encontrada'], 404);
         }
-        
+
         // Formatear los datos
         $data = [
             'nombreEmpresa' => $empresa->nombreEmpresa,
             'nombreLargo' => $empresa->nombreLargo,
             'integrantes' => $empresa->estudiantes->map(function ($estudiante) {
                 return [
+                    'idEstudiante'=> $estudiante->idEstudiante,
                     'nombreEstudiante' => $estudiante->nombreEstudiante,
                     'primerApellido' => $estudiante->primerApellido,
                     'segundoApellido' => $estudiante->segundoApellido,
-                    'rol'=> $estudiante ->rol
                 ];
             }),
         ];
@@ -44,7 +49,7 @@ class EmpresaController extends Controller
         if (!$empresa) {
             return response()->json(['error' => 'Empresa no encontrada'], 404);
         }
-        
+
         // Formatear los datos
         $data = [
             'nombreEmpresa' => $empresa->nombreEmpresa,
@@ -62,7 +67,7 @@ class EmpresaController extends Controller
     // $empresas = Empresa::whereHas('docente', function($query) use ($idDocente) {
     //     $query->where('idDocente', $idDocente);
     // })->orderBy('nombreEmpresa', 'asc')->get();
-    
+
     public function getListaEmpresas()
     {
         // esta formateado para buscar por orden alfabetico
@@ -89,7 +94,7 @@ class EmpresaController extends Controller
     public function obtenerSprints($idEmpresa, $idDocente)
     {
         try {
-           
+
             $empresa = Empresa::findOrFail($idEmpresa);
 
             $sprints = $empresa->sprints;
@@ -105,6 +110,88 @@ class EmpresaController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Error al obtener los sprints: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function getCalificacionesEmpresa($idEmpresa)
+    {
+        try {
+            // Obtener la empresa y verificar si tiene estudiantes
+            $empresa = Empresa::with('estudiantes')->findOrFail($idEmpresa);
+
+            if ($empresa->estudiantes->isEmpty()) {
+                return response()->json([
+                    'mensaje' => 'No hay estudiantes asignados a esta empresa.'
+                ], 200);
+            }
+
+            // Verificar si la empresa tiene planificaciones
+            $planificacion = Planificacion::where('idEmpresa', $idEmpresa)->first();
+
+            if (!$planificacion) {
+                return response()->json([
+                    'mensaje' => 'No hay planificaciones asociadas a esta empresa.'
+                ], 200);
+            }
+
+            // Obtener los sprints relacionados a la planificación
+            $sprints = Sprint::where('idPlanificacion', $planificacion->idPlanificacion)->get();
+
+            if ($sprints->isEmpty()) {
+                return response()->json([
+                    'mensaje' => 'No hay sprints disponibles para esta planificación.'
+                ], 200);
+            }
+
+            // Crear un arreglo para almacenar las calificaciones por estudiante y sprint
+            $calificaciones = [];
+
+            foreach ($empresa->estudiantes as $estudiante) {
+                $calificacionesEstudiante = [
+                    'estudiante' => [
+                        'nombre' => $estudiante->nombreEstudiante,
+                        'primerApellido' => $estudiante->primerApellido,
+                        'segundoApellido' => $estudiante->segundoApellido,
+                    ],
+                    'promediosPorSprint' => []
+                ];
+
+                foreach ($sprints as $sprint) {
+                    $semanas = Semana::where('idSprint', $sprint->idSprint)->get();
+                    $totalNotas = 0;
+                    $cantidadNotas = 0;
+
+                    foreach ($semanas as $semana) {
+                        $notasSemana = NotasSemana::where('idSemana', $semana->idSemana)
+                            ->where('idEstudiante', $estudiante->idEstudiante)
+                            ->get();
+
+                        foreach ($notasSemana as $nota) {
+                            $totalNotas += $nota->nota;
+                            $cantidadNotas++;
+                        }
+                    }
+
+                    $promedio = $cantidadNotas > 0 ? $totalNotas / $cantidadNotas : 0;
+
+                    $calificacionesEstudiante['promediosPorSprint'][] = [
+                        'sprint' => $sprint->idSprint,
+                        'promedio' => $promedio
+                    ];
+                }
+
+                $calificaciones[] = $calificacionesEstudiante;
+            }
+
+            return response()->json([
+                'nombre' => $empresa->nombreEmpresa,
+                'nombreLargo' => $empresa->nombreLargo,
+                'calificaciones' => $calificaciones
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Error al obtener las calificaciones: ' . $e->getMessage()
             ], 500);
         }
     }

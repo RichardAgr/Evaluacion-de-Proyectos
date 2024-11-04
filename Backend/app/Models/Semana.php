@@ -6,10 +6,21 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Semana extends Model
 {
-    protected $table = 'semana'; // Nombre de la tabla
+    protected $table = 'semana';
+    protected $primaryKey = 'idSemana';
+    public $incrementing = false;
+    public $timestamps = false;
+    protected $fillable = [
+        'idSprint',
+    ];
 
-    public function tareas(): HasMany
+    public function tareas()
     {
-        return $this->hasMany(Tarea::class, 'idSemana', 'idSemana');
+        return $this->hasMany(Tarea::class, 'idSemana');
+    }
+
+    public function sprint()
+    {
+        return $this->belongsTo(Sprint::class, 'idSprint');
     }
 }

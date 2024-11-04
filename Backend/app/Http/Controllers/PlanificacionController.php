@@ -9,6 +9,8 @@ use Illuminate\Http\JsonResponse; // Para las respuestas JSON
 use App\Models\Planificacion; // Importa tu modelo Planificacion
 use App\Models\Sprint; // Importa tu modelo Sprint
 use App\Models\Empresa; // Asegúrate de importar el modelo Empresa
+use Illuminate\Support\Facades\Validator;
+use Carbon\Carbon;
 use Exception;
 
 class PlanificacionController extends Controller
@@ -32,7 +34,7 @@ class PlanificacionController extends Controller
             if ($planificacion && $planificacion->aceptada) {
                 // Si la planificación existe y está aceptada, devolver el número de sprints
                 $data[] = [
-                    'idPlanificacion' => $planificacion->idPlanificacion,
+                    'id' => $planificacion->idPlanificacion,
                     'nombreEmpresa' => $empresa->nombreEmpresa,
                     'nombreLargo' => $empresa->nombreLargo,
                     'idEmpresa' => $planificacion->idEmpresa,
@@ -45,31 +47,26 @@ class PlanificacionController extends Controller
         // Retornar la respuesta JSON con los datos de empresas aceptadas
         return response()->json($data);
     }
-    public function planificacionRechazadas(): JsonResponse
+    public function planificacionesSinValidar(): JsonResponse
     {
-        // Obtener todas las empresas
+        // Obtener todas las empresas, en el futuro debera filtrar las empresas por docente
         $empresas = Empresa::all();
-
-        // Inicializar un array para almacenar los datos de planificación
         $data = [];
-
         foreach ($empresas as $empresa) {
             // Obtener la planificación de la empresa
-            $planificacion = Planificacion::with('sprints')
-                ->orderBy('fechaEntrega', 'desc')
-                ->where('idEmpresa', $empresa->idEmpresa)
+            $planificacion = Planificacion::where('idEmpresa', $empresa->idEmpresa)
                 ->first();
 
-            // Verificar si la planificación existe y está aceptada
-            if ($planificacion && !$planificacion->aceptada) {
-                // Si la planificación existe y está aceptada, devolver el número de sprints
+            // Verificar si la planificación existe y si fue rechazada
+            if ($planificacion && $planificacion->publicada == 1 && $planificacion->aceptada == 0) {
+                // Si la planificación existe y fue rechazada, guarda sus datos
                 $data[] = [
                     'idPlanificacion' => $planificacion->idPlanificacion,
                     'nombreEmpresa' => $empresa->nombreEmpresa,
                     'nombreLargo' => $empresa->nombreLargo,
                     'idEmpresa' => $planificacion->idEmpresa,
                     'aceptada' => $planificacion->aceptada,
-                    'numeroSprints' => $planificacion->sprints->count(), // Contar el número de sprints
+                    'numeroSprints' => $planificacion->sprints->count(), // Contar el número de sprints, innecesario
                 ];
             }
         }
@@ -77,6 +74,7 @@ class PlanificacionController extends Controller
         // Retornar la respuesta JSON con los datos de empresas aceptadas
         return response()->json($data);
     }
+
     public function show($idEmpresa): JsonResponse
     {
         // Verificar si la empresa existe
@@ -88,45 +86,48 @@ class PlanificacionController extends Controller
 
         // Obtener la planificación de la empresa si existe
         $planificacion = Planificacion::with(['empresa', 'sprints'])
-            ->orderBy('fechaEntrega', 'desc')
             ->where('idEmpresa', $idEmpresa)
             ->first();
 
-            if (!$planificacion) {
-                // Si no hay planificación, devolver datos por defecto
-                return response()->json([
-                    'idEmpresa' => $empresa->idEmpresa,
-                    'idPlanificacion' => -1,
-                    'aceptada' => 0,
-                    'notaPlanificacion' => 0,
-                    'comentarioDocente' => 'Comentario Docente',
-                    'sprints' => [
-                        ['idSprint' => null, 'fechaIni' => '2024-09-06', 'fechaFin' => '2024-09-06', 'cobro' => 12, 'fechaEntrega' => '2024-09-06', 'entregables'=>'esto es un ejemplo'],
-                        ['idSprint' => null, 'fechaIni' => '2024-09-06', 'fechaFin' => '2024-09-06', 'cobro' => 12, 'fechaEntrega' => '2024-09-06', 'entregables'=>'esto es un ejemplo'],
-                        ['idSprint' => null, 'fechaIni' => '2024-09-06', 'fechaFin' => '2024-09-06', 'cobro' => 12, 'fechaEntrega' => '2024-09-06', 'entregables'=>'esto es un ejemplo'],
-                    ],  // Array de sprints con 3 filas vacías  
-                ], 200);  // Código 200 ya que la empresa existe
-            }
-            
+        if (!$planificacion) {
+            // Si no hay planificación, devolver datos por defecto, indicando que en realidad no se tiene planificacion
+            return response()->json([
+                'message' => 'La empresa no envió su planificación aún.',
+                'idEmpresa' => $empresa->idEmpresa,
+                'idPlanificacion' => -1,
+                'aceptada' => null,
+                'publicada' => null,
+                'comentariopublico' => null,
+                'sprints' => [
+                    ['idSprint' => null, 'fechaIni' => '2025-02-06', 'fechaFin' => '2025-02-12', 'cobro' => 13, 'fechaEntrega' => '2025-02-12', 'entregables' => 'esto es un ejemplo'],
+                ],  // Array de sprints con 1 filas vacías  
+            ], 200);  // Código 200 ya que la empresa existe
+        }
+
 
         // Si la planificación existe, devolver los datos correspondientes
         $data = [
             'idPlanificacion' => $planificacion->idPlanificacion,
             'idEmpresa' => $planificacion->idEmpresa,
             'aceptada' => $planificacion->aceptada,
+            'publicada' => $planificacion->publicada,
             'fechaEntrega' => $planificacion->fechaEntrega,
-            'notaPlanificacion' => $planificacion->notaplanificacion,
-            'comentarioDocente' => $planificacion->comentariodocente,
+            'comentariopublico' => $planificacion->comentariopublico,
+            'comentarioprivado' => $planificacion->comentarioprivado,
             'sprints' => $planificacion->sprints->map(function ($sprint) {
                 return [
                     'idSprint' => $sprint->idSprint,
+                    'numeroSprint'=> $sprint->numeroSprint,
                     'fechaIni' => $sprint->fechaIni,
                     'fechaFin' => $sprint->fechaFin,
                     'cobro' => $sprint->cobro,
                     'fechaEntrega' => $sprint->fechaEntrega,
-                    'entregables' => $sprint->entregables,
-                    'notasprint' => $sprint->notasprint,
-                    'comentariodocente' => $sprint->comentariodocente
+                    'comentariodocente' => $sprint->comentariodocente,
+                    'entregables' => $sprint->entregables->map(function ($entregable){
+                        return [
+                            'descripcionEntregable' =>  $entregable->descripcionEntregable,
+                        ];
+                    })->toArray()
                 ];
             })->toArray()
         ];
@@ -134,7 +135,7 @@ class PlanificacionController extends Controller
         // Retornar la respuesta JSON
         return response()->json($data);
     }
-    public function notaComentario($idPlanificacion): JsonResponse
+    public function getComentario($idPlanificacion): JsonResponse
     {
         $planificacion = Planificacion::find($idPlanificacion);
 
@@ -144,9 +145,7 @@ class PlanificacionController extends Controller
 
 
         $data = [
-
-            'notaplanificacion' => $planificacion->notaplanificacion ?? null,
-            'comentarioocente' => $planificacion->comentariodocente ?? null,
+            'comentariopublico' => $planificacion->comentariodocente ?? null,
             'fechaEntrega' => $planificacion->fechaEntrega
         ];
 
@@ -154,164 +153,177 @@ class PlanificacionController extends Controller
         return response()->json($data);
     }
 
-
-
-    public function validar(Request $request)
+    
+    public function addRevision(Request $request)
     {
-        $validatedData = $request->validate([
-            'idPlanificacion' => 'required|integer',
-        ]);
         try {
-            $planificacion = Planificacion::findOrFail($validatedData['idPlanificacion']);
-
-            // if (!$planificacion) {
-            //     return response()->json(['error' => 'Planificación no encontrada para esta empresa'], 404);
-            // } else {
-            $planificacion->aceptada = 1;
-            $planificacion->save();
-            // }
-
-            return response()->json([
-                'message' => 'Planificación aceptada con éxito',
-                'planificacion' => $planificacion
+            // validar datos
+            $validator = Validator::make($request->all(), [
+                'idEmpresa' => 'required|integer',
+                'comentariopublico' => 'nullable|string',
+                'comentarioprivado' => 'nullable|string',
             ]);
+            if ($validator->fails()) {
+                return response()->json([
+                    'message' => 'Los datos proporcionados no son válidos.',
+                    'errors' => $validator->errors()
+                ], 422);
+            }
+            $validatedData = $validator->validated();
+            //anadir comentario grupal, comentario privado y nota, 
+            //verificar que la planificacion de la empresa existe
+            $planificacion = Planificacion::where('idEmpresa', $validatedData['idEmpresa'])->first();
+            if (!$planificacion) {
+                return response()->json([
+                    'message' => 'No se encontró la planificación para la empresa especificada.'
+                ], 404);
+            }
+            // Añadir comentario del docente
+            if (isset($validatedData['comentariopublico'])) {
+                $planificacion->comentariopublico = $validatedData['comentariopublico'];
+            }
+            if (isset($validatedData['comentarioprivado'])) {
+                $planificacion->comentarioprivado = $validatedData['comentarioprivado'];
+            }
+            // Guardar los cambios
+            $planificacion->save();
+            // devolver respuesta exitosa
+            return response()->json([
+                'message' => 'Revisión guardada exitosamente.'
+            ], 200);
         } catch (Exception $e) {
-            // devolver error
+            // Capturar otros errores
             return response()->json([
                 'message' => 'Hubo un error al procesar la solicitud.',
                 'error' => $e->getMessage()
             ], 500);
         }
     }
-   
 
 
-    public function crearPlanificacion(Request $request): JsonResponse
+    public function validar(Request $request)
     {
-        // Validar los datos de entrada
-        $request->validate([
-            'aceptada' => 'required|boolean',
-            'comentarioDocente' => 'required|string',
-            'fechaEntrega' => 'required|date_format:Y-m-d H:i:s',
-            'idEmpresa' => 'required|integer|exists:empresa,idEmpresa',
-            'notaPlanificacion' => 'required|integer',
-            'sprints' => 'required|array',
-            'sprints.*.fechaIni' => 'required|date',
-            'sprints.*.fechaFin' => 'required|date|after_or_equal:sprints.*.fechaIni',
-            'sprints.*.cobro' => 'required|integer',
-            'sprints.*.fechaEntrega' => 'required|date',
-            'sprints.*.entregables' => 'required|string',
-        ], [
-            'sprints.*.fechaFin.after_or_equal' => 'La fecha de fin debe ser después o igual a la fecha de inicio.',
+        $validatedData = $request->validate([
+            'idEmpresa' => 'required|integer',
         ]);
-    
-        try {
-            // Comenzar la transacción
-            DB::beginTransaction();
-    
-            // Crear la planificación
-            $planificacion = Planificacion::create([
-                'aceptada' => $request->aceptada,
-                'comentarioDocente' => $request->comentarioDocente,
-                'fechaEntrega' => $request->fechaEntrega,
-                'idEmpresa' => $request->idEmpresa,
-                'notaPlanificacion' => $request->notaPlanificacion,
+
+        $planificacion = Planificacion::where('idEmpresa', $validatedData['idEmpresa'])->first();
+
+        if ($planificacion === null) {
+            return response()->json(['error' => 'Planificación no encontrada para esta empresa'], 404);
+        } else {
+            $planificacion->aceptada = 1;
+            $planificacion->publicada = 1;
+            $planificacion->save();
+            return response()->json([
+                'message' => 'Planificación aceptada con éxito',
+                'planificacion' => $planificacion
             ]);
+        }
+    }
     
-            // Insertar los sprints
-            foreach ($request->sprints as $sprintData) {
-                Sprint::create([
-                    'idPlanificacion' => $planificacion->idPlanificacion,
-                    'notasprint' => 0, // Cambia esto si tienes un valor específico
-                    'comentariodocente' => $request->comentarioDocente,
-                    'entregables' => $sprintData['entregables'],
-                    'fechaEntrega' => $sprintData['fechaEntrega'],
-                    'cobro' => $sprintData['cobro'],
-                    'fechaFin' => $sprintData['fechaFin'],
-                    'fechaIni' => $sprintData['fechaIni'],
-                ]);
+    public function rechazar(Request $request)
+    {
+        $validatedData = $request->validate([
+            'idEmpresa' => 'required|integer',
+        ]);
+
+        $planificacion = Planificacion::where('idEmpresa', $validatedData['idEmpresa'])->first();
+
+        if ($planificacion === null) {
+            return response()->json(['error' => 'Planificación no encontrada para esta empresa'], 404);
+        } else {
+            $planificacion->aceptada = 0;
+            $planificacion->publicada = 0;
+            $planificacion->save();
+            return response()->json([
+                'message' => 'Planificación rechazada con éxito',
+                'planificacion' => $planificacion
+            ]);
+        }
+    }
+
+    public function publicar(Request $request)
+    {
+        $validatedData = $request->validate([
+            'idEmpresa' => 'required|integer',
+        ]);
+
+        $planificacion = Planificacion::where('idEmpresa', $validatedData['idEmpresa'])->first();
+
+        if ($planificacion === null) {
+            return response()->json(['error' => 'Planificación no encontrada para esta empresa'], 404);
+        } else {
+            $planificacion->publicada = 1;
+            $planificacion->save();
+            return response()->json([
+                'message' => 'Planificación publicada con éxito',
+                'planificacion' => $planificacion
+            ]);
+        }
+    }
+
+    public function modificarPlanificacion(Request $request): JsonResponse
+    {
+        //validar datos
+        $validator = Validator::make($request->all(), [
+            'aceptada' => 'required|boolean',
+            'comentarioDocente' => 'string',
+            'idEmpresa' => 'required|integer|exists:empresa,idEmpresa',
+        ]);
+        // si no valida, devuelve error
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Los datos proporcionados no son válidos.',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+        //consigue los datos validados
+        $validatedData = $validator->validated();
+        try {
+            // verifica que  la planificación exista
+            $planificacion = Planificacion::where('idEmpresa', $validatedData['idEmpresa'])->first();
+
+            if ($planificacion !== null) {
+                // si la planificacion existe, se actualiza la fechaEntrega y se eliminan los campos de notaplanificacion y comentariodocente
+                $planificacion->fechaEntrega = Carbon::now('America/Caracas')->format('Y-m-d H:i:s'); // ajustado a la zona horaria de Bolivia
+                $planificacion->comentariopublico = null;
+                $planificacion->save();
+            } else {
+                // si la planificacion no existe, se crea una nueva planificacion
+                $planificacion = new Planificacion();
+                $planificacion->idEmpresa = $validatedData['idEmpresa'];
+                $planificacion->aceptada = null;
+                $planificacion->publicada = 0;
+                $planificacion->fechaEntrega = Carbon::now('America/Caracas')->format('Y-m-d H:i:s');
+                $planificacion->save();
             }
-    
-            // Confirmar la transacción
             DB::commit();
-    
-            // Retornar una respuesta exitosa
             return response()->json([
-                'message' => 'Planificación y sprints creados exitosamente',
-                'idPlanificacion' => $planificacion->idPlanificacion,
-                'sprints' => $planificacion->sprints,
+                'message' => 'La Planificación fue modificada correctamente',
             ], 200);
-    
         } catch (\Exception $e) {
-            // Revertir la transacción en caso de error
             DB::rollBack();
-    
-            // Retornar un mensaje de error
             return response()->json([
-                'message' => 'Error al crear la planificación: ' . $e->getMessage(),
+                'message' => 'Hubo un error al modificar la Planificación',
+                'error' => $e->getMessage()
             ], 500);
         }
     }
-    
-    public function obtenerDocentePorEmpresa($idEmpresa): JsonResponse
+    public function testModificarPlanificacion()
     {
-        // Obtener el primer estudiante asociado a la empresa
-        $estudianteEmpresa = EstudiantesEmpresas::where('idEmpresa', $idEmpresa)->first();
-
-        if (!$estudianteEmpresa) {
-            return response()->json(['error' => 'No se encontraron estudiantes para esta empresa'], 404);
-        }
-
-        // Obtener el ID del estudiante
-        $idEstudiante = $estudianteEmpresa->idEstudiante;
-
-        // Obtener el grupo del estudiante
-        $grupo = Grupo::whereHas('estudiantes', function ($query) use ($idEstudiante) {
-            $query->where('idEstudiante', $idEstudiante);
-        })->first();
-
-        if (!$grupo) {
-            return response()->json(['error' => 'El estudiante no pertenece a ningún grupo'], 404);
-        }
-
-        // Obtener el docente del grupo
-        $docente = $grupo->docente;
-
-        if ($docente) {
-            return response()->json([
-                $docente->nombreDocente,$docente->primerApellido,$docente->segundoApellido,
-            ]);
-        }
-
-        return response()->json(['error' => 'Docente no encontrado'], 404);
-    }
-
-    public function obtenerDetallesSprint($idSprint): JsonResponse
-    {
-        // Obtener el sprint con sus semanas y las tareas de cada semana
-        $sprint = Sprint::with(['semanas.tareas'])->find($idSprint);
-
-        if (!$sprint) {
-            return response()->json(['error' => 'Sprint no encontrado'], 404);
-        }
-
-        // Estructurar la respuesta
-        $response = [
-            'semanas' => $sprint->semanas->map(function ($semana) {
-                return [
-                    'idSemana' => $semana->idSemana,
-                    'tareas' => $semana->tareas->map(function ($tarea) {
-                        return [
-                            'idTarea' => $tarea->idTarea
-                        ];
-                    }),
-                ];
-            }),
-            'sprintComentario' => $sprint->comentariodocente, // Comentario del docente del sprint
-            'sprintNota' => $sprint->notasprint // Nota del sprint
+        // Simular una solicitud con datos de prueba
+        $requestData = [
+            'aceptada' => true,
+            'comentariopublico' => 'Comentario de prueba',
+            'idEmpresa' => 1, // Asegúrate de que este ID exista en tu base de datos
         ];
 
-        return response()->json($response);
+        // Crear una nueva instancia de Request con los datos de prueba
+        $request = new Request($requestData);
+
+        // Llamar a la función modificarPlanificacion
+        $response = $this->modificarPlanificacion($request);
+        return $response;
     }
-    
 }

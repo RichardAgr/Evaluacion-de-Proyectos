@@ -1,29 +1,27 @@
 import { Fragment } from 'react';
 import styled from '@emotion/styled'
-function infoEmpresa({nombreLargo, nombreCorto}) {
+import {
+    Box,
+    Typography,
+    List,
+    ListItem,
+    ListItemText,
+    Paper,
+  } from "@mui/material";
+function NombreEmpresa({nombreLargo, nombreCorto}) {
   return (
-    <Fragment>
-        <ContainerInfoEmpresa>
-            <h1>{nombreLargo}</h1>
-             <h2>{nombreCorto}</h2>
-        </ContainerInfoEmpresa>
-    </Fragment>
+    <Paper elevation={1} sx={{ p: 2, my: 1 }}>
+      <Box sx={{ textAlign: "center", mb: 1 }}>
+        <Typography variant="subtitle" component="h1" gutterBottom>
+          {nombreCorto}
+        </Typography>
+        <Typography variant="subtitle" component="h3" color="text.secondary">
+          {nombreLargo}
+        </Typography>
+        </Box>
+    </Paper>
   );
 }
 
-export default infoEmpresa;
+export default NombreEmpresa;
 
-let ContainerInfoEmpresa = styled.div`
-    width: 100%;
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-    border: 0.3rem solid black;
-    border-radius: 0.3rem;
-        -webkit-border-radius: 0.3rem;
-        -moz-border-radius: 0.3rem;
-        -ms-border-radius: 0.3rem;
-        -o-border-radius: 0.3rem;
-    h1,h2{
-        text-align: center;
-    }
-`
