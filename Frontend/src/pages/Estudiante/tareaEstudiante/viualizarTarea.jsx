@@ -120,7 +120,6 @@ function VisualizarTarea() {
                 </ArchivosWrapper>
               </ArchivosSection>
             </div>
-
             <h3>Descripcion de la tarea</h3>
             <Rectangulo>{descripcion}</Rectangulo>
 

@@ -29,11 +29,6 @@ class TareaController extends Controller
         ->where('tareasestudiantes.idTarea', $idTarea)
         ->get();
 
-    // Obtener archivos de la tarea
-    $archivosTarea = ArchivoTarea::where('idTarea', $idTarea)
-        ->select('idArchivo', 'archivo', 'nombreArchivo')
-        ->get();
-    Log::info('Archivos de tarea:', $archivosTarea->toArray());
 
     // Formar la respuesta
     $respuesta = [
@@ -42,23 +37,7 @@ class TareaController extends Controller
         'comentario' => $tarea->comentario,
         'textotarea' => $tarea->textoTarea,
         'fechentregado' => $tarea->fechaEntrega,
-        'estudiantes' => $estudiantes,
-        'archivotarea' => $archivosTarea->map(function ($archivo) {
-            // Decodificar el archivo Base64
-            $contenidoArchivo = base64_decode($archivo->archivo);
-            // Guardar el archivo en el sistema de almacenamiento
-            $rutaArchivo = 'public/archivos/' . $archivo->nombreArchivo; // Asegúrate de que esté en 'public/archivos'
-
-
-            Storage::put($rutaArchivo, $contenidoArchivo); // Guardar el archivo
-
-            // Generar la URL del archivo guardado
-            return [
-                'idArchivo' => $archivo->idArchivo,
-                'archivo' => url(Storage::url($rutaArchivo)),  // Generar la URL completa
-                'nombreArchivo' => $archivo->nombreArchivo
-            ];
-        }),
+        'estudiantes' => $estudiantes
     ];
 
     return response()->json($respuesta);
@@ -115,8 +94,6 @@ class TareaController extends Controller
             // Validar los datos de entrada
             $request->validate([
                 'textotarea' => 'required|string',
-                'files' => 'nullable|array',
-                'deletedFiles' => 'nullable|array',
                 'responsables' => 'nullable|array',
             ]);
 
@@ -130,35 +107,9 @@ class TareaController extends Controller
             $tarea->textoTarea = $request->input('textotarea');
             $tarea->save();
 
-            // Eliminar archivos en deletedFiles
-            if ($request->has('deletedFiles')) {
-                foreach ($request->input('deletedFiles') as $idArchivo) {
-                    if ($idArchivo != -1) {
-                        $archivoTarea = ArchivoTarea::find($idArchivo);
-                        if ($archivoTarea && $archivoTarea->idTarea == $idTarea) {
-                            $archivoTarea->delete();
-                        }
-                    }
-                }
-            }
 
             // Eliminar responsables actuales de la tarea
             TareaEstudiante::where('idTarea', $idTarea)->delete();
-
-            // Procesar y guardar archivos nuevos
-            if ($request->has('files')) {
-                foreach ($request->input('files') as $fileData) {
-                    if ($fileData['idArchivo'] === "-1") {
-                        // Guardar el archivo en la base de datos
-                        ArchivoTarea::create([
-                            'idTarea' => $idTarea,
-                            'archivo' => $fileData['archivoBase64'], // Guardar el contenido base64
-                            'fechaEntrega' => now(),
-                            'nombreArchivo' => $fileData['name']
-                        ]);
-                    }
-                }
-            }
 
             // Agregar responsables
             if ($request->has('responsables')) {

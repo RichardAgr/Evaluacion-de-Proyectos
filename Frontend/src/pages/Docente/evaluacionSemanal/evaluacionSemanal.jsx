@@ -23,7 +23,6 @@ const EvaluarHito = () => {
         setNombreEmpresa({ nombreCorto: data.nombreEmpresa, nombreLargo: data.nombreLargo });
     } catch (error) {
         console.error('Error en la solicitud:', error);
-        setError(error.message);
     }
   };
     useEffect(() => {

@@ -50,7 +50,7 @@ class GrupoController extends Controller
             ->where('grupo.gestionGrupo',$request -> gestionGrupo)
             ->select(
                 'grupo.numGrupo', 
-                'estudiante.idEstudiante',
+                'estudiante.idEstudiante as id',
                 'estudiante.nombreEstudiante as nombreEstudiante', 
                 'estudiante.primerApellido as apellidoPaternoEstudiante', 
                 'estudiante.segundoApellido as apellidoMaternoEstudiante',
