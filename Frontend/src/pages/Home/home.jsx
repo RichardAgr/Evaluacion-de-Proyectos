@@ -38,20 +38,8 @@ function Home() {
 
   const teacherButtons = [
     {
-      label: "Ver Planificación",
-      onClick: () => navigate("/visualizarPlanificacion"),
-    },
-    {
-      label: "Modificar Planificación",
-      onClick: () => navigate("/modificarPlanificacion/empresa/1"),
-    },
-    {
       label: "Validar Planificaciones",
       onClick: () => navigate("/validarPlanificacion/"),
-    },
-    {
-      label: "Publicar Planificación",
-      onClick: () => navigate("/publicarPlanificacion/empresa/1"),
     },
     {
       label: "Calificar Sprint",
@@ -85,17 +73,19 @@ function Home() {
       label: "Grupos Disponibles",
       onClick: () => navigate("/homeEstudiante/gruposDisponibles"),
     },
-    {
-      label: "Ver Nota Sprint",
-      onClick: () =>
-        navigate(
-          "homeEstudiante/homeGrupoEstudiante/empresas/1/calificaciones"
-        ),
-    },
+
     {
       label: "Modificar Tarea",
       onClick: () =>
         navigate("/homeEstudiante/homeGrupoEstudiante/sprint/semana/tareas/1"),
+    },
+
+  ];
+
+  const sharedButtons = [
+    {
+      label: "Visualizar tareas",
+      onClick: () => navigate("/homeEstudiante/homeGrupoEstudiante/sprint/1"),
     },
     {
       label: "Ver Calificaciones",
@@ -105,14 +95,24 @@ function Home() {
         ),
     },
     {
-      label: "Visualizar Sprint",
-      onClick: () => navigate("/homeEstudiante/homeGrupoEstudiante/sprint/1"),
+      label: "Ver Nota Sprint",
+      onClick: () =>
+        navigate(
+          "homeEstudiante/homeGrupoEstudiante/empresas/1/calificaciones"
+        ),
     },
-  ];
-
-  const sharedButtons = [
-
-
+    {
+      label: "Ver Planificación",
+      onClick: () => navigate("/visualizarPlanificacion"),
+    },
+    {
+      label: "Modificar Planificación",
+      onClick: () => navigate("/modificarPlanificacion/empresa/1"),
+    },
+    {
+      label: "Publicar Planificación",
+      onClick: () => navigate("/publicarPlanificacion/empresa/1"),
+    },
   ];
 
 
@@ -126,6 +126,7 @@ function Home() {
         </Typography>
         <ButtonGroup title="Acciones del Docente" buttons={teacherButtons} />
         <ButtonGroup title="Acciones del Estudiante" buttons={studentButtons} />
+        <ButtonGroup title="Acciones Compartidas" buttons={sharedButtons} />
       </Container>
       <Footer />
     </>
