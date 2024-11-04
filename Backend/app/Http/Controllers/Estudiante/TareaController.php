@@ -9,39 +9,63 @@ use App\Models\Tarea;
 use App\Models\Estudiante;
 use App\Models\ArchivoTarea;
 use App\Models\TareaEstudiante;
+use App\Models\Semana;
+use App\Models\Sprint;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Carbon;
 class TareaController extends Controller
 {
     public function obtenerTarea($idTarea)
-{
-    $tarea = Tarea::find($idTarea);
+    {
+        $tarea = Tarea::find($idTarea);
 
-    if (!$tarea) {
-        return response()->json(['error' => 'Tarea no encontrada'], 404);
+        if (!$tarea) {
+            return response()->json(['error' => 'Tarea no encontrada'], 404);
+        }
+
+        // Obtener estudiantes de la tarea
+        $estudiantes = DB::table('estudiante')
+            ->join('tareasestudiantes', 'tareasestudiantes.idEstudiante', '=', 'estudiante.idEstudiante')
+            ->select('estudiante.idEstudiante', 'nombreEstudiante', 'primerApellido', 'segundoApellido')
+            ->where('tareasestudiantes.idTarea', $idTarea)
+            ->get();
+
+        // Obtener archivos de la tarea
+        $archivosTarea = ArchivoTarea::where('idTarea', $idTarea)
+            ->select('idArchivo', 'archivo', 'nombreArchivo')
+            ->get();
+        Log::info('Archivos de tarea:', $archivosTarea->toArray());
+
+        // Formar la respuesta
+        $respuesta = [
+            'idSemana' => $tarea->idSemana,
+            'nombreTarea' => $tarea->nombreTarea,
+            'comentario' => $tarea->comentario,
+            'textotarea' => $tarea->textoTarea,
+            'fechentregado' => $tarea->fechaEntrega,
+            'estudiantes' => $estudiantes,
+            'archivotarea' => $archivosTarea->map(function ($archivo) {
+                // Decodificar el archivo Base64
+                $contenidoArchivo = base64_decode($archivo->archivo);
+                // Guardar el archivo en el sistema de almacenamiento
+                $rutaArchivo = 'public/archivos/' . $archivo->nombreArchivo; // Asegúrate de que esté en 'public/archivos'
+
+
+                Storage::put($rutaArchivo, $contenidoArchivo); // Guardar el archivo
+
+                // Generar la URL del archivo guardado
+                return [
+                    'idArchivo' => $archivo->idArchivo,
+                    'archivo' => url(Storage::url($rutaArchivo)),  // Generar la URL completa
+                    'nombreArchivo' => $archivo->nombreArchivo
+                ];
+            }),
+        ];
+
+        return response()->json($respuesta);
     }
-
-    // Obtener estudiantes de la tarea
-    $estudiantes = DB::table('estudiante')
-        ->join('tareasestudiantes', 'tareasestudiantes.idEstudiante', '=', 'estudiante.idEstudiante')
-        ->select('estudiante.idEstudiante', 'nombreEstudiante', 'primerApellido', 'segundoApellido')
-        ->where('tareasestudiantes.idTarea', $idTarea)
-        ->get();
-
-
-    // Formar la respuesta
-    $respuesta = [
-        'idSemana' => $tarea->idSemana,
-        'nombreTarea' => $tarea->nombreTarea,
-        'comentario' => $tarea->comentario,
-        'textotarea' => $tarea->textoTarea,
-        'fechentregado' => $tarea->fechaEntrega,
-        'estudiantes' => $estudiantes
-    ];
-
-    return response()->json($respuesta);
-}
 
     //************************************ POSTS*************************** */
     public function store(Request $request)
@@ -122,18 +146,71 @@ class TareaController extends Controller
             }
 
             return response()->json(['message' => 'Tarea actualizada correctamente'], 200);
-
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
-    public function crearTarea(Request $request){
+    public function crearTarea(Request $request)
+    {
         $sprint = $request->input('sprint');
         $semana = $request->input('semana');
         $nombreTarea = $request->input('nombreTarea');
 
         $resultado = DB::table('tarea as t');
-       // ->join('semana as s','s.idSemana',)
+        // ->join('semana as s','s.idSemana',)
+    }
+
+    public function getTareasSemana($idEmpresa, $idSprint, $idSemana)
+    {
+        try {
+            $tareas = Tarea::where('idSemana', $idSemana)->get();
+
+            $numeroSemana = Semana::where('idSemana', $idSemana)->value('numeroSemana');
+            $numeroSprint = Sprint::where('idSprint', $idSprint)->value('numeroSprint');
+
+            return response()->json([
+                'numeroSemana' => $numeroSemana,
+                'numeroSprint' => $numeroSprint,
+                'tareas' => $tareas,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error al obtener las tareas: ' . $e->getMessage()], 500);
+        }
+    }
+
+    // Actualizar las tareas de una semana específica
+    public function updateTareasSemana(Request $request, $idEmpresa, $idSprint, $idSemana)
+    {
+        try {
+            $tareas = $request->input('tareas');
+
+            foreach ($tareas as $tareaData) {
+                if (isset($tareaData['idTarea']) && !empty($tareaData['deleted'])) {
+                    // Eliminar tarea
+                    Tarea::where('idTarea', $tareaData['idTarea'])->delete();
+                } elseif (isset($tareaData['idTarea'])) {
+                    // Actualizar tarea existente
+                    Tarea::where('idTarea', $tareaData['idTarea'])->update([
+                        'nombreTarea' => $tareaData['nombreTarea'],
+                        'comentario' => $tareaData['comentario'] ?? '',
+                        'fechaEntrega' => $tareaData['fechaEntrega'] ?? null,
+                    ]);
+                } else {
+                    // Crear nueva tarea si no tiene idTarea
+                    Tarea::create([
+                        'idSemana' => $idSemana,
+                        'nombreTarea' => $tareaData['nombreTarea'],
+                        'textoTarea' => '',
+                        'comentario' => $tareaData['comentario'] ?? '',
+                        'fechaEntrega' => $tareaData['fechaEntrega'] ?? Carbon::now(),
+                    ]);
+                }
+            }
+
+            return response()->json(['message' => 'Tareas actualizadas correctamente'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error al actualizar las tareas: ' . $e->getMessage()], 500);
+        }
     }
 }
