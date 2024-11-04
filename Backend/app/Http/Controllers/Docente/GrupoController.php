@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Docente;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-
+use App\Http\Controllers\Controller;
 use function Laravel\Prompts\select;
 
 class GrupoController extends Controller
@@ -33,12 +33,12 @@ class GrupoController extends Controller
         return response()->json($gruposDocentes, 200);
     }
 
-    public function obtenerEstudiantesPorGrupo($idGrupo,$gestionGrupo)
+    public function obtenerEstudiantesPorGrupo(Request $request)
     {
-        /*$request->validate([
+        $request->validate([
             'idGrupo' => 'required|integer',
             'gestionGrupo' => 'required|string'
-        ]);*/
+        ]);
         // Consulta para obtener todos los estudiantes y el docente del grupo
         $datosGrupo = DB::table('estudiantesgrupos')
             ->join('grupo', 'estudiantesgrupos.idGrupo', '=', 'grupo.idGrupo')
@@ -46,11 +46,11 @@ class GrupoController extends Controller
             ->join('docente', 'grupo.idDocente', '=', 'docente.idDocente')
             ->join('estudiantesempresas AS ee', 'estudiantesgrupos.idEstudiante', '=', 'ee.idEstudiante')
             ->join('empresa AS emp', 'ee.idEmpresa', '=', 'emp.idEmpresa')
-            ->where('grupo.idGrupo',"=",   $idGrupo)
-            ->where('grupo.gestionGrupo',$gestionGrupo)
+            ->where('grupo.idGrupo',"=",   $request -> idGrupo)
+            ->where('grupo.gestionGrupo',$request -> gestionGrupo)
             ->select(
                 'grupo.numGrupo', 
-                'estudiante.idEstudiante',
+                'estudiante.idEstudiante as id',
                 'estudiante.nombreEstudiante as nombreEstudiante', 
                 'estudiante.primerApellido as apellidoPaternoEstudiante', 
                 'estudiante.segundoApellido as apellidoMaternoEstudiante',
@@ -71,11 +71,12 @@ class GrupoController extends Controller
     }
     public function obtenerEmpresasPorGrupoYDocente(Request $request)
     {
+        // Validar los parámetros de entrada
         $request->validate([
-            'idDocente' => 'required|integer',
             'gestionGrupo' => 'required|string',
-            //'idGrupo' => 'required|integer'
         ]);
+        $idDocente = session()->get('docente.id');
+        
         // Ejecutar la consulta
             $resultados = DB::table('estudiantesgrupos AS eg')
             ->join('grupo AS g', 'eg.idGrupo', '=', 'g.idGrupo')
@@ -84,9 +85,9 @@ class GrupoController extends Controller
             ->join('empresa AS emp', 'ee.idEmpresa', '=', 'emp.idEmpresa')
             ->join('estudiante AS e', 'eg.idEstudiante', '=', 'e.idEstudiante')
             ->select('emp.nombreEmpresa','emp.nombreLargo', 'g.gestionGrupo', DB::raw('count(eg.idEstudiante) as totalEstudiantes'), 'g.numGrupo')
-            ->where('d.idDocente', $request->idDocente)
+            ->where('d.idDocente', $idDocente)
            // ->where('g.idGrupo', $request->idGrupo)
-            ->where('g.gestionGrupo', $request->gestionGrupo)
+            ->where('g.gestionGrupo', $request -> gestionGrupo)
             ->groupBy('emp.nombreEmpresa', 'emp.nombreLargo','g.gestionGrupo', 'g.numGrupo')
             -> orderByDesc('g.gestionGrupo')
             ->orderBy('emp.nombreEmpresa')
@@ -135,7 +136,7 @@ class GrupoController extends Controller
         ]);
     
         $termino = $request->input('termino');
-        $idDocente = 1;
+        $idDocente = session()->get('docente.id');
     
         $busqueda = DB::table('estudiantesgrupos AS eg')
             ->join('grupo AS g', 'eg.idGrupo', '=', 'g.idGrupo')
@@ -192,7 +193,7 @@ class GrupoController extends Controller
 
         // Si no se encuentran resultados
         if (empty(trim($valor))) {
-            return $this->obtenerEstudiantesPorGrupo($idGrupo, $gestionGrupo);
+            return $this->obtenerEstudiantesPorGrupo($request);
         }
 
         return response()->json($datosGrupo, 200);

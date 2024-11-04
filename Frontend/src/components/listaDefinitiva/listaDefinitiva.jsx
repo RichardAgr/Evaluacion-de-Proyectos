@@ -85,7 +85,7 @@ const Container = styled('div')`
         padding-bottom: 2rem;
         font-weight: bold;
         white-space: nowrap;
-    }
+    }   
     .tableRow--body {
         cursor: default;
         transition: background-color 0.3s;

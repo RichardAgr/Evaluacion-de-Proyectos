@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import Paper from '@mui/material/Paper';
 import { Fragment, useState, useEffect } from 'react';
@@ -7,7 +6,6 @@ import TextField from '@mui/material/TextField';
 import BaseUI from '../../../../components/baseUI/baseUI';
 import Alert from '@mui/material/Alert';
 import SearchIcon from '@mui/icons-material/Search';
-import Typography from '@mui/material/Typography';
 
 const columns = [
   {

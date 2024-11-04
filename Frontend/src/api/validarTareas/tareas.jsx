@@ -51,15 +51,15 @@ export const updateTarea = async (idTarea, formData) => {
   try {
     // Crear objeto FormData para enviar archivos correctamente
     const data = new FormData();
-    data.append('idTarea', idTarea);
-    data.append('textotarea', formData.descripcion);
+    data.append("idTarea", idTarea);
+    data.append("textotarea", formData.descripcion);
 
     // Agregar archivos a FormData
     formData.files.forEach((file, index) => {
       console.log(file);
-      if (file.idArchivo === "-1") { 
+      if (file.idArchivo === "-1") {
         // Archivos nuevos (con archivoBase64)
-        data.append(`files[${index}][name]`, file.name); 
+        data.append(`files[${index}][name]`, file.name);
         data.append(`files[${index}][idArchivo]`, file.idArchivo);
         data.append(`files[${index}][archivoBase64]`, file.archivoBase64);
       } else {
@@ -71,26 +71,94 @@ export const updateTarea = async (idTarea, formData) => {
 
     // Agregar IDs de archivos eliminados
     formData.deletedFiles.forEach((idArchivo, index) => {
-      console.log(idArchivo)
+      console.log(idArchivo);
       data.append(`deletedFiles[${index}]`, idArchivo);
     });
 
     // Agregar responsables
     formData.responsables.forEach((responsable, index) => {
-      data.append(`responsables[${index}][idEstudiante]`, responsable.idEstudiante);
+      data.append(
+        `responsables[${index}][idEstudiante]`,
+        responsable.idEstudiante
+      );
     });
 
     // Enviar solicitud con FormData
-    const response = await fetch(`http://127.0.0.1:8000/api/tarea/${idTarea}/guardar`, {
-      method: "POST",
-      body: data,
-    });
+    const response = await fetch(
+      `http://127.0.0.1:8000/api/tarea/${idTarea}/guardar`,
+      {
+        method: "POST",
+        body: data,
+      }
+    );
 
     if (!response.ok) {
       throw new Error("Error al actualizar la tarea");
     }
 
     return response;
+  } catch (error) {
+    console.error("Error en la solicitud:", error);
+    throw error;
+  }
+};
+
+export const getTareasSemana = async (idEmpresa, idSprint, idSemana) => {
+  try {
+    const response = await fetch(
+      `http://127.0.0.1:8000/api/empresa/${idEmpresa}/sprint/${idSprint}/semana/${idSemana}/tareas`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Error al obtener las tareas");
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error en la solicitud:", error);
+    throw error;
+  }
+};
+
+export const updateTareasSemana = async (
+  idEmpresa,
+  idSprint,
+  idSemana,
+  tareas
+) => {
+  try {
+    const response = await fetch(
+      `http://127.0.0.1:8000/api/empresa/${idEmpresa}/sprint/${idSprint}/semana/${idSemana}/tareas`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          tareas: tareas.map((task) => ({
+            idTarea: task.idTarea ?? null, // idTarea será null si es una nueva tarea
+            nombreTarea: task.nombreTarea,
+            comentario: task.comentario ?? "",
+            fechaEntrega: task.fechaEntrega ?? null,
+            deleted: task.deleted ?? false,
+          })),
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Error al actualizar las tareas");
+    }
+
+    const data = await response.json();
+    return data;
   } catch (error) {
     console.error("Error en la solicitud:", error);
     throw error;

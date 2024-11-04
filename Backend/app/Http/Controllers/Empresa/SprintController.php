@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Empresa;
 
 use Illuminate\Http\Request;
 use App\Models\Planificacion;
@@ -13,7 +13,7 @@ use App\Models\Semana;
 use App\Models\Tarea;
 use App\Models\Empresa;
 use App\Models\NotaSprint;
-
+use App\Http\Controllers\Controller;
 
 class SprintController extends Controller
 {
