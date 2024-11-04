@@ -7,6 +7,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  TableFooter,
   Paper,
   Button,
   TextField,
@@ -16,6 +17,7 @@ import {
   ListItem,
   ListItemText,
   AlertTitle,
+  Typography,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -28,7 +30,7 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
   const [rows, setRows] = useState([]);
   const [openEntregables, setOpenEntregables] = useState(false);
   const [currentSprintIndex, setCurrentSprintIndex] = useState(-1);
-
+  const [totalCharge, setTotalCharge] = useState(0);
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",
@@ -44,7 +46,7 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
     setCurrentSprintIndex(index);
     setOpenEntregables(true);
   };
-  
+
   const errorTranslations = {
     "The comentario field must be a string.":
       "El comentario para el grupo no debe estar vacio.",
@@ -104,7 +106,14 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
       };
     });
     setRows(newRows);
+    updateTotalCharge(newRows);
   }, [planificacionData]);
+
+  const updateTotalCharge = (newRows) => {
+    const total = newRows.reduce((sum, row) => sum + parseFloat(row.cobro || 0), 0);
+    setTotalCharge(total);
+  };
+
   const addRow = () => {
     if (rows.length >= 10) {
       setSnackbar({
@@ -198,6 +207,9 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
       }
     }
     setRows(newRows);
+    if (field === 'cobro') {
+      updateTotalCharge(newRows);
+    }
   };
 
   const fieldNames = {
@@ -402,7 +414,7 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
                 <TableCell align="left">Fecha Inicio</TableCell>
                 <TableCell align="left">Fecha Fin</TableCell>
                 <TableCell align="left">Fecha Entrega</TableCell>
-                <TableCell align="left">Cobro (Bs)</TableCell>
+                <TableCell align="left">Cobro (%)</TableCell>
                 <TableCell align="left">Entregables</TableCell>
                 <TableCell align="left"></TableCell>
               </TableRow>
@@ -504,6 +516,21 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
                 </TableRow>
               ))}
             </TableBody>
+            <TableFooter>
+              <TableRow>
+                <TableCell colSpan={4} align="right">
+                  <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+                    Cobro total:
+                  </Typography>
+                </TableCell>
+                <TableCell align="left">
+                  <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+                    {totalCharge.toFixed(2)}%
+                  </Typography>
+                </TableCell>
+                <TableCell colSpan={2}></TableCell>
+              </TableRow>
+            </TableFooter>
           </Table>
         </TableContainer>
         {rows.length < 10 && (

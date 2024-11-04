@@ -36,13 +36,16 @@ class SprintController extends Controller
                 'date',
                 'after_or_equal:sprints.*.fechaFin',
             ],
-            'cobro' => 'required|numeric|between:1,100|regex:/^\d+(\.\d{1,2})?$/'
+            'sprints.*.cobro' => 'required|numeric|between:0,100|regex:/^\d+(\.\d{1,2})?$/'
 
         ]);
-        // * verificar que ninguno  de los sprints tenga la
+
+        // * verificar que ninguno de los sprints tenga la
         // * fecha de inicio anterior a la fecha fin del anterior sprint
         $validator->after(function ($validator) use ($request) {
             $sprints = $request->input('sprints');
+            $totalCobro = 0;
+
             for ($i = 0; $i < count($sprints); $i++) {
                 $startDate = Carbon::parse($sprints[$i]['fechaIni']);
                 $endDate = Carbon::parse($sprints[$i]['fechaFin']);
@@ -59,19 +62,14 @@ class SprintController extends Controller
                         $validator->errors()->add("sprints.{$i}.fechaIni", 'La fecha de inicio no puede ser anterior a la fecha de fin del sprint anterior.');
                     }
                 }
+
+                // Sumar el cobro de cada sprint
+                $totalCobro += $sprints[$i]['cobro'];
             }
-        });
 
-
-        // Verificar que el total de los cobros no exceda 100
-        $validator->after(function ($validator) use ($request) {
-            $totalCobro = collect($request->input('sprints'))
-                ->sum('cobro');
-
-            if ($totalCobro > 100) {
-                $validator->errors()->add('cobro', 'La suma de todos los cobros no debe exceder 100.');
-            } elseif ($totalCobro<100){
-                $validator->errors()->add('cobro', 'La suma de todos los cobros no debe ser menor que 100.');
+            // Verificar que el total de cobro sea exactamente 100
+            if ($totalCobro != 100) {
+                $validator->errors()->add('sprints', 'La suma total de los cobros de todos los sprints debe ser exactamente 100%.');
             }
         });
 
