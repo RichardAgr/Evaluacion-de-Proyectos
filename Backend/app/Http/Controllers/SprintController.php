@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Http\Request;
 use App\Models\Planificacion;
 use App\Models\Sprint;
@@ -35,7 +36,7 @@ class SprintController extends Controller
                 'date',
                 'after_or_equal:sprints.*.fechaFin',
             ],
-            'sprints.*.cobro' => 'required|numeric|regex:/^\d+(\.\d{1,2})?$/',
+            'cobro' => 'required|numeric|between:1,100|regex:/^\d+(\.\d{1,2})?$/'
 
         ]);
         // * verificar que ninguno  de los sprints tenga la
@@ -60,7 +61,20 @@ class SprintController extends Controller
                 }
             }
         });
-        
+
+
+        // Verificar que el total de los cobros no exceda 100
+        $validator->after(function ($validator) use ($request) {
+            $totalCobro = collect($request->input('sprints'))
+                ->sum('cobro');
+
+            if ($totalCobro > 100) {
+                $validator->errors()->add('cobro', 'La suma de todos los cobros no debe exceder 100.');
+            } elseif ($totalCobro<100){
+                $validator->errors()->add('cobro', 'La suma de todos los cobros no debe ser menor que 100.');
+            }
+        });
+
         // * devuelve todos los errores en un array error[]
         if ($validator->fails()) {
             return response()->json([
@@ -82,7 +96,7 @@ class SprintController extends Controller
 
             // * buscar y eliminar los sprints anteriores
             Sprint::where('idPlanificacion', $idPlanificacion)->delete();
-            $numeroSprint=1; //contador para indicar el numero del Sprint en el que se encuentra
+            $numeroSprint = 1; //contador para indicar el numero del Sprint en el que se encuentra
             $sprintsInfo = []; // guardar los datos de los  sprints para poder guardar sus entregables en ellos
             // * insertar los sprints actuales
             foreach ($validatedData['sprints'] as $sprintData) {
@@ -94,7 +108,7 @@ class SprintController extends Controller
                 $sprint->fechaEntrega = $sprintData['fechaEntrega'];
                 $sprint->cobro = $sprintData['cobro'];
                 $sprint->save();
-                
+
                 $sprintsInfo[] = [
                     'idSprint' => $sprint->idSprint,
                     'numeroSprint' => $sprint->numeroSprint
@@ -170,23 +184,23 @@ class SprintController extends Controller
     {
         // Obtener el sprint con su comentario y nota
         $sprint = Sprint::find($idSprint, ['idSprint', 'comentariodocente']);
-        
+
         // Verificar si el sprint existe
         if (!$sprint) {
             return response()->json(['error' => 'Sprint no encontrado'], 404);
         }
-    
+
         // Obtener los datos de las semanas asociadas al sprint
         $semanas = Semana::where('idSprint', $idSprint)->get(['idSemana']);
-    
+
         // Preparar la respuesta
         $response = [
             'idSprint' => $sprint->idSprint,
             'comentario' => $sprint->comentariodocente,
-           // 'nota' => $sprint->notasprint,
+            // 'nota' => $sprint->notasprint,
             'semanas' => []
         ];
-    
+
         // Iterar sobre cada semana para obtener las tareas
         foreach ($semanas as $semana) {
             // Obtener las tareas asociadas a la semana
@@ -195,14 +209,14 @@ class SprintController extends Controller
                 'idSemana',
                 'textoTarea'
             ]);
-            
+
             // Agregar la semana y sus tareas al response
             $response['semanas'][] = [
                 'idSemana' => $semana->idSemana,
                 'tareas' => $tareas
             ];
         }
-    
+
         // Devolver la respuesta en formato JSON
         return response()->json($response);
     }
@@ -214,22 +228,22 @@ class SprintController extends Controller
 
         // Verificar si la tarea existe
         if (!$tarea) {
-        return response()->json(['error' => 'Tarea no encontrada'], 404);
+            return response()->json(['error' => 'Tarea no encontrada'], 404);
         }
 
         // Obtener los estudiantes encargados de la tarea a través de la tabla tareasEstudiante
         $estudiantes = DB::table('tareasEstudiantes')
-        ->join('estudiante', 'tareasEstudiantes.idEstudiante', '=', 'estudiante.idEstudiante') 
-        ->join('fotoestudiante', 'estudiante.idEstudiante', '=', 'fotoestudiante.idEstudiante')
-        ->where('tareasEstudiantes.idTarea', $idTarea)
-        ->get(['estudiante.idEstudiante', 'fotoestudiante.idFoto','fotoestudiante.foto']);
+            ->join('estudiante', 'tareasEstudiantes.idEstudiante', '=', 'estudiante.idEstudiante')
+            ->join('fotoestudiante', 'estudiante.idEstudiante', '=', 'fotoestudiante.idEstudiante')
+            ->where('tareasEstudiantes.idTarea', $idTarea)
+            ->get(['estudiante.idEstudiante', 'fotoestudiante.idFoto', 'fotoestudiante.foto']);
 
         // Preparar la respuesta
         $response = [
-        'idTarea' => $tarea->idTarea,
-        'dTarea' => $tarea->dTarea,
-        'idSemana' => $tarea->idSemana,
-        'estudiantes' => $estudiantes
+            'idTarea' => $tarea->idTarea,
+            'dTarea' => $tarea->dTarea,
+            'idSemana' => $tarea->idSemana,
+            'estudiantes' => $estudiantes
         ];
 
         // Devolver la respuesta en formato JSON
@@ -239,10 +253,10 @@ class SprintController extends Controller
     public function obtenerSemanasYTareas($idSprint)
     {
         try {
-    
+
             $sprint = Sprint::with(['semanas.tareas'])->findOrFail($idSprint);
 
-    
+
             $response = [
                 'success' => true,
                 'sprint' => $sprint->idSprint,
@@ -274,32 +288,32 @@ class SprintController extends Controller
     ///////ETHAN
 
     public function obtenerNotasPorEstudiante(Request $request)
-{
-    $request->validate([
-        'idSprint' => 'required|integer',  // Sprint es un identificador relacionado
-    ]);
+    {
+        $request->validate([
+            'idSprint' => 'required|integer',  // Sprint es un identificador relacionado
+        ]);
 
-    //$idSprint = $request->input('idSprint');
+        //$idSprint = $request->input('idSprint');
 
-    // Asumiendo que hay una relación entre semana y sprint en alguna tabla
-    $notas = DB::table('notassemana')
-        ->join('semana', 'notassemana.idSemana', '=', 'semana.idSemana')
-        ->join('sprint','notassemana.idSemana','=','semana.')
-        ->where('semana.idSemana', $request ->idSemana)
-        ->select('notassemana.idEstudiante', DB::raw('SUM(nota) as totalNota'), DB::raw('COUNT(notassemana.idSemana) as semanasCount'))
-        ->groupBy('notassemana.idEstudiante')
-        ->get();
+        // Asumiendo que hay una relación entre semana y sprint en alguna tabla
+        $notas = DB::table('notassemana')
+            ->join('semana', 'notassemana.idSemana', '=', 'semana.idSemana')
+            ->join('sprint', 'notassemana.idSemana', '=', 'semana.')
+            ->where('semana.idSemana', $request->idSemana)
+            ->select('notassemana.idEstudiante', DB::raw('SUM(nota) as totalNota'), DB::raw('COUNT(notassemana.idSemana) as semanasCount'))
+            ->groupBy('notassemana.idEstudiante')
+            ->get();
 
-    // Calcular el promedio si hay más de dos semanas
-    $resultado = $notas->map(function ($nota) {
-        if ($nota->semanasCount > 2) {
-            $nota->promedioNota = $nota->totalNota / $nota->semanasCount;
-        } else {
-            $nota->promedioNota = $nota->totalNota;
-        }
-        return $nota;
-    });
+        // Calcular el promedio si hay más de dos semanas
+        $resultado = $notas->map(function ($nota) {
+            if ($nota->semanasCount > 2) {
+                $nota->promedioNota = $nota->totalNota / $nota->semanasCount;
+            } else {
+                $nota->promedioNota = $nota->totalNota;
+            }
+            return $nota;
+        });
 
-    return response()->json($resultado, 200);
-}
+        return response()->json($resultado, 200);
+    }
 }
