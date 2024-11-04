@@ -50,7 +50,7 @@ class GrupoController extends Controller
             ->where('grupo.gestionGrupo',$gestionGrupo)
             ->select(
                 'grupo.numGrupo', 
-                'estudiante.idEstudiante',
+                'estudiante.idEstudiante as id',
                 'estudiante.nombreEstudiante as nombreEstudiante', 
                 'estudiante.primerApellido as apellidoPaternoEstudiante', 
                 'estudiante.segundoApellido as apellidoMaternoEstudiante',
@@ -79,22 +79,28 @@ class GrupoController extends Controller
         ]);*/
     
         // Ejecutar la consulta
-            $resultados = DB::table('estudiantesgrupos AS eg')
-            ->join('grupo AS g', 'eg.idGrupo', '=', 'g.idGrupo')
-            ->join('docente AS d', 'g.idDocente', '=', 'd.idDocente')
-            ->join('estudiantesempresas AS ee', 'eg.idEstudiante', '=', 'ee.idEstudiante')
-            ->join('empresa AS emp', 'ee.idEmpresa', '=', 'emp.idEmpresa')
-            ->join('estudiante AS e', 'eg.idEstudiante', '=', 'e.idEstudiante')
-            ->select('emp.nombreEmpresa','emp.nombreLargo', 'g.gestionGrupo', DB::raw('count(eg.idEstudiante) as totalEstudiantes'), 'g.numGrupo')
-            ->where('d.idDocente', $idDocente)
-           // ->where('g.idGrupo', $request->idGrupo)
-            ->where('g.gestionGrupo', $gestionGrupo)
-            ->groupBy('emp.nombreEmpresa', 'emp.nombreLargo','g.gestionGrupo', 'g.numGrupo')
-            -> orderByDesc('g.gestionGrupo')
-            ->orderBy('emp.nombreEmpresa')
-            ->orderByDesc('e.nombreEstudiante')
-            ->get();
-        
+        $resultados = DB::table('estudiantesgrupos AS eg')
+        ->join('grupo AS g', 'eg.idGrupo', '=', 'g.idGrupo')
+        ->join('docente AS d', 'g.idDocente', '=', 'd.idDocente')
+        ->join('estudiantesempresas AS ee', 'eg.idEstudiante', '=', 'ee.idEstudiante')
+        ->join('empresa AS emp', 'ee.idEmpresa', '=', 'emp.idEmpresa')
+        ->join('estudiante AS e', 'eg.idEstudiante', '=', 'e.idEstudiante')
+        ->select(
+            'emp.nombreEmpresa',
+            'emp.nombreLargo',
+            'emp.idEmpresa as id',
+            'g.gestionGrupo',
+            DB::raw('count(eg.idEstudiante) as totalEstudiantes'),
+            'g.numGrupo'
+        )
+        ->where('d.idDocente', $idDocente)
+        // ->where('g.idGrupo', $request->idGrupo)
+        ->where('g.gestionGrupo', $gestionGrupo)
+        ->groupBy('emp.nombreEmpresa', 'emp.nombreLargo', 'emp.idEmpresa', 'g.gestionGrupo', 'g.numGrupo')
+        ->orderByDesc('g.gestionGrupo')
+        ->orderBy('emp.nombreEmpresa')
+        ->orderByDesc('e.nombreEstudiante')
+        ->get();
     
         if ($resultados->isEmpty()) {
             return response()->json([
