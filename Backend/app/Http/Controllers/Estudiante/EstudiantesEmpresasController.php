@@ -1,5 +1,5 @@
 <?php
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Estudiante;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\JsonResponse;
@@ -8,8 +8,9 @@ use App\Models\Grupo;
 use App\Models\Estudiante;
 use App\Models\EstudiantesEmpresas;
 use App\Models\Empresa;
+use App\Http\Controllers\Controller;
 
-class EstudiantesEmpresasController{
+class EstudiantesEmpresasController extends Controller{
 
     public function crearEmpresa(Request $request)
     {

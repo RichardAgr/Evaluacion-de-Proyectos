@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Empresa;
 
 use App\Models\Empresa;
 use App\Models\Semana;
@@ -8,6 +8,8 @@ use App\Models\NotasSemana;
 use App\Models\Estudiante;
 use App\Models\Sprint;
 use App\Models\Planificacion;
+use Illuminate\Support\Facades\DB;
+use App\Models\EstudiantesGrupos;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 
@@ -195,4 +197,5 @@ public function getCalificacionesEmpresa($idEmpresa)
             ], 500);
         }
     }
+
 }

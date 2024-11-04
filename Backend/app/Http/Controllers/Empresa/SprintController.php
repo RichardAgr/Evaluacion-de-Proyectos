@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Empresa;
 use Illuminate\Http\Request;
 use App\Models\Planificacion;
 use App\Models\Sprint;
@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use App\Models\Semana;
 use App\Models\Tarea;
+use App\Http\Controllers\Controller;
 class SprintController extends Controller
 {
     public function modificarSprint(Request $request): JsonResponse
@@ -205,7 +206,7 @@ class SprintController extends Controller
         return response()->json($response);
     }
 
-    public function integrantesPorTarea(int $idTarea): JsonResponse
+    /*public function integrantesPorTarea(int $idTarea): JsonResponse
     {
         // Obtener la tarea con su información básica
         $tarea = Tarea::find($idTarea, ['idTarea', 'idTarea', 'idSemana']);
@@ -232,9 +233,9 @@ class SprintController extends Controller
 
         // Devolver la respuesta en formato JSON
         return response()->json($response);
-    }
+    }*/
 
-    public function obtenerSemanasYTareas($idSprint)
+    /*public function obtenerSemanasYTareas($idSprint)
     {
         try {
     
@@ -268,36 +269,5 @@ class SprintController extends Controller
                 'error' => $e->getMessage(),
             ], 500);
         }
-    }
-    ///////ETHAN
-
-    public function obtenerNotasPorEstudiante(Request $request)
-{
-    $request->validate([
-        'idSprint' => 'required|integer',  // Sprint es un identificador relacionado
-    ]);
-
-    //$idSprint = $request->input('idSprint');
-
-    // Asumiendo que hay una relación entre semana y sprint en alguna tabla
-    $notas = DB::table('notassemana')
-        ->join('semana', 'notassemana.idSemana', '=', 'semana.idSemana')
-        ->join('sprint','notassemana.idSemana','=','semana.')
-        ->where('semana.idSemana', $request ->idSemana)
-        ->select('notassemana.idEstudiante', DB::raw('SUM(nota) as totalNota'), DB::raw('COUNT(notassemana.idSemana) as semanasCount'))
-        ->groupBy('notassemana.idEstudiante')
-        ->get();
-
-    // Calcular el promedio si hay más de dos semanas
-    $resultado = $notas->map(function ($nota) {
-        if ($nota->semanasCount > 2) {
-            $nota->promedioNota = $nota->totalNota / $nota->semanasCount;
-        } else {
-            $nota->promedioNota = $nota->totalNota;
-        }
-        return $nota;
-    });
-
-    return response()->json($resultado, 200);
-}
+    }*/
 }

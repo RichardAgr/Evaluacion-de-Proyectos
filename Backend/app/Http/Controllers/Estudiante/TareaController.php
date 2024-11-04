@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Estudiante;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -11,7 +11,7 @@ use App\Models\ArchivoTarea;
 use App\Models\TareaEstudiante;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
-
+use App\Http\Controllers\Controller;
 class TareaController extends Controller
 {
     public function obtenerTarea($idTarea)
