@@ -85,7 +85,7 @@ function SeleccionarSprintVisualizar() {
       titulo="SELECCIONE UN SPRINT PARA VISUALIZAR"
       ocultarAtras={false}
       confirmarAtras={false}
-      dirBack={`/visualizarSprint/empresa/${idEmpresa}`}
+      dirBack={`/`}
     >
         {error.errorMessage || error.errorDetails ? (
         <Error
