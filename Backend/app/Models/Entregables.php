@@ -17,6 +17,7 @@ class Entregables extends Model
         'idSprint',
         'descripcionEntregable',
         'archivoEntregable',
+        'nombreArchivo'
     ];
 
     /**
