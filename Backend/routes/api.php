@@ -31,7 +31,7 @@ Route::get('/empresas/listaEmpresas', [EmpresaController::class, 'getListaEmpres
 Route::get('/empresas/obtenerEstudiantes',[EstudianteController::class, 'obtenerEstudiantesPorGrupo']);
 Route::get('/empresas/{idEmpresa}/calificaciones', [EmpresaController::class, 'getCalificacionesEmpresa']);
 //---Recibe la nota del sprint seleccionado
-Route::get('/empresas/notaSprint', [NotaSprintController::class, 'notaSprint']);
+Route::get('/empresas/notaSprint/{idEmpresa}/{semana}', [NotaSprintController::class, 'notaSprint']);
 //---Recibe las notas de todo los sprints
 Route::get('/empresas/notasSprint/{idEmpresa}', [NotaSprintController::class, 'notasSprint']);
 
