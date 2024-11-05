@@ -25,7 +25,7 @@ class PlanificacionSeeder extends Seeder
             [
                 'idEmpresa' => 2,
                 'aceptada' => false,
-                'publicada' => false,
+                'publicada' => true,
                 'fechaEntrega' => Carbon::now()->addDays(45),
                 'comentarioprivado' => 'Necesita mejorar en varios aspectos',
                 'comentariopublico' => 'Se requieren algunas correcciones',
@@ -40,8 +40,8 @@ class PlanificacionSeeder extends Seeder
             ],
             [
                 'idEmpresa' => 4,
-                'aceptada' => true,
-                'publicada' => false,
+                'aceptada' => false,
+                'publicada' => true,
                 'fechaEntrega' => Carbon::now()->addDays(20),
                 'comentarioprivado' => 'Excelente planificación',
                 'comentariopublico' => 'Felicitaciones por su trabajo',

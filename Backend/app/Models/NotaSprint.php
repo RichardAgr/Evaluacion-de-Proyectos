@@ -9,34 +9,30 @@ class NotaSprint extends Model
 {
     use HasFactory;
 
-    // Nombre de la tabla
     protected $table = 'notaSprint';
-
-    // Deshabilitar timestamps si no usas created_at y updated_at
+    protected $primaryKey = 'idEvaluacionsemanal';
     public $timestamps = false;
 
-    // Definir que la clave primaria es compuesta
-    protected $primaryKey = ['idEmpresa', 'estudiantesempresas_idEstudiante', 'idSprint'];
-    public $incrementing = false; // Laravel no puede autoincrementar una clave primaria compuesta
-
-    // Campos que se pueden asignar en masa
     protected $fillable = [
         'idEmpresa',
-        'estudiantesempresas_idEstudiante',
+        'idEstudiante',
         'idSprint',
         'nota',
+        'comentario',
     ];
 
-    // Relación con la tabla 'estudiantesempresas'
-    public function estudiantesEmpresa()
+    public function estudiante()
     {
-        return $this->belongsTo(EstudiantesEmpresas::class, 'estudiantesempresas_idEstudiante', 'idEstudiante')
-                    ->where('idEmpresa', $this->idEmpresa);
+        return $this->belongsTo(Estudiante::class, 'idEstudiante');
     }
 
-    // Relación con la tabla 'sprint'
+    public function empresa()
+    {
+        return $this->belongsTo(Empresa::class, 'idEmpresa');
+    }
+
     public function sprint()
     {
-        return $this->belongsTo(Sprint::class, 'idSprint', 'idSprint');
+        return $this->belongsTo(Sprint::class, 'idSprint');
     }
 }

@@ -1,5 +1,4 @@
-import { useState, useEffect } from "react";
-import InfoSnackbar from "../infoSnackbar/infoSnackbar";
+import { useState } from "react";
 import {
   Table,
   TableBody,
@@ -12,14 +11,14 @@ import {
 } from "@mui/material";
 import DecisionButtons from "../Buttons/decisionButtons";
 import CuadroDialogo from "../cuadroDialogo/cuadroDialogo";
+import InfoSnackbar from "../infoSnackbar/infoSnackbar";
 import { useParams } from "react-router-dom";
-const TablaEvaluacionSemanal = ({ idEmpresa }) => {
-  const { idSprint } = useParams();
-  const [teamData, setTeamData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [notes, setNotes] = useState([]); // Estado separado para las notas
-  const [comments, setComments] = useState([]); // Estado para los comentarios
+import { updateSprintEvaluar } from "../../api/getSprintsEmpresa";
+
+const TablaEvaluacionSemanal = ({ estudiantes }) => {
+  const { idEmpresa, idSprint } = useParams();
+  const [notas, setNotas] = useState(estudiantes.map(est => est.nota || ""));
+  const [comentarios, setComentarios] = useState(estudiantes.map(est => est.comentario || ""));
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",
@@ -32,174 +31,101 @@ const TablaEvaluacionSemanal = ({ idEmpresa }) => {
     title: "",
     description: "",
   });
-  useEffect(() => {
-    const getNotasSprint = async (empresaId, Sprint) => {
-      try {
-        const response = await fetch(
-          `http://127.0.0.1:8000/api/empresas/notaSprint?empresa=${empresaId}&numeroSprint=${Sprint}`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
 
-        if (!response.ok) throw new Error("Error al obtener las notas del sprint");
-
-        const data = await response.json();
-
-        console.log(data);
-
-        // Si data es un objeto con estudiantes
-        
-        const formattedData = Object.entries(data).map(([nombre, info]) => ({
-          nombre,
-          ...info,
-        }));
-
-        setTeamData(formattedData);
-        console.log(formattedData);
-        // Suponiendo que cada estudiante tiene propiedades 'nota' y 'comentario'
-        const newNotes = formattedData.map((estudiante) => estudiante.nota || ""); // Maneja casos donde no haya nota
-        const newComents = formattedData.map((estudiante) => estudiante.comentario || ""); // Maneja casos donde no haya comentario
-
-        console.log(newNotes);
-        setNotes(newNotes);
-        console.log(newComents);
-        setComments(newComents);
-      } catch (error) {
-        console.error("Error en la solicitud:", error);
-        setError(error.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    getNotasSprint(idEmpresa, idSprint);
-  }, [idEmpresa]);
-
-  const handleNoteChange = (index, value) => {
-    const newValue = value === "" ? "" : Math.max(1, Math.min(100, Number(value)));
-    const updatedNotes = [...notes];
-    updatedNotes[index] = newValue; // Actualiza la nota en el estado de notas
-    setNotes(updatedNotes); // Actualiza el estado de notas
+  const handleNotaChange = (index, value) => {
+    const newNotas = [...notas];
+    newNotas[index] = Math.min(100, Math.max(1, Number(value)));
+    setNotas(newNotas);
   };
 
-  const handleCommentChange = (index, value) => {
-    const updatedComments = [...comments];
-    updatedComments[index] = value; // Actualiza el comentario del miembro
-    setComments(updatedComments); // Actualiza el estado
+  const handleComentarioChange = (index, value) => {
+    const newComentarios = [...comentarios];
+    newComentarios[index] = value;
+    setComentarios(newComentarios);
   };
-  const handleSubmit = async () => {
-    console.log(comments)
-    const notasLlenadas = notes.map((note) => note || "1");
-    console.log(notasLlenadas)
-    const estudiantes = teamData.map((member) => member.id)
-    console.log(estudiantes)
-    try {
-      const response = await fetch("http://127.0.0.1:8000/api/docente/evaluacion", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          empresa: idEmpresa,
-          numeroSprint: idSprint,
-          notas: notasLlenadas,
-          estudiantes: estudiantes,
-          comentarios: comments,
-        }),
-      });
-  
-      if (!response.ok) {
-        const errorData = await response.json(); // Intenta obtener el mensaje de error
-        throw new Error(errorData.message || "Error en el servidor"); // Lanza un error con el mensaje
-      }
-      
-      setSnackbar({
-        open: open,
-        message: "Se Guardo Correctamente",
-        severity: "succes",
-        autoHide: 6000,
-      });
-      const result = await response.json();
-      console.log("Éxito:", result.message);
-    } catch (error) {
-      console.error("Error:", error);
-      setSnackbar({
-        open: true,
-        message: error.message,
-        severity: "error",
-      });
-    }
-  };
-  
-  
-  const handleCancel = () => {
-    setCuadroDialogo({
-      open: true,
-      title: "Descartar los cambios",
-      description:
-        "Esta acción no se puede deshacer. Todos los cambios realizados se perderán.  ¿Está seguro?",
-      onConfirm: () => window.location.reload(),
-    });
-  };
+
   const handleSave = () => {
     setCuadroDialogo({
       open: true,
       title: "Guardar los cambios",
-      description:
-        "Esta acción guardará todos los cambios realizados en la tarea. ¿Está seguro?",
-      onConfirm: handleSubmit,  
+      description: "Esta acción guardará todos los cambios realizados en la tarea. ¿Está seguro?",
+      onConfirm: handleSubmit,
     });
   };
 
-  if (loading) return <p>Cargando datos...</p>;
-  if (error) return <p>Error: {error}</p>;
+  const handleCancel = () => {
+    setCuadroDialogo({
+      open: true,
+      title: "Descartar los cambios",
+      description: "Esta acción no se puede deshacer. Todos los cambios realizados se perderán. ¿Está seguro?",
+      onConfirm: () => window.location.reload(),
+    });
+  };
+
+  const handleSubmit = async () => {
+    try {
+      setCuadroDialogo({ ...cuadroDialogo, open: false });
+      const response = await updateSprintEvaluar(idEmpresa, idSprint, estudiantes.map((est, idx) => ({
+        idEstudiante: est.estudiante.idEstudiante,
+        idEvaluacionsemanal: est.idEvaluacionsemanal,
+        // nota: notas[idx],
+        comentario: comentarios[idx],
+      })));
+
+      setSnackbar({
+        open: true,
+        message: response.message,
+        severity: "success",
+      });
+    } catch (error) {
+      setSnackbar({
+        open: true,
+        message: "Error al guardar la evaluación",
+        severity: "error",
+      });
+    }
+  };
 
   return (
     <>
-      
       <TableContainer component={Paper}>
-        <Table aria-label="team evaluation table" size="small">
+        <Table aria-label="team evaluation table">
           <TableHead>
             <TableRow>
               <TableCell>Integrante</TableCell>
               <TableCell>Tareas</TableCell>
-              <TableCell>Nota (1-100)</TableCell>
+              {/* <TableCell>Nota (1-100)</TableCell> */}
               <TableCell>Comentario</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {teamData.map((member, index) => (
+            {estudiantes.map((estudiante, index) => (
               <TableRow key={index}>
-                <TableCell>{member.nombre}</TableCell>
-                <TableCell sx={{ py: 1 }}>
-                  <ul style={{ margin: 0, paddingInlineStart: "20px" }}>
-                    {member.tareas.map((task, taskIndex) => (
-                      <li key={taskIndex}>{task}</li>
+                <TableCell>{`${estudiante.estudiante.nombre} ${estudiante.estudiante.primerApellido} ${estudiante.estudiante.segundoApellido}`}</TableCell>
+                <TableCell>
+                  <ul>
+                    {estudiante.tareas.map((tarea, idx) => (
+                      <li key={idx}>{tarea.nombreTarea}</li>
                     ))}
                   </ul>
                 </TableCell>
-                <TableCell sx={{ py: 2 }}>
+                {/* <TableCell>
                   <TextField
                     type="number"
-                    value={notes[index] || ""} 
-                    onChange={(e) => handleNoteChange(index, e.target.value)}
-                    inputProps={{ min: 1, max: 100 }} 
-                    sx={{ width: "80px" }}
+                    value={notas[index]}
+                    onChange={(e) => handleNotaChange(index, e.target.value)}
+                    inputProps={{ min: 1, max: 100 }}
                     size="small"
                   />
-                </TableCell>
-                <TableCell sx={{ py: 1 }}>
+                </TableCell> */}
+                <TableCell>
                   <TextField
                     multiline
-                    rows={4}
-                    value={comments[index]} 
-                    placeholder="Ingrese un comentario"
-                    onChange={(e) => handleCommentChange(index, e.target.value)} 
+                    rows={3}
+                    value={comentarios[index]}
+                    onChange={(e) => handleComentarioChange(index, e.target.value)}
                     fullWidth
+                    placeholder="Ingrese un comentario"
                   />
                 </TableCell>
               </TableRow>
@@ -207,13 +133,15 @@ const TablaEvaluacionSemanal = ({ idEmpresa }) => {
           </TableBody>
         </Table>
       </TableContainer>
+      
       <DecisionButtons
         rejectButtonText="Descartar"
         validateButtonText="Guardar Evaluación"
         onReject={handleCancel}
         onValidate={handleSave}
-        disabledButton= {0}
+        disabledButton={0}
       />
+
       <CuadroDialogo
         open={cuadroDialogo.open}
         onClose={() => setCuadroDialogo({ ...cuadroDialogo, open: false })}
@@ -221,13 +149,14 @@ const TablaEvaluacionSemanal = ({ idEmpresa }) => {
         description={cuadroDialogo.description}
         onConfirm={cuadroDialogo.onConfirm}
       />
+
       <InfoSnackbar
         openSnackbar={snackbar.open}
         setOpenSnackbar={(open) => setSnackbar({ ...snackbar, open })}
         message={snackbar.message}
         severity={snackbar.severity}
         autoHide={snackbar.autoHide}
-      />         
+      />
     </>
   );
 };

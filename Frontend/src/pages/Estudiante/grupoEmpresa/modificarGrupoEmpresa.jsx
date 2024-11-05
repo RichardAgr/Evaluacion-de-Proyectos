@@ -38,7 +38,7 @@ const ModificarGrupoEmpresa = () => {
             }
         };
         
-        fetchIntegrantes(); // Llama a la función para obtener los integrantes
+        fetchIntegrantes(); 
     }, []);
 
     const manejarSubmit = async () => {
@@ -120,7 +120,7 @@ const ModificarGrupoEmpresa = () => {
     return (
         <Fragment>
             <BaseUI
-                titulo={`CREAR GRUPO EMPRESA`}
+                titulo={`MODIFICAR GRUPO EMPRESA`}
                 ocultarAtras={false}
                 confirmarAtras={false}
                 dirBack={`/`}

@@ -1,50 +1,72 @@
-import { Fragment, useState,useEffect } from "react";
+import { Fragment, useState, useEffect } from "react";
 import BaseUI from "../../../components/baseUI/baseUI.jsx";
 import TablaEvaluacionSemanal from "../../../components/tablaEvaluacionSemanal/tablaEvaluacionSemanal.jsx";
-import NombreEmpresa from  "../../../components/infoEmpresa/nombreEmpresa.jsx";
+import NombreEmpresa from "../../../components/infoEmpresa/nombreEmpresa.jsx";
 import { useParams } from "react-router-dom";
+import { getSprintEstudiantes } from "../../../api/getSprintsEmpresa.jsx";
+import Loading from "../../../components/loading/loading.jsx";
+import InfoSnackbar from "../../../components/infoSnackbar/infoSnackbar.jsx";
 
 const EvaluarHito = () => {
   const { idEmpresa, idSprint } = useParams();
-  const [nombreEmpresa, setNombreEmpresa] = useState({ nombreCorto: '', nombreLargo: '' });
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "info",
+  });
 
-  const getNombreEmpresa = async (idEmpresa) => {
-    try {
-        const response = await fetch(`http://127.0.0.1:8000/api/nombreEmpresa/${idEmpresa}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await getSprintEstudiantes(idEmpresa, idSprint);
+        setData(data);
+      } catch (error) {
+        console.error("Error en la solicitud:", error);
+        setError("Error al obtener los datos del sprint");
+        setSnackbar({
+          open: true,
+          message: "Error al obtener los datos del sprint",
+          severity: "error",
         });
+      } finally {
+        setLoading(false);
+      }
+    };
 
-        if (!response.ok) throw new Error('Error al obtener los datos de la empresa');
-
-        const data = await response.json();    
-        setNombreEmpresa({ nombreCorto: data.nombreEmpresa, nombreLargo: data.nombreLargo });
-    } catch (error) {
-        console.error('Error en la solicitud:', error);
-    }
-  };
-    useEffect(() => {
-        getNombreEmpresa(idEmpresa);
-    }, []);
-
+    fetchData();
+  }, [idEmpresa, idSprint]);
 
   return (
     <Fragment>
       <BaseUI
-        titulo={"EVALUAR HITO"}
+        titulo="EVALUACION SEMANAL"
         ocultarAtras={false}
         confirmarAtras={false}
-        dirBack={"/"}
-      > 
-        <h1>Sprint {idSprint}</h1>
-        <NombreEmpresa
-          nombreCorto={nombreEmpresa.nombreCorto}
-          nombreLargo={nombreEmpresa.nombreLargo}
-        />
-        <TablaEvaluacionSemanal idEmpresa={idEmpresa}/>
+        dirBack="/"
+      >
+        {error ? (
+          <p>Error: {error}</p>
+        ) : loading ? (
+          <Loading />
+        ) : (
+          <>
+            <NombreEmpresa
+              nombreCorto={data.empresa.nombre}
+              nombreLargo={data.empresa.nombreLargo}
+            />
+            <TablaEvaluacionSemanal estudiantes={data.estudiantes} />
+          </>
+        )}
       </BaseUI>
+      <InfoSnackbar
+        openSnackbar={snackbar.open}
+        setOpenSnackbar={(open) => setSnackbar({ ...snackbar, open })}
+        message={snackbar.message}
+        severity={snackbar.severity}
+      />
     </Fragment>
   );
 };

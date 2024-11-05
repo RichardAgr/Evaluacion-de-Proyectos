@@ -38,7 +38,7 @@ class NotaSprintSeeder extends Seeder
                     'idEstudiante' => $estudiante->idEstudiante,
                     'idEmpresa' => $estudiante->idEmpresa,
                     'nota' => $nota,
-                    'comentario' => $comentario . " Nota: $nota/100",
+                    'comentario' => $comentario,
                 ]);
             }
         }
