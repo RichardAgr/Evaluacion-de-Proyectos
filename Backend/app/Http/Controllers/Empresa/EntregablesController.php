@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Empresa;
 use App\Models\Entregables;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
-
+use App\Http\Controllers\Controller;
 class EntregablesController extends Controller
 {
     public function guardarEntregables(Request $request)

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Estudiante;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -13,8 +13,8 @@ use App\Models\Semana;
 use App\Models\Sprint;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Carbon;
-
 class TareaController extends Controller
 {
     public function obtenerTarea($idTarea)
@@ -118,8 +118,6 @@ class TareaController extends Controller
             // Validar los datos de entrada
             $request->validate([
                 'textotarea' => 'required|string',
-                'files' => 'nullable|array',
-                'deletedFiles' => 'nullable|array',
                 'responsables' => 'nullable|array',
             ]);
 
@@ -133,35 +131,9 @@ class TareaController extends Controller
             $tarea->textoTarea = $request->input('textotarea');
             $tarea->save();
 
-            // Eliminar archivos en deletedFiles
-            if ($request->has('deletedFiles')) {
-                foreach ($request->input('deletedFiles') as $idArchivo) {
-                    if ($idArchivo != -1) {
-                        $archivoTarea = ArchivoTarea::find($idArchivo);
-                        if ($archivoTarea && $archivoTarea->idTarea == $idTarea) {
-                            $archivoTarea->delete();
-                        }
-                    }
-                }
-            }
 
             // Eliminar responsables actuales de la tarea
             TareaEstudiante::where('idTarea', $idTarea)->delete();
-
-            // Procesar y guardar archivos nuevos
-            if ($request->has('files')) {
-                foreach ($request->input('files') as $fileData) {
-                    if ($fileData['idArchivo'] === "-1") {
-                        // Guardar el archivo en la base de datos
-                        ArchivoTarea::create([
-                            'idTarea' => $idTarea,
-                            'archivo' => $fileData['archivoBase64'], // Guardar el contenido base64
-                            'fechaEntrega' => now(),
-                            'nombreArchivo' => $fileData['name']
-                        ]);
-                    }
-                }
-            }
 
             // Agregar responsables
             if ($request->has('responsables')) {

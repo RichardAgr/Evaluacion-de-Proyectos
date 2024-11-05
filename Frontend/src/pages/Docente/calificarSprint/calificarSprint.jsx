@@ -1,13 +1,20 @@
-import React, { Fragment, useState } from "react";
+
+
+
+
+///NO UTILIZADO ES EL ANTIGUO
+
+
+
+
+import { Fragment, useState } from "react";
 import {
-  Container,
   Typography,
   Card,
   CardContent,
   Accordion,
   AccordionSummary,
   AccordionDetails,
-  TextField,
   Button,
   Box,
   Grid,
@@ -15,7 +22,6 @@ import {
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import BaseUI from "../../../components/baseUI/baseUI.jsx";
 import CuadroNota from "../../../components/cuadroNota/cuadroNota.jsx";
-import CuadroDialogo from "../../../components/cuadroDialogo/cuadroDialogo.jsx";
 import CuadroComentario from "../../../components/cuadroComentario/cuadroComentario.jsx";
 
 const CalificarSprint = () => {

@@ -1,15 +1,22 @@
-import { Fragment, useMemo, useEffect, useState } from "react";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
+import { useEffect, useState } from "react";
 import { getPlanificacionesAceptadas } from "../../api/getPlanificacionesAceptadas";
-import { useNavigate } from "react-router-dom";
 import Loading from "../loading/loading";
 import Error from "../error/error";
+import ListaDefinitivaN from "../listaDefinitiva/listaDefinitivaN";
+const columns = [
+  {
+    field: 'nombreEmpresa',
+    headerName: 'Nombre Empresa',
+    type: 'string',
+    flex: 2,
+  },
+  {
+    field: 'nombreLargo',
+    headerName: 'Nombre Empresa largo',
+    type: 'string',
+    flex: 2,
+  }
+];
 
 function ListaEmpresasVisualizar() {
   const [loading, setLoading] = useState(true);
@@ -18,16 +25,6 @@ function ListaEmpresasVisualizar() {
     errorDetails: "",
   });
   const [listaEmpresas, setListaEmpresas] = useState(null);
-  const navigate = useNavigate();
-
-  const sortedListaEmpresas = useMemo(() => {
-    if (!listaEmpresas) return [];
-    return [...listaEmpresas].sort((a, b) =>
-      a.nombreEmpresa.localeCompare(b.nombreEmpresa, "es", {
-        sensitivity: "base",
-      })
-    );
-  }, [listaEmpresas]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -48,10 +45,6 @@ function ListaEmpresasVisualizar() {
     fetchData();
   }, []);
 
-  const handleRowClick = (idEmpresa) => {
-    navigate(`/visualizarPlanificacion/empresa/${idEmpresa}`);
-  };
-
   return (
     <>
       {error.errorMessage || error.errorDetails ? (
@@ -63,36 +56,18 @@ function ListaEmpresasVisualizar() {
         <Loading />
       ) : listaEmpresas.length > 0 ? (
         <>
-          <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
-              <TableHead>
-                <TableRow>
-                  <TableCell align="left">Nombre Empresa</TableCell>
-                  <TableCell align="left">Nombre Largo</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {sortedListaEmpresas.map((empresa) => (
-                  <TableRow
-                    key={empresa.idEmpresa}
-                    sx={{
-                      cursor: "pointer",
-                      "&:hover": {
-                        backgroundColor: "#e0e0e0",
-                      },
-                      "&:last-child td, &:last-child th": { border: 0 },
-                    }}
-                    onClick={() => handleRowClick(empresa.idEmpresa)}
-                  >
-                    <TableCell component="th" scope="row" align="left">
-                      {empresa.nombreEmpresa}
-                    </TableCell>
-                    <TableCell align="left">{empresa.nombreLargo}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+            <ListaDefinitivaN
+              titulo="SELECCIONE UNA PLANIFICACION PARA VISUALIZAR"
+              cabezeraTitulo={null}
+              cabezeras={columns}
+              datosTabla={listaEmpresas}
+              ocultarAtras={false}
+              confirmarAtras={false}
+              dirBack="/"
+              dirForward="/visualizarPlanificacion/empresa/"
+              mensajeSearch = "Buscar Empresa"
+              nombreContador = "Empresas"
+            />
         </>
       ) : (
         <>

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Empresa;
 
 use App\Models\Empresa;
 use App\Models\Semana;
@@ -8,8 +8,11 @@ use App\Models\NotasSemana;
 use App\Models\Estudiante;
 use App\Models\Sprint;
 use App\Models\Planificacion;
+use Illuminate\Support\Facades\DB;
+use App\Models\EstudiantesGrupos;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
 
 class EmpresaController extends Controller
 {
@@ -91,7 +94,7 @@ class EmpresaController extends Controller
         //return response()->json($data);
         return $data;
     }
-    public function obtenerSprints($idEmpresa, $idDocente)
+public function obtenerSprints($idEmpresa, $idDocente)
     {
         try {
 
@@ -114,7 +117,7 @@ class EmpresaController extends Controller
         }
     }
 
-    public function getCalificacionesEmpresa($idEmpresa)
+public function getCalificacionesEmpresa($idEmpresa)
     {
         try {
             // Obtener la empresa y verificar si tiene estudiantes
@@ -219,10 +222,28 @@ class EmpresaController extends Controller
                     'comentario' => $sprint->comentario,
                     'nota' => $sprint->nota,
                     'entregables' => $sprint->entregables->map(function ($entregable) {
+                        if (is_null($entregable->archivoEntregable)) {
+                            return [
+                                'idEntregables' => $entregable->idEntregables,
+                                'descripcionEntregable' => $entregable->descripcionEntregable,
+                                'nombreArchivo' => $entregable->null,
+                                'archivoEntregable' => null, // Retorna null si no hay archivo
+                            ];
+                        }
+                        // Decodificar el archivo Base64
+                        $contenidoArchivo = base64_decode($entregable->archivoEntregable);
+                        $nombreArchivo = $entregable->nombreArchivo;
+                        $rutaArchivo = 'public/archivos/' . $nombreArchivo;
+
+                        // Guardar el archivo decodificado en el almacenamiento
+                        Storage::put($rutaArchivo, $contenidoArchivo);
+
+                        // Generar la URL para el archivo
                         return [
                             'idEntregables' => $entregable->idEntregables,
                             'descripcionEntregable' => $entregable->descripcionEntregable,
-                            'archivoEntregable' => $entregable->archivoEntregable,
+                            'nombreArchivo' => $entregable->nombreArchivo,
+                            'archivoEntregable' => url(Storage::url($rutaArchivo)), // URL completa al archivo
                         ];
                     }),
                 ];

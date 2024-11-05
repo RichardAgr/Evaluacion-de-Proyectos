@@ -2,12 +2,14 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\EmpresaController;
-use App\Http\Controllers\PlanificacionController;
+use App\Http\Controllers\Empresa\EmpresaController;
+use App\Http\Controllers\Empresa\PlanificacionController;
 use App\Http\Controllers\TareaController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TareasController;
-use App\Http\Controllers\GrupoController;
-use App\Http\Controllers\EstudianteController;
+use App\Http\Controllers\Docente\GrupoController;
+//use App\Http\Controllers\EstudianteController;
+use App\Http\Controllers\ControllersGlobal\Estudiante\EstudianteController;
 use App\Http\Controllers\RevisionPlaniController;
 use App\Models\RevisionPlani;
 
