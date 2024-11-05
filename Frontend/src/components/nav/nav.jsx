@@ -12,7 +12,8 @@ import SeleccionarEmpresaSinValidar from "../../pages/Docente/listas/seleccionar
 import ValidarPlanificacion from "../../pages/Docente/validarPlanificacion/validarPlanificacion.jsx";
 import EvaluacionSemanal from "../../pages/Docente/evaluacionSemanal/evaluacionSemanal.jsx";
 import CalificarEstSemana from "../../pages/Docente/calificarSprint/calificarEstudiante/calificarEstSemana.jsx";
-
+import CalificarSprint from "../../pages/Docente/calificarSprint/calificarSprintU.jsx";
+import ListaSprints from "../../pages/Docente/calificarSprint/listaSprints.jsx";
 //archivos estudiante
 import HomeEstudiante from "../../pages/Estudiante/homeEstudiante/homeEstudiante.jsx";
 import HomeGrupoEstudiante from "../../pages/Estudiante/homeGrupoEstudiante/homeGrupoEstudiante.jsx";
@@ -46,6 +47,8 @@ function Nav() {
         path="/visualizarPlanificacion"
         element={<SeleccionarEmpresaVisualizar />}
       />
+      <Route path="/:idEmpresa/calificarSprints" element={<ListaSprints/>}/>
+      <Route path="/:idEmpresa/calificarSprints/sprint/:idSprint" element={<CalificarSprint/>}/>
 
       {/** Visualizar Planificacion*/}
       <Route

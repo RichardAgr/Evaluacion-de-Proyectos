@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id('idEntregables');
             $table->unsignedBigInteger('idSprint');
             $table->text('descripcionEntregable');
+            $table->string('archivoEntregable')->nullable()->default(null);
             // * Llave foranea idSprint
             $table->foreign('idSprint')
                 ->references('idSprint')

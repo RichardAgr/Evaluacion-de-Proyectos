@@ -42,8 +42,12 @@ function Home() {
       onClick: () => navigate("/validarPlanificacion/"),
     },
     {
-      label: "seguimiento semanal",
+      label: "Seguimiento Semanal",
       onClick: () => navigate("/evaluacionSemanal/empresa/1/sprint/1"),
+    },
+    {
+      label: "Calificar Sprints",
+      onClick: () => navigate("/1/calificarSprints"),
     },
     {
       label: "Modificar Lista de Tareas",
@@ -111,7 +115,6 @@ function Home() {
       onClick: () => navigate("/homeEstudiante/visCalificar"),
     },
   ];
-
   return (
     <>
       <Header />

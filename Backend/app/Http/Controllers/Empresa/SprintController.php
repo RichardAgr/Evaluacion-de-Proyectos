@@ -555,4 +555,20 @@ class SprintController extends Controller
         $response = $this->getListaSprintsPorIdEmpresa($request);
         return $response;
     }
+
+    public function actualizarNotaComentario(Request $request, $idSprint)
+    {
+        try {
+
+            $sprint = Sprint::findOrFail($idSprint);
+
+            $sprint->comentario = $request->input('comentario', '');
+            $sprint->nota = $request->input('nota', 0);
+            $sprint->save();
+
+            return response()->json(['message' => 'Sprint actualizado correctamente'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error al actualizar el sprint: ' . $e->getMessage()], 500);
+        }
+    }
 }
