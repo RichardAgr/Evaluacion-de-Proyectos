@@ -10,7 +10,7 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 
 const getGrupoDescripcion = async (idGrupo) => {
   try {
-    const response = await fetch(`http://127.0.0.1:8000/api/grupoDescripcion/${idGrupo}`);
+    const response = await fetch(`http://127.0.0.1:8000/api/estudiante/descripcionGrupo/${idGrupo}`);
     if (!response.ok) {
       throw new Error('Error al obtener la descripción');
     }
@@ -23,7 +23,7 @@ const getGrupoDescripcion = async (idGrupo) => {
 
 const enviarClave = async (idGrupo, clave, idEstudiante) => {
   try {
-    const response = await fetch(`http://127.0.0.1:8000/api/asignarEstudiante`, {
+    const response = await fetch(`http://127.0.0.1:8000/api/estudiante/asignarEstudiante`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -67,7 +67,7 @@ function GrupoDescripcion() {
   const validarCodigo = async () => {
   
       try {
-        const idEstudiante = "3";
+        const idEstudiante = "25";
         const response = await enviarClave(idGrupo, codigo, idEstudiante);
   
         if (response.status === 200) {
@@ -107,7 +107,7 @@ function GrupoDescripcion() {
   }
 
   return (
-    <BaseUI titulo="MATRICULARSE CON UN DOCENTE" ocultarAtras={false} confirmarAtras={true} dirBack={`/`}>
+    <BaseUI titulo="MATRICULARSE CON UN DOCENTE" ocultarAtras={false} confirmarAtras={true} dirBack={`/homeEstudiante/gruposDisponibles`}>
       <Box component="section" sx={{ p: 2, pb: 0, border: '1p' }}>
         <h1 style={{ fontSize: '25px' }}>
           {datos.apellidoPaternoDocente} {datos.apellidoMaternoDocente} {datos.nombreDocente} G{datos.numGrupo}
