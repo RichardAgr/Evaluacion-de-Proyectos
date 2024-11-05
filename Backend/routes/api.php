@@ -172,4 +172,5 @@ Route::post('/session/logout/estudiante', [AuthController::class, 'logoutEstudia
 // ============================  Funciones Joaquin  ====================================
 
 Route::get('estudiante/getEstudiante/{id}', [joaquinController::class, 'getEstudiante']);
+Route::get('prueba/notaSprintV2/{idEmpresa}/{semana}', [joaquinController::class, 'notaSprintV2']);
 Route::post('/crearGrupoEmpresa/paso1',[joaquinController::class, 'crearEmpresa']);
