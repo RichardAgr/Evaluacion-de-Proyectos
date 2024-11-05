@@ -73,7 +73,6 @@ const SprintSemanas = ({ title, semana, idSprint, navigateLink}) => {
                                     },
                                 }}            
                             >
-                                {isOpen ? <div className='arrow-right'></div> : <div className='arrow-right'></div>}
                                 {tarea.nombreTarea}
                             </Box>
                         ))
