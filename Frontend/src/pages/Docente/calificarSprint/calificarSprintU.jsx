@@ -1,9 +1,13 @@
 import { useState, useEffect } from 'react';
 import { Box, Typography, Checkbox, TextField, Paper, Grid, Link, FormControl } from '@mui/material';
-import { styled } from '@mui/system';
+import { styled, typography } from '@mui/system';
 import BaseUI from '../../../components/baseUI/baseUI';
+
 import DescriptionIcon from '@mui/icons-material/Description';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+import PhotoIcon from '@mui/icons-material/Photo';
+import FolderZipIcon from '@mui/icons-material/FolderZip';
+
 import DecisionButtons from '../../../components/Buttons/decisionButtons';
 import InfoSnackbar from '../../../components/infoSnackbar/infoSnackbar';
 import CuadroDialogo from '../../../components/cuadroDialogo/cuadroDialogo';
@@ -28,6 +32,7 @@ function CalificarSprintU() {
     )
     const [notaSprint, setNotaSprint] = useState("");
     const [comentario, setComentario] = useState("")
+    const [errorComentario, setErrorComentario] = useState(false);
     const [snackbar, setSnackbar] = useState({
         open: false,
         message: "",
@@ -65,8 +70,8 @@ function CalificarSprintU() {
                 setDatosSprint(...newSprint)
                 const nota = newSprint[0].nota;
                 setNotaSprint( nota=== null? '' : nota)
-                const comentarioNew = newSprint[0].comentario
-                setComentario(comentarioNew===null? "Comentario para el grupo (máximo 200 caracteres)":comentarioNew)
+                const comentarioNew = newSprint[0].comentario?newSprint[0].comentario:''
+                setComentario(comentarioNew)
             } catch (error) {
                 setError({
                     error: true,
@@ -83,6 +88,8 @@ function CalificarSprintU() {
     const handleComentarioChange = (event) => {
         const value = event.target.value;
         setComentario(value);
+        const error = value === '' && value.length < 20;
+        setErrorComentario(error)
     };
     const handleNotaChange = (event) => {
         const value = event.target.value;
@@ -109,7 +116,8 @@ function CalificarSprintU() {
         });
     };
     const handleSubmit = async () =>{
-        if(comentario.length < 20) {
+        if(comentario === '' && comentario.length < 20) {
+            setError(true);
             console.log('hola   ') 
             return
         }
@@ -133,6 +141,43 @@ function CalificarSprintU() {
             });
         }
     }
+    const selectIcon = (nombreArchivo, link) =>{
+        if(nombreArchivo === null){
+            return (
+                <DescriptionIcon></DescriptionIcon>
+            )
+        }
+        const tipo = nombreArchivo.split('.')[1];
+        console.log(tipo)
+        if(tipo === 'pdf'){
+            return (
+                <Link href={link} target="_blank" className="archivoLink">
+                    <PictureAsPdfIcon></PictureAsPdfIcon>
+                </Link>
+            )
+        }
+        if(tipo === 'docx'){
+            return (
+                <Link href={link} target="_blank" className="archivoLink">
+                    <DescriptionIcon></DescriptionIcon>
+                </Link>
+            )
+        }
+        if(tipo === 'zip'){
+            return (
+                <Link href={link} target="_blank" className="archivoLink">
+                    <FolderZipIcon></FolderZipIcon>
+                </Link>
+            )
+        }
+        if(tipo === 'png' || tipo === 'jpg'){
+            return (
+                <Link href={link} target="_blank" className="archivoLink">
+                    <PhotoIcon></PhotoIcon>
+                </Link>
+            )
+        }
+    }
     
     if (loading) return <Loading></Loading>
     if(!error){
@@ -140,7 +185,7 @@ function CalificarSprintU() {
     }
     return (
         <BaseUI
-            titulo={'MODIFICAR TAREA'}
+            titulo={'CALIFICAR SPRINT'}
             ocultarAtras={false}
             confirmarAtras={true}
             dirBack={`/${idEmpresa}/calificarSprints`}
@@ -157,6 +202,13 @@ function CalificarSprintU() {
                     {datosSprint.entregables.map((entregable, index) => (
                         <Box key={index} className="entregableItem">
                         <Checkbox
+                            sx={{
+                                '&:hover': {
+                                    backgroundColor: 'transparent', // Quita el fondo al hacer hover
+                                },
+                                transition: 'none', // Desactiva la transición de animación
+                                cursor: 'default'
+                            }}    
                             checked={entregable.archivoEntregable !== null}
                         />
                         <Typography>{entregable.descripcionEntregable}</Typography>
@@ -170,11 +222,17 @@ function CalificarSprintU() {
                     <Typography variant="h6">Archivos</Typography>
                     {datosSprint.entregables.map((entregable, index) => (
                         <Box key={index} className="archivoItem">
-                            <PictureAsPdfIcon></PictureAsPdfIcon>
+                                {selectIcon(entregable.nombreArchivo, entregable.archivoEntregable)}
                             <div className='archivosTexto'>
-                                <Link href={entregable.archivoEntregable} target="_blank" className="archivoLink">
-                                    {entregable.descripcionEntregable}.pdf
-                                </Link>
+                                {entregable.nombreArchivo?
+                                    <Link href={entregable.archivoEntregable} target="_blank" className="archivoLink">
+                                        {entregable.nombreArchivo}
+                                    </Link>
+                                    :
+                                    <Typography>
+                                        {entregable.descripcionEntregable}
+                                    </Typography>
+                                }
                                 <Typography className={`estadoArchivo`}>
                                     {entregable.archivoEntregable ? 'Entregado' : 'Pendiente'}
                                 </Typography>
@@ -199,8 +257,8 @@ function CalificarSprintU() {
                     placeholder='Comentario para el grupo (máximo 200 caracteres)'
                     inputProps={{ maxLength: 200 }}
                     className="inputComentario"
-                    error = {comentario.length < 20}
-                    helperText = {comentario.length < 20 && "Debe tener un minimo de 20 caracteres"}
+                    error = {errorComentario}
+                    helperText = {errorComentario && "Debe tener un minimo de 20 caracteres"}
                 />
                 <Box className="notaField">
                     <Typography variant="h6" className="notaLabel">NOTA:</Typography>

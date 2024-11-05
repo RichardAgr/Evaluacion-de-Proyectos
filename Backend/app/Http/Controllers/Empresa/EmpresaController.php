@@ -226,12 +226,13 @@ public function getCalificacionesEmpresa($idEmpresa)
                             return [
                                 'idEntregables' => $entregable->idEntregables,
                                 'descripcionEntregable' => $entregable->descripcionEntregable,
+                                'nombreArchivo' => $entregable->null,
                                 'archivoEntregable' => null, // Retorna null si no hay archivo
                             ];
                         }
                         // Decodificar el archivo Base64
                         $contenidoArchivo = base64_decode($entregable->archivoEntregable);
-                        $nombreArchivo = $entregable->descripcionEntregable . $entregable->idEntregables . '.pdf'; // Puedes personalizar el nombre o extensión
+                        $nombreArchivo = $entregable->nombreArchivo;
                         $rutaArchivo = 'public/archivos/' . $nombreArchivo;
 
                         // Guardar el archivo decodificado en el almacenamiento
@@ -241,6 +242,7 @@ public function getCalificacionesEmpresa($idEmpresa)
                         return [
                             'idEntregables' => $entregable->idEntregables,
                             'descripcionEntregable' => $entregable->descripcionEntregable,
+                            'nombreArchivo' => $entregable->nombreArchivo,
                             'archivoEntregable' => url(Storage::url($rutaArchivo)), // URL completa al archivo
                         ];
                     }),
