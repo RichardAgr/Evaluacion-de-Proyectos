@@ -14,14 +14,28 @@ class EstudiantesEmpresasSeeder extends Seeder
     {
         $estudiantes = range(1, 24);
         $empresas = [1, 2, 3, 4, 5];
- 
-        foreach ($estudiantes as $estudiante) {
-            $empresa = $empresas[array_rand($empresas)];
-            
-            DB::table('estudiantesempresas')->insert([
+        $numEmpresas = count($empresas);
+        $estudiantesPorEmpresa = ceil(count($estudiantes) / $numEmpresas);
+
+        // Shuffle the students to ensure random distribution
+        shuffle($estudiantes);
+
+        $asignaciones = [];
+
+        foreach ($estudiantes as $index => $estudiante) {
+            $empresaIndex = floor($index / $estudiantesPorEmpresa);
+            $empresa = $empresas[$empresaIndex % $numEmpresas];
+
+            $asignaciones[] = [
                 'idEmpresa' => $empresa,
                 'idEstudiante' => $estudiante,
-            ]);
+            ];
         }
+
+        // Shuffle the assignments to ensure randomness in the order of insertion
+        shuffle($asignaciones);
+
+        // Insert all assignments in a single query for better performance
+        DB::table('estudiantesempresas')->insert($asignaciones);
     }
 }

@@ -77,7 +77,7 @@ function Home() {
     {
       label: "Modificar Tarea",
       onClick: () =>
-        navigate("/homeEstudiante/homeGrupoEstudiante/sprint/semana/tareas/1"),
+        navigate("/homeEstudiante/homeGrupoEstudiante/sprintE/1"),
     },
 
   ];
@@ -92,13 +92,6 @@ function Home() {
       onClick: () =>
         navigate(
           "/homeEstudiante/homeGrupoEstudiante/empresas/1/calificaciones"
-        ),
-    },
-    {
-      label: "Ver Nota Sprint",
-      onClick: () =>
-        navigate(
-          "homeEstudiante/homeGrupoEstudiante/empresas/1/calificaciones"
         ),
     },
     {
