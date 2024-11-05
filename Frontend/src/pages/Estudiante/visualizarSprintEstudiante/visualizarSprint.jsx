@@ -32,14 +32,14 @@ const VisualizarSprintEst = ({titulo, navigateLink}) => {
     return (
         <Fragment>
             <BaseUI
-                titulo={titulo?titulo:'VISUALIZAR HITO'}
+                titulo={titulo?titulo:'VISUALIZAR SPRINT'}
                 ocultarAtras={false}
                 confirmarAtras={false}
                 dirBack={'/'}
             >
                 <div>
                     <h1 style={{ fontSize: '2rem', display: 'flex', overflow: 'hidden', marginBottom: '0.1rem' }}>
-                        HITO {idSprint}
+                        SPRINT {idSprint}
                     </h1>
                 </div>
                 {loading && <p>Cargando semanas...</p>}
