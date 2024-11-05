@@ -13,6 +13,7 @@ function VisualizarTarea() {
     const [comentarioD, setComentario] = useState("");
     const [responsables, setResponsables] = useState([]);
     const [existingFiles, setExistingFiles] = useState([]); 
+    const [nombreTarea,setNombreTarea] = useState([]);
     const { idTarea } = useParams();
     const { idSprint } = useParams();
     const [loading, setLoading] = useState(true);
@@ -24,12 +25,13 @@ function VisualizarTarea() {
           setDescripcion(data.textotarea);
           setComentario(data.comentario);
           setResponsables(data.estudiantes);
+          setNombreTarea(data.nombreTarea);
           setExistingFiles(
             data.archivotarea.map((file) => ({
               name: file.nombreArchivo,
               url: file.archivo,
             })),
-            console.log(data.textotarea),
+            console.log(data),
           );
           setLoading(false);
         } catch (error) {
@@ -79,7 +81,7 @@ function VisualizarTarea() {
             dirBack = {`/homeEstudiante/homeGrupoEstudiante/sprint/${idSprint}`}
           >
             <div>
-              <div><h1>Nombre Tarea (Falta base datos implementacion)</h1></div>
+              <div><h1>{nombreTarea}</h1></div>
               <DescripcionTarea>
                 <h4>Responsables</h4>
                 <Responsables>

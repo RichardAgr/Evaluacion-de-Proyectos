@@ -11,12 +11,6 @@ import Button from "@mui/material/Button";
 import { Box, Typography, List, ListItem, ListItemText } from "@mui/material";
 
 function TablaPlanificacion({ sprints, ocultarBotones }) {
-  const totalCharge = useMemo(() => {
-    return sprints.reduce((total, sprint) => {
-      const charge = parseFloat(sprint.cobro) || 0;
-      return total + charge;
-    }, 0);
-  }, [sprints]);
 
   return (
     <>
@@ -29,7 +23,7 @@ function TablaPlanificacion({ sprints, ocultarBotones }) {
                 <TableCell align="left">Fecha Inicio</TableCell>
                 <TableCell align="left">Fecha Fin</TableCell>
                 <TableCell align="left">Fecha Entrega</TableCell>
-                <TableCell align="left">Cobro (Bs)</TableCell>
+                <TableCell align="left">Cobro (%)</TableCell>
                 <TableCell align="left">Entregables</TableCell>
                 {!ocultarBotones && <TableCell align="left"></TableCell>}
               </TableRow>
@@ -44,7 +38,7 @@ function TablaPlanificacion({ sprints, ocultarBotones }) {
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   >
                     <TableCell component="th" scope="row">
-                      {"HITO " + (index + 1)}
+                      {"SPRINT " + (index + 1)}
                     </TableCell>
                     <TableCell align="left">{sprint.fechaIni}</TableCell>
                     <TableCell align="left">{sprint.fechaFin}</TableCell>
@@ -80,29 +74,7 @@ function TablaPlanificacion({ sprints, ocultarBotones }) {
                 );
               })}
             </TableBody>
-            <TableFooter>
-              <TableRow>
-                <TableCell colSpan={4} align="right">
-                  <Typography
-                    variant="subtitle1"
-                    fontWeight="bold"
-                    style={{ color: "black" }}
-                  >
-                    Cobro Total:
-                  </Typography>
-                </TableCell>
-                <TableCell align="left">
-                  <Typography
-                    variant="subtitle1"
-                    fontWeight="bold"
-                    style={{ color: "black" }}
-                  >
-                    {totalCharge.toFixed(2)} Bs
-                  </Typography>
-                </TableCell>
-                <TableCell colSpan={ocultarBotones ? 1 : 2} />
-              </TableRow>
-            </TableFooter>
+           
           </Table>
         </TableContainer>
       </Box>

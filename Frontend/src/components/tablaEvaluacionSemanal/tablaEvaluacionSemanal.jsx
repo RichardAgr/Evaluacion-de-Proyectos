@@ -68,7 +68,7 @@ const TablaEvaluacionSemanal = ({ estudiantes }) => {
       const response = await updateSprintEvaluar(idEmpresa, idSprint, estudiantes.map((est, idx) => ({
         idEstudiante: est.estudiante.idEstudiante,
         idEvaluacionsemanal: est.idEvaluacionsemanal,
-        nota: notas[idx],
+        // nota: notas[idx],
         comentario: comentarios[idx],
       })));
 
@@ -94,7 +94,7 @@ const TablaEvaluacionSemanal = ({ estudiantes }) => {
             <TableRow>
               <TableCell>Integrante</TableCell>
               <TableCell>Tareas</TableCell>
-              <TableCell>Nota (1-100)</TableCell>
+              {/* <TableCell>Nota (1-100)</TableCell> */}
               <TableCell>Comentario</TableCell>
             </TableRow>
           </TableHead>
@@ -109,7 +109,7 @@ const TablaEvaluacionSemanal = ({ estudiantes }) => {
                     ))}
                   </ul>
                 </TableCell>
-                <TableCell>
+                {/* <TableCell>
                   <TextField
                     type="number"
                     value={notas[index]}
@@ -117,7 +117,7 @@ const TablaEvaluacionSemanal = ({ estudiantes }) => {
                     inputProps={{ min: 1, max: 100 }}
                     size="small"
                   />
-                </TableCell>
+                </TableCell> */}
                 <TableCell>
                   <TextField
                     multiline

@@ -1,50 +1,44 @@
-import { Fragment, useState, useEffect } from "react";
+import { Fragment, useState, useEffect} from "react";
 import BaseUI from "../../../components/baseUI/baseUI";
 import { styled } from "@mui/material"; 
-import {Snackbar, Alert,Grid2 } from "@mui/material";
+import { Snackbar, Alert, Grid } from "@mui/material";
 import Box from '@mui/material/Box';
 import { Button } from '@mui/material';
-
-
-
+import { useNavigate } from "react-router-dom";
 
 const CrearGrupoEmpresa = () => {
-
     const [nombreLargo, setNombreLargo] = useState("");
     const [nombreCorto, setNombreCorto] = useState("");
     const [intentoEnviar, setIntentoEnviar] = useState(false);
-    const [integrantes, setIntegrantes] = useState([{ id: 1, nombre: "Jhon Corrales", fijo: true }]); 
+    const [estudiante, setEstudiante] = useState({});
     const [mensajeError, setMensajeError] = useState("");
-    const [openModal, setOpenModal] = useState(false);
-    const [selectedIntegrante, setSelectedIntegrante] = useState(null); 
-    const [options, setOptions] = useState([]); 
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState("");
 
+    const navigate = useNavigate();
+
     useEffect(() => {
-        const fetchIntegrantes = async () => {
+        const fetchEstudiante = async () => {
             try {
-                const response = await fetch('http://localhost:8000/api/estudiante/getEstudiante/1'); 
-                if (!response.ok) throw new Error('Error al recuperar integrantes');
+                const response = await fetch('http://localhost:8000/api/estudiante/getEstudiante/25'); 
+                if (!response.ok) throw new Error('Error al recuperar estudiante');
                 const data = await response.json();
-                // Asegúrate que los datos estén en el formato correcto
-                const formattedOptions = data.map((integrante) => ({ id: integrante.idEstudiante, label: integrante.nombreCompleto }));
-                setOptions(formattedOptions);
+                setEstudiante(data);
+                console.log(data);
             } catch (error) {
                 console.error(error);
-                setMensajeError("Error al cargar los integrantes.");
+                setMensajeError("Error al cargar el estudiante.");
             }
         };
         
-        fetchIntegrantes(); // Llama a la función para obtener los integrantes
+        fetchEstudiante(); // Llama a la función para obtener el estudiante
     }, []);
 
     const manejarSubmit = async () => {
         setIntentoEnviar(true);
-        if (nombreLargo && nombreCorto && integrantes.length >= 1) {
+        if (nombreLargo && nombreCorto && estudiante.idEstudiante) {
             try {
-                const estudiantesIds = integrantes.map(integrante => integrante.id);
-                const response = await fetch('http://localhost:8000/api/estudiante/crearEmpresa', {
+                const response = await fetch('http://localhost:8000/api/crearGrupoEmpresa/paso1', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -52,63 +46,61 @@ const CrearGrupoEmpresa = () => {
                     body: JSON.stringify({
                         nombreLargo,
                         nombreCorto,
-                        estudiantes: estudiantesIds,
+                        estudiante: estudiante.idEstudiante,
                     }),
                 });
-    
                 if (!response.ok) throw new Error('Error al crear el grupo');
     
                 const result = await response.json();
                 console.log('Grupo creado con éxito:', result);
                 setSnackbarMessage("¡Grupo creado con éxito!");
                 setSnackbarOpen(true);
+
+                setTimeout(() => {
+                    navigate('/'); 
+                }, 2000);
             } catch (error) {
                 console.error(error);
                 setMensajeError("Error al crear el grupo.");
             }
         } else {
-            if (integrantes.length < 1) {
-                setMensajeError("Debe haber al menos 1 integrante para crear el grupo."); 
-            }
+            setMensajeError("Debe completar todos los campos.");
         }
     };
-    
-    
 
     return (
         <Fragment>
             <BaseUI
-                titulo={`CREAR GRUPO EMPRESA`}
+                titulo={`REGISTRAR GRUPO EMPRESA`}
                 ocultarAtras={false}
                 confirmarAtras={false}
                 dirBack={`/`}
             >
                 <div style={{ display: 'grid' }}>
-                <NombreEmpresaCompleto>
-                    <Box component="section" sx={{ p: 2 }}>
-                        <h3>NOMBRE LARGO:</h3>
-                    </Box>
-                    <StyledWrapper>
-                        <div style={{ display: "flex", alignItems: "center" }}>
-                            <input
-                                placeholder="Nombre Largo"
-                                className="input"
-                                value={nombreLargo}
-                                onChange={(e) => setNombreLargo(e.target.value)}
-                            />
-                            {intentoEnviar && (
-                                nombreLargo === "" 
-                                ? <Alert severity="error" sx={{ ml: 1, pt: 0, pb: 0 }}>No hay nombre Largo</Alert>
-                                : (nombreLargo.length < 5 || nombreLargo.length > 100) && (
-                                    <Alert severity="warning" sx={{ ml: 1, pt: 0, pb: 0 }}>
-                                        Debe tener entre 5 y 100 caracteres.
-                                    </Alert>
-                                )
-                            )}
-                        </div>
-                    </StyledWrapper>
-                </NombreEmpresaCompleto>
-
+                    <NombreEmpresaCompleto>
+                        <Box component="section" sx={{ p: 2 }}>
+                            <h3>NOMBRE LARGO:</h3>
+                        </Box>
+                        <StyledWrapper>
+                            <div style={{ display: "flex", alignItems: "center" }}>
+                                <input
+                                    placeholder="Nombre Largo"
+                                    className="input"
+                                    value={nombreLargo}
+                                    onChange={(e) => setNombreLargo(e.target.value)}
+                                />
+                                {intentoEnviar && (
+                                    nombreLargo === "" 
+                                    ? <Alert severity="error" sx={{ ml: 1, pt: 0, pb: 0 }}>No hay nombre Largo</Alert>
+                                    : (nombreLargo.length < 5 || nombreLargo.length > 100) && (
+                                        <Alert severity="warning" sx={{ ml: 1, pt: 0, pb: 0 }}>
+                                            Debe tener entre 5 y 100 caracteres.
+                                        </Alert>
+                                    )
+                                )}
+                            </div>
+                        </StyledWrapper>
+                    </NombreEmpresaCompleto>
 
                     <NombreEmpresaCompleto>
                         <Box component="section" sx={{ p: 2 }}>
@@ -123,9 +115,9 @@ const CrearGrupoEmpresa = () => {
                                     onChange={(e) => setNombreCorto(e.target.value)} 
                                 />
                                 {intentoEnviar && (
-                                    nombreLargo === "" 
+                                    nombreCorto === "" 
                                     ? <Alert severity="error" sx={{ ml: 1, pt: 0, pb: 0 }}>No hay nombre Corto</Alert>
-                                    : (nombreLargo.length < 2 || nombreLargo.length > 20) && (
+                                    : (nombreCorto.length < 2 || nombreCorto.length > 20) && (
                                         <Alert severity="warning" sx={{ ml: 1, pt: 0, pb: 0 }}>
                                             Debe tener entre 2 y 20 caracteres.
                                         </Alert>
@@ -134,14 +126,11 @@ const CrearGrupoEmpresa = () => {
                             </div>
                         </StyledWrapper>
                     </NombreEmpresaCompleto>
+   
                     <Box pt={10}>
-                        <h2>Integrantes</h2>
-                        <h6 style={{ color: '#979797', fontSize: '15px'}}>MAXIMO 6 - MINIMO 1</h6>
+                        <h2 style={{marginBottom:20}}>Integrantes</h2>
                     </Box>
-                    <Grid2 item xs={12}>
-                        {integrantes.map((integrante, index) => (
-                            <Box
-                                key={integrante.id}
+                    <Box
                                 sx={{
                                     width: "100%",
                                     height: 70,
@@ -157,35 +146,29 @@ const CrearGrupoEmpresa = () => {
                                 }}
                             >
                                 <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-                                    <h3 style={{paddingLeft: '35px'}}>{integrante.nombre}</h3>
-                                    {index === 0 && (
-                                        <span style={{ color: 'black',paddingRight: '20px' }}>Representante Legal</span>
-                                    )}
+                                    {estudiante && <h3 style={{paddingLeft: '35px'}}>{estudiante.nombreEstudiante}{' '}{estudiante.primerApellido}{' '}{estudiante.segundoApellido}</h3>}
+                                    <span style={{ color: 'black',paddingRight: '20px' }}>Representante Legal</span>
                                 </div>
                             </Box>
-                        ))}
-                    </Grid2>
-
 
                     {mensajeError && <Mensaje>{mensajeError}</Mensaje>}
                     <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                         <Button  
-                        justifyContent="flex-end"
-                        variant="contained"
-                        color="primary"
-                        onClick={manejarSubmit}
-                        sx={{ minWidth: 50, width: '100px', height: '30px', marginTop:'50px' }}
-                    >
-                        CREAR
-                    </Button>
+                            justifyContent="flex-end"
+                            variant="contained"
+                            color="primary"
+                            onClick={manejarSubmit}
+                            sx={{ minWidth: 50, width: '100px', height: '30px', marginTop: '20px' }}
+                        >
+                            CREAR
+                        </Button>
                     </div>
-
-
 
                     <Snackbar 
                         open={snackbarOpen} 
-                        autoHideDuration={3000} 
+                        autoHideDuration={2000} 
                         onClose={() => setSnackbarOpen(false)}
+                        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }} // Centrar horizontalmente
                     >
                         <Alert onClose={() => setSnackbarOpen(false)} severity="success">
                             {snackbarMessage}
@@ -207,16 +190,12 @@ const NombreEmpresaCompleto = styled('div')`
     margin-bottom: 0.5vw;
 `;
 
-
-
 const Mensaje = styled('div')`
     color: red; 
     margin-top: 0.5vw;
     font-size: 14px;
     max-width: 300px;
 `;
-
-
 
 const StyledWrapper = styled('div')`
   .input {

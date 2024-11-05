@@ -31,6 +31,7 @@ function Comentario({titulo, comentario }) {
           backgroundColor: 'background.paper',
           border: '1px solid',
           borderColor: 'divider',
+          mb: 3,
         }}
       >
           <Typography variant="body1" component="h1">{comentario}</Typography>
