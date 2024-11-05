@@ -253,6 +253,7 @@ function ValidarPlanificacion() {
                   validateButtonText="Validar Planificación"
                   onReject={handleReject}
                   onValidate={handleValidate}
+                  disabledButton= {0}
                 />
                 <CuadroDialogo
                   open={openValidateDialog}

@@ -1,16 +1,18 @@
 <?php
-
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Empresa;
 
 use Illuminate\Http\Request;
 use App\Models\Planificacion;
 use App\Models\Sprint;
-use App\Models\Semana;
-use App\Models\Tarea;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use App\Models\Semana;
+use App\Models\Tarea;
+use App\Models\Empresa;
+use App\Models\NotaSprint;
+use App\Http\Controllers\Controller;
 
 class SprintController extends Controller
 {
@@ -181,7 +183,7 @@ class SprintController extends Controller
     public function sprintsSemanas(int $idSprint): JsonResponse
     {
         // Obtener el sprint con su comentario y nota
-        $sprint = Sprint::find($idSprint, ['idSprint', 'comentariodocente']);
+        $sprint = Sprint::find($idSprint, ['idSprint']);
 
         // Verificar si el sprint existe
         if (!$sprint) {
@@ -194,8 +196,6 @@ class SprintController extends Controller
         // Preparar la respuesta
         $response = [
             'idSprint' => $sprint->idSprint,
-            'comentario' => $sprint->comentariodocente,
-            // 'nota' => $sprint->notasprint,
             'semanas' => []
         ];
 
@@ -205,7 +205,8 @@ class SprintController extends Controller
             $tareas = Tarea::where('idSemana', $semana->idSemana)->get([
                 'idTarea',
                 'idSemana',
-                'textoTarea'
+                'textoTarea',
+                'nombreTarea'
             ]);
 
             // Agregar la semana y sus tareas al response
@@ -315,6 +316,93 @@ class SprintController extends Controller
         return response()->json($resultado, 200);
     }
 
+    public function getSprintEvaluar($idEmpresa, $idSprint)
+    {
+        try {
+            // Obtener la empresa
+            $empresa = Empresa::select('nombreEmpresa', 'nombreLargo')->findOrFail($idEmpresa);
+
+            // Obtener el sprint con la relación planificacion y las semanas asociadas
+            $sprint = Sprint::with('planificacion', 'semanas.tareas')
+                ->where('idSprint', $idSprint)
+                ->firstOrFail();
+
+            // Obtener cada estudiante de la empresa
+            $estudiantes = DB::table('estudiantesempresas')
+                ->join('estudiante', 'estudiante.idEstudiante', '=', 'estudiantesempresas.idEstudiante')
+                ->where('estudiantesempresas.idEmpresa', $idEmpresa)
+                ->select('estudiante.idEstudiante', 'nombreEstudiante', 'primerApellido', 'segundoApellido')
+                ->get();
+
+            $result = [
+                'sprint' => $sprint->numeroSprint,
+                'empresa' => [
+                    'nombre' => $empresa->nombreEmpresa,
+                    'nombreLargo' => $empresa->nombreLargo,
+                ],
+                'estudiantes' => $estudiantes->map(function ($estudiante) use ($sprint, $idEmpresa) {
+                    // Obtener todas las tareas del estudiante en el sprint
+                    $tareas = [];
+                    foreach ($sprint->semanas as $semana) {
+                        foreach ($semana->tareas as $tarea) {
+                            $tareas[] = ['nombreTarea' => $tarea->nombreTarea];
+                        }
+                    }
+
+                    // Obtener las notas del estudiante para el sprint
+                    $notaSprint = NotaSprint::where([
+                        'idEmpresa' => $idEmpresa,
+                        'idEstudiante' => $estudiante->idEstudiante,
+                        'idSprint' => $sprint->idSprint,
+                    ])->first();
+
+                    return [
+                        'estudiante' => [
+                            'idEstudiante' => $estudiante->idEstudiante,
+                            'nombre' => $estudiante->nombreEstudiante,
+                            'primerApellido' => $estudiante->primerApellido,
+                            'segundoApellido' => $estudiante->segundoApellido,
+                        ],
+                        'tareas' => $tareas,
+                        'idEvaluacionsemanal' => $notaSprint->idEvaluacionsemanal ?? null,
+                        'nota' => $notaSprint->nota ?? null,
+                        'comentario' => $notaSprint->comentario ?? null,
+                    ];
+                }),
+            ];
+
+            return response()->json($result);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Error al obtener los detalles del sprint: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function updateSprintEvaluar(Request $request, $idEmpresa, $idSprint)
+    {
+        try {
+            $data = $request->input('estudiantes');
+
+            foreach ($data as $estudiante) {
+                NotaSprint::updateOrCreate(
+                    [
+                        'idEmpresa' => $idEmpresa,
+                        'idEstudiante' => $estudiante['idEstudiante'],
+                        'idSprint' => $idSprint,
+                    ],
+                    [
+                        // 'nota' => $estudiante['nota'],
+                        'comentario' => $estudiante['comentario']
+                    ]
+                );
+            }
+
+            return response()->json(['message' => 'Evaluación actualizada correctamente'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error al actualizar la evaluación: ' . $e->getMessage()], 500);
+        }
+    }
     public function getListaSprintsPorIdEmpresa(Request $request): JsonResponse
     {
         // Validate the request
@@ -466,5 +554,21 @@ class SprintController extends Controller
         // Llamar a la función modificarSprint
         $response = $this->getListaSprintsPorIdEmpresa($request);
         return $response;
+    }
+
+    public function actualizarNotaComentario(Request $request, $idSprint)
+    {
+        try {
+
+            $sprint = Sprint::findOrFail($idSprint);
+
+            $sprint->comentario = $request->input('comentario', '');
+            $sprint->nota = $request->input('nota', 0);
+            $sprint->save();
+
+            return response()->json(['message' => 'Sprint actualizado correctamente'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error al actualizar el sprint: ' . $e->getMessage()], 500);
+        }
     }
 }

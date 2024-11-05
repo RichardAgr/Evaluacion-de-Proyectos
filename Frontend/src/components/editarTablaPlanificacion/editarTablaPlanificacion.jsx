@@ -120,7 +120,7 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
         open: true,
         message: "No se pueden añadir más de 10 sprints.",
         severity: "warning",
-        autoHide: true,
+        autoHide: 6000,
       });
       return;
     } else {
@@ -167,7 +167,7 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
           open: true,
           message: `${newRows[index].hito}: No se permite seleccionar fechas anteriores al día actual.`,
           severity: "error",
-          autoHide: 1000,
+          autoHide: 6000,
         });
       } else if (field === "fechaIni") {
         if (prevSprintEndDate && value < prevSprintEndDate) {
@@ -175,7 +175,7 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
             open: true,
             message: `${newRows[index].hito}: La fecha de inicio no puede ser anterior a la fecha fin del sprint anterior.`,
             severity: "error",
-            autoHide: 1000,
+            autoHide: 6000
           });
         } else if (
           newRows[index].fechaFin != "" &&
@@ -186,7 +186,7 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
             message: `${newRows[index].hito}: La fecha de inicio no puede ser posterior a la fecha fin del mismo sprint.`,
 
             severity: "error",
-            autoHide: 1000,
+            autoHide: 6000
           });
         }
       } else if (field === "fechaFin" && value < newRows[index].fechaIni) {
@@ -194,14 +194,14 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
           open: true,
           message: `${newRows[index].hito}: La fecha fin no puede ser anterior a la fecha de inicio del mismo sprint.`,
           severity: "error",
-          autoHide: 1000,
+          autoHide: 6000
         });
       } else if (field === "fechaEntrega" && value < newRows[index].fechaFin) {
         setSnackbar({
           open: true,
           message: `${newRows[index].hito}: La fecha de entrega no puede ser anterior a la fecha fin del mismo sprint.`,
           severity: "error",
-          autoHide: 1000,
+          autoHide: 6000
         });
         return;
       }
@@ -238,7 +238,7 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
             open: true,
             message: `Sprint ${rowIndex}: El campo "${fieldName}" está vacío`,
             severity: "warning",
-            autoHide: false,
+            autoHide: 60000,
           });
           return;
         }
@@ -280,7 +280,7 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
         open: true,
         message: `Error al actualizar la planificacion: ${responseData.error}${responseData.message}`,
         severity: "error",
-        autoHide: false,
+        autoHide: 60000,
       });
     } else {
       console.log("Planificacion modificada con exito.");
@@ -303,7 +303,7 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
           open: true,
           message: `Error al modificar los Sprints: ${responseDataSprint.error} ${responseDataSprint.message}`,
           severity: "error",
-          autoHide: false,
+          autoHide: 60000,
         });
       } else if (
         responseDataSprint.errors !== undefined &&
@@ -329,7 +329,7 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
           open: true,
           message: `${responseDataSprint.message}`,
           severity: "success",
-          autoHide: true,
+          autoHide: 6000,
         });
         if (
           responseDataSprint.sprints &&
@@ -366,7 +366,7 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
               open: true,
               message: `Error al modificar los Sprints: ${responseEntregables.error} ${responseDataSprint.message}`,
               severity: "error",
-              autoHide: false,
+              autoHide: 60000,
             });
           } else if (
             dataEntregables.errors !== undefined &&
@@ -395,7 +395,7 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
               open: true,
               message: `${dataEntregables.message}`,
               severity: "success",
-              autoHide: true,
+              autoHide: 6000,
             });
           }
         }
@@ -550,6 +550,7 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
           validateButtonText="Guardar cambios"
           onReject={handleCancel}
           onValidate={handleSave}
+          disabledButton= {0}
         />
       </Box>
       <CuadroDialogo

@@ -1,11 +1,11 @@
 import { Fragment, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import BaseUI from "../../../components/baseUI/baseUI.jsx";
-import { styled } from "@mui/material";
+import { Box, styled } from "@mui/material";
 
 const getGruposDocentes = async () => {
   try {
-    const response = await fetch("http://127.0.0.1:8000/api/grupos", {
+    const response = await fetch("http://127.0.0.1:8000/api/estudiante/gruposDocente", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -56,8 +56,8 @@ function GruposDocentes() {
   if (error) return <p>Error: {error}</p>;
 
   const handleMatricularse = (grupo) => {
-    const url = `/homeEstudiante/inscribirGrupo/${grupo.idGrupo}`; // Cambia esta línea con la URL adecuada
-    navigate(url); // Redirigir a la nueva página
+    const url = `/homeEstudiante/inscribirGrupo/${grupo.idGrupo}`; 
+    navigate(url); 
   };
 
 
@@ -72,14 +72,30 @@ function GruposDocentes() {
       >
         <DivLista>
           {grupos.map((grupo, index) => (
-            <ListaDocente key={index} onClick={() => handleMatricularse(grupo)}>
-              <div >
-                {/* <td>{grupo.numGrupo}</td> */}
-                <h2 style={{ fontWeight: '450' }}>
-                   {">"} {grupo.apellidoPaterno} {grupo.apellidoMaterno} {grupo.nombre}
-                </h2>
-              </div>
-            </ListaDocente>
+            <Box 
+              key={index} 
+              onClick={() => handleMatricularse(grupo)}
+              sx={{
+                width: '70%',
+                height: 60,
+                borderRadius: 1,
+                margin: 0.7,
+                pl:6,
+                textAlign: 'center',
+                fontSize: '1.5rem',
+                bgcolor: '#d0d4e4', 
+                display: 'flex', 
+                cursor: 'pointer',
+                justifyContent: 'flex-start', 
+                alignItems: 'center', 
+                '&:hover': {
+                  bgcolor: '#a9afc1', 
+                },
+              }}            
+            >
+              {grupo.apellidoPaterno} {grupo.apellidoMaterno} {grupo.nombre}
+            </Box>
+
           ))}
         </DivLista>
       </BaseUI>
@@ -89,18 +105,6 @@ function GruposDocentes() {
 
 export default GruposDocentes;
 
-const ListaDocente = styled("div")`
-  display: flex;
-  width: 83%;
-  cursor: pointer;
-  padding: 17px;
-  background-color: #d0d4e4;
-  user-select: none;
-  margin: auto;
-  margin-bottom: 0.2rem;
-  margin-top: 0.2rem;
-  overflow: auto;
-`;
 
 const DivLista = styled("div")`
   display: flex;

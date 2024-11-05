@@ -1,5 +1,6 @@
 <?php
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Estudiante;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\JsonResponse;
@@ -17,6 +18,7 @@ class EstudianteController extends Controller
             'idGrupo' => 'required|integer|exists:grupo,idGrupo',
             'clave' => 'required|string'
         ]);
+        // $idEstudiante = session()->get('estudiante.id');
 
         // Verificar si la relación ya existe
         $existeRelacion = EstudiantesGrupos::where('idEstudiante', $request->idEstudiante)
@@ -42,7 +44,8 @@ class EstudianteController extends Controller
 
     }
 
-    public function obtenerEstudiantesParaEmpresa($idEstudiante){
+    public function obtenerEstudiantesPorGrupo(){
+        $idEstudiante = session()->get('estudiante.id');
         $grupo = EstudiantesGrupos::select('idGrupo')
                 ->where('idEstudiante',$idEstudiante)
                 ->first();

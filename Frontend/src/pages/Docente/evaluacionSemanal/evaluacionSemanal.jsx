@@ -1,45 +1,72 @@
-import React, { Fragment, useState } from "react";
-import {
-  Container,
-  Typography,
-  Card,
-  CardContent,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  TextField,
-  Button,
-  Box,
-  Grid,
-} from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { Fragment, useState, useEffect } from "react";
 import BaseUI from "../../../components/baseUI/baseUI.jsx";
-import CuadroNota from "../../../components/cuadroNota/cuadroNota.jsx";
-import CuadroDialogo from "../../../components/cuadroDialogo/cuadroDialogo.jsx";
-import CuadroComentario from "../../../components/cuadroComentario/cuadroComentario.jsx";
 import TablaEvaluacionSemanal from "../../../components/tablaEvaluacionSemanal/tablaEvaluacionSemanal.jsx";
-import EditarPlanificacion from "../../../components/editarTablaPlanificacion/editarTablaPlanificacion.jsx";
-import NombreEmpresa from  "../../../components/infoEmpresa/nombreEmpresa.jsx";
-
+import NombreEmpresa from "../../../components/infoEmpresa/nombreEmpresa.jsx";
+import { useParams } from "react-router-dom";
+import { getSprintEstudiantes } from "../../../api/getSprintsEmpresa.jsx";
+import Loading from "../../../components/loading/loading.jsx";
+import InfoSnackbar from "../../../components/infoSnackbar/infoSnackbar.jsx";
 
 const EvaluarHito = () => {
+  const { idEmpresa, idSprint } = useParams();
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "info",
+  });
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await getSprintEstudiantes(idEmpresa, idSprint);
+        setData(data);
+      } catch (error) {
+        console.error("Error en la solicitud:", error);
+        setError("Error al obtener los datos del sprint");
+        setSnackbar({
+          open: true,
+          message: "Error al obtener los datos del sprint",
+          severity: "error",
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
 
+    fetchData();
+  }, [idEmpresa, idSprint]);
 
   return (
     <Fragment>
       <BaseUI
-        titulo={"EVALUAR HITO"}
+        titulo="EVALUACION SEMANAL"
         ocultarAtras={false}
         confirmarAtras={false}
-        dirBack={"/"}
-      > 
-        <NombreEmpresa
-          nombreLargo={"Creative Harbor SRL"}
-          nombreCorto={"Creative Harbor"}
-        />
-        <TablaEvaluacionSemanal/>
+        dirBack="/"
+      >
+        {error ? (
+          <p>Error: {error}</p>
+        ) : loading ? (
+          <Loading />
+        ) : (
+          <>
+            <NombreEmpresa
+              nombreCorto={data.empresa.nombre}
+              nombreLargo={data.empresa.nombreLargo}
+            />
+            <TablaEvaluacionSemanal estudiantes={data.estudiantes} />
+          </>
+        )}
       </BaseUI>
+      <InfoSnackbar
+        openSnackbar={snackbar.open}
+        setOpenSnackbar={(open) => setSnackbar({ ...snackbar, open })}
+        message={snackbar.message}
+        severity={snackbar.severity}
+      />
     </Fragment>
   );
 };

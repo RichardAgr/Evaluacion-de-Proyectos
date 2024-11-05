@@ -1,46 +1,44 @@
-import { Fragment, useState, useEffect } from "react";
+import { Fragment, useState, useEffect} from "react";
 import BaseUI from "../../../components/baseUI/baseUI";
 import { styled } from "@mui/material"; 
-import { Modal, Button, TextField, Autocomplete,Snackbar, Alert } from "@mui/material";
+import { Snackbar, Alert, Grid } from "@mui/material";
+import Box from '@mui/material/Box';
+import { Button } from '@mui/material';
+import { useNavigate } from "react-router-dom";
 
 const CrearGrupoEmpresa = () => {
-
     const [nombreLargo, setNombreLargo] = useState("");
     const [nombreCorto, setNombreCorto] = useState("");
     const [intentoEnviar, setIntentoEnviar] = useState(false);
-    const [integrantes, setIntegrantes] = useState([{ id: 1, nombre: "Jhon Corrales", fijo: true }]); // El estudiante hardcodeado con id=1
+    const [estudiante, setEstudiante] = useState({});
     const [mensajeError, setMensajeError] = useState("");
-    const [openModal, setOpenModal] = useState(false);
-    const [selectedIntegrante, setSelectedIntegrante] = useState(null); 
-    const [options, setOptions] = useState([]); 
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState("");
 
+    const navigate = useNavigate();
+
     useEffect(() => {
-        // Función para obtener los integrantes desde la API
-        const fetchIntegrantes = async () => {
+        const fetchEstudiante = async () => {
             try {
-                const response = await fetch('http://localhost:8000/api/estudiante/getEstudiante/1'); 
-                if (!response.ok) throw new Error('Error al recuperar integrantes');
+                const response = await fetch('http://localhost:8000/api/estudiante/getEstudiante/25'); 
+                if (!response.ok) throw new Error('Error al recuperar estudiante');
                 const data = await response.json();
-                // Asegúrate que los datos estén en el formato correcto
-                const formattedOptions = data.map((integrante) => ({ id: integrante.idEstudiante, label: integrante.nombreCompleto }));
-                setOptions(formattedOptions);
+                setEstudiante(data);
+                console.log(data);
             } catch (error) {
                 console.error(error);
-                setMensajeError("Error al cargar los integrantes.");
+                setMensajeError("Error al cargar el estudiante.");
             }
         };
         
-        fetchIntegrantes(); // Llama a la función para obtener los integrantes
+        fetchEstudiante(); // Llama a la función para obtener el estudiante
     }, []);
 
     const manejarSubmit = async () => {
         setIntentoEnviar(true);
-        if (nombreLargo && nombreCorto && integrantes.length >= 3) {
+        if (nombreLargo && nombreCorto && estudiante.idEstudiante) {
             try {
-                const estudiantesIds = integrantes.map(integrante => integrante.id); // Obtener los IDs de los integrantes
-                const response = await fetch('http://localhost:8000/api/estudiante/crearEmpresa', {
+                const response = await fetch('http://localhost:8000/api/crearGrupoEmpresa/paso1', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -48,167 +46,129 @@ const CrearGrupoEmpresa = () => {
                     body: JSON.stringify({
                         nombreLargo,
                         nombreCorto,
-                        estudiantes: estudiantesIds, // Incluir los IDs de los estudiantes
+                        estudiante: estudiante.idEstudiante,
                     }),
                 });
-    
                 if (!response.ok) throw new Error('Error al crear el grupo');
     
                 const result = await response.json();
                 console.log('Grupo creado con éxito:', result);
                 setSnackbarMessage("¡Grupo creado con éxito!");
-                setSnackbarOpen(true); // Mostrar el snackbar
+                setSnackbarOpen(true);
 
+                setTimeout(() => {
+                    navigate('/'); 
+                }, 2000);
             } catch (error) {
                 console.error(error);
                 setMensajeError("Error al crear el grupo.");
             }
         } else {
-            if (integrantes.length < 3) {
-                setMensajeError("Debe haber al menos 3 integrantes para crear el grupo."); 
-            } 
-            // Agrega aquí otras validaciones según sea necesario
+            setMensajeError("Debe completar todos los campos.");
         }
-    };
-    
-    
-
-    const agregarIntegrante = () => {
-        if (integrantes.length < 6) {
-            setOpenModal(true); 
-        } else {
-            setMensajeError("No puedes agregar más de 6 integrantes.");
-        }
-    };
-
-    const confirmarAgregarIntegrante = () => {
-        if (selectedIntegrante) {
-            // Verifica si el integrante ya está en la lista
-            const existe = integrantes.some(integrante => integrante.id === selectedIntegrante.id);
-            if (existe) {
-                setMensajeError("Este integrante ya ha sido agregado.");
-                return;
-            }
-    
-            // Agregar el integrante al grupo
-            const nuevoIntegrante = { id: selectedIntegrante.id, nombre: selectedIntegrante.label, fijo: false };
-            setIntegrantes([...integrantes, nuevoIntegrante]);
-    
-            // Eliminar el integrante seleccionado de las opciones disponibles
-            const nuevasOpciones = options.filter(option => option.id !== selectedIntegrante.id);
-            setOptions(nuevasOpciones); 
-    
-            // Limpiar la selección y cerrar el modal
-            setSelectedIntegrante(null);
-            setOpenModal(false);
-        } else {
-            setMensajeError("Debe seleccionar un integrante.");
-        }
-    };
-    
-
-    const eliminarIntegrante = (id) => {
-        setIntegrantes(integrantes.filter(integrante => integrante.id !== id));
     };
 
     return (
         <Fragment>
             <BaseUI
-                titulo={`CREAR GRUPO EMPRESA`}
+                titulo={`REGISTRAR GRUPO EMPRESA`}
                 ocultarAtras={false}
                 confirmarAtras={false}
                 dirBack={`/`}
             >
                 <div style={{ display: 'grid' }}>
                     <NombreEmpresaCompleto>
-                        <h3>NOMBRE LARGO:</h3>
-                        <InputCentro
-                            placeholder="Nombre Largo"
-                            value={nombreLargo}
-                            onChange={(e) => setNombreLargo(e.target.value)}
-                        />
-                            {intentoEnviar && (
-                            nombreLargo === "" 
-                            ? <Mensaje>No hay nombre largo</Mensaje>
-                            : nombreLargo.length < 5
-                            ? <Mensaje>debe tener un mínimo de 5 caracteres y un máximo de 100 caracteres.</Mensaje>
-                            : null
-                        )} 
+                        <Box component="section" sx={{ p: 2 }}>
+                            <h3>NOMBRE LARGO:</h3>
+                        </Box>
+                        <StyledWrapper>
+                            <div style={{ display: "flex", alignItems: "center" }}>
+                                <input
+                                    placeholder="Nombre Largo"
+                                    className="input"
+                                    value={nombreLargo}
+                                    onChange={(e) => setNombreLargo(e.target.value)}
+                                />
+                                {intentoEnviar && (
+                                    nombreLargo === "" 
+                                    ? <Alert severity="error" sx={{ ml: 1, pt: 0, pb: 0 }}>No hay nombre Largo</Alert>
+                                    : (nombreLargo.length < 5 || nombreLargo.length > 100) && (
+                                        <Alert severity="warning" sx={{ ml: 1, pt: 0, pb: 0 }}>
+                                            Debe tener entre 5 y 100 caracteres.
+                                        </Alert>
+                                    )
+                                )}
+                            </div>
+                        </StyledWrapper>
                     </NombreEmpresaCompleto>
 
                     <NombreEmpresaCompleto>
-                        <h3>NOMBRE CORTO:</h3>
-                        <InputCentro 
-                            placeholder="Nombre Corto"
-                            value={nombreCorto}
-                            onChange={(e) => setNombreCorto(e.target.value)} 
-                        />
-                            {intentoEnviar && (
-                            nombreCorto === "" 
-                            ? <Mensaje>No hay nombre largo</Mensaje>
-                            : nombreCorto.length < 2
-                            ? <Mensaje>debe tener un mínimo de 5 caracteres y un máximo de 100 caracteres.</Mensaje>
-                            : null
-                        )} 
-                    </NombreEmpresaCompleto>
-                    
-                    <div>
-                        <h2 style={{marginTop: '6vw'}}>Integrantes</h2>
-                        <h6 style={{ color: '#979797', fontSize: '1.5vw', padding: '0.4vw'}}>MAXIMO 6 - MINIMO 3</h6>
-                    </div>
-
-                    {integrantes.map((integrante, index) => (
-                        <Integrante key={integrante.id}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', padding: '10px' }}>
-                                <h3>{integrante.nombre}</h3>
-                                {index === 0 && (
-                                    <span style={{ color: 'black' }}>Representante Legal</span>
+                        <Box component="section" sx={{ p: 2 }}>
+                            <h3>NOMBRE CORTO:</h3>
+                        </Box>
+                        <StyledWrapper>
+                            <div style={{ display: "flex", alignItems: "center" }}>
+                                <input
+                                    placeholder="Nombre Corto"
+                                    className="input"
+                                    value={nombreCorto}
+                                    onChange={(e) => setNombreCorto(e.target.value)} 
+                                />
+                                {intentoEnviar && (
+                                    nombreCorto === "" 
+                                    ? <Alert severity="error" sx={{ ml: 1, pt: 0, pb: 0 }}>No hay nombre Corto</Alert>
+                                    : (nombreCorto.length < 2 || nombreCorto.length > 20) && (
+                                        <Alert severity="warning" sx={{ ml: 1, pt: 0, pb: 0 }}>
+                                            Debe tener entre 2 y 20 caracteres.
+                                        </Alert>
+                                    )
                                 )}
                             </div>
-                            {!integrante.fijo && (
-                                <BotonAzul onClick={() => eliminarIntegrante(integrante.id)}>
-                                    Eliminar
-                                </BotonAzul>
-                            )}
-                        </Integrante>
-                    ))}
+                        </StyledWrapper>
+                    </NombreEmpresaCompleto>
+   
+                    <Box pt={10}>
+                        <h2 style={{marginBottom:20}}>Integrantes</h2>
+                    </Box>
+                    <Box
+                                sx={{
+                                    width: "100%",
+                                    height: 70,
+                                    borderRadius: 1,
+                                    bgcolor: '#cfd4e1',
+                                    '&:hover': {
+                                        bgcolor: '#BFC4D1',
+                                    },
+                                    display: 'flex',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center',
+                                    marginBottom: '12px',
+                                }}
+                            >
+                                <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+                                    {estudiante && <h3 style={{paddingLeft: '35px'}}>{estudiante.nombreEstudiante}{' '}{estudiante.primerApellido}{' '}{estudiante.segundoApellido}</h3>}
+                                    <span style={{ color: 'black',paddingRight: '20px' }}>Representante Legal</span>
+                                </div>
+                            </Box>
 
                     {mensajeError && <Mensaje>{mensajeError}</Mensaje>}
-
-                    <div style={{ display: 'flex', justifyContent: 'flex-start', marginTop: '1vw' }}>
-                        <BotonRojo onClick={agregarIntegrante}>+ Añadir Integrante</BotonRojo>
-                    </div>
                     <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                        <BotonRojo onClick={manejarSubmit}>PUBLICAR GRUPO EMPRESA</BotonRojo>
-
+                        <Button  
+                            justifyContent="flex-end"
+                            variant="contained"
+                            color="primary"
+                            onClick={manejarSubmit}
+                            sx={{ minWidth: 50, width: '100px', height: '30px', marginTop: '20px' }}
+                        >
+                            CREAR
+                        </Button>
                     </div>
 
-                    {/* Modal para agregar integrante */}
-                    <Modal open={openModal} onClose={() => setOpenModal(false)}>
-                        <div style={{ padding: "20px", backgroundColor: "white", margin: "auto", marginTop: "20%", width: "300px", borderRadius: "8px" }}>
-                            <h2>Añadir Integrante</h2>
-                            <Autocomplete
-                                options={options} // Usar las opciones recuperadas
-                                getOptionLabel={(option) => option.label}
-                                onChange={(event, newValue) => setSelectedIntegrante(newValue)}
-                                renderInput={(params) => (
-                                    <TextField {...params} label="Selecciona un integrante" />
-                                )}
-                            />
-                            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '10px' }}>
-                                <Button variant="contained" color="primary" onClick={confirmarAgregarIntegrante}>
-                                    Añadir
-                                </Button>
-                                <Button variant="outlined" onClick={() => setOpenModal(false)}>
-                                    Cancelar
-                                </Button>
-                            </div>
-                        </div>
-                    </Modal>
                     <Snackbar 
                         open={snackbarOpen} 
-                        autoHideDuration={3000} 
+                        autoHideDuration={2000} 
                         onClose={() => setSnackbarOpen(false)}
+                        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }} // Centrar horizontalmente
                     >
                         <Alert onClose={() => setSnackbarOpen(false)} severity="success">
                             {snackbarMessage}
@@ -226,19 +186,8 @@ const NombreEmpresaCompleto = styled('div')`
     display: flex;
     box-sizing: border-box;
     align-items: center; 
-    margin-top: 1vw;
-    margin-bottom: 1vw;
-`;
-
-const InputCentro = styled('input')`
-    box-sizing: border-box;
-    justify-content: center;
-    width: 221px;
-    height: 34px;
-    background-color: #d0d4e4; 
-    border: none;
-    margin-left: 10px;
-    margin-right: 10px;
+    margin-top: 0.5vw;
+    margin-bottom: 0.5vw;
 `;
 
 const Mensaje = styled('div')`
@@ -248,35 +197,22 @@ const Mensaje = styled('div')`
     max-width: 300px;
 `;
 
-const BotonAzul = styled('button')`
-    margin-left: auto;
-    background-color: #114093; 
-    color: white; 
-    width: 122px;
-    height: 28px;
-    border: none;
-    cursor: pointer;
-    border-radius: 0.3vw;
-`;
+const StyledWrapper = styled('div')`
+  .input {
+    border: 2px solid transparent;
+    width: 15em;
+    height: 2.5em;
+    padding-left: 0.8em;
+    outline: none;
+    overflow: hidden;
+    background-color: #cfd4e1;
+    border-radius: 3px;
+    transition: all 0.5s;
+  }
 
-const BotonRojo = styled('button')`
-    background-color: #e30613; 
-    color: white; 
-    width: 25%;
-    height: 3vw;
-    border: none;
-    padding: 0.7vw; 
-    cursor: pointer;
-    margin-top: 1vw;
-    margin-bottom: 1vw;
-    border-radius: 0.3vw;
-`;
-
-const Integrante = styled('div')`
-    display: flex;
-    justify-content: space-between; 
-    align-items: center; 
-    background-color: #d6dbe5; 
-    padding: 10px;
-    margin-bottom: 10px;
+  .input:hover,
+  .input:focus {
+    border: 2px solid #4A9DEC;
+    background-color: white;
+  }
 `;

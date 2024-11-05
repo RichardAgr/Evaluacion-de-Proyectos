@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\DB;
 
 class GrupoSeeder extends Seeder
 {
-
     /**
      * Run the database seeds.
      */

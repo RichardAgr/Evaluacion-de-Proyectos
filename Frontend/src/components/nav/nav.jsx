@@ -12,27 +12,28 @@ import SeleccionarEmpresaSinValidar from "../../pages/Docente/listas/seleccionar
 import ValidarPlanificacion from "../../pages/Docente/validarPlanificacion/validarPlanificacion.jsx";
 import EvaluacionSemanal from "../../pages/Docente/evaluacionSemanal/evaluacionSemanal.jsx";
 import CalificarEstSemana from "../../pages/Docente/calificarSprint/calificarEstudiante/calificarEstSemana.jsx";
-
+import CalificarSprint from "../../pages/Docente/calificarSprint/calificarSprintU.jsx";
+import ListaSprints from "../../pages/Docente/calificarSprint/listaSprints.jsx";
 //archivos estudiante
 import HomeEstudiante from "../../pages/Estudiante/homeEstudiante/homeEstudiante.jsx";
 import HomeGrupoEstudiante from "../../pages/Estudiante/homeGrupoEstudiante/homeGrupoEstudiante.jsx";
 import ModificarPlanificacion from "../../pages/Estudiante/editarPlanificacion/editarPlanificacion.jsx";
 import PublicarPlanificacion from "../../pages/Estudiante/publicarPlanificacion/publicarPlanificacion.jsx";
-import ModificarTarea from "../../pages/Estudiante/editarPlanificacion/modificarTarea/modificarTarea.jsx";
 
 import VisualizarSprintEst from "../../pages/Estudiante/visualizarSprintEstudiante/visualizarSprint.jsx";
 import VisualizarTarea from "../../pages/Estudiante/tareaEstudiante/viualizarTarea.jsx";
 import ModificarListaTareas from "../../pages/Estudiante/editarPlanificacion/modificarListaTareas/modificarListaTareas.jsx";
 
-import CrearGrupoEmpresa from "../../pages/Estudiante/grupoEmpresa/crearGrupoEmpresa.jsx";
+import ModificarGrupoEmpresa from "../../pages/Estudiante/grupoEmpresa/modificarGrupoEmpresa.jsx";
 import GruposDisponibles from "../../pages/Estudiante/gruposDisponibles/gruposDisponibles.jsx"; // Import the new page
 import InscribirGrupo from "../../pages/Estudiante/gruposDisponibles/inscribirGrupo.jsx";
 import ObtenerEstudiantesPorGrupo from "../../pages/Docente/listas/listaEstudiantes/listaEstudiantes.jsx";
-import ObtenerEstudiantesPorGrupoA from "../../pages/Docente/listas/listaEstudiantes/listaEstudiantesA.jsx";
 import EmpresasPorDocente from "../../pages/Docente/listas/listaEmpresas/listaEmpresaPorDocente.jsx";
-
+import ModificarTarea from "../../pages/Estudiante/modificarTarea/modificarTarea.jsx";
+import ListaTareas from "../../pages/Estudiante/modificarTarea/listaTareas.jsx";
 import CalificacionesHitoEmpresa from "../../pages/Estudiante/grupoEmpresa/calificacionesHitoEmpresa.jsx";
 import SeleccionarEmpresaVisualizar from "../../pages/Docente/listas/seleccionarEmpresaVisualizar/seleccionarEmpresaVisualizar.jsx";
+import CrearGrupoEmpresa from "../../pages/Estudiante/grupoEmpresa/crearGrupoEmpresa.jsx";
 
 function Nav() {
   return (
@@ -46,6 +47,8 @@ function Nav() {
         path="/visualizarPlanificacion"
         element={<SeleccionarEmpresaVisualizar />}
       />
+      <Route path="/:idEmpresa/calificarSprints" element={<ListaSprints/>}/>
+      <Route path="/:idEmpresa/calificarSprints/sprint/:idSprint" element={<CalificarSprint/>}/>
 
       {/** Visualizar Planificacion*/}
       <Route
@@ -103,8 +106,14 @@ function Nav() {
       />
       <Route
         path="/homeEstudiante/homeGrupoEstudiante/crearGrupo"
+        element={<ModificarGrupoEmpresa />}
+      />
+      <Route
+        path="/homeEstudiante/homeGrupoEstudiante/crearGrupo1"
         element={<CrearGrupoEmpresa />}
       />
+
+
 
       {/** Ruta Estudiante*/}
       <Route path="/homeEstudiante" element={<HomeEstudiante />} />
@@ -112,7 +121,7 @@ function Nav() {
         path="/homeEstudiante/homeGrupoEstudiante"
         element={<HomeGrupoEstudiante />}
       />
-
+      
       {/** Modificar Planificacion */}
       <Route
         path="/modificarPlanificacion/Empresa/:idEmpresa"
@@ -125,9 +134,14 @@ function Nav() {
         element={<PublicarPlanificacion />}
       />
 
-      <Route
-        path="/homeEstudiante/homeGrupoEstudiante/sprint/semana/tareas/:idTarea"
+      
+      <Route  
+        path="/homeEstudiante/homeGrupoEstudiante/sprintE/:idSprint/semana/editarTarea/:idTarea"
         element={<ModificarTarea />}
+      />
+      <Route
+        path="/homeEstudiante/homeGrupoEstudiante/sprintE/:idSprint"
+        element={<ListaTareas />}
       />
 
       <Route
@@ -154,15 +168,11 @@ function Nav() {
         element={<ObtenerEstudiantesPorGrupo />}
       />
       <Route
-        path="/homeGrupoDocente/listaEstudiantesA/:idGrupo/:gestionGrupo"
-        element={<ObtenerEstudiantesPorGrupoA />}
-      />
-      <Route
         path="/homeGrupoDocente/listaEmpresas/:idDocente"
         element={<EmpresasPorDocente />}
       />
       <Route
-        path="/homeDcoente/visCalificar"
+        path="/homeEstudiante/visCalificar"
         element={<CalificarEstSemana />}
       />
     </Routes>
