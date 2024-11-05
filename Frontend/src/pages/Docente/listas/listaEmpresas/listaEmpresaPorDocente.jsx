@@ -34,21 +34,25 @@ function EmpresasPorGrupo() {
     errorDetails: "",
   });
   
-  const idGrupo = 1; 
+  const idDocente = 1; 
   const gestionGrupo = '2024-2'; 
   // Initial data fetch with GET request
   useEffect(() => {
     setLoading(true)
-    const fetchData = async () => {
+    const fetchEmpresas = async () => {
       setLoading(true);
       try {
-        const response = await fetch(`http://localhost:8000/grupo/empresas/${idGrupo}/${gestionGrupo}`);
+        const response = await fetch(`http://localhost:8000/api/docente/obtenerEmpresasPorGrupoYDocente?` +
+          new URLSearchParams({
+            idDocente,
+            gestionGrupo,
+          })
+        );
 
         if (!response.ok) throw new Error('Error fetching data');
 
         const result = await response.json();
         setData(result);
-        console.log(result)
       } catch (err) {
         setError({
           error: true,

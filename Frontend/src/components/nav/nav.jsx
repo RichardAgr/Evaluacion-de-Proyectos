@@ -26,7 +26,6 @@ import ModificarGrupoEmpresa from "../../pages/Estudiante/grupoEmpresa/modificar
 import GruposDisponibles from "../../pages/Estudiante/gruposDisponibles/gruposDisponibles.jsx"; // Import the new page
 import InscribirGrupo from "../../pages/Estudiante/gruposDisponibles/inscribirGrupo.jsx";
 import ObtenerEstudiantesPorGrupo from "../../pages/Docente/listas/listaEstudiantes/listaEstudiantes.jsx";
-import ObtenerEstudiantesPorGrupoA from "../../pages/Docente/listas/listaEstudiantes/listaEstudiantesA.jsx";
 import EmpresasPorDocente from "../../pages/Docente/listas/listaEmpresas/listaEmpresaPorDocente.jsx";
 import ModificarTarea from "../../pages/Estudiante/modificarTarea/modificarTarea.jsx";
 import ListaTareas from "../../pages/Estudiante/modificarTarea/listaTareas.jsx";
@@ -150,15 +149,11 @@ function Nav() {
         element={<ObtenerEstudiantesPorGrupo />}
       />
       <Route
-        path="/homeGrupoDocente/listaEstudiantesA/:idGrupo/:gestionGrupo"
-        element={<ObtenerEstudiantesPorGrupoA />}
-      />
-      <Route
         path="/homeGrupoDocente/listaEmpresas/:idDocente"
         element={<EmpresasPorDocente />}
       />
       <Route
-        path="/homeDcoente/visCalificar"
+        path="/homeEstudiante/visCalificar"
         element={<CalificarEstSemana />}
       />
 
