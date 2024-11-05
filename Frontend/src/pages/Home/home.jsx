@@ -37,7 +37,7 @@ function Home() {
   };
 
   const handleNavigateToCrearEmpresa = () => {
-    navigate("/homeEstudiante/homeGrupoEstudiante/crearGrupo");
+    navigate("/homeEstudiante/homeGrupoEstudiante/crearGrupo1");
   };
 
   const handleNavigateToGruposDisponibles = () => {

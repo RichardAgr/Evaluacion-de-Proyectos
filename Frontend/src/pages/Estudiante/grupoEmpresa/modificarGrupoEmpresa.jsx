@@ -38,7 +38,7 @@ const ModificarGrupoEmpresa = () => {
             }
         };
         
-        fetchIntegrantes(); // Llama a la función para obtener los integrantes
+        fetchIntegrantes(); 
     }, []);
 
     const manejarSubmit = async () => {
