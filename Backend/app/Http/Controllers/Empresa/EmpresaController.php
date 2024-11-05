@@ -31,7 +31,7 @@ class EmpresaController extends Controller
             'nombreLargo' => $empresa->nombreLargo,
             'integrantes' => $empresa->estudiantes->map(function ($estudiante) {
                 return [
-                    'idEstudiante'=> $estudiante->idEstudiante,
+                    'idEstudiante' => $estudiante->idEstudiante,
                     'nombreEstudiante' => $estudiante->nombreEstudiante,
                     'primerApellido' => $estudiante->primerApellido,
                     'segundoApellido' => $estudiante->segundoApellido,
@@ -198,4 +198,41 @@ public function getCalificacionesEmpresa($idEmpresa)
         }
     }
 
+    public function getSprintsEntregables($idEmpresa)
+    {
+        try {
+            $empresa = Empresa::with(['sprints.entregables'])
+                ->where('idEmpresa', $idEmpresa)
+                ->first();
+
+            if (!$empresa) {
+                return response()->json(['error' => 'Empresa no encontrada'], 404);
+            }
+
+            // Retornar solo los sprints y sus entregables
+            $sprints = $empresa->sprints->map(function ($sprint) {
+                return [
+                    'idSprint' => $sprint->idSprint,
+                    'numeroSprint' => $sprint->numeroSprint,
+                    'fechaIni' => $sprint->fechaIni,
+                    'fechaFin' => $sprint->fechaFin,
+                    'fechaEntrega' => $sprint->fechaEntrega,
+                    'cobro' => $sprint->cobro,
+                    'comentario' => $sprint->comentario,
+                    'nota' => $sprint->nota,
+                    'entregables' => $sprint->entregables->map(function ($entregable) {
+                        return [
+                            'idEntregables' => $entregable->idEntregables,
+                            'descripcionEntregable' => $entregable->descripcionEntregable,
+                            'archivoEntregable' => $entregable->archivoEntregable,
+                        ];
+                    }),
+                ];
+            });
+
+            return response()->json(['sprints' => $sprints], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error al obtener los sprints y entregables: ' . $e->getMessage()], 500);
+        }
+    }
 }
