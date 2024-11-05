@@ -392,7 +392,7 @@ class SprintController extends Controller
                         'idSprint' => $idSprint,
                     ],
                     [
-                        'nota' => $estudiante['nota'],
+                        // 'nota' => $estudiante['nota'],
                         'comentario' => $estudiante['comentario']
                     ]
                 );

@@ -15,6 +15,7 @@ class EstudiantesEmpresasSeeder extends Seeder
         $estudiantes = range(1, 24);
         $empresas = [1, 2, 3, 4, 5];
         $numEmpresas = count($empresas);
+        $numEmpresas = count($empresas);
         $estudiantesPorEmpresa = ceil(count($estudiantes) / $numEmpresas);
 
         // Shuffle the students to ensure random distribution

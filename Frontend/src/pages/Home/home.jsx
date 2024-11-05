@@ -42,8 +42,8 @@ function Home() {
       onClick: () => navigate("/validarPlanificacion/"),
     },
     {
-      label: "Calificar Sprint",
-      onClick: () => navigate("/calificarSprint/empresa/1/sprint/1/"),
+      label: "seguimiento semanal",
+      onClick: () => navigate("/evaluacionSemanal/empresa/1/sprint/1"),
     },
     {
       label: "Modificar Lista de Tareas",
@@ -57,10 +57,6 @@ function Home() {
     {
       label: "Lista Estudiantes",
       onClick: () => navigate("/homeGrupoDocente/listaEstudiantes/1/2024-2"),
-    },
-    {
-      label: "Visualizar Notas Estudiantes",
-      onClick: () => navigate("/homeDcoente/visCalificar"),
     },
   ];
 
