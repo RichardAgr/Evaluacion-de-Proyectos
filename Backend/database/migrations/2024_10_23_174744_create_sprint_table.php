@@ -18,7 +18,7 @@ class CreateSprintTable extends Migration
             $table->date('fechaIni');
             $table->date('fechaFin');
             $table->date('fechaEntrega');
-            $table->decimal('cobro',8,2);
+            $table->decimal('cobro',5,2);
             
             // * Llave foranea idPlanificacion
             $table->foreign('idPlanificacion')
