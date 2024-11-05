@@ -22,6 +22,12 @@ Route::get('/nombreEmpresa/{id}', [EmpresaController::class, 'getNombreEmpresa']
 
 Route::get('/planificacion/{idEmpresa}', [PlanificacionController::class, 'show']);
 
+
+// ----Visualizar Sprint-----
+// Devuelve todos los datos del Sprint por id
+Route::get('/getSprintPorId', [SprintController::class, 'getSprintPorId']);
+// Devuelve una lista de Sprints por idEmpresa
+Route::get('/getListaSprintsPorIdEmpresa', [SprintController::class, 'getListaSprintsPorIdEmpresa']);
 // ----añadir revision-----
 // cambia la revision como valida
 Route::put('/validar', [PlanificacionController::class, 'validar']);
@@ -68,6 +74,10 @@ Route::post('/planificacion/guardarSprints', [SprintController::class, 'modifica
 Route::post('/planificacion/guardarEntregables', [EntregablesController::class, 'guardarEntregables']);
 //tests
 //---Modificar planificacion---
+//tests para ver lista de sprints y sprints por ID
+Route::get('/testGetSprint',[SprintController::class, 'testSprintPorId']);
+
+Route::get('/testGetListaSprints',[SprintController::class, 'testListaSprintsPorIdEmpresa']);
 //tests para ver si los sprints insertados se guardan
 Route::get('/testGuardar', [SprintController::class, 'testModificarSprint']);
 //tests para  ver si la planificacion se actualiza o se crea si no existe

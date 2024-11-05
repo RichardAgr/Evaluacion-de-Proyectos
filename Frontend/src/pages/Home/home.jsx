@@ -2,16 +2,16 @@ import { Fragment } from "react";
 import Footer from "../../components/Footer/footer.jsx";
 import Header from "../../components/Header/header.jsx";
 import { useNavigate } from "react-router-dom";
-import { Container, Grid, Button, Typography, Paper } from "@mui/material";
+import { Container, Grid2, Button, Typography, Paper } from "@mui/material";
 
 const ButtonGroup = ({ title, buttons }) => (
   <Paper elevation={3} sx={{ p: 3, mb: 4 }}>
     <Typography variant="h5" gutterBottom>
       {title}
     </Typography>
-    <Grid container spacing={2}>
+    <Grid2 container spacing={2}>
       {buttons.map((button, index) => (
-        <Grid item xs={12} sm={6} md={4} key={index}>
+        <Grid2 item xs={12} sm={6} md={4} key={index}>
           <Button
             variant="contained"
             color="primary"
@@ -27,9 +27,9 @@ const ButtonGroup = ({ title, buttons }) => (
           >
             {button.label}
           </Button>
-        </Grid>
+        </Grid2>
       ))}
-    </Grid>
+    </Grid2>
   </Paper>
 );
 
@@ -112,6 +112,10 @@ function Home() {
     {
       label: "Publicar Planificación",
       onClick: () => navigate("/publicarPlanificacion/empresa/1"),
+    },
+    {
+      label: "Visualizar Sprint",
+      onClick: () => navigate("/visualizarSprint/empresa/1"),
     },
   ];
 
