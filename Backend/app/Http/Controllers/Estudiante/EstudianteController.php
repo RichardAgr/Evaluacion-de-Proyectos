@@ -14,14 +14,14 @@ class EstudianteController extends Controller
     {
         // Validación de la solicitud
         $request->validate([
-            
+            'idEstudiante' => 'required|integer|exists:estudiante,idEstudiante',
             'idGrupo' => 'required|integer|exists:grupo,idGrupo',
             'clave' => 'required|string'
         ]);
-        $idEstudiante = session()->get('estudiante.id');
+        // $idEstudiante = session()->get('estudiante.id');
 
         // Verificar si la relación ya existe
-        $existeRelacion = EstudiantesGrupos::where('idEstudiante', $idEstudiante)
+        $existeRelacion = EstudiantesGrupos::where('idEstudiante', $request->idEstudiante)
                                             //->where('idGrupo', $request->idGrupo)
                                             ->exists();
 
