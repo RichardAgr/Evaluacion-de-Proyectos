@@ -43,7 +43,7 @@ export const actualizarSprint = async (idSprint, comentario, nota) => {
     }
 
     const data = await response.json();
-    return data;
+    return response.ok;
   } catch (error) {
     console.error("Error en la solicitud:", error);
     throw error;

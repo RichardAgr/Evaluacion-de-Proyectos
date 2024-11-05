@@ -5,13 +5,12 @@ import Box from '@mui/material/Box';
 import BaseUI from '../../../components/baseUI/baseUI';
 import Loading from '../../../components/loading/loading'
 import Error from "../../../components/error/error";
+import { getSprintsEntregables } from "../../../api/getEmpresa"
 /* eslint-disable react/prop-types */
 
 const ListaSprints = () => {
     const navigate = useNavigate();
     const [sprints, setSprints] = useState([
-        {idSprint: 1, numeroSprint:1},
-        {idSprint: 2, numeroSprint:2}
     ])
     const { idEmpresa } = useParams();
     const [loading, setLoading] = useState(true);  
@@ -24,7 +23,11 @@ const ListaSprints = () => {
     useEffect(()=>{
         const fetchSprints = async ()=>{
             try {
-                //setSprints()
+                const [sprintData] = await Promise.all ([
+                    getSprintsEntregables(idEmpresa),
+                ])
+                console.log(sprintData.sprints)
+                setSprints(sprintData.sprints)
             } catch (error) {
                 setError({
                     error: true,
@@ -56,31 +59,37 @@ const ListaSprints = () => {
             dirBack={`/`}
         >
         <DivLista>
-            {sprints?.map((sprint, index)=>(
-                <Box 
-                    key={index}
-                    onClick={() => clickBoton(sprint.idSprint)}
-                    sx={{
-                        width: '80%', height: 60,
-                        borderRadius: 0.6, margin: 0.7,
-                        marginLeft: 7, pl: 2,
-                        textAlign: 'center',
-                        fontSize: '1.5rem',
-                        bgcolor: '#d0d4e4', 
-                        textTransform: 'uppercase',
-                        display: 'flex', 
-                        cursor: 'pointer',
-                        justifyContent: 'flex-start', 
-                        alignItems: 'center', 
-                        '&:hover': {
-                            bgcolor: '#c0c4d4', 
-                        },
-                    }}            
-                >
-                    <div className='arrow-right'></div>
-                    Sprint {sprint.numeroSprint}
-                </Box>
-            ))}
+            {sprints!==null? 
+                <>
+                    {sprints.map((sprint, index)=>(
+                    <Box 
+                        key={index}
+                        onClick={() => clickBoton(sprint.idSprint)}
+                        sx={{
+                            width: '80%', height: 60,
+                            borderRadius: 0.6, margin: 0.7,
+                            marginLeft: 7, pl: 2,
+                            textAlign: 'center',
+                            fontSize: '1.5rem',
+                            bgcolor: sprint.nota === null ? '#d0d4e4' : '#32cd32',
+                            textTransform: 'uppercase',
+                            display: 'flex', 
+                            cursor: 'pointer',
+                            justifyContent: 'flex-start', 
+                            alignItems: 'center', 
+                            '&:hover': {
+                                bgcolor: sprint.nota === null ? '#c0c4d4' : '#68ba44',
+                            },
+                        }}            
+                    >
+                        <div className='arrow-right'></div>
+                        Sprint {sprint.numeroSprint}{sprint.nota === null ? "":"(YA EVALUADO)"}
+                    </Box>
+                    ))}
+                </>
+                :
+                <>No se encontro ningun sprint en la base de datos</>
+            }
         </DivLista>
         </BaseUI>
     );

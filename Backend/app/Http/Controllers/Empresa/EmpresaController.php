@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\EstudiantesGrupos;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
 
 class EmpresaController extends Controller
 {
@@ -221,10 +222,26 @@ public function getCalificacionesEmpresa($idEmpresa)
                     'comentario' => $sprint->comentario,
                     'nota' => $sprint->nota,
                     'entregables' => $sprint->entregables->map(function ($entregable) {
+                        if (is_null($entregable->archivoEntregable)) {
+                            return [
+                                'idEntregables' => $entregable->idEntregables,
+                                'descripcionEntregable' => $entregable->descripcionEntregable,
+                                'archivoEntregable' => null, // Retorna null si no hay archivo
+                            ];
+                        }
+                        // Decodificar el archivo Base64
+                        $contenidoArchivo = base64_decode($entregable->archivoEntregable);
+                        $nombreArchivo = $entregable->descripcionEntregable . $entregable->idEntregables . '.pdf'; // Puedes personalizar el nombre o extensión
+                        $rutaArchivo = 'public/archivos/' . $nombreArchivo;
+
+                        // Guardar el archivo decodificado en el almacenamiento
+                        Storage::put($rutaArchivo, $contenidoArchivo);
+
+                        // Generar la URL para el archivo
                         return [
                             'idEntregables' => $entregable->idEntregables,
                             'descripcionEntregable' => $entregable->descripcionEntregable,
-                            'archivoEntregable' => $entregable->archivoEntregable,
+                            'archivoEntregable' => url(Storage::url($rutaArchivo)), // URL completa al archivo
                         ];
                     }),
                 ];

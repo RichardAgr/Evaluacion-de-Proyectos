@@ -58,6 +58,10 @@ function Home() {
   const handleNavigateResultadosAlumnos = () => {
     navigate("/homeEstudiante/visCalificar");
   };
+  
+  const handleNavigateCalificarSprint = () => {
+    navigate("/1/calificarSprints");
+  };
   return (
     <Fragment>
       <Header />
@@ -231,6 +235,16 @@ function Home() {
           onClick={handleNavigateCalificacionesHito}
         >
           Ir a Ver Calificaciones
+        </Button>
+      </Grid2>
+      <Grid2 item xs={12} sm={6} md={4}>
+        <Button
+          variant="contained"
+          color="primary"
+          size="large"
+          onClick={handleNavigateCalificarSprint}
+        >
+          Calificar Sprint
         </Button>
       </Grid2>
     </Grid2>

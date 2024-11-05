@@ -49,6 +49,9 @@ Route::get('/docente/listaEstudiantes', [GrupoController::class, 'obtenerEstudia
 Route::get('/docente/obtenerEmpresasPorGrupoYDocente',[GrupoController::class, 'obtenerEmpresasPorGrupoYDocente']);
 //---Recibe las tareas de un estudiante {Puuede no funcionar}
 Route::get('/docente/obtenerTareas', [NotaSprintController::class, 'obtenerTareaYEstudiante']);
+//-- sprints con toda su informacion y los entragables
+Route::get('/empresa/{idEmpresa}/sprintsEntregables', [EmpresaController::class, 'getSprintsEntregables']);
+
 
 //============================= PLANIFICACION ==============================
 
@@ -120,6 +123,8 @@ Route::get('/empresa/{idEmpresa}/sprintsEntregables', [EmpresaController::class,
 Route::put('/empresa/{idEmpresa}/sprint/{idSprint}/semana/{idSemana}/tareas', [TareaController::class, 'updateTareasSemana']);
 Route::post('/empresa/{idEmpresa}/sprint/{idSprint}/evaluacion', [SprintController::class, 'updateSprintEvaluar']);
 
+// ----post docente nota sprint
+Route::post('/sprint/{idSprint}/actualizar', [SprintController::class, 'actualizarNotaComentario']);
 
 
 // ============================      SESIONES DOCENTE     ======================================
