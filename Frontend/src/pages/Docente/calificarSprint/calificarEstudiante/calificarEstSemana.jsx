@@ -16,7 +16,7 @@ import {
 
 function CalificarEstSemana() {
     const empresaId = 1; 
-    const Sprint = "2";
+    const Sprint = "1";
     const [nombreEmpresa, setNombreEmpresa] = useState({ nombreCorto: '', nombreLargo: '' });
     const [teamData, setTeamData] = useState([]);
     const [loading, setLoading] = useState(true);
