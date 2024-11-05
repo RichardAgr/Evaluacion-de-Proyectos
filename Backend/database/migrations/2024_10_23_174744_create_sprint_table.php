@@ -18,14 +18,15 @@ class CreateSprintTable extends Migration
             $table->date('fechaIni');
             $table->date('fechaFin');
             $table->date('fechaEntrega');
-            $table->decimal('cobro',8,2);
-            
-            // * Llave foranea idPlanificacion
+            $table->decimal('cobro', 8, 2);
+            $table->string('comentario')->nullable()->default('');
+            $table->integer('nota')->nullable()->default(0);
+
+            // Llave foránea idPlanificacion
             $table->foreign('idPlanificacion')
                 ->references('idPlanificacion')
                 ->on('planificacion')
                 ->onDelete('cascade');
-
 
             $table->charset = 'utf8mb4';
             $table->collation = 'utf8mb4_unicode_ci';

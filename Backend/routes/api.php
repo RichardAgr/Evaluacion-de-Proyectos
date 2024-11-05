@@ -51,9 +51,9 @@ Route::get('/grupos', [GrupoController::class, 'obtenerTodosLosGrupos']);
 Route::get('/grupo/{idGrupo}/participantes', [GrupoController::class, 'obtenerEstudiantesPorGrupo']);
 Route::get('/grupoDescripcion/{idGrupo}', [GrupoController::class, 'getDescripcion']);
 Route::get('/grupo/estudiantes/{idGrupo}/{gestionGrupo}', [GrupoController::class, 'obtenerEstudiantesPorGrupo']);
-Route::get('/estudiante/sprint/semana/{idSprint}',[SprintController::class, 'sprintsSemanas']);
-Route::get('/docente/obtenerEmpresasPorGrupoYDocente',[GrupoController::class, 'obtenerEmpresasPorGrupoYDocente']);
-Route::get('/estudiante/getEstudiante/{idEstudiante}',[EstudianteController::class, 'obtenerEstudiantesParaEmpresa']);
+Route::get('/estudiante/sprint/semana/{idSprint}', [SprintController::class, 'sprintsSemanas']);
+Route::get('/docente/obtenerEmpresasPorGrupoYDocente', [GrupoController::class, 'obtenerEmpresasPorGrupoYDocente']);
+Route::get('/estudiante/getEstudiante/{idEstudiante}', [EstudianteController::class, 'obtenerEstudiantesParaEmpresa']);
 Route::get('/empresas/{idEmpresa}/calificaciones', [EmpresaController::class, 'getCalificacionesEmpresa']);
 Route::get('/empresas/notaSprint', [NotaSprintController::class, 'notaSprint']);
 Route::get('/empresas/notasSprint/{idEmpresa}', [NotaSprintController::class, 'notasSprint']);
@@ -96,12 +96,12 @@ Route::post('/docente/evaluacion', [NotaSprintController::class, 'realizarEvalua
 Route::post('/empresa/{idEmpresa}/sprint/{idSprint}/evaluacion', [SprintController::class, 'updateSprintEvaluar']);
 
 
+Route::post('/sprint/{idSprint}/actualizar', [SprintController::class, 'actualizarNotaComentario']);
+
+
 Route::get('/empresa/{idEmpresa}/sprint/{idSprint}/semana/{idSemana}/tareas', [TareaController::class, 'getTareasSemana']);
+Route::get('/empresa/{idEmpresa}/sprintsEntregables', [EmpresaController::class, 'getSprintsEntregables']);
+
+
+
 Route::put('/empresa/{idEmpresa}/sprint/{idSprint}/semana/{idSemana}/tareas', [TareaController::class, 'updateTareasSemana']);
-
-
-
-
-
-
-

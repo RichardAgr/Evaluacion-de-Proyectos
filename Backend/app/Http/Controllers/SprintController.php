@@ -393,4 +393,20 @@ class SprintController extends Controller
             return response()->json(['error' => 'Error al actualizar la evaluación: ' . $e->getMessage()], 500);
         }
     }
+
+    public function actualizarNotaComentario(Request $request, $idSprint)
+    {
+        try {
+
+            $sprint = Sprint::findOrFail($idSprint);
+
+            $sprint->comentario = $request->input('comentario', '');
+            $sprint->nota = $request->input('nota', 0);
+            $sprint->save();
+
+            return response()->json(['message' => 'Sprint actualizado correctamente'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error al actualizar el sprint: ' . $e->getMessage()], 500);
+        }
+    }
 }
