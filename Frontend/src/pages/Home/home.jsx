@@ -35,27 +35,17 @@ function Home() {
   const handleNavigateToListaEstudiantes = () => {
     navigate("/homeGrupoDocente/listaEstudiantes/1/2024-2");
   };
-  const handleNavigateToListaEstudiantesA = () => {
-    navigate("/homeGrupoDocente/listaEstudiantesA/1/2024-2");
-  };
 
   const handleNavigateToCrearEmpresa = () => {
-    navigate("/homeEstudiante/homeGrupoEstudiante/crearGrupo");
+    navigate("/homeEstudiante/homeGrupoEstudiante/crearGrupo1");
   };
 
   const handleNavigateToGruposDisponibles = () => {
     navigate("/homeEstudiante/gruposDisponibles");
   };
-  const handleNavigateToNotaSprint = () => {
-    navigate( 'homeEstudiante/homeGrupoEstudiante/empresas/1/calificaciones');
-  };
+
   const handleNavigateToModificarTarea = () => {
     navigate( '/homeEstudiante/homeGrupoEstudiante/sprintE/1');
-  };
-
-
-  const handleNavigateEditarTarea = () => {
-    navigate("/homeEstudiante/homeGrupoEstudiante/sprint/semana/tareas/1");
   };
 
   const handleNavigateCalificacionesHito = () => {
@@ -66,7 +56,7 @@ function Home() {
     navigate("/homeEstudiante/homeGrupoEstudiante/sprint/1");
   };
   const handleNavigateResultadosAlumnos = () => {
-    navigate("/homeDcoente/visCalificar");
+    navigate("/homeEstudiante/visCalificar");
   };
   return (
     <Fragment>
@@ -188,29 +178,9 @@ function Home() {
           variant="contained"
           color="primary"
           size="large"
-          onClick={handleNavigateToEmpresasLista}
-        >
-          Ir a Lista Empresas
-        </Button>
-      </Grid2>
-      <Grid2 item xs={12} sm={6} md={4}>
-        <Button
-          variant="contained"
-          color="primary"
-          size="large"
           onClick={handleNavigateToListaEstudiantes}
         >
-          Ir a Lista Estudiantes
-        </Button>
-      </Grid2>
-      <Grid2 item xs={12} sm={6} md={4}>
-        <Button
-          variant="contained"
-          color="primary"
-          size="large"
-          onClick={handleNavigateToListaEstudiantesA}
-        >
-          Ir a Lista Estudiantes mejorado
+          Lista Estudiantes
         </Button>
       </Grid2>
       <Grid2 item xs={12} sm={6} md={4}>
@@ -258,30 +228,9 @@ function Home() {
           variant="contained"
           color="primary"
           size="large"
-          onClick={handleNavigateEditarTarea}
-        >
-          Ir a Editar Tarea
-        </Button>
-      </Grid2>
-      <Grid2 item xs={12} sm={6} md={4}>
-        <Button
-          variant="contained"
-          color="primary"
-          size="large"
           onClick={handleNavigateCalificacionesHito}
         >
           Ir a Ver Calificaciones
-        </Button>
-      </Grid2>
-      <Grid2 item xs={12} sm={6} md={4}>
-        <Button
-          variant="contained"
-          color="primary"
-          size="large"
-          onClick={handleNavigateToNotaSprint}
-
-        >
-          Nota Sprint
         </Button>
       </Grid2>
     </Grid2>
