@@ -89,7 +89,7 @@ const TablaEvaluacionSemanal = ({ estudiantes, idSprint }) => {
             <TableRow>
               <TableCell>Integrante</TableCell>
               <TableCell>Tareas</TableCell>
-              <TableCell>Nota (1-100)</TableCell>
+              {/* <TableCell>Nota (1-100)</TableCell> */}
               <TableCell>Comentario</TableCell>
             </TableRow>
           </TableHead>
@@ -104,7 +104,7 @@ const TablaEvaluacionSemanal = ({ estudiantes, idSprint }) => {
                     ))}
                   </ul>
                 </TableCell>
-                <TableCell>
+                {/* <TableCell>
                   <TextField
                     type="number"
                     value={notas[index]}
@@ -112,7 +112,7 @@ const TablaEvaluacionSemanal = ({ estudiantes, idSprint }) => {
                     inputProps={{ min: 1, max: 100 }}
                     size="small"
                   />
-                </TableCell>
+                </TableCell> */}
                 <TableCell>
                   <TextField
                     multiline
