@@ -5,7 +5,7 @@ import Box from '@mui/material/Box';
 
 /* eslint-disable react/prop-types */
 
-const SprintSemanas = ({ title, semana, idSprint, navigateLink }) => {
+const SprintSemanas = ({ title, semana, idSprint, navigateLink}) => {
     const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(false);
 
@@ -42,7 +42,7 @@ const SprintSemanas = ({ title, semana, idSprint, navigateLink }) => {
                     },
                 }}            
             >
-                {isOpen ? '>  ' : '>  '}
+                {isOpen ? <div className='arrow-down'></div> : <div className='arrow-right'></div> }
                 {title}
             </Box>
 
@@ -73,7 +73,7 @@ const SprintSemanas = ({ title, semana, idSprint, navigateLink }) => {
                                     },
                                 }}            
                             >
-                                {isOpen ? '>  ' : '>  '}
+                                {isOpen ? <div className='arrow-right'></div> : <div className='arrow-right'></div>}
                                 {tarea.nombreTarea}
                             </Box>
                         ))
@@ -109,4 +109,21 @@ const DivLista = styled("div")`
     display: flex;
     flex-direction: column;
     margin: 0rem;
+    .arrow-down {
+        margin-right: 0.5rem;
+        width: 0;
+        height: 0;
+        border-left: 10px solid transparent;
+        border-right: 10px solid transparent;
+        border-top: 10px solid black;
+    }
+    .arrow-right { 
+        width: 0; 
+        height: 0;
+        border-top: 10px solid transparent; 
+        border-bottom: 10px solid transparent; 
+        border-left: 10px solid black; 
+        margin-right: 0.5rem;
+    }   
+
 `;

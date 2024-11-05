@@ -45,7 +45,14 @@ const VisualizarSprintEst = ({titulo, navigateLink}) => {
                 {loading && <p>Cargando semanas...</p>}
                 {error && <p style={{ color: 'red' }}>{error}</p>}
                 {semanas.map((semana, index) => (
-                    <SprintSemanas key={index} title={`Semana ${index + 1}`} semana={semana} idSprint={idSprint} navigateLink={navigateLink}>
+                    <SprintSemanas 
+                        key={index} 
+                        title={`Semana ${index + 1}`} 
+                        semana={semana} 
+                        idSprint={idSprint} 
+                        navigateLink={navigateLink}
+                        
+                    >
                     </SprintSemanas>
                 ))}
             </BaseUI>
