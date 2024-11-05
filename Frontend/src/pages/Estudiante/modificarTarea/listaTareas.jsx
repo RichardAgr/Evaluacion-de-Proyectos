@@ -4,7 +4,7 @@ function ListaTareas() {
     const { idSprint } = useParams(); 
   return (
     <VisualizarSprintEst 
-      titulo={'SELECCIONE UNA TAREA'} 
+      titulo={'SELECCIONE UNA TAREA PARA MODIFICAR'} 
       navigateLink={`/homeEstudiante/homeGrupoEstudiante/sprintE/${idSprint}/semana/editarTarea/`}
     ></VisualizarSprintEst>
   );

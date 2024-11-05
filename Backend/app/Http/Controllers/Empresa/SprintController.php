@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\Empresa;
 
 use Illuminate\Http\Request;
@@ -39,13 +38,16 @@ class SprintController extends Controller
                 'date',
                 'after_or_equal:sprints.*.fechaFin',
             ],
-            'sprints.*.cobro' => 'required|numeric|regex:/^\d+(\.\d{1,2})?$/',
+            'sprints.*.cobro' => 'required|numeric|between:0,100|regex:/^\d+(\.\d{1,2})?$/'
 
         ]);
-        // * verificar que ninguno  de los sprints tenga la
+
+        // * verificar que ninguno de los sprints tenga la
         // * fecha de inicio anterior a la fecha fin del anterior sprint
         $validator->after(function ($validator) use ($request) {
             $sprints = $request->input('sprints');
+            $totalCobro = 0;
+
             for ($i = 0; $i < count($sprints); $i++) {
                 $startDate = Carbon::parse($sprints[$i]['fechaIni']);
                 $endDate = Carbon::parse($sprints[$i]['fechaFin']);
@@ -62,6 +64,14 @@ class SprintController extends Controller
                         $validator->errors()->add("sprints.{$i}.fechaIni", 'La fecha de inicio no puede ser anterior a la fecha de fin del sprint anterior.');
                     }
                 }
+
+                // Sumar el cobro de cada sprint
+                $totalCobro += $sprints[$i]['cobro'];
+            }
+
+            // Verificar que el total de cobro sea exactamente 100
+            if ($totalCobro != 100) {
+                $validator->errors()->add('sprints', 'La suma total de los cobros de todos los sprints debe ser exactamente 100%.');
             }
         });
 
@@ -382,6 +392,7 @@ class SprintController extends Controller
                         'idSprint' => $idSprint,
                     ],
                     [
+                        // 'nota' => $estudiante['nota'],
                         'comentario' => $estudiante['comentario']
                     ]
                 );
@@ -391,6 +402,158 @@ class SprintController extends Controller
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error al actualizar la evaluación: ' . $e->getMessage()], 500);
         }
+    }
+    public function getListaSprintsPorIdEmpresa(Request $request): JsonResponse
+    {
+        // Validate the request
+        $validator = Validator::make($request->query(), [
+            'idEmpresa' => 'required|integer|exists:empresa,idEmpresa',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Validación fallida',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $idEmpresa = $request->query('idEmpresa');
+
+        // Obtener el ID de la planificación
+        $requestPlani = new Request();
+        $requestPlani->merge(['idEmpresa' => $idEmpresa]);
+        $response = $this->getIdPlanificacion($requestPlani);
+        $idPlanificacion = $response->original['idPlanificacion'];
+
+        try {
+            // Check if the planificacion exists
+            $planificacion = Planificacion::findOrFail($idPlanificacion);
+
+            // Get all sprints for the planificacion
+            $sprints = Sprint::where('idPlanificacion', $idPlanificacion)
+                ->orderBy('numeroSprint', 'asc')
+                ->get();
+
+            if ($sprints->isEmpty()) {
+                return response()->json([
+                    'message' => 'No se encontraron sprints para esta planificación',
+                    'data' => []
+                ], 200);
+            }
+
+            // Transform the data to include all relevant information
+            $sprintsData = $sprints->map(function ($sprint) {
+                return [
+                    'idSprint' => $sprint->idSprint,
+                    'idPlanificacion' => $sprint->idPlanificacion,
+                    'numeroSprint' => $sprint->numeroSprint,
+                ];
+            });
+
+            return response()->json([
+                'message' => 'Sprints obtenidos exitosamente',
+                'data' => $sprintsData
+            ], 200);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'message' => 'Planificación no encontrada',
+                'error' => 'No se encontró una planificación con el ID proporcionado.'
+            ], 404);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error al obtener los sprints',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function getSprintPorId(Request $request): JsonResponse
+    {
+        // Validate the request
+        $validator = Validator::make($request->query(), [
+            'idSprint' => 'required|integer|exists:sprint,idSprint',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Validación fallida',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $idSprint = $request->query('idSprint');
+
+        try {
+            // Find the sprint
+            $sprint = Sprint::findOrFail($idSprint);
+
+            // Transform the data to include all relevant information
+            $sprintData = [
+                'idSprint' => $sprint->idSprint,
+                'idPlanificacion' => $sprint->idPlanificacion,
+                'numeroSprint' => $sprint->numeroSprint,
+                'fechaIni' => $sprint->fechaIni,
+                'fechaFin' => $sprint->fechaFin,
+                'fechaEntrega' => $sprint->fechaEntrega,
+                'cobro' => $sprint->cobro,
+            ];
+
+            // Load related entregables
+            $entregables = $sprint->entregables()->get();
+            $sprintData['entregables'] = $entregables->map(function ($entregable) {
+                return [
+                    'idEntregables' => $entregable->idEntregables,
+                    'descripcionEntregable' => $entregable->descripcionEntregable,
+                ];
+            });
+
+            return response()->json([
+                'message' => 'Sprint obtenido exitosamente',
+                'data' => $sprintData
+            ], 200);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'message' => 'Sprint no encontrado',
+                'error' => 'No se encontró un sprint con el ID proporcionado.'
+            ], 404);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error al obtener el sprint',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+
+    public function testSprintPorId()
+    {
+        // Simular una solicitud con datos de prueba
+        $requestData = [
+            'idSprint' => 4, // Asegúrate de que este ID exista en tu base de datos
+
+        ];
+
+        // Crear una nueva instancia de Request con los datos de prueba
+        $request = new Request($requestData);
+
+        // Llamar a la función modificarSprint
+        $response = $this->getSprintPorId($request);
+        return $response;
+    }
+    public function testListaSprintsPorIdEmpresa()
+    {
+        // Simular una solicitud con datos de prueba
+        $requestData = [
+            'idEmpresa' => 1, // Asegúrate de que este ID exista en tu base de datos
+           
+        ];
+
+        // Crear una nueva instancia de Request con los datos de prueba
+        $request = new Request($requestData);
+
+        // Llamar a la función modificarSprint
+        $response = $this->getListaSprintsPorIdEmpresa($request);
+        return $response;
     }
 
     public function actualizarNotaComentario(Request $request, $idSprint)

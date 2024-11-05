@@ -82,7 +82,6 @@ const ListaSprints = () => {
                             },
                         }}            
                     >
-                        <div className='arrow-right'></div>
                         Sprint {sprint.numeroSprint}{sprint.nota === null ? "":"(YA EVALUADO)"}
                     </Box>
                     ))}
@@ -100,15 +99,6 @@ const DivLista = styled("div")`
     display: flex;
     flex-direction: column;
     margin: 0rem;
-    .arrow-right { 
-        width: 0; 
-        height: 0;
-        border-top: 10px solid transparent; 
-        border-bottom: 10px solid transparent; 
-        border-left: 10px solid black; 
-        margin-right: 0.5rem;
-    }   
-
 `;
 
 export default ListaSprints;

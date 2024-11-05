@@ -38,6 +38,8 @@ class EstudianteSeeder extends Seeder
             ['tvillar', 'Tomás', 'Villar', 'García', 'passTomas22', NULL, 1],
             ['squintana', 'Sandra', 'Quintana', 'Ramos', 'passSandra23', NULL, 1],
             ['hpena', 'Hugo', 'Peña', 'Maldonado', 'passHugo24', NULL, 0],
+            ['vjoaco', 'Joaquin', 'Villalpando', 'Maldonado', 'passJoaco25', NULL, 0],
+            ['aricky', 'Ricardo', 'Aguilar', 'Choque', 'passRicky26', NULL, 0],
         ];
 
         foreach ($estudiantes as $index => $estudiante) {

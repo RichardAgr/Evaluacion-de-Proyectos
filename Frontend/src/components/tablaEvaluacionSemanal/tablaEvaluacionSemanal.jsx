@@ -89,6 +89,7 @@ const TablaEvaluacionSemanal = ({ estudiantes, idSprint }) => {
             <TableRow>
               <TableCell>Integrante</TableCell>
               <TableCell>Tareas</TableCell>
+              <TableCell>Nota (1-100)</TableCell>
               <TableCell>Comentario</TableCell>
             </TableRow>
           </TableHead>
@@ -102,6 +103,15 @@ const TablaEvaluacionSemanal = ({ estudiantes, idSprint }) => {
                       <li key={idx}>{tarea}</li>
                     ))}
                   </ul>
+                </TableCell>
+                <TableCell>
+                  <TextField
+                    type="number"
+                    value={notas[index]}
+                    onChange={(e) => handleNotaChange(index, e.target.value)}
+                    inputProps={{ min: 1, max: 100 }}
+                    size="small"
+                  />
                 </TableCell>
                 <TableCell>
                   <TextField

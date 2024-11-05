@@ -2,7 +2,8 @@ import { Routes, Route, Navigate } from "react-router-dom";
 //archivos compartidas
 import Home from "../../pages/Home/home.jsx";
 import VerPlanificacionDeDesarollo from "../../pages/VisualizacionCompartida/verPlanificacionDeDesarollo/VerPlanifacionDeDesarollo.jsx";
-
+import VisualizarSprint from "../../pages/VisualizacionCompartida/visualizarSprint/visualizarSprint.jsx";
+import SeleccionarSprintVisualizar from "../../pages/Docente/listas/seleccionarSprintVisualizar/seleccionarSprintVisualizar.jsx";
 //archivos docente
 import HomeDocente from "../../pages/Docente/homeDocente/homeDocente.jsx";
 import HomeGrupoDocente from "../../pages/Docente/homeGrupoDocente/homeGrupoDocente.jsx";
@@ -53,6 +54,19 @@ function Nav() {
       <Route
         path="/visualizarPlanificacion/Empresa/:idEmpresa"
         element={<VerPlanificacionDeDesarollo />}
+      />
+      {/** Seleccione un Sprint para  visualizar*/}
+
+      <Route
+        path="/visualizarSprint/Empresa/:idEmpresa"
+        element={<SeleccionarSprintVisualizar />}
+      />
+
+      {/** Visualizar Sprint*/}
+
+      <Route
+        path="/visualizarSprint/Empresa/:idEmpresa/Sprint/:idSprint"
+        element={<VisualizarSprint />}
       />
 
       {/** Ruta Docente*/}
@@ -107,13 +121,15 @@ function Nav() {
         path="/homeEstudiante/homeGrupoEstudiante"
         element={<HomeGrupoEstudiante />}
       />
+      
+      {/** Modificar Planificacion */}
       <Route
         path="/modificarPlanificacion/Empresa/:idEmpresa"
         element={<ModificarPlanificacion />}
       />
 
       {/** Publicar Planificacion */}
-            <Route
+      <Route
         path="/publicarPlanificacion/Empresa/:idEmpresa"
         element={<PublicarPlanificacion />}
       />
@@ -159,7 +175,6 @@ function Nav() {
         path="/homeEstudiante/visCalificar"
         element={<CalificarEstSemana />}
       />
-
     </Routes>
   );
 }
