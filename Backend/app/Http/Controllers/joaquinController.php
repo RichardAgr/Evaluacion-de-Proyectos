@@ -8,40 +8,120 @@ use App\Models\Estudiante;
 use App\Models\Semana;
 use App\Models\Tarea;
 use App\Models\NotaSprint;
+use App\Models\EstudiantesEmpresas;
 use Illuminate\Support\Facades\DB;
 
 
 class joaquinController extends Controller{
 
+    public function obtenerDatoEst($idEstudiante)
+    {
+        $relacion = Estudiante::where('idEstudiante',$idEstudiante)->first();
+
+        if (!$relacion) {
+            return response()->json(['mensaje' => 'Estudiante no encontrado'], 404);
+        }
+
+        return response()->json([
+            'idEstudiante' => $relacion->idEstudiante,
+            'nombreEstudiante' => $relacion->nombreEstudiante,
+            'primerApellido' => $relacion->primerApellido,
+            'segundoApellido' => $relacion->segundoApellido,
+        ]);
+
+    }
+
+    public function obtenerIntegrantesPorEstudiante($idEstudiante)
+    {
+        // Buscar la relación del estudiante en la tabla de unión para obtener el idEmpresa
+        $relacion = EstudiantesEmpresas::where('idEstudiante', $idEstudiante)->first();
+    
+        if (!$relacion) {
+            return response()->json(['mensaje' => 'Estudiante no encontrado en ninguna empresa'], 404);
+        }
+    
+        // Obtener los datos de la empresa
+        $empresa = DB::table('tis.empresa')
+            ->where('idEmpresa', $relacion->idEmpresa)
+            ->select('idEmpresa', 'nombreEmpresa', 'nombreLargo', 'publicada')
+            ->first();
+    
+    
+        // Obtener los datos específicos de los estudiantes asociados a esa empresa
+        $integrantes = DB::table('tis.estudiante')
+            ->join('tis.estudiantesempresas', 'tis.estudiante.idEstudiante', '=', 'tis.estudiantesempresas.idEstudiante')
+            ->where('tis.estudiantesempresas.idEmpresa', $relacion->idEmpresa)
+            ->select(
+                'tis.estudiante.idEstudiante',
+                'tis.estudiante.nombreEstudiante',
+                'tis.estudiante.primerApellido',
+                'tis.estudiante.segundoApellido'
+            )
+            ->get();
+    
+
+        $respuesta = [
+                'idEmpresa' => $empresa->idEmpresa,
+                'publicada' => $empresa->publicada,
+                'nombreEmpresa' => $empresa->nombreEmpresa,
+                'nombreLargo' => $empresa->nombreLargo,
+                'integrantes' => $integrantes->toArray()
+        ];
+    
+        return response()->json($respuesta);
+    }
+    
     public function crearEmpresa(Request $request)
     {
         // Validación de los datos
         $request->validate([
             'nombreLargo'   => 'required|string|max:255',
             'nombreCorto'   => 'required|string|max:255',
-            'estudiante'    => 'required|integer|exists:estudiante,idEstudiante', 
+            'estudiante'    => 'required|integer|exists:estudiante,idEstudiante',//Esta parte se tiene que recuperar de la session estudiante 
         ]);
-    
-        // Verificar si el estudiante ya está asociado a otra empresa
+
         $estudiante = Estudiante::find($request->estudiante);
-        if ($estudiante->estudiantesEmpresas()->exists()) { 
+            if ($estudiante->estudiantesEmpresas()->exists()) { 
+                return response()->json([
+                'message' => 'El estudiante ya está asociado a otra empresa'
+            ], 400);
+        }
+        
+        $nombreLargoError = Empresa::where('nombreLargo', $request->nombreLargo)->first();
+        $nombreCortoError = Empresa::where('nombreEmpresa', $request->nombreCorto)->first();
+
+        
+
+        if ($nombreLargoError) {
             return response()->json([
+                'message' => 'Ya existe una empresa con ese nombre largo.'
+            ], 400);
+        } elseif ($nombreCortoError) {
+            return response()->json([
+                'message' => 'Ya existe una empresa con ese nombre corto.'
+            ], 400);
+            
+        } elseif($request->nombreLargo == $request->nombreCorto){
+            return response()->json([
+                'message' => 'El nombre largo y corto son los mismos'
+            ], 400);
+
+        }
+    
+        // verifica si el estudiante esta en otra empresa y si esta disponible 
+        $estudiante = Estudiante::find($request->estudiante);
+            if ($estudiante->estudiantesEmpresas()->exists()) { 
+                return response()->json([
                 'message' => 'El estudiante ya está asociado a otra empresa'
             ], 400);
         }
     
-        // Crear la empresa
         $empresa = Empresa::create([
             'nombreLargo'    => $request->nombreLargo,
             'nombreEmpresa'  => $request->nombreCorto,
         ]);
-    
-        // Asociar el estudiante a la nueva empresa
+
         $empresa->estudiantes()->attach($request->estudiante);
-    
-        // Actualizar el campo 'disponible' del estudiante
-        $estudiante->disponible = '1'; 
-        $estudiante->save();
     
         return response()->json([
             'message' => 'Empresa creada con éxito',
@@ -49,25 +129,82 @@ class joaquinController extends Controller{
         ], 201);
     }
 
-    public function getEstudiante($id)
+    public function actualizarIntegrantes(Request $request, $idEmpresa)
     {
-        try {
-            $estudiante = Estudiante::find($id);
-    
-            if (!$estudiante) {
-                return response()->json([
-                    'error' => 'Estudiante no encontrado'
-                ], 404);
-            }
-    
-            return response()->json($estudiante->only(['idEstudiante', 'nombreCuenta', 'nombreEstudiante', 'primerApellido', 'segundoApellido']), 200);
-        } catch (\Exception $e) {
-            // Captura errores inesperados y retorna un mensaje de error
-            return response()->json([
-                'error' => 'Ocurrió un error al recuperar el estudiante'
-            ], 500);
+        // Validar los datos recibidos
+        $validatedData = $request->validate([
+            'integrantes' => 'required|array',
+            'integrantes.*' => 'exists:estudiante,idEstudiante'
+        ]);
+
+        $empresa = DB::table('tis.empresa')->where('idEmpresa', $idEmpresa)->first();
+        if (!$empresa) {
+            return response()->json(['mensaje' => 'Empresa no encontrada'], 404);
         }
+        if ($empresa->publicada == 1) {
+            return response()->json(['mensaje' => 'No se puede modificar la empresa porque ya ha sido publicada'], 403);
+        }
+
+        // Actualizar los integrantes de la empresa
+        DB::transaction(function () use ($idEmpresa, $validatedData) {
+            // Eliminar los registros actuales de estudiantes en esa empresa
+            DB::table('tis.estudiantesempresas')->where('idEmpresa', $idEmpresa)->delete();
+
+            // Insertar los nuevos integrantes
+            $nuevosIntegrantes = [];
+            foreach ($validatedData['integrantes'] as $idEstudiante) {
+                $nuevosIntegrantes[] = [
+                    'idEmpresa' => $idEmpresa,
+                    'idEstudiante' => $idEstudiante
+                ];
+            }
+            DB::table('tis.estudiantesempresas')->insert($nuevosIntegrantes);
+        });
+
+        return response()->json(['mensaje' => 'Integrantes actualizados correctamente']);
     }
+
+    public function publicarEmpresaPorEstudiante($idEstudiante)
+    {
+        // Buscar la empresa asociada al estudiante
+        $empresa = DB::table('tis.estudiantesempresas')
+            ->join('tis.empresa', 'tis.estudiantesempresas.idEmpresa', '=', 'tis.empresa.idEmpresa')
+            ->where('tis.estudiantesempresas.idEstudiante', $idEstudiante)
+            ->select('tis.empresa.idEmpresa', 'tis.empresa.publicada')
+            ->first();
+        
+        // Verificar si el estudiante está asociado a alguna empresa
+        if (!$empresa) {
+            return response()->json(['mensaje' => 'El estudiante no está asociado a ninguna empresa'], 404);
+        }
+
+        // Verificar si la empresa ya está publicada
+        if ($empresa->publicada == 1) {
+            return response()->json(['mensaje' => 'La empresa ya ha sido publicada'], 409);
+        }
+
+        // Actualizar el campo publicada a 1
+        DB::table('tis.empresa')
+            ->where('idEmpresa', $empresa->idEmpresa)
+            ->update(['publicada' => 1]);
+
+        return response()->json(['mensaje' => 'Empresa publicada correctamente']);
+    }
+    
+    public function obtenerEstudiantesSinEmpresa($idEstudiante)
+    {
+        // Obtener estudiantes que no están asociados a ninguna empresa, excluyendo al estudiante con el ID proporcionado
+        $resultado = Estudiante::select('estudiante.idEstudiante', 'nombreEstudiante', 'primerApellido', 'segundoApellido')
+            ->leftJoin('estudiantesempresas AS ee', 'ee.idEstudiante', '=', 'estudiante.idEstudiante')
+            ->whereNull('ee.idEmpresa') // Asegura que no haya una relación con ninguna empresa
+            ->where('estudiante.idEstudiante', '<>', $idEstudiante) // Excluye al estudiante con el id proporcionado
+            ->orderBy('estudiante.nombreEstudiante')
+            ->get();
+
+        return response()->json($resultado, 200);
+    }
+
+
 
     public function notaSprintV2($empresa, $semana)
     {   
@@ -116,7 +253,9 @@ class joaquinController extends Controller{
         return $resultadoAgrupado;
     }
     
-    
+            // Actualizar el campo 'disponible' del estudiante para que ya no sean selecionables en modificar 
+        // $estudiante->disponible = '0'; 
+        // $estudiante->save();
 
 
 }
