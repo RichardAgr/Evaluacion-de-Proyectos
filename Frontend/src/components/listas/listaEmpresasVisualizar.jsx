@@ -3,6 +3,7 @@ import { getPlanificacionesAceptadas } from "../../api/getPlanificacionesAceptad
 import Loading from "../loading/loading";
 import Error from "../error/error";
 import ListaDefinitivaN from "../listaDefinitiva/listaDefinitivaN";
+import { Typography } from "@mui/material";
 const columns = [
   {
     field: 'nombreEmpresa',

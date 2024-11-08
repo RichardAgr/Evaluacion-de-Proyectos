@@ -50,7 +50,7 @@ function PlanificacionDeDesarollo() {
   return (
     <Fragment>
       <BaseUI
-        titulo={"VISUALIZAR PLANIFICACION DE DESARROLLO"}
+        titulo={"VISUALIZAR PLANIFICACION"}
         ocultarAtras={false}
         confirmarAtras={false}
         dirBack={"/"}
@@ -85,6 +85,7 @@ function PlanificacionDeDesarollo() {
                   sprints={planificacionData.sprints}
                   ocultarBotones={true}
                 />
+                {/** 
                 {planificacionData.comentariopublico && (
                   <Comentario
                     titulo="Comentario:"
@@ -97,6 +98,7 @@ function PlanificacionDeDesarollo() {
                     comentario={planificacionData.comentarioprivado}
                   />
                 )}
+                  */}
               </>
             )}
           </>

@@ -17,8 +17,7 @@ export default function DecisionButtons({
       }}
     >
       <Button
-        variant="contained"
-        color="secondary"
+        variant="outlined"
         onClick={onReject}
       >
         {rejectButtonText}

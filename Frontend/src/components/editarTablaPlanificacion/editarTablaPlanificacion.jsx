@@ -423,7 +423,7 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
               {rows.map((row, index) => (
                 <TableRow key={index}>
                   <TableCell sx={{ minWidth: "70px", maxHeight: "50px" }}>
-                    {`Hito ${index + 1}`}
+                    {`SPRINT ${index + 1}`}
                   </TableCell>
                   {["fechaIni", "fechaFin", "fechaEntrega", "cobro"].map(
                     (field) => (
@@ -553,6 +553,7 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
           disabledButton= {0}
         />
       </Box>
+      
       <CuadroDialogo
         open={cuadroDialogo.open}
         onClose={() => setCuadroDialogo({ ...cuadroDialogo, open: false })}

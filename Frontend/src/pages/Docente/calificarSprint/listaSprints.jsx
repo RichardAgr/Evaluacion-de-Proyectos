@@ -66,10 +66,9 @@ const ListaSprints = () => {
                         key={index}
                         onClick={() => clickBoton(sprint.idSprint)}
                         sx={{
-                            width: '80%', height: 60,
+                            width: '85%', height: 60,
                             borderRadius: 0.6, margin: 0.7,
-                            marginLeft: 7, pl: 2,
-                            textAlign: 'center',
+                            marginLeft: 'calc(2vw + 1rem)', pl: 2,
                             fontSize: '1.5rem',
                             bgcolor: sprint.nota === null ? '#d0d4e4' : '#32cd32',
                             textTransform: 'uppercase',
