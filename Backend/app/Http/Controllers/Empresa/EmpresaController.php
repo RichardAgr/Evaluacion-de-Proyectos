@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Empresa;
 
 use App\Models\Empresa;
 use App\Models\Semana;
@@ -8,8 +8,11 @@ use App\Models\NotasSemana;
 use App\Models\Estudiante;
 use App\Models\Sprint;
 use App\Models\Planificacion;
+use Illuminate\Support\Facades\DB;
+use App\Models\EstudiantesGrupos;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
 
 class EmpresaController extends Controller
 {
@@ -29,7 +32,7 @@ class EmpresaController extends Controller
             'nombreLargo' => $empresa->nombreLargo,
             'integrantes' => $empresa->estudiantes->map(function ($estudiante) {
                 return [
-                    'idEstudiante'=> $estudiante->idEstudiante,
+                    'idEstudiante' => $estudiante->idEstudiante,
                     'nombreEstudiante' => $estudiante->nombreEstudiante,
                     'primerApellido' => $estudiante->primerApellido,
                     'segundoApellido' => $estudiante->segundoApellido,
@@ -91,7 +94,7 @@ class EmpresaController extends Controller
         //return response()->json($data);
         return $data;
     }
-    public function obtenerSprints($idEmpresa, $idDocente)
+public function obtenerSprints($idEmpresa, $idDocente)
     {
         try {
 
@@ -114,7 +117,7 @@ class EmpresaController extends Controller
         }
     }
 
-    public function getCalificacionesEmpresa($idEmpresa)
+public function getCalificacionesEmpresa($idEmpresa)
     {
         try {
             // Obtener la empresa y verificar si tiene estudiantes
@@ -193,6 +196,62 @@ class EmpresaController extends Controller
             return response()->json([
                 'error' => 'Error al obtener las calificaciones: ' . $e->getMessage()
             ], 500);
+        }
+    }
+
+    public function getSprintsEntregables($idEmpresa)
+    {
+        try {
+            $empresa = Empresa::with(['sprints.entregables'])
+                ->where('idEmpresa', $idEmpresa)
+                ->first();
+
+            if (!$empresa) {
+                return response()->json(['error' => 'Empresa no encontrada'], 404);
+            }
+
+            // Retornar solo los sprints y sus entregables
+            $sprints = $empresa->sprints->map(function ($sprint) {
+                return [
+                    'idSprint' => $sprint->idSprint,
+                    'numeroSprint' => $sprint->numeroSprint,
+                    'fechaIni' => $sprint->fechaIni,
+                    'fechaFin' => $sprint->fechaFin,
+                    'fechaEntrega' => $sprint->fechaEntrega,
+                    'cobro' => $sprint->cobro,
+                    'comentario' => $sprint->comentario,
+                    'nota' => $sprint->nota,
+                    'entregables' => $sprint->entregables->map(function ($entregable) {
+                        if (is_null($entregable->archivoEntregable)) {
+                            return [
+                                'idEntregables' => $entregable->idEntregables,
+                                'descripcionEntregable' => $entregable->descripcionEntregable,
+                                'nombreArchivo' => $entregable->null,
+                                'archivoEntregable' => null, // Retorna null si no hay archivo
+                            ];
+                        }
+                        // Decodificar el archivo Base64
+                        $contenidoArchivo = base64_decode($entregable->archivoEntregable);
+                        $nombreArchivo = $entregable->nombreArchivo;
+                        $rutaArchivo = 'public/archivos/' . $nombreArchivo;
+
+                        // Guardar el archivo decodificado en el almacenamiento
+                        Storage::put($rutaArchivo, $contenidoArchivo);
+
+                        // Generar la URL para el archivo
+                        return [
+                            'idEntregables' => $entregable->idEntregables,
+                            'descripcionEntregable' => $entregable->descripcionEntregable,
+                            'nombreArchivo' => $entregable->nombreArchivo,
+                            'archivoEntregable' => url(Storage::url($rutaArchivo)), // URL completa al archivo
+                        ];
+                    }),
+                ];
+            });
+
+            return response()->json(['sprints' => $sprints], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error al obtener los sprints y entregables: ' . $e->getMessage()], 500);
         }
     }
 }

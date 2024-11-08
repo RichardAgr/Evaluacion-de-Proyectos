@@ -32,7 +32,9 @@
   display: flex;
   justify-content: center;
   min-height: calc(74vh);
-  border: 0.3rem solid black;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 0.0625em 0.0625em, 
+              rgba(0, 0, 0, 0.25) 0px 0.125em 0.5em, 
+              rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset;
   border-radius: 0.3rem;
   -webkit-border-radius: 0.3rem;
   -moz-border-radius: 0.3rem;
@@ -160,7 +162,6 @@ h1,h2,h3{
 }
 
 .descripcion_inputText{
-
   display: block;
   min-height: 14vw;
   padding: 1rem;
@@ -170,3 +171,4 @@ h1,h2,h3{
   -ms-border-radius: 0.3rem;
   -o-border-radius: 0.3rem;
   border: 0.3rem solid black;
+}

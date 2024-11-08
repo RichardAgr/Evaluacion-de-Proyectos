@@ -1,6 +1,6 @@
 <?php
 //ESTA ES LA EVALUACION SEMANAL
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Empresa;
 
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;

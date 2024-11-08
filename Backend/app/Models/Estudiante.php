@@ -40,6 +40,10 @@ class Estudiante extends Model
     {
         return $this->belongsToMany(Empresa::class, 'estudiantesempresas', 'idEmpresa', 'idEstudiante');
     }
+    public function estudiantesEmpresas()
+    {
+        return $this->belongsToMany(Empresa::class, 'estudiantesempresas', 'idEstudiante', 'idEmpresa');
+    }
 }
 
     
