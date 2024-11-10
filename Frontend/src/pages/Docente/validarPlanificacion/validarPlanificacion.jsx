@@ -19,7 +19,7 @@ import CuadroDialogo from "../../../components/cuadroDialogo/cuadroDialogo.jsx";
 import DecisionButtons from "../../../components/Buttons/decisionButtons.jsx";
 import Redirecting from "../../../components/redirecting/redirecting.jsx";
 import EstadoPlanificacion from "../../../components/estadoPlanificacion/estadoPlanificacion.jsx";
-
+import Comentario from "../../../components/comentario/comentario.jsx";
 function ValidarPlanificacion() {
   const [openValidateDialog, setOpenValidateDialog] = useState(false);
   const [openRejectDialog, setOpenRejectDialog] = useState(false);
@@ -102,30 +102,7 @@ function ValidarPlanificacion() {
 
   const confirmValidate = async () => {
     setOpenValidateDialog(false);
-    console.log(idEmpresa);
-    const revisionResult = await addRevision(
-      idEmpresa,
-      nota,
-      privateComment,
-      groupComment
-    );
 
-    if (revisionResult.errors != null) {
-      const errorMessages = Object.keys(revisionResult.errors)
-        .map((key) => {
-          const errors = revisionResult.errors[key];
-          return errors
-            .map((error) => `${key}: ${translateError(error)}`)
-            .join("\n");
-        })
-        .join("\n");
-      console.log(errorMessages);
-      setSnackbar({
-        open: true,
-        message: errorMessages,
-        severity: "error",
-      });
-    } else {
       const validarResult = await validar(idEmpresa);
       if (validarResult.error == null) {
         setSnackbar({
@@ -146,16 +123,17 @@ function ValidarPlanificacion() {
           severity: "error",
         });
       }
-    }
   };
 
   const confirmReject = async () => {
     setOpenRejectDialog(false);
     console.log(idEmpresa);
-    const revisionResult = await addRevision(idEmpresa, nota, groupComment, 2);
-    console.log(revisionResult);
+    console.log(groupComment);
+    const revisionResult = await addRevision(
+      idEmpresa,
+      groupComment
+    );
 
-    console.log(revisionResult.errors);
     if (revisionResult.errors != null) {
       const errorMessages = Object.keys(revisionResult.errors)
         .map((key) => {
@@ -236,18 +214,20 @@ function ValidarPlanificacion() {
             </Box>
             ) : (
               <>
+
                 <TablaPlanificacion sprints={planificacionData.sprints} />
+                {planificacionData.comentariopublico && (
+                  <Comentario
+                    titulo="MOTIVOS DE RECHAZO PREVIOS:"
+                    comentario={planificacionData.comentariopublico}
+                  />
+                )}
                 <CuadroComentario
-                  title="Comentario para el grupo"
+                  title="Motivos de rechazo"
                   maxChars={200}
                   onTextChange={(text) => setGroupComment(text)}
                 />
 
-                <CuadroComentario
-                  title="Comentario privado"
-                  maxChars={400}
-                  onTextChange={(text) => setPrivateComment(text)}
-                />
                 <DecisionButtons
                   rejectButtonText="Rechazar Planificación"
                   validateButtonText="Validar Planificación"

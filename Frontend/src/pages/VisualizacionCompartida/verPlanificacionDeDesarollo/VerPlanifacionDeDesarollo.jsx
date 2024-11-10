@@ -85,6 +85,7 @@ function PlanificacionDeDesarollo() {
                   sprints={planificacionData.sprints}
                   ocultarBotones={true}
                 />
+                {/** 
                 {planificacionData.comentariopublico && (
                   <Comentario
                     titulo="Comentario:"
@@ -97,6 +98,7 @@ function PlanificacionDeDesarollo() {
                     comentario={planificacionData.comentarioprivado}
                   />
                 )}
+                  \*/}
               </>
             )}
           </>

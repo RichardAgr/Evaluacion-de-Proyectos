@@ -91,7 +91,7 @@ function ModificarPlanificacion() {
                   planificacionData.comentariopublico != "" && (
                     <>
                       <Comentario
-                        titulo="Comentario:"
+                        titulo="MOTIVOS DE RECHAZO:"
                         comentario={planificacionData.comentariopublico}
                       />
                     </>
