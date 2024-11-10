@@ -14,6 +14,7 @@ import ModificarTarea from "../pages/Estudiante/modificarTarea/modificarTarea.js
 import ListaTareas from "../pages/Estudiante/modificarTarea/listaTareas.jsx";
 import CalificacionesHitoEmpresa from "../pages/Estudiante/grupoEmpresa/calificacionesHitoEmpresa.jsx";
 import CrearGrupoEmpresa from "../pages/Estudiante/grupoEmpresa/crearGrupoEmpresa.jsx";
+import PublicarGrupoEmpresa from "../pages/Estudiante/grupoEmpresa/publicarGrupoEmpresa.jsx";
 
 function Nav() {
     return (
@@ -27,12 +28,16 @@ function Nav() {
           element={<VisualizarTarea />}
         />
         <Route
-          path="/homeEstudiante/homeGrupoEstudiante/crearGrupo"
+          path="/homeEstudiante/homeGrupoEstudiante/crearGrupo/:idEstudiante"
+          element={<CrearGrupoEmpresa />}
+        />
+        <Route
+          path="/homeEstudiante/homeGrupoEstudiante/modificarGrupo/:idEstudiante"
           element={<ModificarGrupoEmpresa />}
         />
         <Route
-          path="/homeEstudiante/homeGrupoEstudiante/crearGrupo1"
-          element={<CrearGrupoEmpresa />}
+        path="/homeEstudiante/homeGrupoEstudiante/publicarEmpresa/:idEstudiante"
+        element={<PublicarGrupoEmpresa />}
         />
         <Route path="/homeEstudiante" element={<HomeEstudiante />} />
         <Route
