@@ -23,13 +23,12 @@ const SprintSemanas = ({ title, semana, idSprint, navigateLink}) => {
             <Box 
                 onClick={togglePanel}
                 sx={{
-                    width: '80%',
+                    width: '90%',
                     height: 60,
                     borderRadius: 0.6,
                     margin: 0.7,
-                    marginLeft: 7,
+                    marginLeft: 'calc(2vw + 0.5rem)',
                     pl: 2,
-                    textAlign: 'center',
                     fontSize: '1.5rem',
                     bgcolor: '#d0d4e4', 
                     textTransform: 'uppercase',
@@ -54,19 +53,17 @@ const SprintSemanas = ({ title, semana, idSprint, navigateLink}) => {
                                 onClick={() => { clickBoton(tarea); }} 
                                 key={tarea.idTarea}
                                 sx={{
-                                    width: '80%',
+                                    width: 'calc(66vw + 1rem)',
                                     height: 60,
                                     borderRadius: 0.6,
                                     margin: 0.7,
-                                    marginLeft: 15,
+                                    marginLeft: 'calc(5vw + 0.5rem)',
                                     pl: 2,
-                                    textAlign: 'center',
-                                    fontSize: '1.5rem',
+                                    fontSize: 'calc(1vw + 0.5rem)',
                                     bgcolor: '#d0d4e4', 
                                     textTransform: 'uppercase',
                                     display: 'flex', 
                                     cursor: 'pointer',
-                                    justifyContent: 'flex-start', 
                                     alignItems: 'center', 
                                     '&:hover': {
                                         bgcolor: '#c0c4d4', 

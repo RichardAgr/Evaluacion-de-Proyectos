@@ -17,10 +17,10 @@ use PhpParser\Node\Expr\AssignOp\Concat;
 class NotaSprintController extends Controller{
 
     //Obtiene las notas por estudiante y sprint
-    public function notaSprint(Request $request)
+    public function notaSprint($empresa, $semana)
     {   
-        $empresa = $request->input('empresa');
-        $semana = $request->input('numeroSprint');
+        // $empresa = $request->input('empresa');
+        // $semana = $request->input('numeroSprint');
     
         $resultado = DB::table('tarea as t')
             ->join('semana as s', 't.idSemana', '=', 's.idSemana')

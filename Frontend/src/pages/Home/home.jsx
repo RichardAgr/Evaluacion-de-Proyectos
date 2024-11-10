@@ -66,9 +66,17 @@ function Home() {
 
   const studentButtons = [
     {
-      label: "Crear Empresa",
-      onClick: () => navigate("/homeEstudiante/homeGrupoEstudiante/crearGrupo1"),
+      label: "Registrar Empresa",
+      onClick: () => navigate("/homeEstudiante/homeGrupoEstudiante/crearGrupo/25"),
     },
+    {
+      label: "Modificar Empresa",
+      onClick: () => navigate("/homeEstudiante/homeGrupoEstudiante/modificarGrupo/25"),
+    },    {
+      label: "Publicar Empresa",
+      onClick: () => navigate("/homeEstudiante/homeGrupoEstudiante/publicarEmpresa/25"),
+    },
+
     {
       label: "Grupos Disponibles",
       onClick: () => navigate("/homeEstudiante/gruposDisponibles"),
