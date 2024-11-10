@@ -1,4 +1,3 @@
-import { Fragment } from "react";
 import Footer from "../../components/Footer/footer.jsx";
 import Header from "../../components/Header/header.jsx";
 import { useNavigate } from "react-router-dom";
@@ -47,7 +46,7 @@ function Home() {
     },
     {
       label: "Calificar Sprints",
-      onClick: () => navigate("/1/calificarSprints"),
+      onClick: () => navigate("homeGrupo/1/listaEmpresaCalificarSprints"),
     },
     {
       label: "Modificar Lista de Tareas",
@@ -56,11 +55,11 @@ function Home() {
     },
     {
       label: "Lista Empresas",
-      onClick: () => navigate("/homeGrupoDocente/listaEmpresas/1"),
+      onClick: () => navigate("/homeGrupo/1/listaEmpresas/1"),
     },
     {
       label: "Lista Estudiantes",
-      onClick: () => navigate("/homeGrupoDocente/listaEstudiantes/1/2024-2"),
+      onClick: () => navigate("/homeGrupo/1/listaEstudiantes/2024-2"),
     },
   ];
 
@@ -85,7 +84,7 @@ function Home() {
     {
       label: "Modificar Tarea",
       onClick: () =>
-        navigate("/homeEstudiante/homeGrupoEstudiante/sprintE/1"),
+        navigate("/1/homeGrupoE/1/sprintE/1"),
     },
 
   ];
@@ -99,7 +98,7 @@ function Home() {
       label: "Ver Calificaciones",
       onClick: () =>
         navigate(
-          "/homeEstudiante/homeGrupoEstudiante/empresas/1/calificaciones"
+          "/1/homeGrupoE/1/empresa/1/calificaciones"
         ),
     },
     {

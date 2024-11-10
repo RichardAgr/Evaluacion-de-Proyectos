@@ -72,17 +72,17 @@ function EmpresasPorGrupo() {
 
   return (
     <ListaDefinitivaN
-          titulo="LISTA DE EMPRESAS"
-          cabezeraTitulo={null}
-          cabezeras={columns}
-          datosTabla={data}
-          ocultarAtras={false}
-          confirmarAtras={false}
-          dirBack="/"
-          dirForward=""
-          mensajeSearch = "Buscar Empresa"
-          nombreContador = "Empresas"
-        />
+      titulo="LISTA DE EMPRESAS"
+      cabezeraTitulo={null}
+      cabezeras={columns}
+      datosTabla={data}
+      ocultarAtras={false}
+      confirmarAtras={false}
+      dirBack="/"
+      dirForward=""
+      mensajeSearch = "Buscar Empresa"
+      nombreContador = "Empresas"
+    />
   );
 }
 
