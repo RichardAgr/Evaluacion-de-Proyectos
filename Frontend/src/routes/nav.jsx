@@ -1,5 +1,4 @@
-  import { Routes, Route, Navigate } from "react-router-dom";
-
+import { Routes, Route } from "react-router-dom";
 import Home from "../pages/Home/home.jsx";
 import VerPlanificacionDeDesarollo from "../pages/VisualizacionCompartida/verPlanificacionDeDesarollo/VerPlanifacionDeDesarollo.jsx";
 import VisualizarSprint from "../pages/VisualizacionCompartida/visualizarSprint/visualizarSprint.jsx";
