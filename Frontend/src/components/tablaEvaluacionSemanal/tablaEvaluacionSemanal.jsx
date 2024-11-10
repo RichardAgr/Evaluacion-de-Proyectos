@@ -15,9 +15,9 @@ import InfoSnackbar from "../infoSnackbar/infoSnackbar";
 import { useParams } from "react-router-dom";
 import { updateSprintEvaluar } from "../../api/getSprintsEmpresa";
 
-const TablaEvaluacionSemanal = ({ estudiantes }) => {
-  const { idEmpresa, idSprint } = useParams();
-  const [notas, setNotas] = useState(estudiantes.map(est => est.nota || ""));
+const TablaEvaluacionSemanal = ({ estudiantes, idSprint }) => {
+  const { idEmpresa } = useParams();
+  //const [notas, setNotas] = useState(estudiantes.map(est => est.nota || ""));
   const [comentarios, setComentarios] = useState(estudiantes.map(est => est.comentario || ""));
   const [snackbar, setSnackbar] = useState({
     open: false,
@@ -31,12 +31,6 @@ const TablaEvaluacionSemanal = ({ estudiantes }) => {
     title: "",
     description: "",
   });
-
-  const handleNotaChange = (index, value) => {
-    const newNotas = [...notas];
-    newNotas[index] = Math.min(100, Math.max(1, Number(value)));
-    setNotas(newNotas);
-  };
 
   const handleComentarioChange = (index, value) => {
     const newComentarios = [...comentarios];
@@ -66,9 +60,9 @@ const TablaEvaluacionSemanal = ({ estudiantes }) => {
     try {
       setCuadroDialogo({ ...cuadroDialogo, open: false });
       const response = await updateSprintEvaluar(idEmpresa, idSprint, estudiantes.map((est, idx) => ({
-        idEstudiante: est.estudiante.idEstudiante,
-        idEvaluacionsemanal: est.idEvaluacionsemanal,
-        // nota: notas[idx],
+        idEmpresa: idEmpresa,
+        idEstudiante: est.idEstudiante,
+        idSprint: idSprint,
         comentario: comentarios[idx],
       })));
 
@@ -78,6 +72,7 @@ const TablaEvaluacionSemanal = ({ estudiantes }) => {
         severity: "success",
       });
     } catch (error) {
+      console.log(error)
       setSnackbar({
         open: true,
         message: "Error al guardar la evaluación",
@@ -99,13 +94,13 @@ const TablaEvaluacionSemanal = ({ estudiantes }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {estudiantes.map((estudiante, index) => (
+            {estudiantes?.map((estudiante, index) => (
               <TableRow key={index}>
-                <TableCell>{`${estudiante.estudiante.nombre} ${estudiante.estudiante.primerApellido} ${estudiante.estudiante.segundoApellido}`}</TableCell>
+                <TableCell>{estudiante.nombreCompleto}</TableCell>
                 <TableCell>
                   <ul>
-                    {estudiante.tareas.map((tarea, idx) => (
-                      <li key={idx}>{tarea.nombreTarea}</li>
+                    {estudiante?.tareas.map((tarea, idx) => (
+                      <li key={idx}>{tarea}</li>
                     ))}
                   </ul>
                 </TableCell>
@@ -122,6 +117,7 @@ const TablaEvaluacionSemanal = ({ estudiantes }) => {
                   <TextField
                     multiline
                     rows={3}
+                    defaultValue={estudiante.comentario[index]}
                     value={comentarios[index]}
                     onChange={(e) => handleComentarioChange(index, e.target.value)}
                     fullWidth

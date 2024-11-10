@@ -72,17 +72,17 @@ export default function DataTable() {
 
 
   return (
-      <ListaDefinitivaN
-        titulo="LISTA DE ESTUDIANTES"
-        cabezeraTitulo={null}
-        cabezeras={columns}
-        datosTabla={estudiantes}
-        ocultarAtras={false}
-        confirmarAtras={false}
-        dirBack="/"
-        dirForward=""
-        mensajeSearch = "Buscar Estudiante o empresa"
-        nombreContador = "Estudiantes"
-      /> 
+    <ListaDefinitivaN
+      titulo="LISTA DE ESTUDIANTES"
+      cabezeraTitulo={null}
+      cabezeras={columns}
+      datosTabla={estudiantes}
+      ocultarAtras={false}
+      confirmarAtras={false}
+      dirBack="/"
+      dirForward=""
+      mensajeSearch = "Buscar Estudiante o empresa"
+      nombreContador = "Estudiantes"
+    /> 
   );
 }
