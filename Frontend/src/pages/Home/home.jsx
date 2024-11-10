@@ -42,8 +42,12 @@ function Home() {
       onClick: () => navigate("/validarPlanificacion/"),
     },
     {
-      label: "Calificar Sprint",
-      onClick: () => navigate("/calificarSprint/empresa/1/sprint/1/"),
+      label: "Seguimiento Semanal",
+      onClick: () => navigate("/evaluacionSemanal/empresa/1/sprint/1"),
+    },
+    {
+      label: "Calificar Sprints",
+      onClick: () => navigate("/1/calificarSprints"),
     },
     {
       label: "Modificar Lista de Tareas",
@@ -58,16 +62,12 @@ function Home() {
       label: "Lista Estudiantes",
       onClick: () => navigate("/homeGrupoDocente/listaEstudiantes/1/2024-2"),
     },
-    {
-      label: "Visualizar Notas Estudiantes",
-      onClick: () => navigate("/homeDcoente/visCalificar"),
-    },
   ];
 
   const studentButtons = [
     {
       label: "Crear Empresa",
-      onClick: () => navigate("/homeEstudiante/homeGrupoEstudiante/crearGrupo"),
+      onClick: () => navigate("/homeEstudiante/homeGrupoEstudiante/crearGrupo1"),
     },
     {
       label: "Grupos Disponibles",
@@ -77,7 +77,7 @@ function Home() {
     {
       label: "Modificar Tarea",
       onClick: () =>
-        navigate("/homeEstudiante/homeGrupoEstudiante/sprint/semana/tareas/1"),
+        navigate("/homeEstudiante/homeGrupoEstudiante/sprintE/1"),
     },
 
   ];
@@ -92,13 +92,6 @@ function Home() {
       onClick: () =>
         navigate(
           "/homeEstudiante/homeGrupoEstudiante/empresas/1/calificaciones"
-        ),
-    },
-    {
-      label: "Ver Nota Sprint",
-      onClick: () =>
-        navigate(
-          "homeEstudiante/homeGrupoEstudiante/empresas/1/calificaciones"
         ),
     },
     {
@@ -117,10 +110,11 @@ function Home() {
       label: "Visualizar Sprint",
       onClick: () => navigate("/visualizarSprint/empresa/1"),
     },
+    {
+      label: "Visualizar est nota",
+      onClick: () => navigate("/homeEstudiante/visCalificar"),
+    },
   ];
-
-
-
   return (
     <>
       <Header />

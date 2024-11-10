@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Empresa;
 
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -34,7 +34,7 @@ class PlanificacionController extends Controller
             if ($planificacion && $planificacion->aceptada) {
                 // Si la planificación existe y está aceptada, devolver el número de sprints
                 $data[] = [
-                    'idPlanificacion' => $planificacion->idPlanificacion,
+                    'id' => $planificacion->idPlanificacion,
                     'nombreEmpresa' => $empresa->nombreEmpresa,
                     'nombreLargo' => $empresa->nombreLargo,
                     'idEmpresa' => $planificacion->idEmpresa,

@@ -2,7 +2,6 @@ import { useParams} from "react-router-dom";
 import { Fragment,useEffect,useState } from 'react';
 import { styled } from '@mui/material';
 import BaseUI from '../../../components/baseUI/baseUI';
-import Comentario from '../../../components/comentarioNota/comentario';
 import {getTareaData} from "../../../api/validarTareas/tareas";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import FolderZipIcon from "@mui/icons-material/FolderZip";
@@ -14,6 +13,7 @@ function VisualizarTarea() {
     const [comentarioD, setComentario] = useState("");
     const [responsables, setResponsables] = useState([]);
     const [existingFiles, setExistingFiles] = useState([]); 
+    const [nombreTarea,setNombreTarea] = useState([]);
     const { idTarea } = useParams();
     const { idSprint } = useParams();
     const [loading, setLoading] = useState(true);
@@ -25,12 +25,13 @@ function VisualizarTarea() {
           setDescripcion(data.textotarea);
           setComentario(data.comentario);
           setResponsables(data.estudiantes);
+          setNombreTarea(data.nombreTarea);
           setExistingFiles(
             data.archivotarea.map((file) => ({
               name: file.nombreArchivo,
               url: file.archivo,
             })),
-            console.log(data.textotarea),
+            console.log(data),
           );
           setLoading(false);
         } catch (error) {
@@ -70,73 +71,70 @@ function VisualizarTarea() {
       }
       return <TextSnippetIcon style={{ fontSize: 30 }} />; // Ícono por defecto para otros tipos
     };
-  
 
     return (
         <Fragment>
           <BaseUI
-            titulo = {'VIZUALIZAR TAREA'}
+            titulo = {'VISUALIZAR TAREA'}
             ocultarAtras = {false}
             confirmarAtras = {false}
             dirBack = {`/homeEstudiante/homeGrupoEstudiante/sprint/${idSprint}`}
           >
             <div>
-            <div><h1>Realizar {idTarea} Sprint {idSprint} </h1></div>
-            <DescripcionTarea>
+              <div><h1>{nombreTarea}</h1></div>
+              <DescripcionTarea>
                 <h4>Responsables</h4>
                 <Responsables>
-                {responsables.length > 0 ? (
-                  responsables.map((responsable, index) => (
-                    <p key={index}>
-                      {responsable.nombreEstudiante} {responsable.primerApellido} {responsable.segundoApellido}
-                    </p>
-                  ))
-                ) : (
-                  <p>No hay responsables asignados</p>
-                )}
-              </Responsables>
-            </DescripcionTarea>
-            <ArchivosSection>
-            <h3>Archivos:</h3>
-            <ArchivosWrapper>
-            <div className="uploadedFiles">
-                {existingFiles.length > 0 ? (
-                existingFiles.map((file, index) => (
-                  <div key={index} className="fileItem">
-                    {renderIconForFileType(file.name)}
-                    <a
-                      href={file.url}  // URL al archivo
-                      target="_blank"   // Abrir en una nueva pestaña
-                      rel="noopener noreferrer"
-                    >
-                      <p className="fileName">
-                        {file?.name || "Nombre desconocido"}
+                  {responsables.length > 0 ? (
+                    responsables.map((responsable, index) => (
+                      <p key={index}>
+                        {responsable.nombreEstudiante} {responsable.primerApellido} {responsable.segundoApellido}
                       </p>
-                    </a>
+                    ))
+                  ) : (
+                    <p>No hay responsables asignados</p>
+                  )}
+                </Responsables>
+              </DescripcionTarea>
+              <ArchivosSection>
+                <h3>Archivos:</h3>
+                <ArchivosWrapper>
+                  <div className="uploadedFiles">
+                    {existingFiles.length > 0 ? (
+                      existingFiles.map((file, index) => (
+                        <div key={index} className="fileItem">
+                          {renderIconForFileType(file.name)}
+                          <a
+                            href={file.url}  // URL al archivo
+                            target="_blank"   // Abrir en una nueva pestaña
+                            rel="noopener noreferrer"
+                          >
+                            <p className="fileName">
+                              {file?.name || "Nombre desconocido"}
+                            </p>
+                          </a>
+                        </div>
+                      ))
+                    ) : (
+                      <p>No hay archivos existentes</p>
+                    )}
                   </div>
-                ))
-
-                ) : (
-                  <p>No hay archivos existentes</p>
-                )}
-              </div>
-
-            </ArchivosWrapper>
-            </ArchivosSection>
-
-
+                </ArchivosWrapper>
+              </ArchivosSection>
             </div>
-                <h3>Descripcion de la tarea</h3>
-                <Rectangulo>{descripcion}</Rectangulo>
+            <h3>Descripcion de la tarea</h3>
+            <Rectangulo>{descripcion}</Rectangulo>
+
+            {comentarioD && ( // Condición para mostrar el comentario solo si existe
+              <>
                 <h3>Comentario del Docente</h3>
                 <Rectangulo>{comentarioD}</Rectangulo>
-
+              </>
+            )}
           </BaseUI> 
         </Fragment>
-      );
-    }
-
-
+    );
+}
 
 export default VisualizarTarea;
 
@@ -147,10 +145,11 @@ const DescripcionTarea = styled('div')`
 const ArchivosSection = styled('div')`
   margin-top: 1rem;
 `;
+
 const ArchivosWrapper = styled('div')`
   box-sizing: border-box;
   padding: 1rem;
-  min-height: 8vw;
+  min-height: 6vw;
   border-radius: 0.1rem;
   width: 80%;
   .archivos-icons {
@@ -162,16 +161,16 @@ const ArchivosWrapper = styled('div')`
     height: 50px;
   }
 `;
+
 const Responsables = styled('div')`
     box-sizing: border-box;
     width: 50%;
-    padding: 2.5vw;
+    padding: 1vw;
     min-height: 20px;
     width: 40;
-    padding-bottom: 20px;
+    padding-bottom: 10px;
+`;
 
-
-`
 const Rectangulo = styled('div')`
     box-sizing: border-box;
     width: 100%;        

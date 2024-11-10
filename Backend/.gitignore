@@ -2,6 +2,9 @@
 /node_modules
 /public/build
 /public/hot
+/public/storage/archivo
+/storage/app/public/archivo
+
 
 /vendor
 .env

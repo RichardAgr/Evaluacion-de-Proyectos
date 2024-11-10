@@ -40,6 +40,7 @@ function ModificarPlanificacion() {
           errorDetails: error.message,
         });
       } finally {
+        console.log(planificacionData)
         setLoading(false);
       }
     };

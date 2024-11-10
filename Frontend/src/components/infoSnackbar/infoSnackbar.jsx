@@ -3,7 +3,6 @@ import { Snackbar, Alert, Slide } from "@mui/material";
 import { styled } from "@mui/system";
 
 const StyledAlert = styled(Alert)(({ theme, severity }) => ({
-  borderRadius: '8px',
   boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
   fontWeight: 'bold',
   fontSize: '1rem',
