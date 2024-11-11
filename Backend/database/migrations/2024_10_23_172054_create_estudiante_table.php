@@ -21,7 +21,6 @@ class CreateEstudianteTable extends Migration
             $table->string('segundoApellido', 20)->nullable();
             $table->string('contrasena', 60)->nullable();
             $table->tinyInteger('numerodefaltasest')->nullable();
-            $table->boolean('disponible')->nullable();
 
 
             $table->charset = 'utf8mb4';
