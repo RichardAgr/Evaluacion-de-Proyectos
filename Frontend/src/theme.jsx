@@ -24,21 +24,7 @@ const theme = createTheme({
         },
       },
     },
-    MuiAppBar: {
-      styleOverrides: {
-        colorPrimary: {
-          backgroundColor: '#ffffff', // Fondo de la AppBar en blanco
-          color: '#000000', // Color del texto en negro
-        },
-      },
-    },
-    MuiMenuItem: {
-      styleOverrides: {
-        root: {
-          color: '#000000', // Texto del MenuItem en negro
-        },
-      },
-    },
+    
     MuiTypography: {
       styleOverrides: {
         root: {

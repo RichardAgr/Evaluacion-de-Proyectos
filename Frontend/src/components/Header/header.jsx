@@ -23,8 +23,8 @@ function Header() {
   };
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="sticky">
+    <Box >
+      <AppBar position="fixed">
         <Toolbar>
           {grupo ? (
             <IconButton
