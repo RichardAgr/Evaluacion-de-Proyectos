@@ -52,6 +52,8 @@ Route::get('/docente/obtenerTareas', [NotaSprintController::class, 'obtenerTarea
 //-- sprints con toda su informacion y los entragables
 Route::get('/empresa/{idEmpresa}/sprintsEntregables', [EmpresaController::class, 'getSprintsEntregables']);
 
+Route::get('/empresa/{idEmpresa}/sprintsSemanasTareas', [EmpresaController::class, 'getSprintsSemanasTareas']);
+
 
 //============================= PLANIFICACION ==============================
 
