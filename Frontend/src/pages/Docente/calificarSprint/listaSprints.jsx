@@ -43,7 +43,7 @@ const ListaSprints = () => {
     },[])
     const clickBoton = (sprint) => {
         console.log("click", sprint)
-        navigate(`homeGrupo/${idGrupo}/listaEmpresaCalificarSprints/${idEmpresa}/sprint/${sprint}`); 
+        navigate(`/homeGrupo/${idGrupo}/listaEmpresaCalificarSprints/${idEmpresa}/sprint/${sprint}`); 
     }
     if (loading) {
         return <Loading></Loading>

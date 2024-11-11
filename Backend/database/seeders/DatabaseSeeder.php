@@ -55,7 +55,7 @@ class DatabaseSeeder extends Seeder
         // * Poblar clase Entregables
         $this->call(EntregablesSeeder::class);
 
-        // * Poblar clase NotaSprint
-        $this->call(NotaSprintSeeder::class);
+        // * Poblar clase NotaTareasEstudianteSeeder
+        $this->call(NotaTareasEstudianteSeeder::class);
     }
 }

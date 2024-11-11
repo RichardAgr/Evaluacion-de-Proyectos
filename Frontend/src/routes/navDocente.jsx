@@ -18,15 +18,15 @@ function Nav() {
       <Routes>
         {/** ROUTES JHON*/}
         <Route 
-            path="homeGrupo/:idGrupo/listaEmpresaCalificarSprints" 
+            path="/homeGrupo/:idGrupo/listaEmpresaCalificarSprints" 
             element={<ListaEmpresaSprints/>}
         />
         <Route 
-            path="homeGrupo/:idGrupo/listaEmpresaCalificarSprints/:idEmpresa" 
+            path="/homeGrupo/:idGrupo/listaEmpresaCalificarSprints/:idEmpresa" 
             element={<ListaSprints/>}
         />
         <Route 
-            path="homeGrupo/:idGrupo/listaEmpresaCalificarSprints/:idEmpresa/sprint/:idSprint" 
+            path="/homeGrupo/:idGrupo/listaEmpresaCalificarSprints/:idEmpresa/sprint/:idSprint" 
             element={<CalificarSprint/>}
         />
         <Route
