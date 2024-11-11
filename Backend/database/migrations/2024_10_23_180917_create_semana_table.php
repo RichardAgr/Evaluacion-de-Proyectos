@@ -15,13 +15,15 @@ return new class extends Migration
             $table->id('idSemana');
             $table->unsignedBigInteger('idSprint');
             $table->tinyInteger('numeroSemana');
-            
+
             // * Llave foranea idSprint
             $table->foreign('idSprint')
                 ->references('idSprint')
                 ->on('sprint')
                 ->onDelete('cascade');
 
+            $table->dateTime('fechaIni');
+            $table->dateTime('fechaFin');
             $table->charset = 'utf8mb4';
             $table->collation = 'utf8mb4_general_ci';
             $table->engine = 'InnoDB';

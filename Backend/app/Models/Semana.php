@@ -12,6 +12,9 @@ class Semana extends Model
     public $timestamps = false;
     protected $fillable = [
         'idSprint',
+        'numeroSemana',
+        'fechaIni',
+        'fechaFin',
     ];
 
     public function tareas()
