@@ -14,6 +14,9 @@ import ListaTareas from "../pages/Estudiante/modificarTarea/listaTareas.jsx";
 import CalificacionesHitoEmpresa from "../pages/Estudiante/grupoEmpresa/calificacionesHitoEmpresa.jsx";
 import CrearGrupoEmpresa from "../pages/Estudiante/grupoEmpresa/crearGrupoEmpresa.jsx";
 import PublicarGrupoEmpresa from "../pages/Estudiante/grupoEmpresa/publicarGrupoEmpresa.jsx";
+import EmpresasParaTareas from "../pages/Estudiante/visualizarSprintEstudiante/seleccionarEmpresaParaVisualizar.jsx";
+
+import SprintTareas2 from "../pages/Estudiante/visualizarSprintEstudiante/prueba123.jsx";
 
 function Nav() {
     return (
@@ -32,6 +35,14 @@ function Nav() {
           element={<CalificacionesHitoEmpresa />}
         />
         {/** ROUTES JOAQUIN*/}
+        <Route
+          path="/homeEstudiante/homeGrupoEstudiante/empresaTareas"
+          element={<EmpresasParaTareas />}
+        />
+        <Route
+          path="/prueba123"
+          element={<SprintTareas2 />}
+        />
         {/** ROUTES JHAIR*/}
         <Route
           path="/homeEstudiante/homeGrupoEstudiante/sprint/:idSprint"

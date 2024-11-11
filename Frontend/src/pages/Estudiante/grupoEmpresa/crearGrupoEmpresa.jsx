@@ -16,6 +16,7 @@ const CrearGrupoEmpresa = () => {
     const [mensajeError, setMensajeError] = useState("");
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState("");
+    const [isLoading, setLoading] = useState(true);
 
     const navigate = useNavigate();
 
@@ -27,13 +28,14 @@ const CrearGrupoEmpresa = () => {
                 const data = await response.json();
                 setEstudiante(data);
                 console.log(data);
+                setLoading(false);
             } catch (error) {
                 console.error(error);
                 setMensajeError("Error al cargar el estudiante.");
             }
         };
         if (idEstudiante) {
-            fetchEstudiante(idEstudiante); // Pasa idEstudiante como argumento
+            fetchEstudiante(idEstudiante); 
         }
     
     }, [idEstudiante]);
@@ -94,7 +96,11 @@ const CrearGrupoEmpresa = () => {
                 confirmarAtras={false}
                 dirBack={`/`}
             >
+                {isLoading !== true && (
+                <div>
+                {estudiante.enEmpresa !== 1 && (
                 <div style={{ display: 'grid' }}>
+
                     <NombreEmpresaCompleto>
                         <Box component="section" sx={{ p: 2 }}>
                             <h3>NOMBRE LARGO:</h3>
@@ -119,7 +125,6 @@ const CrearGrupoEmpresa = () => {
                             </div>
                         </StyledWrapper>
                     </NombreEmpresaCompleto>
-
                     <NombreEmpresaCompleto>
                         <Box component="section" sx={{ p: 2 }}>
                             <h3>NOMBRE CORTO:</h3>
@@ -144,7 +149,7 @@ const CrearGrupoEmpresa = () => {
                             </div>
                         </StyledWrapper>
                     </NombreEmpresaCompleto>
-   
+
                     <Box pt={10}>
                         <h2 style={{marginBottom:20}}>Integrantes</h2>
                     </Box>
@@ -192,6 +197,24 @@ const CrearGrupoEmpresa = () => {
                         </Alert>
                     </Snackbar>
                 </div>
+                )}
+                    </div>)}
+                    {estudiante.enEmpresa === 1 && (
+                        <div 
+                            style={{
+                                color: 'red',
+                                fontWeight: 'bold',
+                                position: 'fixed',
+                                top: '50%',
+                                left: '50%',
+                                transform: 'translate(-50%, -50%)',
+                                textAlign: 'center',
+                            }}
+                        >
+                            Ya tiene una empresa registrada
+                        </div>
+
+                    )}
             </BaseUI>
         </Fragment>
     );
