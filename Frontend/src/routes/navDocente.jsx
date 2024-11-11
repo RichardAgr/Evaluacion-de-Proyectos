@@ -10,22 +10,42 @@ import ListaSprints from "../pages/Docente/calificarSprint/listaSprints.jsx";
 import ObtenerEstudiantesPorGrupo from "../pages/Docente/listas/listaEstudiantes/listaEstudiantes.jsx";
 import EmpresasPorDocente from "../pages/Docente/listas/listaEmpresas/listaEmpresaPorDocente.jsx";
 import SeleccionarEmpresaVisualizar from "../pages/Docente/listas/seleccionarEmpresaVisualizar/seleccionarEmpresaVisualizar.jsx";
-import ListaVerPlanificacion from "../pages/Docente/listas/seleccionarEmpresaVisualizar/seleccionarEmpresaVisualizar.jsx";
+//import ListaVerPlanificacion from "../pages/Docente/listas/seleccionarEmpresaVisualizar/seleccionarEmpresaVisualizar.jsx";
+import ListaEmpresaSprints from "../pages/Docente/calificarSprint/listaEmpresaSprints.jsx";
 
 function Nav() {
     return (
       <Routes>
-        <Route
-          path="/visualizarPlanificacion"
-          element={<SeleccionarEmpresaVisualizar />}
+        {/** ROUTES JHON*/}
+        <Route 
+            path="homeGrupo/:idGrupo/listaEmpresaCalificarSprints" 
+            element={<ListaEmpresaSprints/>}
         />
         <Route 
-            path="/:idEmpresa/calificarSprints" 
+            path="homeGrupo/:idGrupo/listaEmpresaCalificarSprints/:idEmpresa" 
             element={<ListaSprints/>}
         />
         <Route 
-            path="/:idEmpresa/calificarSprints/sprint/:idSprint" 
+            path="homeGrupo/:idGrupo/listaEmpresaCalificarSprints/:idEmpresa/sprint/:idSprint" 
             element={<CalificarSprint/>}
+        />
+        <Route
+          path="/homeGrupo/:idGrupo/listaEstudiantes/:gestionGrupo"//NO_NECESITAS_GESTION
+          element={<ObtenerEstudiantesPorGrupo />}
+        />
+        <Route
+          path="/homeGrupo/:idGrupo/listaEmpresas/:idDocente"//NO_NECESITAS_DOCENTE
+          element={<EmpresasPorDocente />}
+        />
+        <Route
+          path="/homeEstudiante/visCalificar"
+          element={<CalificarEstSemana />}
+        />
+        {/** ROUTES JOAQUIN*/}
+        {/** ROUTES JHAIR*/}
+        <Route
+          path="/visualizarPlanificacion"
+          element={<SeleccionarEmpresaVisualizar />}
         />
         <Route 
             path="/homeDocente" 
@@ -46,18 +66,6 @@ function Nav() {
         <Route
           path="/evaluacionSemanal/empresa/:idEmpresa/sprint/:idSprint"
           element={<EvaluacionSemanal />}
-        />
-        <Route
-          path="/homeGrupoDocente/listaEstudiantes/:idGrupo/:gestionGrupo"
-          element={<ObtenerEstudiantesPorGrupo />}
-        />
-        <Route
-          path="/homeGrupoDocente/listaEmpresas/:idDocente"
-          element={<EmpresasPorDocente />}
-        />
-        <Route
-          path="/homeEstudiante/visCalificar"
-          element={<CalificarEstSemana />}
         />
       </Routes>
     );

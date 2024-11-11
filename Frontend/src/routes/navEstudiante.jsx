@@ -1,5 +1,4 @@
 import { Routes, Route } from "react-router-dom";
-
 import HomeEstudiante from "../pages/Estudiante/homeEstudiante/homeEstudiante.jsx";
 import HomeGrupoEstudiante from "../pages/Estudiante/homeGrupoEstudiante/homeGrupoEstudiante.jsx";
 import ModificarPlanificacion from "../pages/Estudiante/editarPlanificacion/editarPlanificacion.jsx";
@@ -19,6 +18,21 @@ import PublicarGrupoEmpresa from "../pages/Estudiante/grupoEmpresa/publicarGrupo
 function Nav() {
     return (
       <Routes>
+        {/** ROUTES JHON*/}
+        <Route
+          path="/:idEstudiante/homeGrupoE/:idGrupo/sprintE/:idSprint"
+          element={<ListaTareas />}
+        />
+        <Route  
+          path="/:idEstudiante/homeGrupoE/:idGrupo/sprintE/:idSprint/semana/editarTarea/:idTarea"
+          element={<ModificarTarea />}
+        />
+        <Route
+          path="/:idEstudiante/homeGrupoE/:idGrupo/empresa/:idEmpresa/calificaciones"
+          element={<CalificacionesHitoEmpresa />}
+        />
+        {/** ROUTES JOAQUIN*/}
+        {/** ROUTES JHAIR*/}
         <Route
           path="/homeEstudiante/homeGrupoEstudiante/sprint/:idSprint"
           element={<VisualizarSprintEst />}
@@ -51,18 +65,6 @@ function Nav() {
         <Route
           path="/publicarPlanificacion/Empresa/:idEmpresa"
           element={<PublicarPlanificacion />}
-        />
-        <Route  
-          path="/homeEstudiante/homeGrupoEstudiante/sprintE/:idSprint/semana/editarTarea/:idTarea"
-          element={<ModificarTarea />}
-        />
-        <Route
-          path="/homeEstudiante/homeGrupoEstudiante/sprintE/:idSprint"
-          element={<ListaTareas />}
-        />
-        <Route
-          path="/homeEstudiante/homeGrupoEstudiante/empresas/:idEmpresa/calificaciones"
-          element={<CalificacionesHitoEmpresa />}
         />
         <Route
           path="/modificarListaTareas/empresa/:idEmpresa/sprint/:idSprint/semana/:idSemana"
