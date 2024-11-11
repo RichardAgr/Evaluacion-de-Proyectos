@@ -211,7 +211,7 @@ const CrearGrupoEmpresa = () => {
                                 textAlign: 'center',
                             }}
                         >
-                            Ya tiene una empresa registrada
+                            Ya se encuentra en una empresa
                         </div>
 
                     )}
