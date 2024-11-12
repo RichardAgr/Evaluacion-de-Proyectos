@@ -41,7 +41,7 @@ Route::get('/estudiante/sprint/semana/{idSprint}',[SprintController::class, 'spr
 
 //============================= GET DOCENTE ================================
 //---Recibe la lista de estudiantes de un grupo especifico del docente activo
-Route::post('/docente/listaEstudiantes', [GrupoController::class, 'obtenerEstudiantesPorGrupo']);
+Route::get('/grupo/estudiantes/{idGrupo}/{gestionGrupo}', [GrupoController::class, 'obtenerEstudiantesPorGrupo']);
 //---Recibe las empresas del grupo del docente y del docente activo
 Route::get('/docente/obtenerEmpresasPorGrupoYDocente',[GrupoController::class, 'obtenerEmpresasPorGrupoYDocente']);
 //---Recibe las tareas de un estudiante {Puuede no funcionar}
@@ -116,8 +116,8 @@ Route::post('/empresa/{idEmpresa}/sprint/{idSprint}/evaluacion', [SprintControll
 // ============================      SESIONES DOCENTE     ======================================
 
 Route::get('/session/active/docente', [AuthController::class, 'isSessionActiveDocente']);
-Route::post('/session/logeado/docente', [AuthController::class, 'loginConIdDocente']);
-Route::post('/session/logout/docente', [AuthController::class, 'logoutDocente']);
+Route::get('/session/logeado/docente/{idDoc}', [AuthController::class, 'loginConIdDocente']);
+Route::get('/session/logout/docente/{idDoc}', [AuthController::class, 'logoutDocente']);
 
 // ============================      SESIONES ESTUDIANTE  ====================================
 

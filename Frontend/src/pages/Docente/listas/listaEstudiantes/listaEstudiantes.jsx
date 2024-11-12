@@ -36,7 +36,9 @@ export default function DataTable() {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
+          
         },
+        credentials: 'include',
       });
 
       if (!response.ok) {

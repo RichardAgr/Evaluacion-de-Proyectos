@@ -86,6 +86,7 @@ export default function DataTable() {
   }, [searchValue, filteredEstudiantes.length]);
 
   return (
+    
     <Fragment>
       <BaseUI
         titulo={"LISTA DE ESTUDIANTES"}
@@ -93,6 +94,7 @@ export default function DataTable() {
         confirmarAtras={true} 
         dirBack={`/`}
       >
+      hola
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px', marginTop: '10px' }}>
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <Autocomplete

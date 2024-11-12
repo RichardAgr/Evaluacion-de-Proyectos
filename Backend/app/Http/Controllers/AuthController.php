@@ -13,12 +13,12 @@ class AuthController extends Controller
     {
         // Validar los datos recibidos
         $request->validate([
-            'email' => 'required|email',
+            'nombreCuenta' => 'required|email',
             'password' => 'required'
         ]);
 
         // Intentar autenticación con las credenciales en la tabla personalizada
-        if (Auth::attempt($request->only('email', 'password'))) {
+        if (Auth::attempt($request->only('nombreCuenta', 'password'))) {
             // Obtener el usuario autenticado
             $usuario = Auth::user();
 
@@ -91,7 +91,7 @@ class AuthController extends Controller
     }
     
     //Logeo de docente
-    public function loginConIdDocente(Request $request)
+    public function loginConIdDocente($idDoc)
     {
         // Asegúrate de que la sesión esté disponible
         
@@ -99,12 +99,12 @@ class AuthController extends Controller
         
 
         // Validar que el ID esté presente en la solicitud
-        $request->validate([
+       /* $request->validate([
             'idDocente' => 'required|integer'
-        ]);
+        ]);*/
 
         // Buscar al usuario por el ID
-        $usuario = Docente::find($request->idDocente);
+        $usuario = Docente::find($idDoc);
 
         if ($usuario) {
             // Crear una sesión para el usuario
@@ -123,7 +123,7 @@ class AuthController extends Controller
     }
 
      
-    public function logoutDocente()
+    public function logoutDocente($idDoc)
     {   
         session()->forget('docente');
         // Eliminar la sesión
