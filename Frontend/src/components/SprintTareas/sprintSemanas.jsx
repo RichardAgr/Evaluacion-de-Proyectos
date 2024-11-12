@@ -2,10 +2,11 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
+import { Typography } from '@mui/material';
 
 /* eslint-disable react/prop-types */
 
-const SprintSemanas = ({ title, semana, idSprint, navigateLink}) => {
+const SprintSemanas = ({ title, semana, idSprint, navigateLink, semanaTexto, isOpenSprint}) => {
     const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(false);
 
@@ -20,7 +21,7 @@ const SprintSemanas = ({ title, semana, idSprint, navigateLink}) => {
 
     return (
         <DivLista>
-            <Box 
+            {(semanaTexto!==true || isOpenSprint)?  <Box 
                 onClick={togglePanel}
                 sx={{
                     width: '90%',
@@ -44,8 +45,11 @@ const SprintSemanas = ({ title, semana, idSprint, navigateLink}) => {
                 {isOpen ? <div className='arrow-down'></div> : <div className='arrow-right'></div> }
                 {title}
             </Box>
+            :
+            <Typography variant='h5' sx={{marginLeft: 'calc(2vw + 0.5rem)', }}>{title}</Typography>
+            }
 
-            {isOpen && (
+            {(semanaTexto === true || isOpen) && (
                 <Box>
                     {semana.tareas.length > 0 ? (
                         semana.tareas.map((tarea) => (
@@ -105,21 +109,4 @@ const DivLista = styled("div")`
     display: flex;
     flex-direction: column;
     margin: 0rem;
-    .arrow-down {
-        margin-right: 0.5rem;
-        width: 0;
-        height: 0;
-        border-left: 10px solid transparent;
-        border-right: 10px solid transparent;
-        border-top: 10px solid black;
-    }
-    .arrow-right { 
-        width: 0; 
-        height: 0;
-        border-top: 10px solid transparent; 
-        border-bottom: 10px solid transparent; 
-        border-left: 10px solid black; 
-        margin-right: 0.5rem;
-    }   
-
 `;

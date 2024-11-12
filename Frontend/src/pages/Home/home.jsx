@@ -82,7 +82,7 @@ function Home() {
     },
 
     {
-      label: "Modificar Tarea",
+      label: "ID8-->Modificar Tarea",
       onClick: () =>
         navigate("/1/homeGrupoE/1/sprintE/1"),
     },

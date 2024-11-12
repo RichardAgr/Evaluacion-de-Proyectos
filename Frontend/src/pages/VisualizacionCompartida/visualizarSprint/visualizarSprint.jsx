@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
   getSprintPorId,
-  getListaSprintsPorIdEmpresa,
 } from "../../../api/visualizarSprint/visualizarSprint";
 import {
   Typography,
@@ -10,12 +9,10 @@ import {
   List,
   ListItem,
   ListItemText,
-  CircularProgress,
   Box,
   Button,
   Grid2,
   Divider,
-  Chip,
 } from "@mui/material";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import AssignmentIcon from "@mui/icons-material/Assignment";

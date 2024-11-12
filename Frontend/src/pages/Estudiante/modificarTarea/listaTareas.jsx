@@ -6,6 +6,8 @@ function ListaTareas() {
     <VisualizarSprintEst 
       titulo={'SELECCIONE UNA TAREA PARA MODIFICAR'} 
       navigateLink={`/${idEstudiante}/homeGrupoE/${idGrupo}/sprintE/${idSprint}/semana/editarTarea/`}
+      bloquearFechas={true}
+      verSprints= {false}
     ></VisualizarSprintEst>
   );
 }
