@@ -14,11 +14,12 @@ class CreateGrupoTable extends Migration
         Schema::create('grupo', function (Blueprint $table) {
             $table->id('idGrupo');
             $table->unsignedBigInteger('idDocente');
-            
             $table->integer('numGrupo')->nullable();
             $table->string('gestionGrupo',6)->nullable();
             $table->string('codigoAcceso',20)->nullable();
             $table->longText('descripcion')->nullable();
+            $table->date('fechaIniGestion')->nullable();
+            $table->date('fechaFinGestion')->nullable();
 
             // * Llave foranea idDocente
             $table->foreign('idDocente')

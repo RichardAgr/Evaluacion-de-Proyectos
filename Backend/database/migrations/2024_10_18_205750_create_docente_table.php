@@ -18,7 +18,7 @@ class CreateDocenteTable extends Migration
             $table->string('primerApellido',10)->nullable();
             $table ->string('segundoApellido',10)->nullable();
             $table->string ('contrasena',60)->nullable();
-            $table->timestamps();
+            $table->string ('descripcionDocente',500)->nullable();
 
         });
     }

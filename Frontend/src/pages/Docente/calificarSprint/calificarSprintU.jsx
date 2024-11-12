@@ -17,7 +17,7 @@ import Error from "../../../components/error/error";
 import { getSprintsEntregables } from "../../../api/getEmpresa"
 import { actualizarSprint } from '../../../api/sprintApi';            
 function CalificarSprintU() {
-    const { idEmpresa, idSprint } = useParams();
+    const { idEmpresa, idSprint, idGrupo } = useParams();
     const [sprints, setSprints] = useState([])
     const [datosSprint, setDatosSprint] = useState(
         {
@@ -188,7 +188,7 @@ function CalificarSprintU() {
             titulo={'CALIFICAR SPRINT'}
             ocultarAtras={false}
             confirmarAtras={true}
-            dirBack={`/${idEmpresa}/calificarSprints`}
+            dirBack={`/homeGrupo/${idGrupo}/listaEmpresaCalificarSprints/${idEmpresa}`}
         >
         <Container>
             

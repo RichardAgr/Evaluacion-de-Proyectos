@@ -30,7 +30,6 @@ class Estudiante extends Model
     {
         return $this->belongsTo(Docente::class, 'idDocente');
     }
-
     public function tareas()
     {
         return $this->belongsToMany(Tarea::class, 'tareasestudiantes', 'idEstudiante', 'idTarea');
@@ -43,6 +42,10 @@ class Estudiante extends Model
     public function estudiantesEmpresas()
     {
         return $this->belongsToMany(Empresa::class, 'estudiantesempresas', 'idEstudiante', 'idEmpresa');
+    }
+    public function notaTareasEstudiante()
+    {
+        return $this->hasMany(NotaTareasEstudiante::class, 'estudiante_idEstudiante');
     }
 }
 

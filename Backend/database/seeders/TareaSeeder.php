@@ -13,7 +13,11 @@ class TareaSeeder extends Seeder
      */
     public function run(): void
     {
-        $semanas = DB::table('semana')->get();
+        $semanas = DB::table('semana')
+            ->join('sprint', 'semana.idSprint', '=', 'sprint.idSprint')
+            ->whereIn('sprint.idPlanificacion', [1, 2])
+            ->select('semana.*')
+            ->get();
 
         $tareas = [
             [

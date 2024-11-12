@@ -160,8 +160,7 @@ class PlanificacionController extends Controller
             // validar datos
             $validator = Validator::make($request->all(), [
                 'idEmpresa' => 'required|integer',
-                'comentariopublico' => 'nullable|string',
-                'comentarioprivado' => 'nullable|string',
+                'comentariopublico' => 'required|string',
             ]);
             if ($validator->fails()) {
                 return response()->json([
@@ -181,9 +180,6 @@ class PlanificacionController extends Controller
             // Añadir comentario del docente
             if (isset($validatedData['comentariopublico'])) {
                 $planificacion->comentariopublico = $validatedData['comentariopublico'];
-            }
-            if (isset($validatedData['comentarioprivado'])) {
-                $planificacion->comentarioprivado = $validatedData['comentarioprivado'];
             }
             // Guardar los cambios
             $planificacion->save();

@@ -12,8 +12,8 @@ class EstudiantesEmpresasSeeder extends Seeder
      */
     public function run(): void
     {
-        $estudiantes = range(1, 24);
-        $empresas = [1, 2, 3, 4, 5];
+        $estudiantes = range(1, 29);
+        $empresas = [1, 2, 3, 4, 5, 6, 7];
         $numEmpresas = count($empresas);
         $numEmpresas = count($empresas);
         $estudiantesPorEmpresa = ceil(count($estudiantes) / $numEmpresas);

@@ -58,7 +58,7 @@ function ListaEmpresaSprints() {
       ocultarAtras={false}
       confirmarAtras={false}
       dirBack={`/`}
-      dirForward= {`homeGrupo/${idGrupo}/listaEmpresaCalificarSprints/`}
+      dirForward= {`/homeGrupo/${idGrupo}/listaEmpresaCalificarSprints/`}
       mensajeSearch = "Buscar empresa"
       nombreContador = "Empresas"
     />

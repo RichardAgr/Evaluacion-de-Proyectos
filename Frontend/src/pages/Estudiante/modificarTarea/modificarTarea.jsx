@@ -7,7 +7,6 @@ import Loading from '../../../components/loading/loading'
 import Error from "../../../components/error/error";
 import BaseUI from '../../../components/baseUI/baseUI';
 import { getTareaData, updateTarea } from '../../../api/validarTareas/tareas';
-import { getEmpresaData } from "../../../api/getEmpresa.jsx";
 import DecisionButtons from '../../../components/Buttons/decisionButtons.jsx'
 import CuadroDialogo from '../../../components/cuadroDialogo/cuadroDialogo.jsx';
 import InfoSnackbar from '../../../components/infoSnackbar/infoSnackbar.jsx'
@@ -17,7 +16,7 @@ import CancelRoundedIcon from '@mui/icons-material/CancelSharp';;
 
 
 function ModificarTarea() {
-  const { idTarea, idSprint } = useParams();
+  const { idTarea, idSprint, idGrupo, idEstudiante } = useParams();
   const [responsables, setResponsables] = useState([]);
   const [responsablesError, setResponsablesError] = useState(false);
   const [descripcion, setDescripcion] = useState('Descripcion...');
@@ -50,16 +49,15 @@ function ModificarTarea() {
   useEffect(() => {
     const fetchTareaData = async () => {
       try {
-        const [data, empresaData] = await Promise.all ([
-          getTareaData(idTarea),
-          getEmpresaData(1),
+        const [data] = await Promise.all ([
+          getTareaData(idTarea)
         ])
         setTitulo(data.nombreTarea)
         setDescripcion(data.textotarea);
         setResponsables(data.estudiantes);
         console.log(data)
-        console.log(empresaData)
-        await filtrarEstuLista(empresaData, data);
+        console.log(data)
+        await filtrarEstuLista(data, data);
         
       } catch (error) {
         setError({
@@ -183,7 +181,7 @@ function ModificarTarea() {
         titulo={'MODIFICAR TAREA'}
         ocultarAtras={false}
         confirmarAtras={true}
-        dirBack={`/homeEstudiante/homeGrupoEstudiante/sprintE/${idSprint}`}
+        dirBack={`/${idEstudiante}/homeGrupoE/${idGrupo}/sprintE/${idSprint}`}
       >
         <ContainerdropZone>
           <form autoComplete="off" onSubmit={handleSubmit}>

@@ -15,7 +15,7 @@ class CreateEstudiantesgruposTable extends Migration
 
             $table->unsignedBigInteger('idEstudiante');
             $table->unsignedBigInteger('idGrupo');
-
+            $table->boolean('disponibleEstudiante')->default('1');
             $table->primary(['idEstudiante', 'idGrupo']);
 
             // * Definir las claves foráneas

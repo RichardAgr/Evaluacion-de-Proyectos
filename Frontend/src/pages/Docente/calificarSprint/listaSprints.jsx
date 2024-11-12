@@ -43,7 +43,7 @@ const ListaSprints = () => {
     },[])
     const clickBoton = (sprint) => {
         console.log("click", sprint)
-        navigate(`homeGrupo/${idGrupo}/listaEmpresaCalificarSprints/${idEmpresa}/sprint/${sprint}`); 
+        navigate(`/homeGrupo/${idGrupo}/listaEmpresaCalificarSprints/${idEmpresa}/sprint/${sprint}`); 
     }
     if (loading) {
         return <Loading></Loading>
@@ -56,7 +56,7 @@ const ListaSprints = () => {
             titulo={'SELECCIONE UN SPRINT PARA CALIFICAR'}
             ocultarAtras={false}
             confirmarAtras={false}
-            dirBack={`homeGrupo/${idGrupo}/listaEmpresaCalificarSprints`}
+            dirBack={`/homeGrupo/${idGrupo}/listaEmpresaCalificarSprints`}
         >
         <DivLista>
             {sprints!==null? 

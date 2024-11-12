@@ -48,7 +48,22 @@ class EmpresaSeeder extends Seeder
                 'nombreLargo' => 'PixelForge Software Development S.R.L.',
                 'numerodefaltasempresa' => null,
                 'notaproductofinal' => null,
-            ]
+            ],
+            [
+                'idEmpresa' => 6,
+                'nombreEmpresa' => 'CodeLovers',
+                'nombreLargo' => 'CodeLovers Solutions S.R.L.',
+                'numerodefaltasempresa' => null,
+                'notaproductofinal' => null,
+            ],
+            [
+                'idEmpresa' => 7,
+                'nombreEmpresa' => 'CodeNest',
+                'nombreLargo' => 'CodeNest Innovations S.R.L.',
+                'numerodefaltasempresa' => null,
+                'notaproductofinal' => null,
+            ],
+            
         ]);
     }
 }
