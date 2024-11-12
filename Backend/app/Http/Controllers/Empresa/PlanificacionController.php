@@ -58,7 +58,7 @@ class PlanificacionController extends Controller
                 ->first();
 
             // Verificar si la planificación existe y si fue rechazada
-            if ($planificacion && $planificacion->aceptada === 0) {
+            if ($planificacion && $planificacion->aceptada === 0 && $planificacion->publicada=== 1) {
                 // Si la planificación existe y fue rechazada, guarda sus datos
                 $data[] = [
                     'id' => $planificacion->idPlanificacion,
