@@ -15,6 +15,11 @@ const columns = [
     headerName: 'Equipo',
     type: 'string',
     flex: 2,
+    renderCell: ({ value }) => (
+      <span style={{ color: value ? 'inherit' : 'red' }}>
+        {value || 'N/A'}
+      </span>
+    ),
   },
 ];
 
@@ -74,17 +79,17 @@ export default function DataTable() {
 
 
   return (
-      <ListaDefinitivaN
-        titulo="LISTA DE ESTUDIANTES"
-        cabezeraTitulo={null}
-        cabezeras={columns}
-        datosTabla={estudiantes}
-        ocultarAtras={false}
-        confirmarAtras={false}
-        dirBack="/"
-        dirForward=""
-        mensajeSearch = "Buscar Estudiante o empresa"
-        nombreContador = "Estudiantes"
-      /> 
+    <ListaDefinitivaN
+      titulo="LISTA DE ESTUDIANTES"
+      cabezeraTitulo={null}
+      cabezeras={columns}
+      datosTabla={estudiantes}
+      ocultarAtras={false}
+      confirmarAtras={false}
+      dirBack="/"
+      dirForward=""
+      mensajeSearch = "Buscar Estudiante o empresa"
+      nombreContador = "Estudiantes"
+    /> 
   );
 }

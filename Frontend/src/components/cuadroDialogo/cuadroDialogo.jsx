@@ -62,7 +62,7 @@ const CuadroDialogo = ({ open, onClose, title, description, onConfirm }) => {
         </Box>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} color="secondary" variant="contained">
+        <Button onClick={onClose} variant="outlined">
           Cancelar
         </Button>
         <Button onClick={onConfirm} color="primary" variant="contained" autoFocus>

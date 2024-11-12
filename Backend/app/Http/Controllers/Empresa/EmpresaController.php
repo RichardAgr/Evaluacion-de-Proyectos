@@ -94,7 +94,7 @@ class EmpresaController extends Controller
         //return response()->json($data);
         return $data;
     }
-public function obtenerSprints($idEmpresa, $idDocente)
+    public function obtenerSprints($idEmpresa, $idDocente)
     {
         try {
 
@@ -117,7 +117,7 @@ public function obtenerSprints($idEmpresa, $idDocente)
         }
     }
 
-public function getCalificacionesEmpresa($idEmpresa)
+    public function getCalificacionesEmpresa($idEmpresa)
     {
         try {
             // Obtener la empresa y verificar si tiene estudiantes
@@ -252,6 +252,21 @@ public function getCalificacionesEmpresa($idEmpresa)
             return response()->json(['sprints' => $sprints], 200);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error al obtener los sprints y entregables: ' . $e->getMessage()], 500);
+        }
+    }
+
+    public function getSprintsSemanasTareas($idEmpresa)
+    {
+        try {
+            $empresa = Empresa::findOrFail($idEmpresa);
+
+            $sprints = $empresa->sprints()->with(['semanas' => function ($query) {
+                $query->with(['tareas:idSemana,nombreTarea']);
+            }])->get();
+
+            return response()->json($sprints, 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error al obtener los datos: ' . $e->getMessage()], 500);
         }
     }
 }

@@ -20,7 +20,7 @@
     display: flex;
     justify-content: center;
     width: 98.5vw;
-    margin-top: 1vh;
+    margin-top: 10vh;
     min-height: calc(87vh);
 }
 
@@ -29,34 +29,40 @@
     display: block;
 }
 
-.pageBorder {
-    padding: 2vh;
-    display: flex;
-    justify-content: center;
-    min-height: calc(74vh);
-    border: 0.3rem solid black;
-    border-radius: 0.3rem;
-    -webkit-border-radius: 0.3rem;
-    -moz-border-radius: 0.3rem;
-    -ms-border-radius: 0.3rem;
-    -o-border-radius: 0.3rem;
-}
+display: flex;
+justify-content: center;
+min-height: calc(74vh);
+box-shadow: rgba(0,
+0,
+0,
+0.25) 0px 0.0625em 0.0625em,
+rgba(0,
+0,
+0,
+0.25) 0px 0.125em 0.5em,
+rgba(255,
+255,
+255,
+0.1) 0px 0px 0px 1px inset;
+border-radius: 0.3rem;
+-webkit-border-radius: 0.3rem;
+-moz-border-radius: 0.3rem;
+-ms-border-radius: 0.3rem;
+-o-border-radius: 0.3rem;
 
+}
 .pageBorder_interior {
     width: 90%;
 }
-
 h1 {
     font-size: 2.5rem;
 }
-
 h1,
 h2,
 h3 {
     margin-top: 0;
     margin-bottom: 0;
 }
-
 .calificar {
     margin: 2rem;
     display: flex;
@@ -64,7 +70,6 @@ h3 {
     align-content: center;
     justify-content: center;
 }
-
 .calificar_inputText {
     display: block;
     min-height: 10vw;
@@ -77,13 +82,11 @@ h3 {
     -o-border-radius: 0.3rem;
     border: 0.3rem solid black;
 }
-
 .notaOrden {
     display: flex;
     margin-top: 1rem;
     justify-content: space-between;
 }
-
 .calificar_inputNota {
     padding: 0.3rem;
     display: inline;
@@ -94,7 +97,6 @@ h3 {
     -o-border-radius: 0.3rem;
     border: 0.3rem solid black;
 }
-
 .divContainerPlani {
     display: flex;
     justify-content: center;
@@ -102,7 +104,6 @@ h3 {
     align-items: center;
     min-height: 50vh;
 }
-
 .icons {
     color: white;
     padding: 0.3rem;
@@ -113,11 +114,9 @@ h3 {
     -ms-border-radius: 0.2rem;
     -o-border-radius: 0.2rem;
 }
-
 .icons:hover {
     background-color: #c50512;
 }
-
 .iconsSec {
     padding: 0.3rem;
     color: white;
@@ -128,17 +127,14 @@ h3 {
     -ms-border-radius: 0.2rem;
     -o-border-radius: 0.2rem;
 }
-
 .iconsSec:hover {
     background-color: #0e316d;
 }
-
 .buttonIzq {
     display: flex;
     width: 100%;
     justify-content: end;
 }
-
 .collapse-header {
     display: flex;
     width: 83%;
@@ -151,7 +147,6 @@ h3 {
     margin-top: 0.2rem;
     overflow: auto;
 }
-
 .collapse-child {
     display: flex;
     min-height: 1vw;
@@ -163,18 +158,15 @@ h3 {
     margin: 0.4vw;
     margin-left: 10%;
 }
-
 .prueba {
     display: flex;
 }
-
 .visualizarSprint {
     height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
 }
-
 .descripcion_inputText {
     display: block;
     min-height: 14vw;
@@ -185,4 +177,20 @@ h3 {
     -ms-border-radius: 0.3rem;
     -o-border-radius: 0.3rem;
     border: 0.3rem solid black;
+}
+.arrow-down {
+    margin-right: 0.5rem;
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 10px solid black;
+}
+.arrow-right {
+    width: 0;
+    height: 0;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-left: 10px solid black;
+    margin-right: 0.5rem;
 }

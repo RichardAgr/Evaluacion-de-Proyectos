@@ -1,12 +1,14 @@
 import { Fragment, useState, useEffect} from "react";
+import { useParams } from "react-router-dom";
 import BaseUI from "../../../components/baseUI/baseUI";
 import { styled } from "@mui/material"; 
-import { Snackbar, Alert, Grid } from "@mui/material";
+import { Snackbar, Alert } from "@mui/material";
 import Box from '@mui/material/Box';
 import { Button } from '@mui/material';
 import { useNavigate } from "react-router-dom";
 
 const CrearGrupoEmpresa = () => {
+    let { idEstudiante } = useParams(); 
     const [nombreLargo, setNombreLargo] = useState("");
     const [nombreCorto, setNombreCorto] = useState("");
     const [intentoEnviar, setIntentoEnviar] = useState(false);
@@ -14,25 +16,29 @@ const CrearGrupoEmpresa = () => {
     const [mensajeError, setMensajeError] = useState("");
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState("");
+    const [isLoading, setLoading] = useState(true);
 
     const navigate = useNavigate();
 
     useEffect(() => {
-        const fetchEstudiante = async () => {
+        const fetchEstudiante = async (idEstudiante) => {
             try {
-                const response = await fetch('http://localhost:8000/api/estudiante/getEstudiante/25'); 
+                const response = await fetch(`http://localhost:8000/api/estudiante/getDatosEst/${idEstudiante}`); 
                 if (!response.ok) throw new Error('Error al recuperar estudiante');
                 const data = await response.json();
                 setEstudiante(data);
                 console.log(data);
+                setLoading(false);
             } catch (error) {
                 console.error(error);
                 setMensajeError("Error al cargar el estudiante.");
             }
         };
-        
-        fetchEstudiante(); // Llama a la función para obtener el estudiante
-    }, []);
+        if (idEstudiante) {
+            fetchEstudiante(idEstudiante); 
+        }
+    
+    }, [idEstudiante]);
 
     const manejarSubmit = async () => {
         setIntentoEnviar(true);
@@ -49,16 +55,30 @@ const CrearGrupoEmpresa = () => {
                         estudiante: estudiante.idEstudiante,
                     }),
                 });
-                if (!response.ok) throw new Error('Error al crear el grupo');
+                
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    if (errorData.message === 'Ya existe una empresa con ese nombre largo.') {
+                        setMensajeError("El nombre largo de la empresa ya está en uso. Elige otro nombre.");
+                    } else if (errorData.message === 'Ya existe una empresa con ese nombre corto.') {
+                        setMensajeError("El nombre corto de la empresa ya está en uso. Elige otro nombre.");
+                    } else if (errorData.message === 'El estudiante ya está asociado a otra empresa') {
+                        setMensajeError("El estudiante ya pertenece a otra empresa.");
+                    } else {
+                        setMensajeError("Error al crear el grupo.");
+                    }
+                    return;
+                }
     
                 const result = await response.json();
                 console.log('Grupo creado con éxito:', result);
                 setSnackbarMessage("¡Grupo creado con éxito!");
                 setSnackbarOpen(true);
-
+    
                 setTimeout(() => {
                     navigate('/'); 
                 }, 2000);
+    
             } catch (error) {
                 console.error(error);
                 setMensajeError("Error al crear el grupo.");
@@ -76,7 +96,11 @@ const CrearGrupoEmpresa = () => {
                 confirmarAtras={false}
                 dirBack={`/`}
             >
+                {isLoading !== true && (
+                <div>
+                {estudiante.enEmpresa !== 1 && (
                 <div style={{ display: 'grid' }}>
+
                     <NombreEmpresaCompleto>
                         <Box component="section" sx={{ p: 2 }}>
                             <h3>NOMBRE LARGO:</h3>
@@ -101,7 +125,6 @@ const CrearGrupoEmpresa = () => {
                             </div>
                         </StyledWrapper>
                     </NombreEmpresaCompleto>
-
                     <NombreEmpresaCompleto>
                         <Box component="section" sx={{ p: 2 }}>
                             <h3>NOMBRE CORTO:</h3>
@@ -126,7 +149,7 @@ const CrearGrupoEmpresa = () => {
                             </div>
                         </StyledWrapper>
                     </NombreEmpresaCompleto>
-   
+
                     <Box pt={10}>
                         <h2 style={{marginBottom:20}}>Integrantes</h2>
                     </Box>
@@ -147,7 +170,6 @@ const CrearGrupoEmpresa = () => {
                             >
                                 <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
                                     {estudiante && <h3 style={{paddingLeft: '35px'}}>{estudiante.nombreEstudiante}{' '}{estudiante.primerApellido}{' '}{estudiante.segundoApellido}</h3>}
-                                    <span style={{ color: 'black',paddingRight: '20px' }}>Representante Legal</span>
                                 </div>
                             </Box>
 
@@ -175,6 +197,24 @@ const CrearGrupoEmpresa = () => {
                         </Alert>
                     </Snackbar>
                 </div>
+                )}
+                    </div>)}
+                    {estudiante.enEmpresa === 1 && (
+                        <div 
+                            style={{
+                                color: 'red',
+                                fontWeight: 'bold',
+                                position: 'fixed',
+                                top: '50%',
+                                left: '50%',
+                                transform: 'translate(-50%, -50%)',
+                                textAlign: 'center',
+                            }}
+                        >
+                            Ya se encuentra en una empresa
+                        </div>
+
+                    )}
             </BaseUI>
         </Fragment>
     );

@@ -79,13 +79,13 @@ function ListaDefinitivaN({
                             options={[]}
                             inputValue={searchValue} 
                             onInputChange={(event, newValue) => setSearchValue(newValue)} 
-                            sx={{ width: 300 }}
+                            sx={{ width: 'calc(10vw + 6rem)' }}
                             renderInput={(params) => <TextField {...params} label={mensajeSearch} />}
                         />
                         <SearchIcon  className='search_icon'/>
                     </div>
                     <div className='search_input'>
-                        <h2>{nombreContador?datosTabla.length+" "+nombreContador : ""}</h2>
+                        <h2 className='search_input--h2'>{nombreContador?datosTabla.length+" "+nombreContador : ""}</h2>
                     </div>
                 </div>
                 <TableContainer component={Paper}>
@@ -168,5 +168,8 @@ const Container = styled('div')`
         display: flex;
         justify-content: center;
         color: red;
+    }
+    .search_input--h2{
+        font-size: calc(1vw + 0.8rem);
     }
 `;

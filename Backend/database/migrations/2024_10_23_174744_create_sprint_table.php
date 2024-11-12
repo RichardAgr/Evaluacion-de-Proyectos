@@ -20,8 +20,8 @@ class CreateSprintTable extends Migration
             $table->date('fechaEntrega');
             $table->decimal('cobro',5,2);
             
-            $table->string('comentario')->nullable()->default('');
-            $table->integer('nota')->nullable()->default(0);
+            $table->string('comentario',400)->nullable()->default(null);
+            $table->integer('nota')->nullable()->default(null);
 
             // Llave foránea idPlanificacion
             $table->foreign('idPlanificacion')

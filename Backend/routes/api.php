@@ -31,7 +31,7 @@ Route::get('/empresas/listaEmpresas', [EmpresaController::class, 'getListaEmpres
 Route::get('/empresas/obtenerEstudiantes',[EstudianteController::class, 'obtenerEstudiantesPorGrupo']);
 Route::get('/empresas/{idEmpresa}/calificaciones', [EmpresaController::class, 'getCalificacionesEmpresa']);
 //---Recibe la nota del sprint seleccionado
-Route::get('/empresas/notaSprint', [NotaSprintController::class, 'notaSprint']);
+Route::get('/empresas/notaSprint/{idEmpresa}/{semana}', [NotaSprintController::class, 'notaSprint']);
 //---Recibe las notas de todo los sprints
 Route::get('/empresas/notasSprint/{idEmpresa}', [NotaSprintController::class, 'notasSprint']);
 
@@ -51,6 +51,8 @@ Route::get('/docente/obtenerEmpresasPorGrupoYDocente',[GrupoController::class, '
 Route::get('/docente/obtenerTareas', [NotaSprintController::class, 'obtenerTareaYEstudiante']);
 //-- sprints con toda su informacion y los entragables
 Route::get('/empresa/{idEmpresa}/sprintsEntregables', [EmpresaController::class, 'getSprintsEntregables']);
+
+Route::get('/empresa/{idEmpresa}/sprintsSemanasTareas', [EmpresaController::class, 'getSprintsSemanasTareas']);
 
 
 //============================= PLANIFICACION ==============================
@@ -171,5 +173,12 @@ Route::post('/session/logout/estudiante', [AuthController::class, 'logoutEstudia
 
 // ============================  Funciones Joaquin  ====================================
 
-Route::get('estudiante/getEstudiante/{id}', [joaquinController::class, 'getEstudiante']);
+Route::get('estudiante/getDatosEst/{id}', [joaquinController::class, 'obtenerDatoEst']);
+Route::get('estudiante/getDatosEstEmpresa/{idEstudiante}', [joaquinController::class, 'obtenerIntegrantesPorEstudiante']);
+Route::get('estudiante/getDisponibles/{idEstudiante}',[joaquinController::class, 'obtenerEstudiantesSinEmpresa']);
 Route::post('/crearGrupoEmpresa/paso1',[joaquinController::class, 'crearEmpresa']);
+Route::put('/crearGrupoEmpresa/paso2/{idEmpresa}',[joaquinController::class, 'actualizarIntegrantes']);
+Route::post('/crearGrupoEmpresa/paso3/{idEstudiante}',[joaquinController::class, 'publicarEmpresaPorEstudiante']);
+
+
+Route::get('prueba/notaSprintV2/{idEmpresa}/{semana}', [joaquinController::class, 'notaSprintV2']);

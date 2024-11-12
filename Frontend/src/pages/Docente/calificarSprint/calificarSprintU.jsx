@@ -17,7 +17,7 @@ import Error from "../../../components/error/error";
 import { getSprintsEntregables } from "../../../api/getEmpresa"
 import { actualizarSprint } from '../../../api/sprintApi';            
 function CalificarSprintU() {
-    const { idEmpresa, idSprint } = useParams();
+    const { idEmpresa, idSprint, idGrupo } = useParams();
     const [sprints, setSprints] = useState([])
     const [datosSprint, setDatosSprint] = useState(
         {
@@ -188,15 +188,14 @@ function CalificarSprintU() {
             titulo={'CALIFICAR SPRINT'}
             ocultarAtras={false}
             confirmarAtras={true}
-            dirBack={`/${idEmpresa}/calificarSprints`}
+            dirBack={`/homeGrupo/${idGrupo}/listaEmpresaCalificarSprints/${idEmpresa}`}
         >
         <Container>
             
             <Typography variant="h4" className="titulo">
                 SPRINT {datosSprint.numeroSprint}
             </Typography>
-            <Grid container spacing={2}>
-            <Grid item xs={6}>
+            <Grid container className='datosSprint'>
                 <Paper className="entregables">
                     <Typography variant="h6">Entregables</Typography>
                     {datosSprint.entregables.map((entregable, index) => (
@@ -215,9 +214,6 @@ function CalificarSprintU() {
                         </Box>
                     ))}
                 </Paper>
-            </Grid>
-
-            <Grid item xs={6}>
                 <Paper className="archivos">
                     <Typography variant="h6">Archivos</Typography>
                     {datosSprint.entregables.map((entregable, index) => (
@@ -240,7 +236,6 @@ function CalificarSprintU() {
                         </Box>
                     ))}
                 </Paper>
-            </Grid>
             </Grid>
 
             <Paper className="comentarioNota">            
@@ -307,7 +302,10 @@ export default CalificarSprintU;
     // Definición de estilos usando styled-components
     const Container = styled('div')`
     padding: 1.5rem;
-    
+    .datosSprint{
+        display: flex;
+        justify-content: space-between;
+    }
     .titulo {
         margin-bottom: 1rem;
     }
@@ -316,7 +314,7 @@ export default CalificarSprintU;
         padding: 1rem;
         margin-top: 1rem;
     }
-    
+
     .entregableItem, .archivoItem {
         display: flex;
         align-items: center;
