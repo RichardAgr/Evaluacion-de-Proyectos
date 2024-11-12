@@ -61,7 +61,7 @@ class PlanificacionController extends Controller
             if ($planificacion && $planificacion->publicada == 1 && $planificacion->aceptada == 0) {
                 // Si la planificación existe y fue rechazada, guarda sus datos
                 $data[] = [
-                    'idPlanificacion' => $planificacion->idPlanificacion,
+                    'id' => $planificacion->idPlanificacion,
                     'nombreEmpresa' => $empresa->nombreEmpresa,
                     'nombreLargo' => $empresa->nombreLargo,
                     'idEmpresa' => $planificacion->idEmpresa,

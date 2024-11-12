@@ -12,7 +12,22 @@ import { useNavigate } from "react-router-dom";
 import { getPlanificacionesSinValidar } from "../../api/getPlanificacionesSinValidar";
 import Loading from "../loading/loading";
 import Error from "../error/error";
+import ListaConBuscador from "./listaConBuscador";
 
+const columns = [
+  {
+    field: "nombreEmpresa",
+    headerName: "Nombre Empresa",
+    type: "string",
+    flex: 2,
+  },
+  {
+    field: "nombreLargo",
+    headerName: "Nombre Empresa largo",
+    type: "string",
+    flex: 2,
+  },
+];
 
 function ListaEmpresasSinValidar() {
   const [loading, setLoading] = useState(true);
@@ -21,20 +36,11 @@ function ListaEmpresasSinValidar() {
     errorDetails: "",
   });
   const [listaEmpresas, setListaEmpresas] = useState(null);
-  const navigate = useNavigate();
-
-  const sortedListaEmpresas = useMemo(() => {
-    if (!listaEmpresas) return [];
-    return [...listaEmpresas].sort((a, b) =>
-      a.nombreEmpresa.localeCompare(b.nombreEmpresa, "es", {
-        sensitivity: "base",
-      })
-    );
-  }, [listaEmpresas]);
 
   useEffect(() => {
     const fetchData = async () => {
       const responseData = await Promise.all([getPlanificacionesSinValidar()]);
+
       if (responseData.error !== undefined && responseData.error !== null) {
         setError({
           errorMessage: "Ha ocurrido un error",
@@ -50,9 +56,6 @@ function ListaEmpresasSinValidar() {
     fetchData();
   }, []);
 
-  const handleRowClick = (idEmpresa) => {
-    navigate(`/validarPlanificacion/Empresa/${idEmpresa}`);
-  };
 
   return (
     <>
@@ -65,36 +68,13 @@ function ListaEmpresasSinValidar() {
         <Loading />
       ) : listaEmpresas.length > 0 ? (
         <>
-          <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
-              <TableHead>
-                <TableRow>
-                  <TableCell align="left">Nombre Empresa</TableCell>
-                  <TableCell align="left">Nombre Largo</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {sortedListaEmpresas.map((empresa) => (
-                  <TableRow
-                    key={empresa.idEmpresa}
-                    sx={{
-                      cursor: "pointer",
-                      "&:hover": {
-                        backgroundColor: "#e0e0e0",
-                      },
-                      "&:last-child td, &:last-child th": { border: 0 },
-                    }}
-                    onClick={() => handleRowClick(empresa.idEmpresa)}
-                  >
-                    <TableCell component="th" scope="row" align="left">
-                      {empresa.nombreEmpresa}
-                    </TableCell>
-                    <TableCell align="left">{empresa.nombreLargo}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+          <ListaConBuscador
+            columnas={columns}
+            datosTabla={listaEmpresas}
+            dirForward="/validarPlanificacion/empresa/"
+            mensajeSearch="Buscar Empresa"
+            nombreContador="Empresas"
+          />
         </>
       ) : (
         <>

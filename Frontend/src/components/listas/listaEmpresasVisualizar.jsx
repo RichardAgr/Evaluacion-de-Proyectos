@@ -3,6 +3,8 @@ import { getPlanificacionesAceptadas } from "../../api/getPlanificacionesAceptad
 import Loading from "../loading/loading";
 import Error from "../error/error";
 import ListaDefinitivaN from "../listaDefinitiva/listaDefinitivaN";
+import ListaConBuscador from "./listaConBuscador";
+import BaseUI from "../baseUI/baseUI";
 const columns = [
   {
     field: 'nombreEmpresa',
@@ -28,25 +30,26 @@ function ListaEmpresasVisualizar() {
 
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        const [lista] = await Promise.all([getPlanificacionesAceptadas()]);
-        setListaEmpresas(lista);
-        console.log(lista);
-      } catch (error) {
-        console.error("Error en la solicitud:", error.message);
+        const responseData = await Promise.all([getPlanificacionesAceptadas()]);
+        
+      if (responseData.error !== undefined && responseData.error !== null) {
         setError({
           errorMessage: "Ha ocurrido un error",
           errorDetails: error.message,
         });
-      } finally {
-        setLoading(false);
+      } else{
+        const [lista] = await responseData
+        setListaEmpresas(lista);
+        console.log(lista);
       }
+      
+      setLoading(false);
     };
     fetchData();
   }, []);
 
   return (
-    <>
+      <>
       {error.errorMessage || error.errorDetails ? (
         <Error
           errorMessage={error.errorMessage}
@@ -56,14 +59,9 @@ function ListaEmpresasVisualizar() {
         <Loading />
       ) : listaEmpresas.length > 0 ? (
         <>
-            <ListaDefinitivaN
-              titulo="SELECCIONE UNA PLANIFICACION PARA VISUALIZAR"
-              cabezeraTitulo={null}
-              cabezeras={columns}
+            <ListaConBuscador
+              columnas={columns}
               datosTabla={listaEmpresas}
-              ocultarAtras={false}
-              confirmarAtras={false}
-              dirBack="/"
               dirForward="/visualizarPlanificacion/empresa/"
               mensajeSearch = "Buscar Empresa"
               nombreContador = "Empresas"

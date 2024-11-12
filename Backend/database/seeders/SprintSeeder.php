@@ -14,7 +14,7 @@ class SprintSeeder extends Seeder
     public function run(): void
     {
         $planificaciones = DB::table('planificacion')
-            ->whereIn('idPlanificacion', [1, 2, 3])
+            ->whereIn('idPlanificacion', [1, 2, 3, 4, 5, 6])
             ->pluck('idPlanificacion');
 
 
