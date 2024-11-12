@@ -95,3 +95,53 @@ export const getSprintSemanasTareas = async (idEmpresa) => {
     throw error;
   }
 };
+
+export const getEmpresasPorGrupo = async (idGrupo) => {
+  try {
+    const response = await fetch(
+      `http://127.0.0.1:8000/api/grupo/${idGrupo}/empresas`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Error al obtener las empresas del grupo");
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error en la solicitud:", error);
+    throw error;
+  }
+};
+
+export const getSprintsYEstudiantesPorEmpresa = async (idEmpresa) => {
+  try {
+    const response = await fetch(
+      `http://127.0.0.1:8000/api/empresa/${idEmpresa}/sprints-estudiantes`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(
+        "Error al obtener los sprints y estudiantes de la empresa"
+      );
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error en la solicitud:", error);
+    throw error;
+  }
+};

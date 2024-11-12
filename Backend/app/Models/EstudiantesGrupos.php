@@ -6,11 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 class EstudiantesGrupos extends Model
 {
     protected $table = 'estudiantesgrupos';
-    protected $primaryKey = ['idEstudiante', 'idGrupo'];
     public $incrementing = false;
     public $timestamps = false;
-
-    protected $fillable = ['idEstudiante', 'idGrupo']; 
+    protected $fillable = [
+        'idEstudiante',
+        'idGrupo',
+        'disponibleEstudiante'
+    ];
 
     public function estudiante()
     {

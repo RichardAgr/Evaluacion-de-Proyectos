@@ -269,4 +269,27 @@ class EmpresaController extends Controller
             return response()->json(['error' => 'Error al obtener los datos: ' . $e->getMessage()], 500);
         }
     }
+
+    public function obtenerSprintsYEstudiantes($idEmpresa)
+    {
+        try {
+            // Obtener la empresa junto con sus sprints y estudiantes
+            $empresa = Empresa::with([
+                'sprints',
+                'estudiantes' => function ($query) {
+                    $query->select('estudiante.idEstudiante', 'nombreCuenta', 'nombreEstudiante', 'primerApellido', 'segundoApellido');
+                },
+            ])->findOrFail($idEmpresa);
+
+            // Formatear la respuesta
+            $response = [
+                'sprints' => $empresa->sprints,
+                'estudiantes' => $empresa->estudiantes,
+            ];
+
+            return response()->json($response, 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error al obtener los datos: ' . $e->getMessage()], 500);
+        }
+    }
 }
