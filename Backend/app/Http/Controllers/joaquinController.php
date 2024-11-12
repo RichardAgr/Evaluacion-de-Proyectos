@@ -88,7 +88,7 @@ class joaquinController extends Controller{
         ]);
 
         $estudiante = Estudiante::find($request->estudiante);
-            if ($estudiante->estudiantesEmpresas()->exists()) { 
+            if ($estudiante->empresas()->exists()) { 
                 return response()->json([
                 'message' => 'El estudiante ya está asociado a otra empresa'
             ], 400);
@@ -117,7 +117,7 @@ class joaquinController extends Controller{
     
         // verifica si el estudiante esta en otra empresa y si esta disponible 
         $estudiante = Estudiante::find($request->estudiante);
-            if ($estudiante->estudiantesEmpresas()->exists()) { 
+            if ($estudiante->empresas()->exists()) { 
                 return response()->json([
                 'message' => 'El estudiante ya está asociado a otra empresa'
             ], 400);
