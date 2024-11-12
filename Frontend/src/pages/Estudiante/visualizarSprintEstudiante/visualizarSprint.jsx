@@ -66,7 +66,7 @@ const VisualizarSprintEst = ({titulo, navigateLink, bloquearFechas, verSprints})
     return (
         <Fragment>
             <BaseUI
-                titulo={titulo?titulo:'VISUALIZAR SPRINT'}
+                titulo={titulo?titulo:'SELECCIONE UNA TAREA PARA VISUALIZAR'}
                 ocultarAtras={false}
                 confirmarAtras={false}
                 dirBack={'/'}

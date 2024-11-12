@@ -52,7 +52,7 @@ function VisualizarSprint() {
   }, [idSprint]);
 
   const handleVerTareas = () => {
-    navigate(`/visualizarPlanificacion`);
+    navigate(`/1/homeGrupoE/1/empresas/${idEmpresa}`);
   };
 
   return (
