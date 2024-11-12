@@ -92,7 +92,7 @@ function Home() {
   const sharedButtons = [
     {
       label: "Visualizar tareas",
-      onClick: () => navigate("/homeEstudiante/homeGrupoEstudiante/empresaTareas"),
+      onClick: () => navigate(`/1/homeGrupoE/1/empresaTareas`),
     },
     {
       label: "Ver Calificaciones",

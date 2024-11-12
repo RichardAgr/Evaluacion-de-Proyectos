@@ -16,7 +16,7 @@ import CrearGrupoEmpresa from "../pages/Estudiante/grupoEmpresa/crearGrupoEmpres
 import PublicarGrupoEmpresa from "../pages/Estudiante/grupoEmpresa/publicarGrupoEmpresa.jsx";
 import EmpresasParaTareas from "../pages/Estudiante/visualizarSprintEstudiante/seleccionarEmpresaParaVisualizar.jsx";
 
-import SprintTareas2 from "../pages/Estudiante/visualizarSprintEstudiante/prueba123.jsx";
+import SprintTareas2 from "../pages/Estudiante/visualizarSprintEstudiante/visualizarSprint.jsx";
 
 function Nav() {
     return (
@@ -36,18 +36,19 @@ function Nav() {
         />
         {/** ROUTES JOAQUIN*/}
         <Route
-          path="/homeEstudiante/homeGrupoEstudiante/empresaTareas"
+          path="/:idEstudiante/homeGrupoE/:idGrupo/empresaTareas"
           element={<EmpresasParaTareas />}
         />
         <Route
           path="/prueba123/:idEmpresa"
           element={<SprintTareas2 />}
         />
-        {/** ROUTES JHAIR*/}
         <Route
-          path="/homeEstudiante/homeGrupoEstudiante/sprint/:idSprint"
+          path="/:idEstudiante/homeGrupoE/:idGrupo/empresas/:idEmpresa"
           element={<VisualizarSprintEst />}
         />
+        {/** ROUTES JHAIR /homeEstudiante/homeGrupoEstudiante/sprint/:idSprint"*/}
+        
         <Route
           path="/homeEstudiante/homeGrupoEstudiante/sprint/:idSprint/tarea/:idTarea"
           element={<VisualizarTarea />}

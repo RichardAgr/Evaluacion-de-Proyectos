@@ -51,7 +51,7 @@ function ListaEmpresaSprints() {
 
   return (
     <ListaDefinitivaN
-      titulo="LISTA DE EMPRESAS"
+      titulo="SELECCIONE UNA EMPRESA PARA CALIFICAR"
       cabezeraTitulo={null}
       cabezeras={columns}
       datosTabla={listaEmpresas}

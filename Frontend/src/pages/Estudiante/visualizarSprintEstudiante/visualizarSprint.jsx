@@ -4,10 +4,10 @@ import BaseUI from '../../../components/baseUI/baseUI';
 import { getSprintSemanas } from '../../../api/sprintApi.jsx'; 
 import SprintSemanas from '../../../components/SprintTareas/sprintSemanas';
 import { Box } from '@mui/material';
-
+import { getSprintSemanasTareas } from "../../../api/getEmpresa";
 // eslint-disable-next-line react/prop-types
 const VisualizarSprintEst = ({titulo, navigateLink, bloquearFechas, verSprints}) => {
-    const { idSprint } = useParams(); 
+    const { idSprint, idEmpresa } = useParams(); 
     const [sprints, setSprints] = useState([]);
     const [sprintOpen, setSprintOpen] = useState([])
     const [error, setError] = useState(null);
@@ -15,10 +15,11 @@ const VisualizarSprintEst = ({titulo, navigateLink, bloquearFechas, verSprints})
     useEffect(() => {
         const fetchSprintData = async () => {
             try {
-                const data = await getSprintSemanas(idSprint); 
+                const data = await getSprintSemanas(idEmpresa===undefined? idSprint : idEmpresa); 
                 console.log([data])
                 setSprints([data]);
                 const newOpens = [data]?.map(()=> false);
+                console.log('hola')
                 console.log(newOpens)
                 setSprintOpen(newOpens)
                 setError(null);
@@ -29,8 +30,23 @@ const VisualizarSprintEst = ({titulo, navigateLink, bloquearFechas, verSprints})
                 setLoading(false); 
             }
         };
-        if(verSprints === undefined || verSprints === true)fetchSprintData(); //cambiar por el otro fetch que de todos los sprints
-        if(verSprints === false)fetchSprintData();
+        
+    const fetchSprints = async () => {
+        try {
+          const data = await getSprintSemanasTareas(idEmpresa);
+          setSprints(data);  
+          const newOpens = data?.map(()=> false);
+          console.log(newOpens)
+            setSprintOpen(newOpens)
+          console.log(data);
+        } catch (error) {
+          console.error("Error al obtener los datos:", error);
+        } finally {
+          setLoading(false);
+        }
+      };
+        if(verSprints === undefined || verSprints === true) fetchSprints();
+        if(verSprints === false) fetchSprintData();
     }, [idSprint]); 
 
     const togglePanel = (index) => {
@@ -38,8 +54,11 @@ const VisualizarSprintEst = ({titulo, navigateLink, bloquearFechas, verSprints})
             if(i === index){
                 if(open === true) return false
                 return true;
+            }else{
+                if(open === true) return true
+                else return false
             }
-            return false
+            
         })
         console.log(newOpens)
         setSprintOpen(newOpens)
@@ -56,7 +75,7 @@ const VisualizarSprintEst = ({titulo, navigateLink, bloquearFechas, verSprints})
                 {error && <p style={{ color: 'red' }}>{error}</p>}
                 {sprints.map((sprint, i)=>{
                     return (
-                    <div key={'1'+i}>
+                    <div key={`${i}-${sprint.semanas[i].fechaIni}`}>
                         {(verSprints === undefined || verSprints === true)? 
                         <Box 
                             onClick={(e) =>togglePanel(i)}
