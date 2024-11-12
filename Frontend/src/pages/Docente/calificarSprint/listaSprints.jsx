@@ -56,7 +56,7 @@ const ListaSprints = () => {
             titulo={'SELECCIONE UN SPRINT PARA CALIFICAR'}
             ocultarAtras={false}
             confirmarAtras={false}
-            dirBack={`homeGrupo/${idGrupo}/listaEmpresaCalificarSprints`}
+            dirBack={`/homeGrupo/${idGrupo}/listaEmpresaCalificarSprints`}
         >
         <DivLista>
             {sprints!==null? 
