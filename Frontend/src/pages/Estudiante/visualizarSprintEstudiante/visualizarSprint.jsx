@@ -44,7 +44,7 @@ const VisualizarSprintEst = ({titulo, navigateLink, bloquearFechas, verSprints})
         } finally {
           setLoading(false);
         }
-      };
+          };
         if(verSprints === undefined || verSprints === true) fetchSprints();
         if(verSprints === false) fetchSprintData();
     }, [idSprint]); 
@@ -75,7 +75,7 @@ const VisualizarSprintEst = ({titulo, navigateLink, bloquearFechas, verSprints})
                 {error && <p style={{ color: 'red' }}>{error}</p>}
                 {sprints.map((sprint, i)=>{
                     return (
-                    <div key={`${i}-${sprint.semanas[i].fechaIni}`}>
+                    <div key={i}>
                         {(verSprints === undefined || verSprints === true)? 
                         <Box 
                             onClick={(e) =>togglePanel(i)}
@@ -122,6 +122,8 @@ const VisualizarSprintEst = ({titulo, navigateLink, bloquearFechas, verSprints})
                             >
                             </SprintSemanas>)
                         })}
+                        
+                        
                     </div>
                     )
                 })}

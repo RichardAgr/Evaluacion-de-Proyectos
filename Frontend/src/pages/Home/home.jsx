@@ -84,7 +84,7 @@ function Home() {
     {
       label: "ID8-->Modificar Tarea",
       onClick: () =>
-        navigate("/1/homeGrupoE/1/sprintE/1"),
+        navigate("/1/homeGrupoE/1/sprintE/3"),
     },
 
   ];
