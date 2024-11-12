@@ -108,7 +108,7 @@ function Home() {
     },
     {
       label: "Visualizar Sprint",
-      onClick: () => navigate("/visualizarSprint/empresa/1"),
+      onClick: () => navigate("/visualizarSprint/"),
     },
     {
       label: "Visualizar est nota",

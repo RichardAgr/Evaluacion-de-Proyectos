@@ -3,7 +3,8 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import Home from "../../pages/Home/home.jsx";
 import VerPlanificacionDeDesarollo from "../../pages/VisualizacionCompartida/verPlanificacionDeDesarollo/VerPlanifacionDeDesarollo.jsx";
 import VisualizarSprint from "../../pages/VisualizacionCompartida/visualizarSprint/visualizarSprint.jsx";
-import SeleccionarSprintVisualizar from "../../pages/Docente/listas/seleccionarSprintVisualizar/seleccionarSprintVisualizar.jsx";
+import SeleccionarSprintVisualizar from "../../pages/Docente/listas/seleccionarEmpresaVerSprints/seleccionarSprintVisualizar/seleccionarSprintVisualizar.jsx";
+import SeleccionarEmpresaVerSprints from "../../pages/Docente/listas/seleccionarEmpresaVerSprints/seleccionarEmpresaVerSprints.jsx";
 import SeleccionarEmpresaModificar from "../../pages/Docente/listas/seleccionarEmpresaModificar/seleccionarEmpresaModificar.jsx";
 //archivos docente
 import HomeDocente from "../../pages/Docente/homeDocente/homeDocente.jsx";
@@ -80,6 +81,13 @@ function Nav() {
       <Route
         path="/publicarPlanificacion/Empresa/:idEmpresa"
         element={<PublicarPlanificacion />}
+      />
+
+      {/** Seleccione una empresa para ver sus sprints*/}
+
+      <Route
+        path="/visualizarSprint/"
+        element={<SeleccionarEmpresaVerSprints />}
       />
 
       {/** Seleccione un Sprint para  visualizar*/}

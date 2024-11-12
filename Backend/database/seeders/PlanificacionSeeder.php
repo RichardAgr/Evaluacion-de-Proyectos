@@ -63,7 +63,7 @@ class PlanificacionSeeder extends Seeder
                 'comentariopublico' => null,
             ],
 
-            // * La empresa 7 no tiene planificacion para usar de ejemplo al crear una grupo empresa
+            // * La empresa 7 no tiene planificacion para usar de ejemplo al crear una grupo
         ];
 
         foreach ($planificaciones as $planificacion) {
