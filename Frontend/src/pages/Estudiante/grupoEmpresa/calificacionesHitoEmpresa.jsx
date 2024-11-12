@@ -1,22 +1,14 @@
 import { useState, useEffect } from 'react';
-import Loading from '../../../components/loading/loading';
-import Error from '../../../components/error/error';
-import ListaDefinitiva from '../../../components/listaDefinitiva/listaDefinitiva';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, CircularProgress } from '@mui/material';
 import { useParams } from 'react-router-dom';
-
+import BaseUI from '../../../components/baseUI/baseUI';
+import NombreEmpresa from '../../../components/infoEmpresa/nombreEmpresa';
 const NotaSprintTable = () => {
-  const {idEmpresa} = useParams();
+  const { idEmpresa } = useParams();
   const [notas, setNotas] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState({
-    error: false,
-    errorMessage: "",
-    errorDetails: "",
-  });
+  const [error, setError] = useState(null);
   const [nombreEmpresa, setNombreEmpresa] = useState({ nombreCorto: '', nombreLargo: '' });
-  const [cabezeras, setCabezeras] = useState([]);
-  const [datosTabla, setDatosTabla] = useState([]);
-
   useEffect(() => {
     getNombreEmpresa(idEmpresa);
     fetchNotas();
@@ -25,36 +17,18 @@ const NotaSprintTable = () => {
   const fetchNotas = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`http://localhost:8000/api/empresas/notasSprint/${idEmpresa}`);
+      const response = await fetch(`http://localhost:8000/api/empresa/${idEmpresa}/sprints-estudiantes`);
       if (!response.ok) {
-        throw new Error('Error al obtener datos.');
+        throw new Error('Error al obtener los datos.');
       }
       const data = await response.json();
       setNotas(data);
-      console.log(data)
-      const sprints = new Set();
-      const datos = Object.entries(data).map(([idEstudiante, estudiante]) => {
-        Object.keys(estudiante.sprints).forEach(sprint => sprints.add(sprint));
-        return {
-          Nombre: estudiante.nombre,
-          ...estudiante.sprints
-        };
-      });
-
-      setCabezeras(['Nombre', ...Array.from(sprints)]);
-      setDatosTabla(datos);
-      
     } catch (err) {
-      setError({
-        error: true,
-        errorMessage: err.message,
-        errorDetails: err,
-      });
+      setError(err.message);
     } finally {
       setLoading(false);
     }
   };
-
   const getNombreEmpresa = async (idEmpresa) => {
     try {
       const response = await fetch(`http://127.0.0.1:8000/api/nombreEmpresa/${idEmpresa}`);
@@ -74,20 +48,53 @@ const NotaSprintTable = () => {
     }
   };
 
-  if (loading) return <Loading />;
-  if (error.error) return <Error errorMessage={error.errorMessage} errorDetails={error.errorDetails} />;
+  if (loading) return <CircularProgress />;
+  if (error) return <div>Error: {error}</div>;
+
+  const sprints = notas.sprints || [];
+  const estudiantes = notas.estudiantes || [];
 
   return (
-    <ListaDefinitiva
+    <BaseUI
       titulo="VISUALIZAR CALIFICACIONES DE LA GRUPO EMPRESA"
-      cabezeraTitulo={nombreEmpresa}
-      cabezeras={cabezeras}
-      datosTabla={datosTabla}
       ocultarAtras={false}
       confirmarAtras={false}
-      dirBack="/"
-      dirForward=""
-    />
+      dirBack="/1/homeGrupoE/1/empresa/calificaciones"
+    >
+    <NombreEmpresa nombreCorto={nombreEmpresa.nombreCorto} nombreLargo={nombreEmpresa.nombreLargo} />
+    <TableContainer component={Paper}>
+      <Table sx={{ borderCollapse: 'separate', borderSpacing: '1rem' }}>
+        <TableHead>
+          <TableRow>
+            <TableCell>Estudiante</TableCell>
+            {sprints.map((sprint) => (
+              <TableCell key={sprint.idSprint}>Sprint {sprint.numeroSprint}</TableCell>
+            ))}
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {estudiantes.map((estudiante) => (
+            <TableRow key={estudiante.idEstudiante}>
+              <TableCell>{`${estudiante.nombreEstudiante} ${estudiante.primerApellido} ${estudiante.segundoApellido}`}</TableCell>
+              {sprints.map((sprint) => {
+                const nota = sprint.nota;
+                const notaText = nota === null ? 'N/A' : nota;
+                const notaColor = nota === null || nota >= 51 ? 'inherit' : 'red'; // Rojo si es menor a 51
+
+                return (
+                  <TableCell 
+                    key={sprint.idSprint} 
+                    sx={{ color: notaColor }}>
+                    {notaText}
+                  </TableCell>
+                );
+              })}
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
+    </BaseUI>
   );
 };
 

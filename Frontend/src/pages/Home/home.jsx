@@ -98,7 +98,7 @@ function Home() {
       label: "Ver Calificaciones",
       onClick: () =>
         navigate(
-          "/1/homeGrupoE/1/empresa/1/calificaciones"
+          "/1/homeGrupoE/1/empresa/calificaciones"
         ),
     },
     {
