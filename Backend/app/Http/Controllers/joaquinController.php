@@ -23,9 +23,9 @@ class joaquinController extends Controller{
         if (!$relacion) {
             return response()->json(['mensaje' => 'Estudiante no encontrado'], 404);
         }
-    
+     
         // Verificar si el estudiante está asociado a alguna empresa usando la relación estudiantesEmpresas
-        $enEmpresa = $relacion->estudiantesEmpresas()->exists() ? 1 : 0;
+        $enEmpresa = $relacion->empresas()->exists() ? 1 : 0;
     
         return response()->json([
             'idEstudiante' => $relacion->idEstudiante,
@@ -88,7 +88,7 @@ class joaquinController extends Controller{
         ]);
 
         $estudiante = Estudiante::find($request->estudiante);
-            if ($estudiante->estudiantesEmpresas()->exists()) { 
+            if ($estudiante->empresas()->exists()) { 
                 return response()->json([
                 'message' => 'El estudiante ya está asociado a otra empresa'
             ], 400);
@@ -117,7 +117,7 @@ class joaquinController extends Controller{
     
         // verifica si el estudiante esta en otra empresa y si esta disponible 
         $estudiante = Estudiante::find($request->estudiante);
-            if ($estudiante->estudiantesEmpresas()->exists()) { 
+            if ($estudiante->empresas()->exists()) { 
                 return response()->json([
                 'message' => 'El estudiante ya está asociado a otra empresa'
             ], 400);
