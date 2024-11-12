@@ -19,7 +19,10 @@ const CrearGrupoEmpresa = () => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [isLoading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState({
+    errorMessage: "",
+    errorDetails: "",
+  });
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -35,9 +38,10 @@ const CrearGrupoEmpresa = () => {
         setLoading(false);
       } catch (error) {
         console.error(error);
+        console.log(error); 
         setError({
           errorMessage: "Ha ocurrido un error",
-          errorDetails: error.message,
+          errorDetails: error,
         });
         setMensajeError("Error al cargar el estudiante.");
       }
@@ -251,7 +255,7 @@ const CrearGrupoEmpresa = () => {
               </div>
             )}
           </div>
-        ) : error !== null || error !== undefined ? (
+        ) : error.errorMessage || error.errorDetails ? (
           <Error
             errorMessage={error.errorMessage}
             errorDetails={error.errorDetails}

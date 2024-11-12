@@ -25,7 +25,7 @@ class joaquinController extends Controller{
         }
     
         // Verificar si el estudiante está asociado a alguna empresa usando la relación estudiantesEmpresas
-        $enEmpresa = $relacion->estudiantesEmpresas()->exists() ? 1 : 0;
+        $enEmpresa = $relacion->empresas()->exists() ? 1 : 0;
     
         return response()->json([
             'idEstudiante' => $relacion->idEstudiante,
