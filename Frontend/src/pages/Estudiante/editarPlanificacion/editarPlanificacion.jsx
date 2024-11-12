@@ -79,6 +79,7 @@ function ModificarPlanificacion() {
             />
             <EstadoPlanificacion
               estado={planificacionData.aceptada}
+              comentariopublico={planificacionData.comentariopublico}
             />
             {planificacionData.aceptada ? (
               <Redirecting />
@@ -88,8 +89,8 @@ function ModificarPlanificacion() {
                   planificacionData={planificacionData}
                   idEmpresa={planificacionData.idEmpresa}
                 />
-                {planificacionData.comentariopublico != null &&
-                  planificacionData.comentariopublico != "" && (
+                {planificacionData.comentariopublico !== null &&
+                  planificacionData.comentariopublico !== "" && (
                     <>
                       <Comentario
                         titulo="MOTIVOS DE RECHAZO:"
