@@ -4,6 +4,7 @@ import Home from "../../pages/Home/home.jsx";
 import VerPlanificacionDeDesarollo from "../../pages/VisualizacionCompartida/verPlanificacionDeDesarollo/VerPlanifacionDeDesarollo.jsx";
 import VisualizarSprint from "../../pages/VisualizacionCompartida/visualizarSprint/visualizarSprint.jsx";
 import SeleccionarSprintVisualizar from "../../pages/Docente/listas/seleccionarSprintVisualizar/seleccionarSprintVisualizar.jsx";
+import SeleccionarEmpresaModificar from "../../pages/Docente/listas/seleccionarEmpresaModificar/seleccionarEmpresaModificar.jsx";
 //archivos docente
 import HomeDocente from "../../pages/Docente/homeDocente/homeDocente.jsx";
 import HomeGrupoDocente from "../../pages/Docente/homeGrupoDocente/homeGrupoDocente.jsx";
@@ -55,6 +56,19 @@ function Nav() {
         path="/visualizarPlanificacion/Empresa/:idEmpresa"
         element={<VerPlanificacionDeDesarollo />}
       />
+
+      {/** Seleccione una Planificacion para Modificar */}
+      <Route
+        path="/modificarPlanificacion/"
+        element={<SeleccionarEmpresaModificar />}
+      />
+
+      {/** Modificar Planificacion */}
+      <Route
+        path="/modificarPlanificacion/Empresa/:idEmpresa"
+        element={<ModificarPlanificacion />}
+      />
+
       {/** Seleccione un Sprint para  visualizar*/}
 
       <Route
@@ -120,12 +134,6 @@ function Nav() {
       <Route
         path="/homeEstudiante/homeGrupoEstudiante"
         element={<HomeGrupoEstudiante />}
-      />
-      
-      {/** Modificar Planificacion */}
-      <Route
-        path="/modificarPlanificacion/Empresa/:idEmpresa"
-        element={<ModificarPlanificacion />}
       />
 
       {/** Publicar Planificacion */}

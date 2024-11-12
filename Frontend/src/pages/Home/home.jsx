@@ -100,7 +100,7 @@ function Home() {
     },
     {
       label: "Modificar Planificación",
-      onClick: () => navigate("/modificarPlanificacion/empresa/1"),
+      onClick: () => navigate("/modificarPlanificacion/"),
     },
     {
       label: "Publicar Planificación",
