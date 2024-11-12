@@ -13,7 +13,7 @@ class EstudiantesGruposSeeder extends Seeder
      */
     public function run(): void
     {
-        $estudiantes = range(1, 24); 
+        $estudiantes = range(1, 29); 
         $grupo = 1;
 
         foreach ($estudiantes as $estudiante) {

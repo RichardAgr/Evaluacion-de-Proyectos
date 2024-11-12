@@ -107,15 +107,15 @@ function Home() {
     },
     {
       label: "Modificar Planificación",
-      onClick: () => navigate("/modificarPlanificacion/empresa/1"),
+      onClick: () => navigate("/modificarPlanificacion/"),
     },
     {
       label: "Publicar Planificación",
-      onClick: () => navigate("/publicarPlanificacion/empresa/1"),
+      onClick: () => navigate("/publicarPlanificacion/"),
     },
     {
       label: "Visualizar Sprint",
-      onClick: () => navigate("/visualizarSprint/empresa/1"),
+      onClick: () => navigate("/visualizarSprint/"),
     },
     {
       label: "Visualizar est nota",

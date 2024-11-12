@@ -49,7 +49,7 @@ class PlanificacionSeeder extends Seeder
             [
                 // * Planificacion no revisada y no publicada
                 'idEmpresa' => 5,
-                'aceptada' => true,
+                'aceptada' => false,
                 'publicada' => false,
                 'fechaEntrega' => Carbon::now()->addDays(50),
                 'comentariopublico' => null,
@@ -57,13 +57,13 @@ class PlanificacionSeeder extends Seeder
             [
                 // * Planificacion no revisada y publicada
                 'idEmpresa' => 6,
-                'aceptada' => true,
+                'aceptada' => false,
                 'publicada' => false,
                 'fechaEntrega' => Carbon::now()->addDays(50),
                 'comentariopublico' => null,
             ],
 
-            // * La empresa 7 no tiene planificacion
+            // * La empresa 7 no tiene planificacion para usar de ejemplo al crear una grupo
         ];
 
         foreach ($planificaciones as $planificacion) {

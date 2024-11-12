@@ -1,8 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import HomeEstudiante from "../pages/Estudiante/homeEstudiante/homeEstudiante.jsx";
 import HomeGrupoEstudiante from "../pages/Estudiante/homeGrupoEstudiante/homeGrupoEstudiante.jsx";
-import ModificarPlanificacion from "../pages/Estudiante/editarPlanificacion/editarPlanificacion.jsx";
-import PublicarPlanificacion from "../pages/Estudiante/publicarPlanificacion/publicarPlanificacion.jsx";
 import VisualizarSprintEst from "../pages/Estudiante/visualizarSprintEstudiante/visualizarSprint.jsx";
 import VisualizarTarea from "../pages/Estudiante/tareaEstudiante/viualizarTarea.jsx";
 import ModificarListaTareas from "../pages/Estudiante/editarPlanificacion/modificarListaTareas/modificarListaTareas.jsx";
@@ -69,14 +67,6 @@ function Nav() {
         <Route
           path="/homeEstudiante/homeGrupoEstudiante"
           element={<HomeGrupoEstudiante />}
-        />
-        <Route
-          path="/modificarPlanificacion/Empresa/:idEmpresa"
-          element={<ModificarPlanificacion />}
-        />
-        <Route
-          path="/publicarPlanificacion/Empresa/:idEmpresa"
-          element={<PublicarPlanificacion />}
         />
         <Route
           path="/modificarListaTareas/empresa/:idEmpresa/sprint/:idSprint/semana/:idSemana"
