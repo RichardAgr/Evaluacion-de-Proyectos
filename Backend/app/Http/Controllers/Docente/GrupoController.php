@@ -241,6 +241,12 @@ class GrupoController extends Controller
                 ->pluck('empresas') // Accede a la relación empresas
                 ->flatten() // Aplana la colección de colecciones
                 ->unique('idEmpresa') // Elimina duplicados basados en idEmpresa
+                ->map(function ($empresa) {
+                    // Cambiar el nombre de 'idEmpresa' a 'id'
+                    $empresa->id = $empresa->idEmpresa;
+                    unset($empresa->idEmpresa); // Elimina el campo 'idEmpresa' original
+                    return $empresa;
+                })
                 ->values(); // Reindexa los resultados
 
             return response()->json($empresas, 200);
@@ -248,4 +254,5 @@ class GrupoController extends Controller
             return response()->json(['error' => 'Error al obtener las empresas: ' . $e->getMessage()], 500);
         }
     }
+
 }
