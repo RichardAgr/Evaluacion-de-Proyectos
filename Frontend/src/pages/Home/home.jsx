@@ -104,7 +104,7 @@ function Home() {
     },
     {
       label: "Publicar Planificación",
-      onClick: () => navigate("/publicarPlanificacion/empresa/1"),
+      onClick: () => navigate("/publicarPlanificacion/"),
     },
     {
       label: "Visualizar Sprint",

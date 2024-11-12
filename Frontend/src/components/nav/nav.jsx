@@ -35,6 +35,7 @@ import ListaTareas from "../../pages/Estudiante/modificarTarea/listaTareas.jsx";
 import CalificacionesHitoEmpresa from "../../pages/Estudiante/grupoEmpresa/calificacionesHitoEmpresa.jsx";
 import SeleccionarEmpresaVisualizar from "../../pages/Docente/listas/seleccionarEmpresaVisualizar/seleccionarEmpresaVisualizar.jsx";
 import CrearGrupoEmpresa from "../../pages/Estudiante/grupoEmpresa/crearGrupoEmpresa.jsx";
+import SeleccionarEmpresaPublicar from "../../pages/Docente/listas/seleccionarEmpresaPublicar/seleccionarEmpresaPublicar.jsx";
 
 function Nav() {
   return (
@@ -67,6 +68,18 @@ function Nav() {
       <Route
         path="/modificarPlanificacion/Empresa/:idEmpresa"
         element={<ModificarPlanificacion />}
+      />
+
+      {/** Seleccione una Planificacion para Publicar */}
+      <Route
+        path="/publicarPlanificacion/"
+        element={<SeleccionarEmpresaPublicar />}
+      />
+
+      {/** Publicar Planificacion */}
+      <Route
+        path="/publicarPlanificacion/Empresa/:idEmpresa"
+        element={<PublicarPlanificacion />}
       />
 
       {/** Seleccione un Sprint para  visualizar*/}
@@ -136,13 +149,6 @@ function Nav() {
         element={<HomeGrupoEstudiante />}
       />
 
-      {/** Publicar Planificacion */}
-      <Route
-        path="/publicarPlanificacion/Empresa/:idEmpresa"
-        element={<PublicarPlanificacion />}
-      />
-
-      
       <Route  
         path="/homeEstudiante/homeGrupoEstudiante/sprintE/:idSprint/semana/editarTarea/:idTarea"
         element={<ModificarTarea />}

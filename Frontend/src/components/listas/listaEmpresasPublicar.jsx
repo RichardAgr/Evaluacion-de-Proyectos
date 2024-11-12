@@ -29,7 +29,7 @@ const columns = [
   },
 ];
 
-function ListaEmpresasModificar() {
+function ListaEmpresasPublicar() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState({
     errorMessage: "",
@@ -70,7 +70,7 @@ function ListaEmpresasModificar() {
           <ListaConBuscador
             columnas={columns}
             datosTabla={listaEmpresas}
-            dirForward="/modificarPlanificacion/empresa/"
+            dirForward="/publicarPlanificacion/empresa/"
             mensajeSearch="Buscar Empresa"
             nombreContador="Empresas"
           />
@@ -78,7 +78,7 @@ function ListaEmpresasModificar() {
       ) : (
         <>
           <Typography>
-            Actualmente no hay planificaciones para modificar
+            Actualmente no hay planificaciones sin publicar
           </Typography>
         </>
       )}
@@ -86,4 +86,4 @@ function ListaEmpresasModificar() {
   );
 }
 
-export default ListaEmpresasModificar;
+export default ListaEmpresasPublicar;
