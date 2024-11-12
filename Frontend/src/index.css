@@ -19,7 +19,7 @@
   display: flex;
   justify-content: center;
   width: 98.5vw; 
-  margin-top: 1vh;
+  margin-top: 10vh;
   min-height: calc(87vh);
 }
 .container{

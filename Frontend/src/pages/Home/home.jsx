@@ -46,7 +46,7 @@ function Home() {
     },
     {
       label: "Calificar Sprints",
-      onClick: () => navigate("homeGrupo/1/listaEmpresaCalificarSprints"),
+      onClick: () => navigate("/homeGrupo/1/listaEmpresaCalificarSprints"),
     },
     {
       label: "Modificar Lista de Tareas",

@@ -15,45 +15,55 @@ class PlanificacionSeeder extends Seeder
     {
         $planificaciones = [
             [
+                // * Planificacion aceptada con Sprints, tareas y entregables
                 'idEmpresa' => 1,
-                'aceptada' => false,
-                'publicada' => false,
-                'fechaEntrega' => Carbon::now()->addDays(30),
-                'comentarioprivado' => 'Requiere una revisión completa',
-                'comentariopublico' => 'Por favor, revisen y corrijan los puntos señalados',
-            ],
-            [
-                'idEmpresa' => 2,
-                'aceptada' => false,
+                'aceptada' => true,
                 'publicada' => true,
-                'fechaEntrega' => Carbon::now()->addDays(45),
-                'comentarioprivado' => 'Necesita mejorar en varios aspectos',
-                'comentariopublico' => 'Se requieren algunas correcciones',
-            ],
-            [
-                'idEmpresa' => 3,
-                'aceptada' => null,
-                'publicada' => false,
-                'fechaEntrega' => Carbon::now()->addDays(60),
-                'comentarioprivado' => 'Pendiente de revisión',
+                'fechaEntrega' => Carbon::now()->addDays(30),
                 'comentariopublico' => null,
             ],
             [
+                // * Planificacion aceptada con Sprints sin calificar, solo con tareas
+                'idEmpresa' => 2,
+                'aceptada' => true,
+                'publicada' => true,
+                'fechaEntrega' => Carbon::now()->addDays(45),
+                'comentariopublico' => null,
+            ],
+            [
+                // * Planificacion aceptada que no tenga nada de nada
+                'idEmpresa' => 3,
+                'aceptada' => true,
+                'publicada' => true,
+                'fechaEntrega' => Carbon::now()->addDays(60),
+                'comentariopublico' => null,
+            ],
+            [
+                // * Planificacion rechazada  y publicada con su comentario
                 'idEmpresa' => 4,
                 'aceptada' => false,
                 'publicada' => true,
                 'fechaEntrega' => Carbon::now()->addDays(20),
-                'comentarioprivado' => 'Excelente planificación',
-                'comentariopublico' => 'Felicitaciones por su trabajo',
+                'comentariopublico' => 'Tienen que corregir las fechas de entrega de los Sprint 1, 2 y 4',
             ],
             [
+                // * Planificacion no revisada y no publicada
                 'idEmpresa' => 5,
                 'aceptada' => true,
                 'publicada' => false,
                 'fechaEntrega' => Carbon::now()->addDays(50),
-                'comentarioprivado' => 'Comentario privado para la empresa 5',
-                'comentariopublico' => 'Buen trabajo, sigan así',
+                'comentariopublico' => null,
             ],
+            [
+                // * Planificacion no revisada y publicada
+                'idEmpresa' => 6,
+                'aceptada' => true,
+                'publicada' => false,
+                'fechaEntrega' => Carbon::now()->addDays(50),
+                'comentariopublico' => null,
+            ],
+
+            // * La empresa 7 no tiene planificacion
         ];
 
         foreach ($planificaciones as $planificacion) {

@@ -29,8 +29,8 @@ export default footer;
 
 let FooterContainer = styled.footer`
     display: flex;
-    color: black;
-    background-color: #ffff;
+    color: white;
+    background-color: #114093;
     margin-top: 1rem;
     box-shadow: rgba(0, 0, 0, 0.25) 0px 0.0625em 0.0625em, 
               rgba(0, 0, 0, 0.25) 0px 0.125em 0.5em, 

@@ -17,7 +17,6 @@ class CreatePlanificacionTable extends Migration
             $table->boolean('aceptada')->nullable();
             $table->boolean('publicada')->nullable();
             $table->dateTime('fechaEntrega');
-            $table->text('comentarioprivado')->nullable();
             $table->text('comentariopublico')->nullable();
             // * Llave foranea idEmpresa
             $table->foreign('idEmpresa')

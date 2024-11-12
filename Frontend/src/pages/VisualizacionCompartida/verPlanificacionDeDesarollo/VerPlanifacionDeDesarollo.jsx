@@ -98,7 +98,7 @@ function PlanificacionDeDesarollo() {
                     comentario={planificacionData.comentarioprivado}
                   />
                 )}
-                  */}
+                  \*/}
               </>
             )}
           </>

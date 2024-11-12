@@ -17,8 +17,7 @@ class CreateEmpresaTable extends Migration
             $table->string('nombreLargo',50)->unique()->nullable();
             $table->tinyInteger('numerodefaltasempresa')->nullable();
             $table->tinyInteger('notaproductofinal')->nullable();
-            $table->timestamps();
-            
+            $table->boolean('publicada')->nullable();
         });
     }
 

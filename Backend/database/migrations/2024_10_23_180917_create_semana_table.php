@@ -15,7 +15,9 @@ return new class extends Migration
             $table->id('idSemana');
             $table->unsignedBigInteger('idSprint');
             $table->tinyInteger('numeroSemana');
-            
+            $table->date('fechaIni');
+            $table->date('fechaFin');
+
             // * Llave foranea idSprint
             $table->foreign('idSprint')
                 ->references('idSprint')
