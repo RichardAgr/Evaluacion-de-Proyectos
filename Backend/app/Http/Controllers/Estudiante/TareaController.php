@@ -163,11 +163,21 @@ class TareaController extends Controller
     public function getTareasSemana($idEmpresa, $idSprint, $idSemana)
     {
         try {
-            $tareas = Tarea::where('idSemana', $idSemana)->get();
-
-            $numeroSemana = Semana::where('idSemana', $idSemana)->value('numeroSemana');
-            $numeroSprint = Sprint::where('idSprint', $idSprint)->value('numeroSprint');
-
+            // Realizar una única consulta uniendo las tablas necesarias
+            $tareas = Tarea::join('semana as s', 'tarea.idSemana', '=', 's.idSemana')
+                ->join('sprint as sp', 's.idSprint', '=', 'sp.idSprint')
+                ->join('planificacion as p', 'sp.idPlanificacion', '=', 'p.idPlanificacion')
+                ->join('empresa as emp', 'emp.idEmpresa', '=', 'p.idEmpresa')
+                ->where('emp.idEmpresa', $idEmpresa)
+                ->where('sp.numeroSprint', $idSprint)
+                ->where('s.numeroSemana', $idSemana)
+                ->select('tarea.*', 's.numeroSemana', 'sp.numeroSprint')
+                ->get();
+    
+            // Obtener el número de semana y número de sprint directamente de la consulta
+            $numeroSemana = $idSemana;
+            $numeroSprint = $idSprint;
+    
             return response()->json([
                 'numeroSemana' => $numeroSemana,
                 'numeroSprint' => $numeroSprint,
@@ -177,6 +187,7 @@ class TareaController extends Controller
             return response()->json(['error' => 'Error al obtener las tareas: ' . $e->getMessage()], 500);
         }
     }
+    
 
     // Actualizar las tareas de una semana específica
     public function updateTareasSemana(Request $request, $idEmpresa, $idSprint, $idSemana)
