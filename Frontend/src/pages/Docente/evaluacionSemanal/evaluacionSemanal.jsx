@@ -42,7 +42,7 @@ const EvaluarHito = () => {
   return (
     <Fragment>
       <BaseUI
-        titulo="EVALUAR HITO"
+        titulo="EVALUACION SEMANAL"
         ocultarAtras={false}
         confirmarAtras={false}
         dirBack="/"

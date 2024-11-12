@@ -15,10 +15,10 @@ class CreateEstudianteTable extends Migration
     {
         Schema::create('estudiante', function (Blueprint $table) {
             $table->id('idEstudiante');
-            $table->string('nombreCuenta', 15)->unique()->nullable();
-            $table->string('nombreEstudiante', 12)->nullable();
-            $table->string('primerApellido', 10)->nullable();
-            $table->string('segundoApellido', 10)->nullable();
+            $table->string('nombreCuenta', 20)->unique()->nullable();
+            $table->string('nombreEstudiante', 20)->nullable();
+            $table->string('primerApellido', 20)->nullable();
+            $table->string('segundoApellido', 20)->nullable();
             $table->string('contrasena', 60)->nullable();
             $table->tinyInteger('numerodefaltasest')->nullable();
             $table->boolean('disponible')->nullable();

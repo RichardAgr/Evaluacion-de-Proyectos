@@ -16,6 +16,8 @@ class Entregables extends Model
     protected $fillable = [
         'idSprint',
         'descripcionEntregable',
+        'archivoEntregable',
+        'nombreArchivo'
     ];
 
     /**

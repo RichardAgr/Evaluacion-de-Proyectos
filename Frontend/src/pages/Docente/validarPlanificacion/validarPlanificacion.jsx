@@ -13,6 +13,7 @@ import { addRevision } from "../../../api/validarPlanificacion/addRevision.jsx";
 import InfoSnackbar from "../../../components/infoSnackbar/infoSnackbar.jsx";
 import CuadroComentario from "../../../components/cuadroComentario/cuadroComentario.jsx";
 import Loading from "../../../components/loading/loading.jsx";
+import Error from "../../../components/error/error.jsx";
 import NombreEmpresa from "../../../components/infoEmpresa/nombreEmpresa.jsx";
 import CuadroDialogo from "../../../components/cuadroDialogo/cuadroDialogo.jsx";
 import DecisionButtons from "../../../components/Buttons/decisionButtons.jsx";
@@ -26,11 +27,14 @@ function ValidarPlanificacion() {
   const [privateComment, setPrivateComment] = useState("");
   const [nota, setNota] = useState("");
   const navigate = useNavigate();
+  const [error, setError] = useState({
+    errorMessage: "",
+    errorDetails: "",
+  });
 
   let { idEmpresa } = useParams();
   const [empresaData, setEmpresaData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [planificacionData, setPlanificacionData] = useState({
     aceptada: false,
   });
@@ -68,7 +72,10 @@ function ValidarPlanificacion() {
         setPlanificacionData(planificacion);
       } catch (error) {
         console.error("Error en la solicitud:", error.message);
-        setError(`Error en la solicitud: ${error.message}`);
+        setError({
+          errorMessage: "Ha ocurrido un error",
+          errorDetails: error.message,
+        });
       } finally {
         setLoading(false);
       }
@@ -181,8 +188,11 @@ function ValidarPlanificacion() {
         confirmarAtras={true}
         dirBack={"/"}
       >
-        {error ? (
-          <p>Error: {error}</p>
+        {error.errorMessage || error.errorDetails ? (
+          <Error
+            errorMessage={error.errorMessage}
+            errorDetails={error.errorDetails}
+          />
         ) : loading ? (
           <Loading />
         ) : (
