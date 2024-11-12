@@ -44,8 +44,8 @@ class GrupoController extends Controller
             ->join('grupo', 'estudiantesgrupos.idGrupo', '=', 'grupo.idGrupo')
             ->join('estudiante', 'estudiantesgrupos.idEstudiante', '=', 'estudiante.idEstudiante')
             ->join('docente', 'grupo.idDocente', '=', 'docente.idDocente')
-            ->join('estudiantesempresas AS ee', 'estudiantesgrupos.idEstudiante', '=', 'ee.idEstudiante')
-            ->join('empresa AS emp', 'ee.idEmpresa', '=', 'emp.idEmpresa')
+            ->leftjoin('estudiantesempresas AS ee', 'estudiantesgrupos.idEstudiante', '=', 'ee.idEstudiante')
+            ->leftjoin('empresa AS emp', 'ee.idEmpresa', '=', 'emp.idEmpresa')
             ->where('grupo.idGrupo',"=",   $request -> idGrupo)
             ->where('grupo.gestionGrupo',$request -> gestionGrupo)
             ->select(

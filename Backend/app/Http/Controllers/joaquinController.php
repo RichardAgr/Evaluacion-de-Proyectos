@@ -8,7 +8,9 @@ use App\Models\Estudiante;
 use App\Models\Semana;
 use App\Models\Tarea;
 use App\Models\NotaSprint;
+use App\Models\Sprint;
 use App\Models\EstudiantesEmpresas;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 
 
@@ -16,20 +18,25 @@ class joaquinController extends Controller{
 
     public function obtenerDatoEst($idEstudiante)
     {
-        $relacion = Estudiante::where('idEstudiante',$idEstudiante)->first();
-
+        $relacion = Estudiante::where('idEstudiante', $idEstudiante)->first();
+    
         if (!$relacion) {
             return response()->json(['mensaje' => 'Estudiante no encontrado'], 404);
         }
-
+    
+        // Verificar si el estudiante está asociado a alguna empresa usando la relación estudiantesEmpresas
+        $enEmpresa = $relacion->estudiantesEmpresas()->exists() ? 1 : 0;
+    
         return response()->json([
             'idEstudiante' => $relacion->idEstudiante,
             'nombreEstudiante' => $relacion->nombreEstudiante,
             'primerApellido' => $relacion->primerApellido,
             'segundoApellido' => $relacion->segundoApellido,
+            'enEmpresa' => $enEmpresa, 
         ]);
-
     }
+    
+    
 
     public function obtenerIntegrantesPorEstudiante($idEstudiante)
     {
@@ -257,5 +264,48 @@ class joaquinController extends Controller{
         // $estudiante->disponible = '0'; 
         // $estudiante->save();
 
+    
+    public function sprintsSemanasPorNumero(int $numeroSprint): JsonResponse
+    {
+        // Obtener el sprint por numeroSprint
+        $sprint = Sprint::where('numeroSprint', $numeroSprint)->first(['idSprint', 'numeroSprint']);
+    
+        // Verificar si el sprint existe
+        if (!$sprint) {
+            return response()->json(['error' => 'Sprint no encontrado'], 404);
+        }
+    
+        // Obtener los datos de las semanas asociadas al sprint
+        $semanas = Semana::where('idSprint', $sprint->idSprint)->get(['idSemana', 'numeroSemana']);
+    
+        // Preparar la respuesta
+        $response = [
+            'idSprint' => $sprint->idSprint,
+            'numeroSprint' => $sprint->numeroSprint,
+            'semanas' => []
+        ];
+    
+        // Iterar sobre cada semana para obtener las tareas
+        foreach ($semanas as $semana) {
+            // Obtener las tareas asociadas a la semana
+            $tareas = Tarea::where('idSemana', $semana->idSemana)->get([
+                'idTarea',
+                'idSemana',
+                'textoTarea',
+                'nombreTarea'
+            ]);
+    
+            // Agregar la semana, su número y sus tareas al response
+            $response['semanas'][] = [
+                'idSemana' => $semana->idSemana,
+                'numeroSemana' => $semana->numeroSemana,
+                'tareas' => $tareas
+            ];
+        }
+    
+        // Devolver la respuesta en formato JSON
+        return response()->json($response);
+    }
+        
 
 }

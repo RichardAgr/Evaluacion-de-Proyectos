@@ -15,6 +15,7 @@ const PublicarGrupoEmpresa = () => {
     const [mensajeError, setMensajeError] = useState("");
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState("");
+    const [isLoading,setLoading]= useState(true);
 
     useEffect(() => {
         const fetchInformacion = async () => {
@@ -27,14 +28,14 @@ const PublicarGrupoEmpresa = () => {
                 const { idEmpresa, nombreEmpresa, nombreLargo, integrantes, publicada } = data;
                 setEmpresa({ idEmpresa, nombreEmpresa, nombreLargo, publicada });
                 setIntegrantes(integrantes);
-    
+                setIdRepresentanteLegal(integrantes[0]?.idEstudiante);
+                setLoading(false);
                 if (publicada === 1) {
                     // Si la empresa está publicada, mostrar el error 403 con el nombre de la empresa
                     setMensajeError(`La empresa "${nombreEmpresa}" ya ha sido publicada.`);
                     return; // No seguir con la carga de los datos si la empresa está publicada
                 }
     
-                setIdRepresentanteLegal(integrantes[0]?.idEstudiante);
     
             } catch (error) {
                 console.error(error);
@@ -84,6 +85,7 @@ const PublicarGrupoEmpresa = () => {
                 confirmarAtras={false}
                 dirBack={`/`}
             >
+                {isLoading !== true &&(
                 <div style={{ display: 'grid' }}>
                     <NombreEmpresaCompleto>
                         <Box component="section" sx={{ p: 2 }}>
@@ -156,6 +158,7 @@ const PublicarGrupoEmpresa = () => {
                         </Alert>
                     </Snackbar>
                 </div>
+                )}
             </BaseUI>
         </Fragment>
     );

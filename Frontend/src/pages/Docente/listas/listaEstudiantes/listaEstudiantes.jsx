@@ -15,6 +15,11 @@ const columns = [
     headerName: 'Equipo',
     type: 'string',
     flex: 2,
+    renderCell: ({ value }) => (
+      <span style={{ color: value ? 'inherit' : 'red' }}>
+        {value || 'N/A'}
+      </span>
+    ),
   },
 ];
 

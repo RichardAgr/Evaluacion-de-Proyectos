@@ -20,6 +20,7 @@ const ModificarGrupoEmpresa = () => {
     const [selectedIntegrante, setSelectedIntegrante] = useState(null); 
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState("");
+    const [isLoading, setLoading] = useState(true);
     const navigate = useNavigate(); 
 
     const irInicio = () => {
@@ -37,6 +38,7 @@ const ModificarGrupoEmpresa = () => {
                 const { idEmpresa, nombreEmpresa, nombreLargo, integrantes, publicada } = data;
                 setEmpresa({ idEmpresa, nombreEmpresa, nombreLargo, publicada });
                 setIntegrantes(integrantes);
+                setLoading(false);
     
                 if (publicada === 1) {
                     // Si la empresa está publicada, mostrar el error 403 con el nombre de la empresa
@@ -169,7 +171,9 @@ const ModificarGrupoEmpresa = () => {
                 confirmarAtras={false}
                 dirBack={`/`}
             >
+                {isLoading !== true && (
                 <div style={{ display: 'grid' }}>
+
                     <NombreEmpresaCompleto>
                         <Box component="section" sx={{ p: 2 }}>
                             <h3>NOMBRE LARGO:</h3>
@@ -300,7 +304,7 @@ const ModificarGrupoEmpresa = () => {
                             {snackbarMessage}
                         </Alert>
                     </Snackbar>
-                </div>
+                </div>)}
             </BaseUI>
         </Fragment>
     );

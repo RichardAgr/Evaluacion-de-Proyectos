@@ -51,7 +51,7 @@ function Home() {
     {
       label: "Modificar Lista de Tareas",
       onClick: () =>
-        navigate("/modificarListaTareas/empresa/1/sprint/1/semana/1"),
+        navigate("/modificarListaTareas/empresa/1/sprint/2/semana/2"),
     },
     {
       label: "Lista Empresas",
@@ -92,7 +92,7 @@ function Home() {
   const sharedButtons = [
     {
       label: "Visualizar tareas",
-      onClick: () => navigate("/homeEstudiante/homeGrupoEstudiante/sprint/1"),
+      onClick: () => navigate("/homeEstudiante/homeGrupoEstudiante/empresaTareas"),
     },
     {
       label: "Ver Calificaciones",
