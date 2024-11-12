@@ -23,7 +23,7 @@ class joaquinController extends Controller{
         if (!$relacion) {
             return response()->json(['mensaje' => 'Estudiante no encontrado'], 404);
         }
-    
+     
         // Verificar si el estudiante está asociado a alguna empresa usando la relación estudiantesEmpresas
         $enEmpresa = $relacion->empresas()->exists() ? 1 : 0;
     
