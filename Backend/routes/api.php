@@ -53,6 +53,11 @@ Route::get('/docente/obtenerTareas', [NotaSprintController::class, 'obtenerTarea
 Route::get('/empresa/{idEmpresa}/sprintsEntregables', [EmpresaController::class, 'getSprintsEntregables']);
 
 Route::get('/empresa/{idEmpresa}/sprintsSemanasTareas', [EmpresaController::class, 'getSprintsSemanasTareas']);
+//-- empresas de un grupo
+Route::get('/grupo/{idGrupo}/empresas', [GrupoController::class, 'getEmpresasPorGrupo']);
+//-- sprints y estudiantes de una empresa
+Route::get('/empresa/{idEmpresa}/sprints-estudiantes', [EmpresaController::class, 'obtenerSprintsYEstudiantes']);
+
 
 
 //============================= PLANIFICACION ==============================

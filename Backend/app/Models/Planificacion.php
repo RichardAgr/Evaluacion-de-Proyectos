@@ -3,20 +3,20 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-
 class Planificacion extends Model
 {
-
     protected $table = 'planificacion';
     protected $primaryKey = 'idPlanificacion';
-    public $timestamps = false; // Cambia a true si usas created_at y updated_at
+    public $timestamps = false;
+
     protected $fillable = [
         'idEmpresa', 
         'aceptada', 
+        'publicada',
         'fechaEntrega',
-        'notaplanificacion',
-        'comentariodocente',
+        'comentariopublico',
     ];
+
     public function empresa()
     {
         return $this->belongsTo(Empresa::class, 'idEmpresa');
