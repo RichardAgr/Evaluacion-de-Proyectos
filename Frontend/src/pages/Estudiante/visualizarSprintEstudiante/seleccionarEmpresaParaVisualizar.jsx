@@ -1,33 +1,14 @@
 import { useEffect, useState } from 'react';
-// import Loading from '../../../../components/loading/loading'
-// import Error from '../../../../components/error/error'
-// import ListaDefinitivaN from '../../../../components/listaDefinitiva/listaDefinitivaN';
+import { useNavigate } from 'react-router-dom';
 import Loading from '../../../components/loading/loading';
 import Error from '../../../components/error/error';
 import ListaDefinitivaN from '../../../components/listaDefinitiva/listaDefinitivaN';
 
-
 const columns = [
-  {
-    field: 'nombreEmpresa',
-    headerName: 'Nombre Empresa',
-    type: 'string',
-    flex: 2,
-  },
-  {
-    field: 'nombreLargo',
-    headerName: 'Nombre Empresa largo',
-    type: 'string',
-    flex: 2,
-  },
-  {
-    field: 'totalEstudiantes',
-    headerName: 'Numero de Integrantes',
-    type: 'string',
-    flex: 2,
-  },
+  { field: 'nombreEmpresa', headerName: 'Nombre Empresa', type: 'string', flex: 2 },
+  { field: 'nombreLargo', headerName: 'Nombre Empresa largo', type: 'string', flex: 2 },
+  { field: 'totalEstudiantes', headerName: 'Numero de Integrantes', type: 'string', flex: 2 },
 ];
-
 
 function EmpresasParaTareas() {
   const [data, setData] = useState([]);
@@ -37,20 +18,17 @@ function EmpresasParaTareas() {
     errorMessage: "",
     errorDetails: "",
   });
-  
-  const idDocente = 1; 
-  const gestionGrupo = '2024-2'; 
-  // Initial data fetch with GET request
+
+  const navigate = useNavigate();
+  const idDocente = 1;
+  const gestionGrupo = '2024-2';
+
   useEffect(() => {
-    setLoading(true)
+    setLoading(true);
     const fetchEmpresas = async () => {
-      setLoading(true);
       try {
         const response = await fetch(`http://localhost:8000/api/docente/obtenerEmpresasPorGrupoYDocente?` +
-          new URLSearchParams({
-            idDocente,
-            gestionGrupo,
-          })
+          new URLSearchParams({ idDocente, gestionGrupo })
         );
 
         if (!response.ok) throw new Error('Error fetching data');
@@ -70,9 +48,12 @@ function EmpresasParaTareas() {
     fetchEmpresas();
   }, []);
 
-  
   if (loading) return <Loading />;
   if (error.error) return <Error errorMessage={error.errorMessage} errorDetails={error.errorDetails} />;
+
+  const handleRowClick = (empresa) => {
+    navigate(`/prueba123/${empresa.id}`);
+  };
 
   return (
     <ListaDefinitivaN
@@ -83,9 +64,9 @@ function EmpresasParaTareas() {
       ocultarAtras={false}
       confirmarAtras={false}
       dirBack="/"
-      dirForward="/homeEstudiante/homeGrupoEstudiante/sprint/"
-      mensajeSearch = "Buscar Empresa"
-      nombreContador = "Empresas"
+      dirForward="/prueba123/"
+      mensajeSearch="Buscar Empresa"
+      nombreContador="Empresas"
     />
   );
 }

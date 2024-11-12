@@ -1,36 +1,30 @@
-import { Fragment, useState } from "react";
-// import { useNavigate } from "react-router-dom";
+import { Fragment, useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import BaseUI from "../../../components/baseUI/baseUI";
 import { Box } from "@mui/material";
+import { getSprintSemanasTareas } from "../../../api/getEmpresa";
 
 function SprintTareas2() {
+  const { idEmpresa } = useParams(); 
   const [isOpenSprint, setIsOpenSprint] = useState({});
   const [isOpenSemana, setIsOpenSemana] = useState({});
+  const [sprintsData, setSprintsData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const mockData = [
-    {
-      title: "Sprint 1",
-      semanas: [
-        {
-          title: "Semana 1",
-          tareas: [{ nombre: "Tarea 1" }, { nombre: "Tarea 2" }]
-        },
-        {
-          title: "Semana 2",
-          tareas: [{ nombre: "Tarea 3" }]
-        }
-      ]
-    },
-    {
-      title: "Sprint 2",
-      semanas: [
-        {
-          title: "Semana 1",
-          tareas: [{ nombre: "Tarea 4" }]
-        }
-      ]
-    }
-  ];
+  useEffect(() => {
+    const fetchSprints = async () => {
+      try {
+        const data = await getSprintSemanasTareas(idEmpresa);
+        setSprintsData(data);  
+        console.log(data);
+      } catch (error) {
+        console.error("Error al obtener los datos:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchSprints();
+  }, [idEmpresa]);
 
   const toggleSprint = (index) => {
     setIsOpenSprint((prevState) => ({
@@ -47,6 +41,10 @@ function SprintTareas2() {
     }));
   };
 
+  if (loading) {
+    return <div>Cargando datos...</div>;
+  }
+
   return (
     <Fragment>
       <BaseUI
@@ -56,8 +54,8 @@ function SprintTareas2() {
         dirBack="/"
       >
         <Box sx={{ width: "90%", marginTop: 2 }}>
-          {mockData.map((sprint, index) => (
-            <Fragment key={index}>
+          {sprintsData.map((sprint, index) => (
+            <Fragment key={sprint.idSprint}>
               <Box
                 onClick={() => toggleSprint(index)}
                 sx={{
@@ -79,13 +77,13 @@ function SprintTareas2() {
                 ) : (
                   <div className="arrow-right"></div>
                 )}
-                {sprint.title}
+                {`Sprint ${sprint.numeroSprint}`}
               </Box>
 
               {isOpenSprint[index] && (
                 <Box sx={{ width: "90%", marginLeft: "2rem" }}>
-                  {sprint.semanas.map((semana, semanaIndex) => (
-                    <Fragment key={semanaIndex}>
+                  {sprint.semanas && sprint.semanas.map((semana, semanaIndex) => (
+                    <Fragment key={semana.idSemana}>
                       <Box
                         onClick={() => toggleSemana(semanaIndex, index)}
                         sx={{
@@ -107,12 +105,12 @@ function SprintTareas2() {
                         ) : (
                           <div className="arrow-right"></div>
                         )}
-                        {semana.title}
+                        {`Semana ${semana.numeroSemana}`}
                       </Box>
 
                       {isOpenSemana[`${index}-${semanaIndex}`] && (
                         <Box sx={{ width: "80%", marginLeft: "3.5rem" }}>
-                          {semana.tareas.length > 0 ? (
+                          {semana.tareas && semana.tareas.length > 0 ? (
                             semana.tareas.map((tarea, tareaIndex) => (
                               <Box
                                 key={tareaIndex}
@@ -130,7 +128,7 @@ function SprintTareas2() {
                                   "&:hover": { bgcolor: "#cfd8dc" },
                                 }}
                               >
-                                {tarea.nombre}
+                                {tarea.nombreTarea}
                               </Box>
                             ))
                           ) : (

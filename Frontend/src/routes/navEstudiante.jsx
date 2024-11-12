@@ -40,7 +40,7 @@ function Nav() {
           element={<EmpresasParaTareas />}
         />
         <Route
-          path="/prueba123"
+          path="/prueba123/:idEmpresa"
           element={<SprintTareas2 />}
         />
         {/** ROUTES JHAIR*/}
