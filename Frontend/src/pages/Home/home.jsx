@@ -41,11 +41,11 @@ function Home() {
       onClick: () => navigate("/validarPlanificacion/"),
     },
     {
-      label: "Seguimiento Semanal",
+      label: "HU7__Seguimiento Semanal",
       onClick: () => navigate("/evaluacionSemanal/empresa/1/sprint/1"),
     },
     {
-      label: "Calificar Sprints",
+      label: "HU34__Calificar Sprints",
       onClick: () => navigate("/homeGrupo/1/listaEmpresaCalificarSprints"),
     },
     {
@@ -54,12 +54,19 @@ function Home() {
         navigate("/modificarListaTareas/empresa/1/sprint/2/semana/2"),
     },
     {
-      label: "Lista Empresas",
+      label: "HU31__Lista Empresas",
       onClick: () => navigate("/homeGrupo/1/listaEmpresas/1"),
     },
     {
-      label: "Lista Estudiantes",
+      label: "HU32__Lista Estudiantes",
       onClick: () => navigate("/homeGrupo/1/listaEstudiantes/2024-2"),
+    },
+    {
+      label: "HU18__Ver Calificaciones",
+      onClick: () =>
+        navigate(
+          "/homeGrupo/1/empresa/calificaciones"
+        ),
     },
   ];
 
@@ -75,16 +82,21 @@ function Home() {
       label: "Publicar Empresa",
       onClick: () => navigate("/homeEstudiante/homeGrupoEstudiante/publicarEmpresa/25"),
     },
-
     {
       label: "Grupos Disponibles",
       onClick: () => navigate("/homeEstudiante/gruposDisponibles"),
     },
-
     {
-      label: "ID8-->Modificar Tarea",
+      label: "HU8__Modificar Tarea",
       onClick: () =>
         navigate("/1/homeGrupoE/1/sprintE/3"),
+    },
+    {
+      label: "HU18__Ver Calificaciones",
+      onClick: () =>
+        navigate(
+          "/1/homeGrupoE/1/empresa/calificaciones/1"
+        ),
     },
 
   ];
@@ -93,13 +105,6 @@ function Home() {
     {
       label: "Visualizar tareas",
       onClick: () => navigate(`/1/homeGrupoE/1/empresaTareas`),
-    },
-    {
-      label: "Ver Calificaciones",
-      onClick: () =>
-        navigate(
-          "/1/homeGrupoE/1/empresa/calificaciones"
-        ),
     },
     {
       label: "Ver Planificación",

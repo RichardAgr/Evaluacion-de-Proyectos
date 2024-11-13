@@ -7,13 +7,12 @@ import ModificarListaTareas from "../pages/Estudiante/editarPlanificacion/modifi
 import ModificarGrupoEmpresa from "../pages/Estudiante/grupoEmpresa/modificarGrupoEmpresa.jsx";
 import GruposDisponibles from "../pages/Estudiante/gruposDisponibles/gruposDisponibles.jsx"; // Import the new page
 import InscribirGrupo from "../pages/Estudiante/gruposDisponibles/inscribirGrupo.jsx";
-import ModificarTarea from "../pages/Estudiante/modificarTarea/modificarTarea.jsx";
-import ListaTareas from "../pages/Estudiante/modificarTarea/listaTareas.jsx";
-import CalificacionesHitoEmpresa from "../pages/Estudiante/grupoEmpresa/calificacionesHitoEmpresa.jsx";
+import ModificarTarea from "../pages/Estudiante/HU8_modificarTarea/modificarTarea.jsx";
+import ListaTareas from "../pages/Estudiante/HU8_modificarTarea/listaTareas.jsx";
+import CalificacionesHitoEmpresa from "../pages/Estudiante/HU18_verCalificaciones/calificacionesHitoEmpresa.jsx";
 import CrearGrupoEmpresa from "../pages/Estudiante/grupoEmpresa/crearGrupoEmpresa.jsx";
 import PublicarGrupoEmpresa from "../pages/Estudiante/grupoEmpresa/publicarGrupoEmpresa.jsx";
 import EmpresasParaTareas from "../pages/Estudiante/visualizarSprintEstudiante/seleccionarEmpresaParaVisualizar.jsx";
-import ListaCali from "../pages/Estudiante/grupoEmpresa/listaCalificaciones.jsx";
 import SprintTareas2 from "../pages/Estudiante/visualizarSprintEstudiante/visualizarSprint.jsx";
 
 function Nav() {
@@ -31,10 +30,6 @@ function Nav() {
         <Route
           path="/:idEstudiante/homeGrupoE/:idGrupo/empresa/calificaciones/:idEmpresa"
           element={<CalificacionesHitoEmpresa />}
-        />
-        <Route
-          path="/:idEstudiante/homeGrupoE/:idGrupo/empresa/calificaciones"
-          element={<ListaCali/>}
         />
         {/** ROUTES JOAQUIN*/}
         <Route

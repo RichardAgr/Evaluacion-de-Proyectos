@@ -3,10 +3,10 @@ import { Fragment, useEffect, useState } from 'react';
 import { useParams } from "react-router-dom";
 import { styled } from '@mui/material';
 
-import Loading from '../../../components/loading/loading'
-import Error from "../../../components/error/error";
-import BaseUI from '../../../components/baseUI/baseUI';
-import { getTareaData, updateTarea } from '../../../api/validarTareas/tareas';
+import Loading from '../../../components/loading/loading.jsx'
+import Error from "../../../components/error/error.jsx";
+import BaseUI from '../../../components/baseUI/baseUI.jsx';
+import { getTareaData, updateTarea } from '../../../api/validarTareas/tareas.jsx';
 import DecisionButtons from '../../../components/Buttons/decisionButtons.jsx'
 import CuadroDialogo from '../../../components/cuadroDialogo/cuadroDialogo.jsx';
 import InfoSnackbar from '../../../components/infoSnackbar/infoSnackbar.jsx'

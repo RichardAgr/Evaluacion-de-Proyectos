@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import Loading from '../../../components/loading/loading';
-import Error from '../../../components/error/error';
-import ListaDefinitivaN from '../../../components/listaDefinitiva/listaDefinitivaN';
+import Loading from '../../../../components/loading/loading';
+import Error from '../../../../components/error/error';
+import ListaDefinitivaN from '../../../../components/listaDefinitiva/listaDefinitivaN';
 import { useParams } from 'react-router-dom';
 const columns = [
     {
@@ -57,7 +57,7 @@ function ListaCali() {
       ocultarAtras={false}
       confirmarAtras={false}
       dirBack={`/`}
-      dirForward= {`/${idEstudiante}/homeGrupoE/${idGrupo}/empresa/calificaciones/`}
+      dirForward= {`/homeGrupo/${idGrupo}/empresa/calificaciones/`}
       mensajeSearch = "Buscar empresa"
       nombreContador = "Empresas"
     />
