@@ -1,7 +1,7 @@
 import { Fragment, useState, useEffect } from "react";
-import BaseUI from "../../../../components/baseUI/baseUI";
+import BaseUI from "../../../components/baseUI/baseUI";
 import { styled } from "@mui/material";
-import InfoEmpresa from "../../../../components/infoEmpresa/nombreEmpresa";
+import InfoEmpresa from "../../../components/infoEmpresa/nombreEmpresa";
 import {
     Table,
     TableBody,

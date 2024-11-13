@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import Loading from '../../../../components/loading/loading'
-import Error from '../../../../components/error/error'
-import ListaDefinitivaN from '../../../../components/listaDefinitiva/listaDefinitivaN';
+import Loading from '../../../components/loading/loading'
+import Error from '../../../components/error/error'
+import ListaDefinitivaN from '../../../components/listaDefinitiva/listaDefinitivaN';
 
 const columns = [
   {

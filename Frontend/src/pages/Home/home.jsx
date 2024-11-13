@@ -41,11 +41,11 @@ function Home() {
       onClick: () => navigate("/validarPlanificacion/"),
     },
     {
-      label: "Seguimiento Semanal",
+      label: "HU7__Seguimiento Semanal",
       onClick: () => navigate("/evaluacionSemanal/empresa/1/sprint/1"),
     },
     {
-      label: "Calificar Sprints",
+      label: "HU34__Calificar Sprints",
       onClick: () => navigate("/homeGrupo/1/listaEmpresaCalificarSprints"),
     },
     {
@@ -54,11 +54,11 @@ function Home() {
         navigate("/modificarListaTareas/empresa/1/sprint/2/semana/2"),
     },
     {
-      label: "Lista Empresas",
+      label: "HU31__Lista Empresas",
       onClick: () => navigate("/homeGrupo/1/listaEmpresas/1"),
     },
     {
-      label: "Lista Estudiantes",
+      label: "HU32__Lista Estudiantes",
       onClick: () => navigate("/homeGrupo/1/listaEstudiantes/2024-2"),
     },
   ];
@@ -82,7 +82,7 @@ function Home() {
     },
 
     {
-      label: "ID8-->Modificar Tarea",
+      label: "HU8__Modificar Tarea",
       onClick: () =>
         navigate("/1/homeGrupoE/1/sprintE/3"),
     },
@@ -95,7 +95,7 @@ function Home() {
       onClick: () => navigate(`/1/homeGrupoE/1/empresaTareas`),
     },
     {
-      label: "Ver Calificaciones",
+      label: "HU18__Ver Calificaciones",
       onClick: () =>
         navigate(
           "/1/homeGrupoE/1/empresa/calificaciones"

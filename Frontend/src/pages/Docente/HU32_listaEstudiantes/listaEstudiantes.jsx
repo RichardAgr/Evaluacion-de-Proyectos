@@ -1,7 +1,7 @@
 import {useState, useEffect } from 'react';
-import ListaDefinitivaN from '../../../../components/listaDefinitiva/listaDefinitivaN';
-import Loading from '../../../../components/loading/loading'
-import Error from '../../../../components/error/error'
+import ListaDefinitivaN from '../../../components/listaDefinitiva/listaDefinitivaN';
+import Loading from '../../../components/loading/loading'
+import Error from '../../../components/error/error'
 const columns = [
   {
     field: 'nombreCompleto',
