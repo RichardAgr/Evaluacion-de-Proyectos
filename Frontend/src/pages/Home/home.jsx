@@ -61,6 +61,13 @@ function Home() {
       label: "HU32__Lista Estudiantes",
       onClick: () => navigate("/homeGrupo/1/listaEstudiantes/2024-2"),
     },
+    {
+      label: "HU18__Ver Calificaciones",
+      onClick: () =>
+        navigate(
+          "/homeGrupo/1/empresa/calificaciones"
+        ),
+    },
   ];
 
   const studentButtons = [
@@ -75,16 +82,21 @@ function Home() {
       label: "Publicar Empresa",
       onClick: () => navigate("/homeEstudiante/homeGrupoEstudiante/publicarEmpresa/25"),
     },
-
     {
       label: "Grupos Disponibles",
       onClick: () => navigate("/homeEstudiante/gruposDisponibles"),
     },
-
     {
       label: "HU8__Modificar Tarea",
       onClick: () =>
         navigate("/1/homeGrupoE/1/sprintE/3"),
+    },
+    {
+      label: "HU18__Ver Calificaciones",
+      onClick: () =>
+        navigate(
+          "/1/homeGrupoE/1/empresa/calificaciones/1"
+        ),
     },
 
   ];
@@ -93,13 +105,6 @@ function Home() {
     {
       label: "Visualizar tareas",
       onClick: () => navigate(`/1/homeGrupoE/1/empresaTareas`),
-    },
-    {
-      label: "HU18__Ver Calificaciones",
-      onClick: () =>
-        navigate(
-          "/1/homeGrupoE/1/empresa/calificaciones"
-        ),
     },
     {
       label: "Ver Planificación",

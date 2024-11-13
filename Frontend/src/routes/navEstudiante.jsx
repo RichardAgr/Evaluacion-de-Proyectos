@@ -13,7 +13,6 @@ import CalificacionesHitoEmpresa from "../pages/Estudiante/HU18_verCalificacione
 import CrearGrupoEmpresa from "../pages/Estudiante/grupoEmpresa/crearGrupoEmpresa.jsx";
 import PublicarGrupoEmpresa from "../pages/Estudiante/grupoEmpresa/publicarGrupoEmpresa.jsx";
 import EmpresasParaTareas from "../pages/Estudiante/visualizarSprintEstudiante/seleccionarEmpresaParaVisualizar.jsx";
-import ListaCali from "../pages/Estudiante/HU18_verCalificaciones/listaCalificaciones.jsx";
 import SprintTareas2 from "../pages/Estudiante/visualizarSprintEstudiante/visualizarSprint.jsx";
 
 function Nav() {
@@ -31,10 +30,6 @@ function Nav() {
         <Route
           path="/:idEstudiante/homeGrupoE/:idGrupo/empresa/calificaciones/:idEmpresa"
           element={<CalificacionesHitoEmpresa />}
-        />
-        <Route
-          path="/:idEstudiante/homeGrupoE/:idGrupo/empresa/calificaciones"
-          element={<ListaCali/>}
         />
         {/** ROUTES JOAQUIN*/}
         <Route
