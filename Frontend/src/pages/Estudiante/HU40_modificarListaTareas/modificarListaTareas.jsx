@@ -11,15 +11,15 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
-import BaseUI from "../../../../components/baseUI/baseUI.jsx";
-import CuadroDialogo from "../../../../components/cuadroDialogo/cuadroDialogo.jsx";
-import DecisionButtons from "../../../../components/Buttons/decisionButtons.jsx";
-import InfoSnackbar from "../../../../components/infoSnackbar/infoSnackbar.jsx";
+import BaseUI from "../../../components/baseUI/baseUI.jsx";
+import CuadroDialogo from "../../../components/cuadroDialogo/cuadroDialogo.jsx";
+import DecisionButtons from "../../../components/Buttons/decisionButtons.jsx";
+import InfoSnackbar from "../../../components/infoSnackbar/infoSnackbar.jsx";
 import {
   getTareasSemana,
   updateTareasSemana,
-} from "../../../../api/validarTareas/tareas.jsx";
-import Loading from "../../../../components/loading/loading.jsx";
+} from "../../../api/validarTareas/tareas.jsx";
+import Loading from "../../../components/loading/loading.jsx";
 
 export default function ModificarListaTareas() {
   const { idEmpresa, idSprint, idSemana } = useParams();
