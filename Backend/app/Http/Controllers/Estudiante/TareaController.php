@@ -19,24 +19,37 @@ class TareaController extends Controller
 {
     public function obtenerTarea($idTarea)
     {
+        // Obtener la tarea
         $tarea = Tarea::find($idTarea);
 
         if (!$tarea) {
             return response()->json(['error' => 'Tarea no encontrada'], 404);
         }
 
-        // Obtener estudiantes de la tarea
+        // Obtener los estudiantes de la tarea
         $estudiantes = DB::table('estudiante')
             ->join('tareasestudiantes', 'tareasestudiantes.idEstudiante', '=', 'estudiante.idEstudiante')
             ->select('estudiante.idEstudiante', 'nombreEstudiante', 'primerApellido', 'segundoApellido')
             ->where('tareasestudiantes.idTarea', $idTarea)
             ->get();
 
-        // Obtener archivos de la tarea
-        $archivosTarea = ArchivoTarea::where('idTarea', $idTarea)
-            ->select('idArchivo', 'archivo', 'nombreArchivo')
-            ->get();
-        Log::info('Archivos de tarea:', $archivosTarea->toArray());
+        // Obtener el primer estudiante relacionado con la tarea (esto sería uno de los estudiantes que ya se ha recuperado)
+        $primerEstudiante = $estudiantes->first();
+
+        if ($primerEstudiante) {
+            // Obtener las empresas del primer estudiante
+            $empresasEstudiante = DB::table('estudiantesempresas')
+                ->where('idEstudiante', $primerEstudiante->idEstudiante)
+                ->pluck('idEmpresa');
+
+            // Obtener todos los estudiantes de las mismas empresas
+            $companerosDeEmpresa = DB::table('estudiante')
+                ->join('estudiantesempresas', 'estudiantesempresas.idEstudiante', '=', 'estudiante.idEstudiante')
+                ->whereIn('estudiantesempresas.idEmpresa', $empresasEstudiante)
+                ->where('estudiante.idEstudiante', '!=', $primerEstudiante->idEstudiante) // Excluir al primer estudiante
+                ->select('estudiante.idEstudiante', 'nombreEstudiante', 'primerApellido', 'segundoApellido')
+                ->get();
+        }
 
         // Formar la respuesta
         $respuesta = [
@@ -46,26 +59,12 @@ class TareaController extends Controller
             'textotarea' => $tarea->textoTarea,
             'fechentregado' => $tarea->fechaEntrega,
             'estudiantes' => $estudiantes,
-            'archivotarea' => $archivosTarea->map(function ($archivo) {
-                // Decodificar el archivo Base64
-                $contenidoArchivo = base64_decode($archivo->archivo);
-                // Guardar el archivo en el sistema de almacenamiento
-                $rutaArchivo = 'public/archivos/' . $archivo->nombreArchivo; // Asegúrate de que esté en 'public/archivos'
-
-
-                Storage::put($rutaArchivo, $contenidoArchivo); // Guardar el archivo
-
-                // Generar la URL del archivo guardado
-                return [
-                    'idArchivo' => $archivo->idArchivo,
-                    'archivo' => url(Storage::url($rutaArchivo)),  // Generar la URL completa
-                    'nombreArchivo' => $archivo->nombreArchivo
-                ];
-            }),
+            'integrantes' => $companerosDeEmpresa ?? [],
         ];
 
         return response()->json($respuesta);
     }
+
 
     //************************************ POSTS*************************** */
     public function store(Request $request)
@@ -164,11 +163,21 @@ class TareaController extends Controller
     public function getTareasSemana($idEmpresa, $idSprint, $idSemana)
     {
         try {
-            $tareas = Tarea::where('idSemana', $idSemana)->get();
-
-            $numeroSemana = Semana::where('idSemana', $idSemana)->value('numeroSemana');
-            $numeroSprint = Sprint::where('idSprint', $idSprint)->value('numeroSprint');
-
+            // Realizar una única consulta uniendo las tablas necesarias
+            $tareas = Tarea::join('semana as s', 'tarea.idSemana', '=', 's.idSemana')
+                ->join('sprint as sp', 's.idSprint', '=', 'sp.idSprint')
+                ->join('planificacion as p', 'sp.idPlanificacion', '=', 'p.idPlanificacion')
+                ->join('empresa as emp', 'emp.idEmpresa', '=', 'p.idEmpresa')
+                ->where('emp.idEmpresa', $idEmpresa)
+                ->where('sp.numeroSprint', $idSprint)
+                ->where('s.numeroSemana', $idSemana)
+                ->select('tarea.*', 's.numeroSemana', 'sp.numeroSprint')
+                ->get();
+    
+            // Obtener el número de semana y número de sprint directamente de la consulta
+            $numeroSemana = $idSemana;
+            $numeroSprint = $idSprint;
+    
             return response()->json([
                 'numeroSemana' => $numeroSemana,
                 'numeroSprint' => $numeroSprint,
@@ -178,6 +187,7 @@ class TareaController extends Controller
             return response()->json(['error' => 'Error al obtener las tareas: ' . $e->getMessage()], 500);
         }
     }
+    
 
     // Actualizar las tareas de una semana específica
     public function updateTareasSemana(Request $request, $idEmpresa, $idSprint, $idSemana)

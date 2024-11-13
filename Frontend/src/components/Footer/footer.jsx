@@ -32,6 +32,10 @@ let FooterContainer = styled.footer`
     color: white;
     background-color: #114093;
     margin-top: 1rem;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 0.0625em 0.0625em, 
+              rgba(0, 0, 0, 0.25) 0px 0.125em 0.5em, 
+              rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset;
+ 
     .footer{
         display: flex;
         justify-content: space-between;
@@ -39,6 +43,7 @@ let FooterContainer = styled.footer`
         margin-left: calc(0.6vw + 1rem);
         margin-right: 2rem;
         margin-bottom: 0;
+        
     }
     .footer_links{
         margin: 0;
@@ -56,7 +61,7 @@ let FooterContainer = styled.footer`
         width: 98vw;
         padding-bottom:0.5rem;
         text-align: center;
-        font-size: calc(0.5vw + 0.3rem);
+        font-size: calc(0.4vw + 0.3rem);
         display: block;
     }
 `

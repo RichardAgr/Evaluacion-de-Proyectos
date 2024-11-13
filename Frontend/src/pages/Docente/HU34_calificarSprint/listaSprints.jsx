@@ -12,7 +12,7 @@ const ListaSprints = () => {
     const navigate = useNavigate();
     const [sprints, setSprints] = useState([
     ])
-    const { idEmpresa } = useParams();
+    const { idEmpresa, idGrupo } = useParams();
     const [loading, setLoading] = useState(true);  
     const [error, setError] = useState({
         error: false,
@@ -28,6 +28,7 @@ const ListaSprints = () => {
                 ])
                 console.log(sprintData.sprints)
                 setSprints(sprintData.sprints)
+                console.log(sprintData.sprints[0].fechaFin)
             } catch (error) {
                 setError({
                     error: true,
@@ -43,7 +44,7 @@ const ListaSprints = () => {
     },[])
     const clickBoton = (sprint) => {
         console.log("click", sprint)
-        navigate(`/${idEmpresa}/calificarSprints/sprint/${sprint}`); 
+        navigate(`/homeGrupo/${idGrupo}/listaEmpresaCalificarSprints/${idEmpresa}/sprint/${sprint}`); 
     }
     if (loading) {
         return <Loading></Loading>
@@ -56,38 +57,41 @@ const ListaSprints = () => {
             titulo={'SELECCIONE UN SPRINT PARA CALIFICAR'}
             ocultarAtras={false}
             confirmarAtras={false}
-            dirBack={`/`}
+            dirBack={`/homeGrupo/${idGrupo}/listaEmpresaCalificarSprints`}
         >
         <DivLista>
             {sprints!==null? 
                 <>
                     {sprints.map((sprint, index)=>(
-                    <Box 
-                        key={index}
-                        onClick={() => clickBoton(sprint.idSprint)}
-                        sx={{
-                            width: '80%', height: 60,
-                            borderRadius: 0.6, margin: 0.7,
-                            marginLeft: 7, pl: 2,
-                            textAlign: 'center',
-                            fontSize: '1.5rem',
-                            bgcolor: sprint.nota === null ? '#d0d4e4' : '#32cd32',
-                            textTransform: 'uppercase',
-                            display: 'flex', 
-                            cursor: 'pointer',
-                            justifyContent: 'flex-start', 
-                            alignItems: 'center', 
-                            '&:hover': {
-                                bgcolor: sprint.nota === null ? '#c0c4d4' : '#68ba44',
-                            },
-                        }}            
-                    >
-                        Sprint {sprint.numeroSprint}{sprint.nota === null ? "":"(YA EVALUADO)"}
-                    </Box>
+                        ( new Date() > new Date(sprint.fechaFin)?<Box 
+                            key={index}
+                            onClick={() => clickBoton(sprint.idSprint)}
+                            sx={{
+                                width: '85%', height: 60,
+                                borderRadius: 0.6, margin: 0.7,
+                                marginLeft: 'calc(2vw + 1rem)', pl: 2,
+                                fontSize: '1.5rem',
+                                bgcolor: sprint.nota === null ? '#d0d4e4' : '#32cd32',
+                                textTransform: 'uppercase',
+                                display: 'flex', 
+                                cursor: 'pointer',
+                                justifyContent: 'flex-start', 
+                                alignItems: 'center', 
+                                '&:hover': {
+                                    bgcolor: sprint.nota === null ? '#c0c4d4' : '#68ba44',
+                                },
+                            }}            
+                        >
+                            Sprint {sprint.numeroSprint}{sprint.nota === null ? "":"(YA EVALUADO)"}
+                        </Box>
+                        :
+                         <></>
+                        )
                     ))}
+                    {new Date(sprints[0].fechaFin) > new Date()?<h3 style={{marginLeft:'calc(2vw + 1rem)'}}>EL PRIMER SPRINT DE ESTE GRUPO NO TERMINO, NO SE PUEDE CALIFICAR</h3>:<></>}
                 </>
                 :
-                <>No se encontro ningun sprint en la base de datos</>
+                <h3 style={{marginLeft:'calc(2vw + 1rem)'}}>No se encontro ningun sprint en la base de datos</h3>
             }
         </DivLista>
         </BaseUI>

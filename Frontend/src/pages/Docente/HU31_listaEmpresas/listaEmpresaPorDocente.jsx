@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import Loading from '../../../../components/loading/loading'
-import Error from '../../../../components/error/error'
-import ListaDefinitivaN from '../../../../components/listaDefinitiva/listaDefinitivaN';
+import Loading from '../../../components/loading/loading'
+import Error from '../../../components/error/error'
+import ListaDefinitivaN from '../../../components/listaDefinitiva/listaDefinitivaN';
 
 const columns = [
   {
@@ -72,17 +72,17 @@ function EmpresasPorGrupo() {
 
   return (
     <ListaDefinitivaN
-          titulo="LISTA DE EMPRESAS"
-          cabezeraTitulo={null}
-          cabezeras={columns}
-          datosTabla={data}
-          ocultarAtras={false}
-          confirmarAtras={false}
-          dirBack="/"
-          dirForward=""
-          mensajeSearch = "Buscar Empresa"
-          nombreContador = "Empresas"
-        />
+      titulo="LISTA DE EMPRESAS"
+      cabezeraTitulo={null}
+      cabezeras={columns}
+      datosTabla={data}
+      ocultarAtras={false}
+      confirmarAtras={false}
+      dirBack="/"
+      dirForward=""
+      mensajeSearch = "Buscar Empresa"
+      nombreContador = "Empresas"
+    />
   );
 }
 

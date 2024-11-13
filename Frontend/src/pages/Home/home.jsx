@@ -1,4 +1,3 @@
-import { Fragment } from "react";
 import Footer from "../../components/Footer/footer.jsx";
 import Header from "../../components/Header/header.jsx";
 import { useNavigate } from "react-router-dom";
@@ -42,42 +41,62 @@ function Home() {
       onClick: () => navigate("/validarPlanificacion/"),
     },
     {
-      label: "Seguimiento Semanal",
+      label: "HU7__Seguimiento Semanal",
       onClick: () => navigate("/evaluacionSemanal/empresa/1/sprint/1"),
     },
     {
-      label: "Calificar Sprints",
-      onClick: () => navigate("/1/calificarSprints"),
+      label: "HU34__Calificar Sprints",
+      onClick: () => navigate("/homeGrupo/1/listaEmpresaCalificarSprints"),
     },
     {
       label: "Modificar Lista de Tareas",
       onClick: () =>
-        navigate("/modificarListaTareas/empresa/1/sprint/1/semana/1"),
+        navigate("/modificarListaTareas/empresa/1/sprint/2/semana/2"),
     },
     {
-      label: "Lista Empresas",
-      onClick: () => navigate("/homeGrupoDocente/listaEmpresas/1"),
+      label: "HU31__Lista Empresas",
+      onClick: () => navigate("/homeGrupo/1/listaEmpresas/1"),
     },
     {
-      label: "Lista Estudiantes",
-      onClick: () => navigate("/homeGrupoDocente/listaEstudiantes/1/2024-2"),
+      label: "HU32__Lista Estudiantes",
+      onClick: () => navigate("/homeGrupo/1/listaEstudiantes/2024-2"),
+    },
+    {
+      label: "HU18__Ver Calificaciones",
+      onClick: () =>
+        navigate(
+          "/homeGrupo/1/empresa/calificaciones"
+        ),
     },
   ];
 
   const studentButtons = [
     {
-      label: "Crear Empresa",
-      onClick: () => navigate("/homeEstudiante/homeGrupoEstudiante/crearGrupo1"),
+      label: "Registrar Empresa",
+      onClick: () => navigate("/homeEstudiante/homeGrupoEstudiante/crearGrupo/25"),
+    },
+    {
+      label: "Modificar Empresa",
+      onClick: () => navigate("/homeEstudiante/homeGrupoEstudiante/modificarGrupo/25"),
+    },    {
+      label: "Publicar Empresa",
+      onClick: () => navigate("/homeEstudiante/homeGrupoEstudiante/publicarEmpresa/25"),
     },
     {
       label: "Grupos Disponibles",
       onClick: () => navigate("/homeEstudiante/gruposDisponibles"),
     },
-
     {
-      label: "Modificar Tarea",
+      label: "HU8__Modificar Tarea",
       onClick: () =>
-        navigate("/homeEstudiante/homeGrupoEstudiante/sprintE/1"),
+        navigate("/1/homeGrupoE/1/sprintE/3"),
+    },
+    {
+      label: "HU18__Ver Calificaciones",
+      onClick: () =>
+        navigate(
+          "/1/homeGrupoE/1/empresa/calificaciones/1"
+        ),
     },
 
   ];
@@ -85,14 +104,7 @@ function Home() {
   const sharedButtons = [
     {
       label: "Visualizar tareas",
-      onClick: () => navigate("/homeEstudiante/homeGrupoEstudiante/sprint/1"),
-    },
-    {
-      label: "Ver Calificaciones",
-      onClick: () =>
-        navigate(
-          "/homeEstudiante/homeGrupoEstudiante/empresas/1/calificaciones"
-        ),
+      onClick: () => navigate(`/1/homeGrupoE/1/empresaTareas`),
     },
     {
       label: "Ver Planificación",

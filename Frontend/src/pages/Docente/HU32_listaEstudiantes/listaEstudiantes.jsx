@@ -1,7 +1,7 @@
 import {useState, useEffect } from 'react';
-import ListaDefinitivaN from '../../../../components/listaDefinitiva/listaDefinitivaN';
-import Loading from '../../../../components/loading/loading'
-import Error from '../../../../components/error/error'
+import ListaDefinitivaN from '../../../components/listaDefinitiva/listaDefinitivaN';
+import Loading from '../../../components/loading/loading'
+import Error from '../../../components/error/error'
 const columns = [
   {
     field: 'nombreCompleto',
@@ -15,6 +15,11 @@ const columns = [
     headerName: 'Equipo',
     type: 'string',
     flex: 2,
+    renderCell: ({ value }) => (
+      <span style={{ color: value ? 'inherit' : 'red' }}>
+        {value || 'N/A'}
+      </span>
+    ),
   },
 ];
 
@@ -41,7 +46,9 @@ export default function DataTable() {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
+          
         },
+        credentials: 'include',
       });
 
       if (!response.ok) {
@@ -72,17 +79,17 @@ export default function DataTable() {
 
 
   return (
-      <ListaDefinitivaN
-        titulo="LISTA DE ESTUDIANTES"
-        cabezeraTitulo={null}
-        cabezeras={columns}
-        datosTabla={estudiantes}
-        ocultarAtras={false}
-        confirmarAtras={false}
-        dirBack="/"
-        dirForward=""
-        mensajeSearch = "Buscar Estudiante o empresa"
-        nombreContador = "Estudiantes"
-      /> 
+    <ListaDefinitivaN
+      titulo="LISTA DE ESTUDIANTES"
+      cabezeraTitulo={null}
+      cabezeras={columns}
+      datosTabla={estudiantes}
+      ocultarAtras={false}
+      confirmarAtras={false}
+      dirBack="/"
+      dirForward=""
+      mensajeSearch = "Buscar Estudiante o empresa"
+      nombreContador = "Estudiantes"
+    /> 
   );
 }

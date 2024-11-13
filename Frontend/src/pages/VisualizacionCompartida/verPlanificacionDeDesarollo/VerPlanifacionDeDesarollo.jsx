@@ -50,7 +50,7 @@ function PlanificacionDeDesarollo() {
   return (
     <Fragment>
       <BaseUI
-        titulo={"VISUALIZAR PLANIFICACION DE DESARROLLO"}
+        titulo={"VISUALIZAR PLANIFICACION"}
         ocultarAtras={false}
         confirmarAtras={false}
         dirBack={"/"}

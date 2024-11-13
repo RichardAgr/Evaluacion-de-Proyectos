@@ -14,14 +14,13 @@ class SprintSeeder extends Seeder
     public function run(): void
     {
         $planificaciones = DB::table('planificacion')
-            ->whereIn('idPlanificacion', [1, 2, 3, 4, 5, 6])
+            ->whereIn('idPlanificacion', [1])
             ->pluck('idPlanificacion');
-
-
+// *las p
         foreach ($planificaciones as $idPlanificacion) {
             $startDate = Carbon::now()->addDays(rand(1, 30));
             $totalCobro = 100.00;
-            $sprints = rand(3, 6); // Número aleatorio de sprints entre 2 y 7
+            $sprints = rand(3, 6); // Número aleatorio de sprints entre 3 y 6
             $cobros = [];
 
             // Generar cobros aleatorios para todos los sprints excepto el último
@@ -45,7 +44,7 @@ class SprintSeeder extends Seeder
             // Mezclar los cobros para que el último no sea siempre el que ajusta
             shuffle($cobros);
 
-            // * Insertar los Sprints en la  base de datos
+            // * Insertar los Sprints en la base de datos
             for ($i = 0; $i < $sprints; $i++) {
                 DB::table('sprint')->insert([
                     'idPlanificacion' => $idPlanificacion,
@@ -54,10 +53,42 @@ class SprintSeeder extends Seeder
                     'fechaFin' => $startDate->copy()->addDays(14),
                     'cobro' => $cobros[$i],
                     'fechaEntrega' => $startDate->copy()->addDays(15),
+                    'comentario' => $this->generateRandomComment(),
+                    'nota' => $this->generateRandomNote(),
                 ]);
 
                 $startDate->addDays(15);
             }
         }
+    }
+
+    /**
+     * Generate a random comment.
+     *
+     * @return string|null
+     */
+    private function generateRandomComment(): ?string
+    {
+        $comments = [
+            "Buen progreso en este sprint.",
+            "Se necesita mejorar la velocidad de desarrollo.",
+            "Excelente trabajo en equipo.",
+            "Algunos objetivos no se cumplieron.",
+            "Implementación satisfactoria de nuevas características.",
+        ];
+
+        return $comments[array_rand($comments)];
+    }
+
+    /**
+     * Generate a random note.
+     *
+     * @return int|null
+     */
+    private function generateRandomNote(): ?int
+    {
+
+        // Generar una nota aleatoria entre 1 y 10
+        return rand(1, 100);
     }
 }

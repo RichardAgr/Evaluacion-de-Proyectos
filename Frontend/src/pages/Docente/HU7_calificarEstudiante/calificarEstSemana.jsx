@@ -1,7 +1,7 @@
 import { Fragment, useState, useEffect } from "react";
-import BaseUI from "../../../../components/baseUI/baseUI";
+import BaseUI from "../../../components/baseUI/baseUI";
 import { styled } from "@mui/material";
-import InfoEmpresa from "../../../../components/infoEmpresa/nombreEmpresa";
+import InfoEmpresa from "../../../components/infoEmpresa/nombreEmpresa";
 import {
     Table,
     TableBody,
@@ -16,7 +16,7 @@ import {
 
 function CalificarEstSemana() {
     const empresaId = 1; 
-    const Sprint = "2";
+    const Sprint = "1";
     const [nombreEmpresa, setNombreEmpresa] = useState({ nombreCorto: '', nombreLargo: '' });
     const [teamData, setTeamData] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -43,7 +43,7 @@ function CalificarEstSemana() {
 
     const getNotasSprint = async (empresaId, Sprint) => {
         try {
-            const response = await fetch(`http://127.0.0.1:8000/api/empresas/notaSprint?empresa=${empresaId}&numeroSprint=${Sprint}`, {
+            const response = await fetch(`http://127.0.0.1:8000/api/empresas/notaSprint/${empresaId}/${Sprint}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
