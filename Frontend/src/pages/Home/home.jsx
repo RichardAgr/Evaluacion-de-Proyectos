@@ -84,7 +84,7 @@ function Home() {
     {
       label: "ID8-->Modificar Tarea",
       onClick: () =>
-        navigate("/1/homeGrupoE/1/sprintE/1"),
+        navigate("/1/homeGrupoE/1/sprintE/3"),
     },
 
   ];
@@ -92,13 +92,13 @@ function Home() {
   const sharedButtons = [
     {
       label: "Visualizar tareas",
-      onClick: () => navigate("/homeEstudiante/homeGrupoEstudiante/empresaTareas"),
+      onClick: () => navigate(`/1/homeGrupoE/1/empresaTareas`),
     },
     {
       label: "Ver Calificaciones",
       onClick: () =>
         navigate(
-          "/1/homeGrupoE/1/empresa/1/calificaciones"
+          "/1/homeGrupoE/1/empresa/calificaciones"
         ),
     },
     {
@@ -107,15 +107,15 @@ function Home() {
     },
     {
       label: "Modificar Planificación",
-      onClick: () => navigate("/modificarPlanificacion/empresa/1"),
+      onClick: () => navigate("/modificarPlanificacion/"),
     },
     {
       label: "Publicar Planificación",
-      onClick: () => navigate("/publicarPlanificacion/empresa/1"),
+      onClick: () => navigate("/publicarPlanificacion/"),
     },
     {
       label: "Visualizar Sprint",
-      onClick: () => navigate("/visualizarSprint/empresa/1"),
+      onClick: () => navigate("/visualizarSprint/"),
     },
     {
       label: "Visualizar est nota",

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Docente;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Models\Grupo;
 use App\Http\Controllers\Controller;
 use function Laravel\Prompts\select;
 
@@ -16,13 +17,13 @@ class GrupoController extends Controller
             ->join('docente', 'grupo.idDocente', '=', 'docente.idDocente')
             ->select(
                 'grupo.idGrupo',
-                'grupo.numGrupo', 
-                'docente.nombreDocente as nombre', 
-                'docente.primerApellido as apellidoPaterno', 
-                'docente.segundoApellido as apellidoMaterno', 
+                'grupo.numGrupo',
+                'docente.nombreDocente as nombre',
+                'docente.primerApellido as apellidoPaterno',
+                'docente.segundoApellido as apellidoMaterno',
                 //'grupo.gestionGrupo'
             )
-            ->where('grupo.gestionGrupo','=','2024-2')
+            ->where('grupo.gestionGrupo', '=', '2024-2')
             ->get();
 
         // Si no se encuentran resultados
@@ -43,13 +44,17 @@ class GrupoController extends Controller
             ->join('docente', 'grupo.idDocente', '=', 'docente.idDocente')
             ->leftjoin('estudiantesempresas AS ee', 'estudiantesgrupos.idEstudiante', '=', 'ee.idEstudiante')
             ->leftjoin('empresa AS emp', 'ee.idEmpresa', '=', 'emp.idEmpresa')
-            ->where('grupo.idGrupo',"=",   $idGrupo)
-            ->where('grupo.gestionGrupo',$gestionGrupo)
+            ->where('grupo.idGrupo',"=",   $request -> idGrupo)
+            ->where('grupo.gestionGrupo',$request -> gestionGrupo)
+            ->join('estudiantesempresas AS ee', 'estudiantesgrupos.idEstudiante', '=', 'ee.idEstudiante')
+            ->join('empresa AS emp', 'ee.idEmpresa', '=', 'emp.idEmpresa')
+            ->where('grupo.idGrupo', "=",   $request->idGrupo)
+            ->where('grupo.gestionGrupo', $request->gestionGrupo)
             ->select(
-                'grupo.numGrupo', 
+                'grupo.numGrupo',
                 'estudiante.idEstudiante as id',
-                'estudiante.nombreEstudiante as nombreEstudiante', 
-                'estudiante.primerApellido as apellidoPaternoEstudiante', 
+                'estudiante.nombreEstudiante as nombreEstudiante',
+                'estudiante.primerApellido as apellidoPaternoEstudiante',
                 'estudiante.segundoApellido as apellidoMaternoEstudiante',
                 'emp.nombreEmpresa'
                 /*'docente.nombreDocente as nombreDocente', 
@@ -75,31 +80,31 @@ class GrupoController extends Controller
             'gestionGrupo' => 'required|string',
         ]);
         // $idDocente = session()->get('docente.id');
-        
+
         // Ejecutar la consulta
-            $resultados = DB::table('estudiantesgrupos AS eg')
+        $resultados = DB::table('estudiantesgrupos AS eg')
             ->join('grupo AS g', 'eg.idGrupo', '=', 'g.idGrupo')
             ->join('docente AS d', 'g.idDocente', '=', 'd.idDocente')
             ->join('estudiantesempresas AS ee', 'eg.idEstudiante', '=', 'ee.idEstudiante')
             ->join('empresa AS emp', 'ee.idEmpresa', '=', 'emp.idEmpresa')
             ->join('estudiante AS e', 'eg.idEstudiante', '=', 'e.idEstudiante')
-            ->select('emp.nombreEmpresa','emp.nombreLargo','emp.idEmpresa as id','g.gestionGrupo', DB::raw('count(eg.idEstudiante) as totalEstudiantes'), 'g.numGrupo')
-            ->where('d.idDocente', $request ->idDocente)
-           // ->where('g.idGrupo', $request->idGrupo)
-            ->where('g.gestionGrupo', $request -> gestionGrupo)
-            ->groupBy('emp.nombreEmpresa', 'emp.nombreLargo','emp.idEmpresa','g.gestionGrupo', 'g.numGrupo')
-            -> orderByDesc('g.gestionGrupo')
+            ->select('emp.nombreEmpresa', 'emp.nombreLargo', 'emp.idEmpresa as id', 'g.gestionGrupo', DB::raw('count(eg.idEstudiante) as totalEstudiantes'), 'g.numGrupo')
+            ->where('d.idDocente', $request->idDocente)
+            // ->where('g.idGrupo', $request->idGrupo)
+            ->where('g.gestionGrupo', $request->gestionGrupo)
+            ->groupBy('emp.nombreEmpresa', 'emp.nombreLargo', 'emp.idEmpresa', 'g.gestionGrupo', 'g.numGrupo')
+            ->orderByDesc('g.gestionGrupo')
             ->orderBy('emp.nombreEmpresa')
             ->orderByDesc('e.nombreEstudiante')
             ->get();
-        
-    
+
+
         if ($resultados->isEmpty()) {
             return response()->json([
                 'message' => 'No se encontraron registros para el grupo y/o gestión especificados.'
             ], 404); // Puedes devolver un código 404 o cualquier otro código de estado
         }
-    
+
         // Si hay resultados, retornarlos
         return response()->json($resultados);
     }
@@ -107,22 +112,22 @@ class GrupoController extends Controller
     {
         // Recupera la descripción del curso basado en el ID
         $datosCurso = DB::table('grupo')
-            ->join('docente AS d', 'grupo.idDocente','=','d.idDocente')
+            ->join('docente AS d', 'grupo.idDocente', '=', 'd.idDocente')
             ->select(
                 'grupo.numGrupo',
-                'd.nombreDocente as nombreDocente', 
-                'd.primerApellido as apellidoPaternoDocente', 
+                'd.nombreDocente as nombreDocente',
+                'd.primerApellido as apellidoPaternoDocente',
                 'd.segundoApellido as apellidoMaternoDocente',
                 'grupo.descripcion'
             )
             ->where('idGrupo', $id) // Asegúrate de usar solo el nombre de la columna
             ->first(); // Usa first() para obtener un solo resultado
-    
+
         // Verifica si se encontraron datos
         if (!$datosCurso) {
             return response()->json(['message' => 'Curso no encontrado'], 404);
         }
-    
+
         // Devuelve los datos en formato JSON
         return response()->json($datosCurso);
     }
@@ -133,10 +138,10 @@ class GrupoController extends Controller
             'termino' => 'required|string',
             //'idDocente' => 'required|integer'
         ]);
-    
+
         $termino = $request->input('termino');
         $idDocente = session()->get('docente.id');
-    
+
         $busqueda = DB::table('estudiantesgrupos AS eg')
             ->join('grupo AS g', 'eg.idGrupo', '=', 'g.idGrupo')
             ->join('docente AS d', 'g.idDocente', '=', 'd.idDocente')
@@ -150,11 +155,12 @@ class GrupoController extends Controller
             ->orderByDesc('g.gestionGrupo')
             ->orderBy('emp.nombreEmpresa')
             ->get();
-            if (!$busqueda) {
-                return response()->json(['message' => 'Curso no encontrado'], 404);
-            }
+        if (!$busqueda) {
+            return response()->json(['message' => 'Curso no encontrado'], 404);
+        }
         return response()->json($busqueda);
     }
+
     public function barraBusquedaEstudiante(Request $request)
     {
         $request->validate([
@@ -176,12 +182,12 @@ class GrupoController extends Controller
             ->join('estudiantesempresas AS ee', 'estudiantesgrupos.idEstudiante', '=', 'ee.idEstudiante')
             ->join('empresa AS emp', 'ee.idEmpresa', '=', 'emp.idEmpresa')
             ->where('estudiante.nombreEstudiante', 'like', "%$valor%")
-            ->where('grupo.idGrupo',"=",   $request -> idGrupo)
-            ->where('grupo.gestionGrupo',$request -> gestionGrupo)
+            ->where('grupo.idGrupo', "=",   $request->idGrupo)
+            ->where('grupo.gestionGrupo', $request->gestionGrupo)
             ->select(
                 //'grupo.numGrupo', 
-                'estudiante.nombreEstudiante as nombreEstudiante', 
-                'estudiante.primerApellido as apellidoPaternoEstudiante', 
+                'estudiante.nombreEstudiante as nombreEstudiante',
+                'estudiante.primerApellido as apellidoPaternoEstudiante',
                 'estudiante.segundoApellido as apellidoMaternoEstudiante',
                 'emp.nombreEmpresa'
                 /*'docente.nombreDocente as nombreDocente', 
@@ -198,23 +204,51 @@ class GrupoController extends Controller
         return response()->json($datosGrupo, 200);
     }
 
-    public function darDeBaja(Request $request) {
+    public function darDeBaja(Request $request)
+    {
         $request->validate([
             'idGrupo' => 'required|integer',
             'idEstudiante' => 'required|integer',
         ]);
-    
+
         // Realizar la eliminación después de aplicar la condición 'where'
         $idBaja = DB::table('estudiantesgrupos')
             ->where('idGrupo', $request->idGrupo)  // Condición para el grupo
             ->where('idEstudiante', $request->idEstudiante)  // Condición para el estudiante
             ->delete();
-    
+
         // Verificar si se eliminó alguna fila
         if ($idBaja) {
             return response()->json(['success' => 'Estudiante dado de baja exitosamente'], 200);
         } else {
             return response()->json(['error' => 'No se pudo dar de baja al estudiante'], 400);
+        }
+    }
+
+    public function getEmpresasPorGrupo($idGrupo)
+    {
+        try {
+            // Encuentra el grupo y obtén las empresas únicas asociadas
+            $grupo = Grupo::findOrFail($idGrupo);
+
+            // Obtenemos las empresas relacionadas a través de estudiantes y eliminamos duplicados
+            $empresas = $grupo->estudiantes()
+                ->with('empresas') // Carga las empresas de cada estudiante
+                ->get()
+                ->pluck('empresas') // Accede a la relación empresas
+                ->flatten() // Aplana la colección de colecciones
+                ->unique('idEmpresa') // Elimina duplicados basados en idEmpresa
+                ->map(function ($empresa) {
+                    // Cambiar el nombre de 'idEmpresa' a 'id'
+                    $empresa->id = $empresa->idEmpresa;
+                    unset($empresa->idEmpresa); // Elimina el campo 'idEmpresa' original
+                    return $empresa;
+                })
+                ->values(); // Reindexa los resultados
+
+            return response()->json($empresas, 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error al obtener las empresas: ' . $e->getMessage()], 500);
         }
     }
 

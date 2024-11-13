@@ -53,6 +53,11 @@ Route::get('/docente/obtenerTareas', [NotaSprintController::class, 'obtenerTarea
 Route::get('/empresa/{idEmpresa}/sprintsEntregables', [EmpresaController::class, 'getSprintsEntregables']);
 
 Route::get('/empresa/{idEmpresa}/sprintsSemanasTareas', [EmpresaController::class, 'getSprintsSemanasTareas']);
+//-- empresas de un grupo
+Route::get('/grupo/{idGrupo}/empresas', [GrupoController::class, 'getEmpresasPorGrupo']);
+//-- sprints y estudiantes de una empresa
+Route::get('/empresa/{idEmpresa}/sprints-estudiantes', [EmpresaController::class, 'obtenerSprintsYEstudiantes']);
+
 
 
 //============================= PLANIFICACION ==============================
@@ -82,6 +87,9 @@ Route::get('/empresas/', [EmpresaController::class, 'getListaEmpresas']);
 
 // obtiene una lista de todas las empresas que aun no fueron validadas
 Route::get('/planificacionesSinValidar', [PlanificacionController::class, 'planificacionesSinValidar']);
+// obtiene una lista de todas las empresas que no fueron publicadas
+Route::get('/planificacionesSinPublicar', [PlanificacionController::class, 'planificacionesSinPublicar']);
+
 Route::get('/planificacion/notaComentario/{idPlanificacion}', [PlanificacionController::class, 'notaComentario']);
 Route::get('/planificacionAceptadas', [PlanificacionController::class, 'planificacionAceptadas']);
 Route::get('/planificacionRechazadas', [PlanificacionController::class, 'planificacionRechazadas']);

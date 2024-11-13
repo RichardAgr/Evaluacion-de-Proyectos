@@ -58,7 +58,35 @@ class PlanificacionController extends Controller
                 ->first();
 
             // Verificar si la planificación existe y si fue rechazada
-            if ($planificacion && $planificacion->aceptada === 0) {
+            if ($planificacion && $planificacion->aceptada === 0 && $planificacion->publicada=== 1) {
+                // Si la planificación existe y fue rechazada, guarda sus datos
+                $data[] = [
+                    'id' => $planificacion->idPlanificacion,
+                    'nombreEmpresa' => $empresa->nombreEmpresa,
+                    'nombreLargo' => $empresa->nombreLargo,
+                    'idEmpresa' => $planificacion->idEmpresa,
+                    'aceptada' => $planificacion->aceptada,
+                    'numeroSprints' => $planificacion->sprints->count(), // Contar el número de sprints, innecesario
+                ];
+            }
+        }
+
+        // Retornar la respuesta JSON con los datos de empresas aceptadas
+        return response()->json($data);
+    }
+
+    public function planificacionesSinPublicar(): JsonResponse
+    {
+        // Obtener todas las empresas, en el futuro debera filtrar las empresas por docente
+        $empresas = Empresa::all();
+        $data = [];
+        foreach ($empresas as $empresa) {
+            // Obtener la planificación de la empresa
+            $planificacion = Planificacion::where('idEmpresa', $empresa->idEmpresa)
+                ->first();
+
+            // Verificar si la planificación existe y si fue rechazada
+            if ($planificacion && $planificacion->publicada === 0 && $planificacion->aceptada !== 1) {
                 // Si la planificación existe y fue rechazada, guarda sus datos
                 $data[] = [
                     'id' => $planificacion->idPlanificacion,

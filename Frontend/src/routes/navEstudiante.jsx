@@ -1,8 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import HomeEstudiante from "../pages/Estudiante/homeEstudiante/homeEstudiante.jsx";
 import HomeGrupoEstudiante from "../pages/Estudiante/homeGrupoEstudiante/homeGrupoEstudiante.jsx";
-import ModificarPlanificacion from "../pages/Estudiante/editarPlanificacion/editarPlanificacion.jsx";
-import PublicarPlanificacion from "../pages/Estudiante/publicarPlanificacion/publicarPlanificacion.jsx";
 import VisualizarSprintEst from "../pages/Estudiante/visualizarSprintEstudiante/visualizarSprint.jsx";
 import VisualizarTarea from "../pages/Estudiante/tareaEstudiante/viualizarTarea.jsx";
 import ModificarListaTareas from "../pages/Estudiante/editarPlanificacion/modificarListaTareas/modificarListaTareas.jsx";
@@ -15,8 +13,8 @@ import CalificacionesHitoEmpresa from "../pages/Estudiante/grupoEmpresa/califica
 import CrearGrupoEmpresa from "../pages/Estudiante/grupoEmpresa/crearGrupoEmpresa.jsx";
 import PublicarGrupoEmpresa from "../pages/Estudiante/grupoEmpresa/publicarGrupoEmpresa.jsx";
 import EmpresasParaTareas from "../pages/Estudiante/visualizarSprintEstudiante/seleccionarEmpresaParaVisualizar.jsx";
-
-import SprintTareas2 from "../pages/Estudiante/visualizarSprintEstudiante/prueba123.jsx";
+import ListaCali from "../pages/Estudiante/grupoEmpresa/listaCalificaciones.jsx";
+import SprintTareas2 from "../pages/Estudiante/visualizarSprintEstudiante/visualizarSprint.jsx";
 
 function Nav() {
     return (
@@ -31,23 +29,28 @@ function Nav() {
           element={<ModificarTarea />}
         />
         <Route
-          path="/:idEstudiante/homeGrupoE/:idGrupo/empresa/:idEmpresa/calificaciones"
+          path="/:idEstudiante/homeGrupoE/:idGrupo/empresa/calificaciones/:idEmpresa"
           element={<CalificacionesHitoEmpresa />}
+        />
+        <Route
+          path="/:idEstudiante/homeGrupoE/:idGrupo/empresa/calificaciones"
+          element={<ListaCali/>}
         />
         {/** ROUTES JOAQUIN*/}
         <Route
-          path="/homeEstudiante/homeGrupoEstudiante/empresaTareas"
+          path="/:idEstudiante/homeGrupoE/:idGrupo/empresaTareas"
           element={<EmpresasParaTareas />}
         />
         <Route
           path="/prueba123/:idEmpresa"
           element={<SprintTareas2 />}
         />
-        {/** ROUTES JHAIR*/}
         <Route
-          path="/homeEstudiante/homeGrupoEstudiante/sprint/:idSprint"
+          path="/:idEstudiante/homeGrupoE/:idGrupo/empresas/:idEmpresa"
           element={<VisualizarSprintEst />}
         />
+        {/** ROUTES JHAIR /homeEstudiante/homeGrupoEstudiante/sprint/:idSprint"*/}
+        
         <Route
           path="/homeEstudiante/homeGrupoEstudiante/sprint/:idSprint/tarea/:idTarea"
           element={<VisualizarTarea />}
@@ -68,14 +71,6 @@ function Nav() {
         <Route
           path="/homeEstudiante/homeGrupoEstudiante"
           element={<HomeGrupoEstudiante />}
-        />
-        <Route
-          path="/modificarPlanificacion/Empresa/:idEmpresa"
-          element={<ModificarPlanificacion />}
-        />
-        <Route
-          path="/publicarPlanificacion/Empresa/:idEmpresa"
-          element={<PublicarPlanificacion />}
         />
         <Route
           path="/modificarListaTareas/empresa/:idEmpresa/sprint/:idSprint/semana/:idSemana"

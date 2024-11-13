@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import Loading from '../../../components/loading/loading';
 import Error from '../../../components/error/error';
 import ListaDefinitivaN from '../../../components/listaDefinitiva/listaDefinitivaN';
@@ -11,6 +11,7 @@ const columns = [
 ];
 
 function EmpresasParaTareas() {
+  const {idGrupo, idEstudiante, idEmpresa} = useParams();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState({
@@ -19,9 +20,8 @@ function EmpresasParaTareas() {
     errorDetails: "",
   });
 
-  const navigate = useNavigate();
   const idDocente = 1;
-  const gestionGrupo = '2024-2';
+  const gestionGrupo = '2024-2'
 
   useEffect(() => {
     setLoading(true);
@@ -34,6 +34,7 @@ function EmpresasParaTareas() {
         if (!response.ok) throw new Error('Error fetching data');
 
         const result = await response.json();
+        console.log(result)
         setData(result);
       } catch (err) {
         setError({
@@ -51,10 +52,6 @@ function EmpresasParaTareas() {
   if (loading) return <Loading />;
   if (error.error) return <Error errorMessage={error.errorMessage} errorDetails={error.errorDetails} />;
 
-  const handleRowClick = (empresa) => {
-    navigate(`/prueba123/${empresa.id}`);
-  };
-
   return (
     <ListaDefinitivaN
       titulo="SELECCIONE UNA EMPRESA PARA VISUALIZAR SUS TAREAS"
@@ -64,7 +61,7 @@ function EmpresasParaTareas() {
       ocultarAtras={false}
       confirmarAtras={false}
       dirBack="/"
-      dirForward="/prueba123/"
+      dirForward= {`/${idEstudiante}/homeGrupoE/${idGrupo}/empresas/`}
       mensajeSearch="Buscar Empresa"
       nombreContador="Empresas"
     />

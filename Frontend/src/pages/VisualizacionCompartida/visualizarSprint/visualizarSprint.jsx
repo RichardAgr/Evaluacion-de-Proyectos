@@ -52,7 +52,7 @@ function VisualizarSprint() {
   }, [idSprint]);
 
   const handleVerTareas = () => {
-    navigate(`/visualizarPlanificacion`);
+    navigate(`/1/homeGrupoE/1/empresas/${idEmpresa}`);
   };
 
   return (
@@ -141,7 +141,7 @@ function VisualizarSprint() {
               </ListItem>
             ))}
           </List>
-          <Box sx={{ mt: 3, display: "flex", justifyContent: "center" }}>
+          <Box sx={{ mt: 3, display: "flex", justifyContent: "left" }}>
             <Button
               variant="contained"
               color="primary"
@@ -157,7 +157,7 @@ function VisualizarSprint() {
                 },
               }}
             >
-              Ver Tareas del Sprint {sprint.numeroSprint}
+              Ver Tareas
             </Button>
           </Box>
         </Paper>

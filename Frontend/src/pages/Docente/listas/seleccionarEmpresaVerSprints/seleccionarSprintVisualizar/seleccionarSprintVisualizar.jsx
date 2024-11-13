@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { getListaSprintsPorIdEmpresa } from "../../../../api/visualizarSprint/visualizarSprint";
+import { getListaSprintsPorIdEmpresa } from "../../../../../api/visualizarSprint/visualizarSprint";
 import {
   Typography,
   List,
@@ -12,26 +12,26 @@ import {
   styled,
 } from "@mui/material";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import BaseUI from "../../../../components/baseUI/baseUI";
-import Loading from "../../../../components/loading/loading";
-import Error from "../../../../components/error/error";
+import BaseUI from "../../../../../components/baseUI/baseUI";
+import Loading from "../../../../../components/loading/loading";
+import Error from "../../../../../components/error/error";
 
 // Estilos personalizados
 const StyledPaper = styled(Paper)({
-  backgroundColor: "#CFD4E1", // Color rosa/rojo similar a la imagen
+  backgroundColor: "#d0d4e4", 
   borderRadius: "8px",
   overflow: "hidden",
 });
 
 const StyledListItem = styled(ListItem)({
-  borderBottom: "1px solid rgba(255, 255, 255, 0.2)",
+  borderBottom: "3px solid rgba(255, 255, 255, 0.4)",
   padding: "16px 20px",
   cursor: "pointer",
   "&:last-child": {
     borderBottom: "none",
   },
   "&:hover": {
-    backgroundColor: "rgba(255, 255, 255, 0.1)",
+    backgroundColor: "#c0c4d4",
   },
   display: "flex",
   justifyContent: "space-between",
