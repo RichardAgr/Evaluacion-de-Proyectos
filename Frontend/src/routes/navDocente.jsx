@@ -48,15 +48,15 @@ function Nav() {
         path="/homeEstudiante/visCalificar"
         element={<CalificarEstSemana />}
       />
-                         {/** ROUTES COMPARTIDAS JHON*/} 
-      <Route
-          path="/homeGrupo/:idGrupo/empresa/calificaciones"
-          element={<ListaCali/>}
-        />
-      <Route
-        path="/homeGrupo/:idGrupo/empresa/calificaciones/:idEmpresa"
-        element={<CalificacionesHitoEmpresa/>}
-      />
+          {/** ROUTES COMPARTIDAS JHON*/} 
+          <Route
+              path="/homeGrupo/:idGrupo/empresa/calificaciones"
+              element={<ListaCali/>}
+            />
+          <Route
+            path="/homeGrupo/:idGrupo/empresa/calificaciones/:idEmpresa"
+            element={<CalificacionesHitoEmpresa/>}
+          />
       {/** ROUTES JOAQUIN*/}
       {/** ROUTES JHAIR*/}
 
