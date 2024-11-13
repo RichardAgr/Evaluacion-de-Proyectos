@@ -37,7 +37,11 @@ export default function DataTable() {
   const fetchEstudiantes = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`http://localhost:8000/api/docente/listaEstudiantes/${idGrupo}/${gestionGrupo}`,
+      const response = await fetch(`http://localhost:8000/api/docente/listaEstudiantes?` +
+            new URLSearchParams({
+              idGrupo,
+              gestionGrupo,
+            }),
           {
         method: 'GET',
         headers: {

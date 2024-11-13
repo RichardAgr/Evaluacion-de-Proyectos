@@ -31,7 +31,7 @@ Route::get('/empresas/listaEmpresas', [EmpresaController::class, 'getListaEmpres
 Route::get('/empresas/obtenerEstudiantes',[EstudianteController::class, 'obtenerEstudiantesPorGrupo']);
 Route::get('/empresas/{idEmpresa}/calificaciones', [EmpresaController::class, 'getCalificacionesEmpresa']);
 //---Recibe la nota del sprint seleccionado
-Route::get('/empresas/notaSprint/{idEmpresa}/{idEmpresa}', [SprintController::class, 'obtenerResultadoEvaluacionesPrevias']);
+Route::get('/empresas/notaSprint/{idEmpresa}/{semana}', [SprintController::class, 'obtenerResultadoEvaluacionesPrevias']);
 //---Recibe las notas de todo los sprints
 Route::get('/empresas/notasSprint/{idEmpresa}', [NotaSprintController::class, 'notasSprint']);
 
@@ -44,7 +44,7 @@ Route::get('/estudiante/sprint/semana/{idSprint}',[SprintController::class, 'spr
 
 //============================= GET DOCENTE ================================
 //---Recibe la lista de estudiantes de un grupo especifico del docente activo
-Route::get('/docente/listaEstudiantes/{idGrupo}/{gestionGrupo}', [GrupoController::class, 'obtenerEstudiantesPorGrupo']);
+Route::get('/docente/listaEstudiantes', [GrupoController::class, 'obtenerEstudiantesPorGrupo']);
 //---Recibe las empresas del grupo del docente y del docente activo
 Route::get('/docente/obtenerEmpresasPorGrupoYDocente',[GrupoController::class, 'obtenerEmpresasPorGrupoYDocente']);
 //---Recibe las tareas de un estudiante {Puuede no funcionar}
