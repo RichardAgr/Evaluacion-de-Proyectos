@@ -573,4 +573,46 @@ class SprintController extends Controller
             return response()->json(['error' => 'Error al actualizar el sprint: ' . $e->getMessage()], 500);
         }
     }
+
+
+
+    public function obtenerResultadoEvaluacionesPrevias($empresa, $semana)
+    {
+        // Validación básica para asegurar que se reciben los parámetros necesarios
+        //$empresa = $request->input('idEmpresa');
+        //$semana = $request->input('semana');
+    
+        if (!$empresa || !$semana) {
+            return response()->json(['error' => 'Los parámetros idEmpresa y semana son obligatorios'], 400);
+        }
+    
+        // Consulta principal
+        $resultado = DB::table('tarea as t')
+            ->join('semana as s', 's.idSemana', '=', 't.idSemana')
+            ->join('sprint as sp', 'sp.idSprint', '=', 's.idSprint')
+            ->join('planificacion as p', 'p.idPlanificacion', '=', 'sp.idPlanificacion')
+            ->join('tareasestudiantes as te', 't.idTarea', '=', 'te.idTarea')
+            ->join('estudiante as e', 'e.idEstudiante', '=', 'te.idEstudiante')
+            ->where('p.idEmpresa', $empresa)
+            ->where('sp.numeroSprint', $semana)
+            ->select(
+                't.nombreTarea', 
+                DB::raw("CONCAT(e.nombreEstudiante, ' ', e.primerApellido, ' ', e.segundoApellido) as nombre_completo"),
+                't.comentario',
+                'e.idEstudiante'
+            )
+            ->get();
+    
+        // Agrupación de resultados por estudiante
+        $resultadoAgrupado = $resultado->groupBy('nombre_completo')->map(function($items) {
+            return [
+                'tareas' => $items->pluck('nombreTarea')->toArray(),
+                'comentario' => $items->first()->comentario, // Comentario del primer registro
+                'id' => $items->first()->idEstudiante // ID del primer registro
+            ];
+        });
+    
+        return response()->json($resultadoAgrupado);
+    }
+    
 }
