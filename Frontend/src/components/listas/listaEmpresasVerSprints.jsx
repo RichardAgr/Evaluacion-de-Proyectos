@@ -2,9 +2,7 @@ import { useEffect, useState } from "react";
 import { getPlanificacionesAceptadas } from "../../api/getPlanificacionesAceptadas";
 import Loading from "../loading/loading";
 import Error from "../error/error";
-import ListaDefinitivaN from "../listaDefinitiva/listaDefinitivaN";
-import ListaConBuscador from "./listaConBuscador";
-import BaseUI from "../baseUI/baseUI";
+import ListaConBuscador from "./listaConBuscador";;
 const columns = [
   {
     field: 'nombreEmpresa',
@@ -40,9 +38,9 @@ function ListaEmpresasVerSprints() {
       } else{
         const [lista] = await responseData
         setListaEmpresas(lista);
+
         console.log(lista);
       }
-      
       setLoading(false);
     };
     fetchData();

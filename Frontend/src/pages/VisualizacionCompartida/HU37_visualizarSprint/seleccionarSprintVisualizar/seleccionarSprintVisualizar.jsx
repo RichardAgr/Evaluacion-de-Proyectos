@@ -84,6 +84,8 @@ function SeleccionarSprintVisualizar() {
       ocultarAtras={false}
       confirmarAtras={false}
       dirBack={`/`}
+      loading={false}
+      error={{error:false}}
     >
         {error.errorMessage || error.errorDetails ? (
         <Error

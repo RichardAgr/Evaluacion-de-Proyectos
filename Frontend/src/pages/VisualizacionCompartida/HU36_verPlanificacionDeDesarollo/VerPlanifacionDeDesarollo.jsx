@@ -56,8 +56,8 @@ function PlanificacionDeDesarollo() {
             {!planificacionData.aceptada ? (
               <>
                 <NombreEmpresa
-                  nombreLargo={empresaData.nombreLargo}
-                  nombreCorto={empresaData.nombreEmpresa}
+                  nombreLargo={empresaData?.nombreLargo}
+                  nombreCorto={empresaData?.nombreEmpresa}
                 />
                 <div className="divContainerPlani">
                   <h1>TODAVIA NO FUE VALIDADA</h1>
@@ -66,12 +66,12 @@ function PlanificacionDeDesarollo() {
             ) : (
               <>
                 <InfoEmpresa
-                  nombreLargo={empresaData.nombreLargo}
-                  nombreCorto={empresaData.nombreEmpresa}
-                  integrantes={empresaData.integrantes}
+                  nombreLargo={empresaData?.nombreLargo}
+                  nombreCorto={empresaData?.nombreEmpresa}
+                  integrantes={empresaData?.integrantes}
                 />
                 <TablaPlanificacion
-                  sprints={planificacionData.sprints}
+                  sprints={planificacionData?.sprints}
                   ocultarBotones={true}
                 />
                 {/** 
