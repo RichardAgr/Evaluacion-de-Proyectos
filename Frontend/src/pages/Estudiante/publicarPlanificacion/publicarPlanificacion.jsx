@@ -95,10 +95,10 @@ function PublicarPlanificacion() {
       >
           <>
             <NombreEmpresa
-              nombreLargo={empresaData.nombreLargo}
-              nombreCorto={empresaData.nombreEmpresa}
+              nombreLargo={empresaData?.nombreLargo}
+              nombreCorto={empresaData?.nombreEmpresa}
             />
-            {planificacionData.publicada || planificacionData.aceptada ? (
+            {planificacionData?.publicada || planificacionData?.aceptada ? (
               <Box
               sx={{
                 display: "flex",
@@ -110,8 +110,8 @@ function PublicarPlanificacion() {
                 <b>PLANIFICACIÓN PUBLICADA</b>
               </Typography>
               </Box>
-            ) : planificacionData.message !== null &&
-              planificacionData.message !== undefined ? (
+            ) : planificacionData?.message !== null &&
+              planificacionData?.message !== undefined ? (
               <Box
                 sx={{
                   display: "flex",
@@ -122,12 +122,12 @@ function PublicarPlanificacion() {
                 }}
               >
                 <Typography variant="h5" sx={{ mt: 2 }}>
-                  {planificacionData.message}
+                  {planificacionData?.message}
                 </Typography>
               </Box>
             ) : (
               <>
-                <TablaPlanificacion sprints={planificacionData.sprints} />
+                <TablaPlanificacion sprints={planificacionData?.sprints} />
                 <Box sx={{ m: 3, display: "flex", justifyContent: "flex-end" }}>
                   <Button
                     variant="contained"

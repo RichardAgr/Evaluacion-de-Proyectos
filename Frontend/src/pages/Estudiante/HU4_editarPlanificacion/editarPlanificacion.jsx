@@ -15,7 +15,7 @@ function ModificarPlanificacion() {
   let { idEmpresa } = useParams();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState({
-    error:error,
+    error:false,
     errorMessage: "",
     errorDetails: "",
   });
@@ -68,27 +68,27 @@ function ModificarPlanificacion() {
       >
           <>
             <NombreEmpresa
-              nombreLargo={datosEmpresa.nombreLargo}
-              nombreCorto={datosEmpresa.nombreEmpresa}
+              nombreLargo={datosEmpresa?.nombreLargo}
+              nombreCorto={datosEmpresa?.nombreEmpresa}
             />
             <EstadoPlanificacion
-              estado={planificacionData.aceptada}
-              comentariopublico={planificacionData.comentariopublico}
+              estado={planificacionData?.aceptada}
+              comentariopublico={planificacionData?.comentariopublico}
             />
-            {planificacionData.aceptada ? (
+            {planificacionData?.aceptada ? (
               <Redirecting />
-            ) : planificacionData.publicada==0 ? (
+            ) : planificacionData?.publicada==0 ? (
               <>
                 <EditarPlanificacion
                   planificacionData={planificacionData}
-                  idEmpresa={planificacionData.idEmpresa}
+                  idEmpresa={planificacionData?.idEmpresa}
                 />
-                {planificacionData.comentariopublico !== null &&
-                  planificacionData.comentariopublico !== "" && (
+                {planificacionData?.comentariopublico !== null &&
+                  planificacionData?.comentariopublico !== "" && (
                     <>
                       <Comentario
                         titulo="MOTIVOS DE RECHAZO:"
-                        comentario={planificacionData.comentariopublico}
+                        comentario={planificacionData?.comentariopublico}
                       />
                     </>
                   )}
