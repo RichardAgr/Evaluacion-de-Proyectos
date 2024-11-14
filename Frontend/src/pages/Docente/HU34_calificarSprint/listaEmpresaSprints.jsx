@@ -1,7 +1,5 @@
 import { useState, useEffect } from 'react';
 import { getPlanificacionesAceptadas } from '../../../api/getPlanificacionesAceptadas';
-import Loading from '../../../components/loading/loading';
-import Error from '../../../components/error/error';
 import ListaDefinitivaN from '../../../components/listaDefinitiva/listaDefinitivaN';
 import { useParams } from 'react-router-dom';
 const columns = [
@@ -23,6 +21,7 @@ function ListaEmpresaSprints() {
     const { idGrupo } = useParams()
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState({
+        error:false,
         errorMessage: "",
         errorDetails: "",
     });
@@ -36,6 +35,7 @@ function ListaEmpresaSprints() {
           } catch (error) {
             console.error("Error en la solicitud:", error.message);
             setError({
+              error:true,
               errorMessage: "Ha ocurrido un error",
               errorDetails: error.message,
             });
@@ -46,11 +46,10 @@ function ListaEmpresaSprints() {
         fetchData();
       }, []);
       
-    if (loading) return <Loading />;
-    if (error.error) return <Error errorMessage={error.errorMessage} errorDetails={error.errorDetails} />;
-
   return (
     <ListaDefinitivaN
+      loading={loading}
+      error={error}
       titulo="SELECCIONE UNA EMPRESA PARA CALIFICAR"
       cabezeraTitulo={null}
       cabezeras={columns}

@@ -83,20 +83,14 @@ const EvaluarHito = () => {
         ocultarAtras={false}
         confirmarAtras={false}
         dirBack="/"
+        loading={loading}
+        error={{error:error}}
       >
-        {error ? (
-          <p>Error: {error}</p>
-        ) : loading ? (
-          <Loading />
-        ) : (
-          <>
             <NombreEmpresa
               nombreCorto={empresa.nombreCorto}
               nombreLargo={empresa.nombreLargo}
             />
-            {data2.length > 0 && <TablaEvaluacionSemanal estudiantes={data2} idSprint={semana} />}
-          </>
-         )} 
+            {data2.length > 0 && <TablaEvaluacionSemanal estudiantes={data2} idSprint={semana} />} 
       </BaseUI>
       <InfoSnackbar
         openSnackbar={snackbar.open}

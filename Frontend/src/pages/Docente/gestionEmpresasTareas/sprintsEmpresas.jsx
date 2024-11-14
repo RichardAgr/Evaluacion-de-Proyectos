@@ -40,6 +40,8 @@ function SprintsEmpresas() {
                 ocultarAtras={false}
                 confirmarAtras={false}
                 dirBack={`/grupoDocente/calificarTareasEmpresas/` + idDocente + `/empresas`}
+                loading={loading}
+                error={{error:error}}
             >
                 <NombreEmpresa nombreLargo={nombreLargo} nombreCorto={nombreEmpresa}></NombreEmpresa>
 

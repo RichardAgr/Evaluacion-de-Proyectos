@@ -34,12 +34,9 @@ class GrupoController extends Controller
         return response()->json($gruposDocentes, 200);
     }
 
-    public function obtenerEstudiantesPorGrupo(Request $request)
+    public function obtenerEstudiantesPorGrupo( $idGrupo, $gestionGrupo)
     {
-        $request->validate([
-            'idGrupo' => 'required|integer',
-            'gestionGrupo' => 'required|string'
-        ]);
+        //
         // Consulta para obtener todos los estudiantes y el docente del grupo
         $datosGrupo = DB::table('estudiantesgrupos')
             ->join('grupo', 'estudiantesgrupos.idGrupo', '=', 'grupo.idGrupo')
@@ -201,7 +198,7 @@ class GrupoController extends Controller
 
         // Si no se encuentran resultados
         if (empty(trim($valor))) {
-            return $this->obtenerEstudiantesPorGrupo($request);
+            return $this->obtenerEstudiantesPorGrupo( $idGrupo, $gestionGrupo);
         }
 
         return response()->json($datosGrupo, 200);

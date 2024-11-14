@@ -7,8 +7,6 @@ import { getPlanificacion } from "../../../api/getPlanificacion.jsx";
 import { getNombreEmpresa } from "../../../api/getNombreEmpresa.jsx";
 import NombreEmpresa from "../../../components/infoEmpresa/nombreEmpresa.jsx";
 import BaseUI from "../../../components/baseUI/baseUI.jsx";
-import Loading from "../../../components/loading/loading.jsx";
-import Error from "../../../components/error/error.jsx";
 import EstadoPlanificacion from "../../../components/estadoPlanificacion/estadoPlanificacion.jsx";
 import Redirecting from "../../../components/redirecting/redirecting.jsx";
 import { Box, Typography } from "@mui/material";
@@ -17,6 +15,7 @@ function ModificarPlanificacion() {
   let { idEmpresa } = useParams();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState({
+    error:error,
     errorMessage: "",
     errorDetails: "",
   });
@@ -36,6 +35,7 @@ function ModificarPlanificacion() {
       } catch (error) {
         console.error("Error en la solicitud:", error.message);
         setError({
+          error:true,
           errorMessage: "Ha ocurrido un error",
           errorDetails: error.message,
         });
@@ -63,15 +63,9 @@ function ModificarPlanificacion() {
         ocultarAtras={false}
         confirmarAtras={true}
         dirBack={"/"}
+        loading={loading}
+        error={error}
       >
-        {error.errorMessage || error.errorDetails ? (
-          <Error
-            errorMessage={error.errorMessage}
-            errorDetails={error.errorDetails}
-          />
-        ) : loading ? (
-          <Loading />
-        ) : (
           <>
             <NombreEmpresa
               nombreLargo={datosEmpresa.nombreLargo}
@@ -109,7 +103,6 @@ function ModificarPlanificacion() {
               </Box>
             )}
           </>
-        )}
       </BaseUI>
     </Fragment>
   );

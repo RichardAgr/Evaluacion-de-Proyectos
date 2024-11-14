@@ -30,7 +30,7 @@ const getGruposDocentes = async () => {
 function GruposDocentes() {
   const [grupos, setGrupos] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState(false);
   const navigate = useNavigate(); // Usar useNavigate para la redirección
 
   useEffect(() => {
@@ -44,17 +44,13 @@ function GruposDocentes() {
         }
       } catch (error) {
         console.error("Error en la solicitud:", error.message);
-        setError(`Error en la solicitud: ${error.message}`);
+        setError(error);
       } finally {
         setLoading(false);
       }
     };
     fetchData();
   }, []);
-
-  if (loading) return <p>Cargando datos...</p>;
-  if (error) return <p>Error: {error}</p>;
-
   const handleMatricularse = (grupo) => {
     const url = `/homeEstudiante/inscribirGrupo/${grupo.idGrupo}`; 
     navigate(url); 
@@ -69,6 +65,8 @@ function GruposDocentes() {
         ocultarAtras={false}
         confirmarAtras={false}
         dirBack={`/`}
+        loading={loading}
+        error={{error:error}}
       >
         <DivLista>
           {grupos.map((grupo, index) => (

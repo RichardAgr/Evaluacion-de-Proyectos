@@ -1,7 +1,5 @@
 import {useState, useEffect } from 'react';
 import ListaDefinitivaN from '../../../components/listaDefinitiva/listaDefinitivaN';
-import Loading from '../../../components/loading/loading'
-import Error from '../../../components/error/error'
 const columns = [
   {
     field: 'nombreCompleto',
@@ -46,7 +44,9 @@ export default function DataTable() {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
+          
         },
+        credentials: 'include',
       });
 
       if (!response.ok) {
@@ -71,11 +71,6 @@ export default function DataTable() {
     fetchEstudiantes();
   }, []);
 
-
-  if (loading) return <Loading />;
-  if (error.error) return <Error errorMessage={error.errorMessage} errorDetails={error.errorDetails} />;
-
-
   return (
     <ListaDefinitivaN
       titulo="LISTA DE ESTUDIANTES"
@@ -88,6 +83,8 @@ export default function DataTable() {
       dirForward=""
       mensajeSearch = "Buscar Estudiante o empresa"
       nombreContador = "Estudiantes"
+      loading={loading}
+      error={error}
     /> 
   );
 }

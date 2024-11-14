@@ -7,6 +7,8 @@ function SeleccionarEmpresaVisualizar() {
       ocultarAtras={false}
       confirmarAtras={false}
       dirBack={"/"}
+      loading={false}
+      error={{error:false}}
     >
       <ListaEmpresasVisualizar />
     </BaseUI>
