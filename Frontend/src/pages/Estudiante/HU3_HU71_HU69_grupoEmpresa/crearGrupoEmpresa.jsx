@@ -20,6 +20,7 @@ const CrearGrupoEmpresa = () => {
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [isLoading, setLoading] = useState(true);
   const [error, setError] = useState({
+    error:false,
     errorMessage: "",
     errorDetails: "",
   });
@@ -40,6 +41,7 @@ const CrearGrupoEmpresa = () => {
         console.error(error);
         console.log(error); 
         setError({
+          error:true,
           errorMessage: "Ha ocurrido un error",
           errorDetails: error,
         });
@@ -119,6 +121,8 @@ const CrearGrupoEmpresa = () => {
         ocultarAtras={false}
         confirmarAtras={false}
         dirBack={`/`}
+        loading={isLoading}
+        error={error}
       >
         {isLoading !== true ? (
           <div>

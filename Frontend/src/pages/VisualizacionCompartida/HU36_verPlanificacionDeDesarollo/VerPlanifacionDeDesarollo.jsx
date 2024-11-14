@@ -3,16 +3,11 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 import InfoEmpresa from "../../../components/infoEmpresa/infoEmpresa.jsx";
 import NombreEmpresa from "../../../components/infoEmpresa/nombreEmpresa.jsx";
-import TablaNotasPlanificacion from "../../../components/tablaPlanificacionNotas/tablaPlanificacionNotas.jsx";
 import TablaPlanificacion from "../../../components/tablaPlanificacionDeDesarollo/tablaPlanificacion.jsx";
 import { getEmpresaData } from "../../../api/getEmpresa.jsx";
 import { getPlanificacion } from "../../../api/getPlanificacion.jsx";
 import BaseUI from "../../../components/baseUI/baseUI.jsx";
-import Error from "../../../components/error/error.jsx";
-import Loading from "../../../components/loading/loading.jsx";
-import Comentario from "../../../components/comentario/comentario.jsx";
 
-const loginDocente = true;
 
 function PlanificacionDeDesarollo() {
   const [empresaData, setEmpresaData] = useState(null);
@@ -54,15 +49,9 @@ function PlanificacionDeDesarollo() {
         ocultarAtras={false}
         confirmarAtras={false}
         dirBack={"/"}
+        loading={loading}
+        error={error}
       >
-        {error.errorMessage || error.errorDetails ? (
-          <Error
-            errorMessage={error.errorMessage}
-            errorDetails={error.errorDetails}
-          />
-        ) : loading ? (
-          <Loading />
-        ) : (
           <>
             {!planificacionData.aceptada ? (
               <>
@@ -102,7 +91,6 @@ function PlanificacionDeDesarollo() {
               </>
             )}
           </>
-        )}
       </BaseUI>
     </Fragment>
   );

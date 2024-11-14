@@ -16,6 +16,7 @@ const ModificarGrupoEmpresa = () => {
     const [integrantesN, setIntegrantesN] = useState([]);
     const [idRepresentanteLegal, setIdRepresentanteLegal] = useState(null);
     const [mensajeError, setMensajeError] = useState("");
+    const [error, setError] = useState(false);
     const [openModal, setOpenModal] = useState(false);
     const [selectedIntegrante, setSelectedIntegrante] = useState(null); 
     const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -38,11 +39,10 @@ const ModificarGrupoEmpresa = () => {
                 const { idEmpresa, nombreEmpresa, nombreLargo, integrantes, publicada } = data;
                 setEmpresa({ idEmpresa, nombreEmpresa, nombreLargo, publicada });
                 setIntegrantes(integrantes);
-                setLoading(false);
-    
                 if (publicada === 1) {
                     // Si la empresa está publicada, mostrar el error 403 con el nombre de la empresa
                     setMensajeError(`La empresa "${nombreEmpresa}" ya ha sido publicada.`);
+                    setError(true)
                     return; // No seguir con la carga de los datos si la empresa está publicada
                 }
     
@@ -51,6 +51,9 @@ const ModificarGrupoEmpresa = () => {
             } catch (error) {
                 console.error(error);
                 setMensajeError("Error al cargar los datos.");
+                setError(true)
+            }finally{
+                setLoading(false);
             }
         };
 
@@ -63,6 +66,7 @@ const ModificarGrupoEmpresa = () => {
                 setIntegrantesN(data);
             } catch (error) {
                 console.error(error);
+                setError(true)
                 setMensajeError("Error al cargar los datos.");
             }
         };
@@ -107,7 +111,7 @@ const ModificarGrupoEmpresa = () => {
         if (integrantes.length < 6) {
             setOpenModal(true); 
         } else {
-            setMensajeError("No puedes agregar más de 6 integrantes.");
+            setError(true)
         }
     };
 
@@ -116,6 +120,7 @@ const ModificarGrupoEmpresa = () => {
             const existe = integrantes.some(integrante => integrante.idEstudiante === selectedIntegrante.idEstudiante);
             if (existe) {
                 setMensajeError("Este integrante ya ha sido agregado.");
+                setError(true)
                 return;
             }
 
@@ -170,6 +175,8 @@ const ModificarGrupoEmpresa = () => {
                 ocultarAtras={false}
                 confirmarAtras={false}
                 dirBack={`/`}
+                loading={isLoading}
+                error={mensajeError}
             >
                 {isLoading !== true && (
                 <div style={{ display: 'grid' }}>

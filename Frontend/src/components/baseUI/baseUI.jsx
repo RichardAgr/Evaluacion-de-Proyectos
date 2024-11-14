@@ -1,10 +1,11 @@
 /* eslint-disable react/prop-types */
 import { Fragment } from 'react';
 import ButtonBackAndTitle from '../buttonBackAndTitle/buttonBackAndTitle.jsx';
-import Header from '../Header/header.jsx';
-import Footer from '../Footer/footer.jsx';
-
-function BaseUI({ children, titulo, ocultarAtras, confirmarAtras, dirBack }) {
+import Header from './Header/header.jsx';
+import Footer from './Footer/footer.jsx';
+import Loading from '../loading/loading.jsx';
+import Error from '../error/error.jsx';
+function BaseUI({ children, titulo, ocultarAtras, confirmarAtras, dirBack, loading, error }) {
   return (
     <Fragment>
       <Header />
@@ -18,7 +19,15 @@ function BaseUI({ children, titulo, ocultarAtras, confirmarAtras, dirBack }) {
           />
           <div className='pageBorder'>
             <div className='pageBorder_interior'>
-              {children}
+              {error.error?
+                <Error errorMessage={error?.errorMenssange} errorDetails={error?.errorDetails}></Error>
+                :
+                (loading?
+                  <Loading></Loading>  
+                  :
+                  children
+                )
+              }
             </div>
           </div>
         </div>

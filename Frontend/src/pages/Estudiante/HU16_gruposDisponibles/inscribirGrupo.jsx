@@ -90,24 +90,15 @@ function GrupoDescripcion() {
     setSnackbar({ ...snackbar, open: false });
   };
 
-  if (error) {
-    return (
-      <BaseUI titulo="MATRICULARSE CON UN DOCENTE" ocultarAtras={false} confirmarAtras={true} dirBack={`/`}>
-        <Box sx={{ p: 2, color: 'red' }}>{error}</Box>
-      </BaseUI>
-    );
-  }
-
-  if (loading) {
-    return (
-      <BaseUI titulo="MATRICULARSE CON UN DOCENTE" ocultarAtras={false} confirmarAtras={true} dirBack={`/`}>
-        <Box sx={{ p: 2 }}>Cargando...</Box>
-      </BaseUI>
-    );
-  }
 
   return (
-    <BaseUI titulo="MATRICULARSE CON UN DOCENTE" ocultarAtras={false} confirmarAtras={true} dirBack={`/homeEstudiante/gruposDisponibles`}>
+    <BaseUI 
+      titulo="MATRICULARSE CON UN DOCENTE" 
+      ocultarAtras={false} 
+      confirmarAtras={true} dirBack={`/homeEstudiante/gruposDisponibles`}
+      loading={loading}
+      error={{error:error}}
+    >
       <Box component="section" sx={{ p: 2, pb: 0, border: '1p' }}>
         <h1 style={{ fontSize: '25px' }}>
           {datos.apellidoPaternoDocente} {datos.apellidoMaternoDocente} {datos.nombreDocente} G{datos.numGrupo}

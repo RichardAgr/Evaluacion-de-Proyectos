@@ -9,6 +9,8 @@ function SeleccionarEmpresaPublicar() {
         ocultarAtras = {false}
         confirmarAtras = {false}
         dirBack = {'/'}
+        loading={false}
+        error={{error:false}}
       >
           <ListaEmpresasPublicar />
       </BaseUI>

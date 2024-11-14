@@ -10,10 +10,8 @@ import TablaPlanificacion from "../../../components/tablaPlanificacionDeDesaroll
 import { getEmpresaData } from "../../../api/getEmpresa.jsx";
 import { getPlanificacion } from "../../../api/getPlanificacion.jsx";
 import InfoSnackbar from "../../../components/infoSnackbar/infoSnackbar.jsx";
-import Loading from "../../../components/loading/loading.jsx";
 import NombreEmpresa from "../../../components/infoEmpresa/nombreEmpresa.jsx";
 import CuadroDialogo from "../../../components/cuadroDialogo/cuadroDialogo.jsx";
-import Redirecting from "../../../components/redirecting/redirecting.jsx";
 import { publicarPlanificacion } from "../../../api/publicarPlanificacion/publicarPlanificacion.jsx";
 
 function PublicarPlanificacion() {
@@ -23,7 +21,7 @@ function PublicarPlanificacion() {
   let { idEmpresa } = useParams();
   const [empresaData, setEmpresaData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState(false);
   const [planificacionData, setPlanificacionData] = useState({
     aceptada: false,
   });
@@ -46,7 +44,7 @@ function PublicarPlanificacion() {
         setPlanificacionData(planificacion);
       } catch (error) {
         console.error("Error en la solicitud:", error.message);
-        setError(`Error en la solicitud: ${error.message}`);
+        setError(true);
       } finally {
         setLoading(false);
       }
@@ -92,12 +90,9 @@ function PublicarPlanificacion() {
         ocultarAtras={false}
         confirmarAtras={true}
         dirBack={"/"}
+        loading={loading}
+        error={error}
       >
-        {error ? (
-          <p>Error: {error}</p>
-        ) : loading ? (
-          <Loading />
-        ) : (
           <>
             <NombreEmpresa
               nombreLargo={empresaData.nombreLargo}
@@ -159,7 +154,7 @@ function PublicarPlanificacion() {
               </>
             )}
           </>
-        )}
+        
       </BaseUI>
     </Fragment>
   );
