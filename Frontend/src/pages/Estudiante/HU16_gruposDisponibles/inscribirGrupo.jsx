@@ -46,7 +46,7 @@ function GrupoDescripcion() {
   const { idGrupo } = useParams();
   const [codigo, setCodigo] = useState('');
   const [datos, setDatos] = useState(null); 
-  const [error, setError] = useState(null);
+  const [error, setError] = useState(false);
   const [loading, setLoading] = useState(true);
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
 
@@ -101,11 +101,11 @@ function GrupoDescripcion() {
     >
       <Box component="section" sx={{ p: 2, pb: 0, border: '1p' }}>
         <h1 style={{ fontSize: '25px' }}>
-          {datos.apellidoPaternoDocente} {datos.apellidoMaternoDocente} {datos.nombreDocente} G{datos.numGrupo}
+          {datos?.apellidoPaternoDocente} {datos?.apellidoMaternoDocente} {datos?.nombreDocente} G{datos?.numGrupo}
         </h1>
       </Box>
       <Box component="section" m={2.8} minHeight={150} sx={{ p: 0.5, fontSize: '0.8rem' }}>
-        {datos.descripcion}
+        {datos?.descripcion}
       </Box>
       <Stack direction='row' spacing={2} pt={8} sx={{ justifyContent: "center", alignItems: "center" }}>
         <Box>Código de Acceso:</Box>
