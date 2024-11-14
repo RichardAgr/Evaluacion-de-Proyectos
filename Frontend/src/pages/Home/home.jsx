@@ -1,5 +1,5 @@
-import Footer from "../../components/Footer/footer.jsx";
-import Header from "../../components/Header/header.jsx";
+import Footer from "../../components/baseUI/Footer/footer.jsx";
+import Header from "../../components/baseUI/Header/header.jsx";
 import { useNavigate } from "react-router-dom";
 import { Container, Grid2, Button, Typography, Paper } from "@mui/material";
 

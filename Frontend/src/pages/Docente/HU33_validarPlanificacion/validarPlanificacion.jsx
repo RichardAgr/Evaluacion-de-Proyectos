@@ -28,6 +28,7 @@ function ValidarPlanificacion() {
   const [nota, setNota] = useState("");
   const navigate = useNavigate();
   const [error, setError] = useState({
+    error:false,
     errorMessage: "",
     errorDetails: "",
   });
@@ -73,6 +74,7 @@ function ValidarPlanificacion() {
       } catch (error) {
         console.error("Error en la solicitud:", error.message);
         setError({
+          error:true,
           errorMessage: "Ha ocurrido un error",
           errorDetails: error.message,
         });
@@ -165,15 +167,10 @@ function ValidarPlanificacion() {
         ocultarAtras={false}
         confirmarAtras={true}
         dirBack={"/"}
+        loading={loading}
+        error={error}
       >
-        {error.errorMessage || error.errorDetails ? (
-          <Error
-            errorMessage={error.errorMessage}
-            errorDetails={error.errorDetails}
-          />
-        ) : loading ? (
-          <Loading />
-        ) : (
+        (
           <>
             <NombreEmpresa
               nombreLargo={empresaData.nombreLargo}
@@ -259,7 +256,7 @@ function ValidarPlanificacion() {
               </>
             )}
           </>
-        )}
+        )
       </BaseUI>
     </Fragment>
   );

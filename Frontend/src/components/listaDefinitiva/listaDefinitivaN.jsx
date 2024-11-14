@@ -20,7 +20,9 @@ function ListaDefinitivaN({
     dirBack, 
     dirForward,
     mensajeSearch,
-    nombreContador 
+    nombreContador,
+    loading,
+    error
 }) {
     
     const paginationModel = { page: 0, pageSize: 10 };
@@ -35,26 +37,24 @@ function ListaDefinitivaN({
     const [notFound, setNotFound] = useState('');
 
 
-    const filtered = datosTabla.filter((data) => {
-        const nombreCompleto = `${data.nombreEstudiante} ${data.apellidoPaternoEstudiante} ${data.apellidoMaternoEstudiante}`.toLowerCase();
-        const nombreEmpresa = data.nombreEmpresa?.toLowerCase() || '';
+    const filtered = (datosTabla || []).filter((data) => {
+        const nombreCompleto = `${data.nombreEstudiante || ''} ${data.apellidoPaternoEstudiante || ''} ${data.apellidoMaternoEstudiante || ''}`.toLowerCase();
+        const nombreEmpresa = (data.nombreEmpresa || '').toLowerCase();
         return (
-            nombreCompleto?.includes(searchValue.toLowerCase()) || nombreEmpresa?.includes(searchValue.toLowerCase())
-            || data.totalEstudiantes?.toString().includes(searchValue)
+            nombreCompleto.includes(searchValue.toLowerCase()) || 
+            nombreEmpresa.includes(searchValue.toLowerCase()) ||
+            (data.totalEstudiantes ? data.totalEstudiantes.toString().includes(searchValue) : false)
         );
     });
 
     useEffect(() => {
-        if (filtered.length === 0) {
-            if (searchValue.trim() === '') {
-                setNotFound('');
-            } else {
-                setNotFound('No se encontraron resultados que coincidan con la búsqueda');
-            }
+        if ((filtered || []).length === 0) {
+            setNotFound(searchValue.trim() === '' ? '' : 'No se encontraron resultados que coincidan con la búsqueda');
         } else {
             setNotFound('');
         }
     }, [searchValue, filtered.length]);
+    
 
 
     return (
@@ -63,6 +63,8 @@ function ListaDefinitivaN({
             ocultarAtras={ocultarAtras}
             confirmarAtras={confirmarAtras}
             dirBack={dirBack}
+            loading={loading}
+            error={error}
         >
             hola
             {cabezeraTitulo&&
@@ -85,7 +87,7 @@ function ListaDefinitivaN({
                         <SearchIcon  className='search_icon'/>
                     </div>
                     <div className='search_input'>
-                        <h2 className='search_input--h2'>{nombreContador?datosTabla.length+" "+nombreContador : ""}</h2>
+                        <h2 className='search_input--h2'>{nombreContador?datosTabla?.length+" "+nombreContador : ""}</h2>
                     </div>
                 </div>
                 <TableContainer component={Paper}>

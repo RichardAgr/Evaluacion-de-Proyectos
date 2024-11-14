@@ -1,6 +1,4 @@
 import { useState, useEffect } from 'react';
-import Loading from '../../../../components/loading/loading';
-import Error from '../../../../components/error/error';
 import ListaDefinitivaN from '../../../../components/listaDefinitiva/listaDefinitivaN';
 import { useParams } from 'react-router-dom';
 const columns = [
@@ -44,9 +42,6 @@ function ListaCali() {
         };
         fetchData();
       }, []);
-      
-    if (loading) return <Loading />;
-    if (error.error) return <Error errorMessage={error.errorMessage} errorDetails={error.errorDetails} />;
 
   return (
     <ListaDefinitivaN
@@ -60,6 +55,8 @@ function ListaCali() {
       dirForward= {`/homeGrupo/${idGrupo}/empresa/calificaciones/`}
       mensajeSearch = "Buscar empresa"
       nombreContador = "Empresas"
+      loading={loading}
+      error={error}
     />
   );
 }

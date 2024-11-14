@@ -12,6 +12,8 @@ const TareaPage = () => {
       ocultarAtras={false}
       confirmarAtras={true}
       dirBack={`/grupoDocente/calificarTareasEmpresas/empresas/sprints/` + idSprint + `/` + idEmpresa + `/` + idDocente + `/semanas`}
+      loading={false}
+      error={{error:false}}
     >
       <CalificarTarea idTarea={idTarea} /> {/* Pasar idTarea a CalificarTarea */}
     </BaseUI>

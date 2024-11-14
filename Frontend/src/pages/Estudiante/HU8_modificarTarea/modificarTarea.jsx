@@ -168,13 +168,6 @@ function ModificarTarea() {
     }
   };
   
-  
-  if (loading) {
-    return <Loading></Loading>
-  }
-  if(!error){
-    return <Error errorMessage={error.errorMessage} errorDetails={error.errorDetails}></Error>
-  }
   return (
     <Fragment>
       <BaseUI
@@ -182,6 +175,8 @@ function ModificarTarea() {
         ocultarAtras={false}
         confirmarAtras={true}
         dirBack={`/${idEstudiante}/homeGrupoE/${idGrupo}/sprintE/${idSprint}`}
+        loading={loading}
+        error={error}
       >
         <ContainerdropZone>
           <form autoComplete="off" onSubmit={handleSubmit}>

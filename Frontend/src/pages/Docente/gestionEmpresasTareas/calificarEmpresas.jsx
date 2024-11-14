@@ -57,15 +57,14 @@ const CalificarEmpresas = () => {
     navigate(`/grupoDocente/calificarTareasEmpresas/empresas/${idEmpresa}/${idDocente}/sprints`); // Cambiar la ruta según tu implementación
   };
 
-  if (loading) return <p>Cargando datos...</p>;
-  if (error) return <p>{error}</p>;
-
   return (
     <BaseUI
       titulo={'CALIFICAR TAREAS'}
       ocultarAtras={false}
       confirmarAtras={false}
       dirBack={'/'} 
+      loading={loading}
+      error={{error:error}}
     >
       <DocenteInfoWrapper>
         <DocenteName>{`Docente: ${docente}`}</DocenteName>
