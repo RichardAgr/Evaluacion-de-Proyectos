@@ -77,11 +77,11 @@ function Nav() {
           element={<ModificarListaTareas />}
         />
         <Route
-          path="/homeEstudiante/gruposDisponibles"
+          path="/homeEstudiante/gruposDisponibles/:idEstudiante"
           element={<GruposDisponibles />}
         />
         <Route
-          path="/homeEstudiante/inscribirGrupo/:idGrupo"
+          path="/homeEstudiante/inscribirGrupo/:idEstudiante/:idGrupo"
           element={<InscribirGrupo />}
         />
       </Routes>

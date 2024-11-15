@@ -9,6 +9,8 @@ use App\Models\Semana;
 use App\Models\Tarea;
 use App\Models\NotaSprint;
 use App\Models\Sprint;
+use App\Models\Grupo;
+use App\Models\EstudiantesGrupos;
 use App\Models\EstudiantesEmpresas;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
@@ -307,5 +309,15 @@ class joaquinController extends Controller{
         return response()->json($response);
     }
         
+
+
+    public function estaMatriculado($idEstudiante){
+
+        $existeRelacion = EstudiantesGrupos::where('idEstudiante', $idEstudiante)->exists();
+        return response()->json([
+            'enGrupo' => $existeRelacion ? 1 : 0,
+        ]);
+
+    }
 
 }

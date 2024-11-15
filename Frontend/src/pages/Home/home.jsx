@@ -78,7 +78,7 @@ function Home() {
 
     {
       label: "Grupos Disponibles",
-      onClick: () => navigate("/homeEstudiante/gruposDisponibles"),
+      onClick: () => navigate("/homeEstudiante/gruposDisponibles/33"),
     },
 
     {
