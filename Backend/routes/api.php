@@ -146,8 +146,9 @@ Route::post('/docente/darDeBaja', [GrupoController::class, 'darDeBaja']);
 Route::post('/tarea/{idTarea}/guardar', [TareaController::class, 'update']);
 
 // ---Realizar evaluacion semanal
-Route::post('/docente/evaluacion', [NotaSprintController::class, 'realizarEvaluacionSemana']);
+Route::post('/docente/evaluacion', [SprintController::class, 'crearOActualizarNotaTarea']);
 
+Route::get('/docente/notasTarea/{idEmpresa}', [SprintController::class, 'getNotasTareasEstudiantes']);
 
 
 Route::get('/empresa/{idEmpresa}/sprint/{idSprint}/tareas', [SprintController::class, 'getSprintEvaluar']);

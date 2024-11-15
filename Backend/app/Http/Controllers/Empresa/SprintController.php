@@ -13,6 +13,7 @@ use App\Models\Tarea;
 use App\Models\Empresa;
 use App\Models\NotaSprint;
 use App\Http\Controllers\Controller;
+use App\Models\NotaTareasEstudiante;
 
 class SprintController extends Controller
 {
@@ -613,6 +614,71 @@ class SprintController extends Controller
         });
     
         return response()->json($resultadoAgrupado);
+    }
+
+    public function crearOActualizarNotaTarea(Request $request)
+    {
+        // Valida que el request sea un array y que cada elemento contenga los campos requeridos
+        $validatedData = $request->validate([
+            '*.idEstudiante' => 'required|integer',
+            '*.idSprint' => 'required|integer',
+            '*.comentario' => 'required|string',
+        ]);
+
+        // Itera sobre cada elemento del array validado
+        foreach ($validatedData as $item) {
+            // Guarda o actualiza los datos utilizando Eloquent
+            notatareasestudiante::create([
+                'estudiante_idEstudiante' => $item['idEstudiante'],
+                'sprint_idSprint' => $item['idSprint'],
+                'comentario' => $item['comentario'],
+            ]);
+        }
+
+        return response()->json(['message' => 'Comentarios guardados exitosamente'], 201);
+    }
+    public function getNotasTareasEstudiantes($empresa)
+    {
+    
+        $result = DB::table('notatareasestudiante as nte')
+            ->join('estudiante as e', 'e.idEstudiante', '=', 'nte.estudiante_idEstudiante')
+            ->join('sprint as sp', 'sp.idSprint', '=', 'nte.sprint_idSprint')
+            ->join('semana as s', 's.idSprint', '=', 'sp.idSprint')
+            ->join('planificacion as p', 'p.idPlanificacion', '=', 'sp.idPlanificacion')
+            ->select(
+                's.numeroSemana',
+                'sp.numeroSprint',
+                'e.idEstudiante',
+                'e.NombreEstudiante',
+                'e.primerApellido',
+                'e.segundoApellido',
+                'sp.idSprint',
+                'nte.comentario'
+            )
+            ->where('p.idEmpresa', $empresa)
+            ->get();
+
+        // Agrupar los resultados por 'numeroSemana' y 'numeroSprint'
+        $groupedResults = $result->groupBy(function ($item) {
+            return $item->numeroSemana . '-' . $item->numeroSprint;
+        })->map(function ($items, $key) {
+            $firstItem = $items->first();
+            list($numeroSemana, $numeroSprint) = explode('-', $key);
+            return [
+                'numeroSemana' => (int) $numeroSemana,
+                'numeroSprint' => (int) $numeroSprint,
+                'notasTareasEstudiante' => $items->map(function ($item) {
+                    return [
+                        'idEstudiante' => $item->idEstudiante,
+                        'nombreEstudiante' => "{$item->NombreEstudiante} {$item->primerApellido} {$item->segundoApellido}",
+                        'idSprint' => $item->idSprint,
+                        'comentario' => $item->comentario,
+                    ];
+                })->values()
+            ];
+        })->values();
+
+        return response()->json($groupedResults, 200);
     }
     
 }
