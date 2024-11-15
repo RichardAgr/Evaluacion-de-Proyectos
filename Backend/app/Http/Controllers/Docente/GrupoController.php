@@ -191,7 +191,7 @@ class GrupoController extends Controller
 
         // Si no se encuentran resultados
         if (empty(trim($valor))) {
-            return $this->obtenerEstudiantesPorGrupo( $idGrupo, $gestionGrupo);
+            return $this->obtenerEstudiantesPorGrupo( $request);
         }
 
         return response()->json($datosGrupo, 200);
