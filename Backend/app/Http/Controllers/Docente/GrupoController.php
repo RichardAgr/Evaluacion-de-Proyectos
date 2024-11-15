@@ -34,43 +34,36 @@ class GrupoController extends Controller
         return response()->json($gruposDocentes, 200);
     }
 
-    public function obtenerEstudiantesPorGrupo( $idGrupo, $gestionGrupo)
-    {
-        //
-        // Consulta para obtener todos los estudiantes y el docente del grupo
-        $datosGrupo = DB::table('estudiantesgrupos')
-            ->join('grupo', 'estudiantesgrupos.idGrupo', '=', 'grupo.idGrupo')
-            ->join('estudiante', 'estudiantesgrupos.idEstudiante', '=', 'estudiante.idEstudiante')
-            ->join('docente', 'grupo.idDocente', '=', 'docente.idDocente')
-            ->leftjoin('estudiantesempresas AS ee', 'estudiantesgrupos.idEstudiante', '=', 'ee.idEstudiante')
-            ->leftjoin('empresa AS emp', 'ee.idEmpresa', '=', 'emp.idEmpresa')
-            ->where('grupo.idGrupo',"=",   $request -> idGrupo)
-            ->where('grupo.gestionGrupo',$request -> gestionGrupo)
-            ->join('estudiantesempresas AS ee', 'estudiantesgrupos.idEstudiante', '=', 'ee.idEstudiante')
-            ->join('empresa AS emp', 'ee.idEmpresa', '=', 'emp.idEmpresa')
-            ->where('grupo.idGrupo', "=",   $request->idGrupo)
-            ->where('grupo.gestionGrupo', $request->gestionGrupo)
-            ->select(
-                'grupo.numGrupo',
-                'estudiante.idEstudiante as id',
-                'estudiante.nombreEstudiante as nombreEstudiante',
-                'estudiante.primerApellido as apellidoPaternoEstudiante',
-                'estudiante.segundoApellido as apellidoMaternoEstudiante',
-                'emp.nombreEmpresa'
-                /*'docente.nombreDocente as nombreDocente', 
-                'docente.primerApellido as apellidoPaternoDocente', 
-                'docente.segundoApellido as apellidoMaternoDocente'*/
-            )
-            ->orderBy('estudiante.nombreEstudiante')
-            ->get();
+    public function obtenerEstudiantesPorGrupo($idGrupo, $gestionGrupo)
+{
+    // Consulta para obtener todos los estudiantes y el docente del grupo
+    $datosGrupo = DB::table('estudiantesgrupos')
+        ->join('grupo', 'estudiantesgrupos.idGrupo', '=', 'grupo.idGrupo')
+        ->join('estudiante', 'estudiantesgrupos.idEstudiante', '=', 'estudiante.idEstudiante')
+        ->join('docente', 'grupo.idDocente', '=', 'docente.idDocente')
+        ->leftJoin('estudiantesempresas AS ee', 'estudiantesgrupos.idEstudiante', '=', 'ee.idEstudiante')
+        ->leftJoin('empresa AS emp', 'ee.idEmpresa', '=', 'emp.idEmpresa')
+        ->where('grupo.idGrupo', '=', $idGrupo)
+        ->where('grupo.gestionGrupo', '=', $gestionGrupo)
+        ->select(
+            'grupo.numGrupo',
+            'estudiante.idEstudiante as id',
+            'estudiante.nombreEstudiante as nombreEstudiante',
+            'estudiante.primerApellido as apellidoPaternoEstudiante',
+            'estudiante.segundoApellido as apellidoMaternoEstudiante',
+            'emp.nombreEmpresa'
+        )
+        ->orderBy('estudiante.nombreEstudiante')
+        ->get();
 
-        // Si no se encuentran resultados
-        if ($datosGrupo->isEmpty()) {
-            return response()->json(['message' => 'No se encontraron estudiantes o docentes para este grupo.'], 404);
-        }
-
-        return response()->json($datosGrupo, 200);
+    // Si no se encuentran resultados
+    if ($datosGrupo->isEmpty()) {
+        return response()->json(['message' => 'No se encontraron estudiantes o docentes para este grupo.'], 404);
     }
+
+    return response()->json($datosGrupo, 200);
+}
+
 
     public function obtenerEmpresasPorGrupoYDocente(Request $request)
     {

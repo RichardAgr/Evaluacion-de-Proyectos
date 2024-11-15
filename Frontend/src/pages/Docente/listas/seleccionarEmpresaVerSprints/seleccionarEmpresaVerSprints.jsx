@@ -7,6 +7,8 @@ function SeleccionarEmpresaVerSprints() {
       ocultarAtras={false}
       confirmarAtras={false}
       dirBack={"/"}
+      loading={false}
+      error={{error:false}}
     >
       <ListaEmpresasVerSprints />
     </BaseUI>

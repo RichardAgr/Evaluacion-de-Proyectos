@@ -10,7 +10,7 @@ const VisualizarSprintEst = ({titulo, navigateLink, bloquearFechas, verSprints})
     const { idSprint, idEmpresa } = useParams(); 
     const [sprints, setSprints] = useState([]);
     const [sprintOpen, setSprintOpen] = useState([])
-    const [error, setError] = useState(null);
+    const [error, setError] = useState(false);
     const [loading, setLoading] = useState(true); 
     useEffect(() => {
         const fetchSprintData = async () => {
@@ -22,10 +22,9 @@ const VisualizarSprintEst = ({titulo, navigateLink, bloquearFechas, verSprints})
                 console.log('hola')
                 console.log(newOpens)
                 setSprintOpen(newOpens)
-                setError(null);
             } catch (err) {
                 console.error('Error en la solicitud:', err);
-                setError(err.message); 
+                setError(true); 
             } finally {
                 setLoading(false); 
             }
@@ -70,9 +69,9 @@ const VisualizarSprintEst = ({titulo, navigateLink, bloquearFechas, verSprints})
                 ocultarAtras={false}
                 confirmarAtras={false}
                 dirBack={'/'}
+                loading={loading}
+                error={error}
             >
-                {loading && <p>Cargando semanas...</p>}
-                {error && <p style={{ color: 'red' }}>{error}</p>}
                 {sprints.map((sprint, i)=>{
                     return (
                     <div key={i}>
