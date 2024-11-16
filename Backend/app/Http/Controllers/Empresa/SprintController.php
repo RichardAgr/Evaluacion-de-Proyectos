@@ -629,7 +629,7 @@ class SprintController extends Controller
         // Itera sobre cada elemento del array validado
         foreach ($validatedData as $item) {
             // Guarda o actualiza los datos utilizando Eloquent
-            comentariotarea::create([
+            comentariotarea::updateOrCreate([
                 'estudiante_idEstudiante' => $item['idEstudiante'],
                 'semana_idSemana' => $item['idSemana'],
                 'comentario' => $item['comentario'],
