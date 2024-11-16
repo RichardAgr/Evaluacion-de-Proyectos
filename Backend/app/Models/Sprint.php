@@ -35,8 +35,5 @@ class Sprint extends Model
         return $this->hasMany(Entregables::class, 'idSprint', 'idSprint');
     }
 
-    public function notaTareasEstudiante()
-    {
-        return $this->hasMany(NotaTareasEstudiante::class, 'sprint_idSprint');
-    }
+    
 }

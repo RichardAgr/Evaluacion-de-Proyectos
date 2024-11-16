@@ -26,4 +26,9 @@ class Semana extends Model
     {
         return $this->belongsTo(Sprint::class, 'idSprint');
     }
+
+    public function comentarioTarea()
+    {
+        return $this->hasMany(ComentarioTarea::class, 'semana_idSemana');
+    }
 }

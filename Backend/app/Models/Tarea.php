@@ -25,6 +25,12 @@ class Tarea extends Model
     {
         return $this->belongsToMany(Estudiante::class, 'tareasestudiantes', 'idTarea', 'idEstudiante');
     }
+    // Modelo Tarea
+
+    public function tareaEstudiantes()
+    {
+        return $this->hasMany(TareaEstudiante::class, 'idTarea');
+    }
 
     public function archivos()
     {

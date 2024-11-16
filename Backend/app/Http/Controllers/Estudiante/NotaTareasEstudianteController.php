@@ -3,18 +3,18 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\NotaTareasEstudiante;
+use App\Models\ComentarioTarea;
 use App\Models\Estudiante;
 use App\Models\Sprint;
 
-class NotaTareasEstudianteController extends Controller
+class ComentarioTareaController extends Controller
 {
     /**
      * Muestra una lista de las notas de tareas de estudiantes.
      */
     public function index()
     {
-        $notas = NotaTareasEstudiante::with(['estudiante', 'sprint'])->get();
+        $notas = ComentarioTarea::with(['estudiante', 'sprint'])->get();
         return response()->json($notas);
     }
 
@@ -40,7 +40,7 @@ class NotaTareasEstudianteController extends Controller
             'comentario' => 'required|string|max:200',
         ]);
 
-        $nota = NotaTareasEstudiante::create($request->all());
+        $nota = ComentarioTarea::create($request->all());
         return response()->json($nota, 201);
     }
 
@@ -49,7 +49,7 @@ class NotaTareasEstudianteController extends Controller
      */
     public function show($id)
     {
-        $nota = NotaTareasEstudiante::with(['estudiante', 'sprint'])->findOrFail($id);
+        $nota = ComentarioTarea::with(['estudiante', 'sprint'])->findOrFail($id);
         return response()->json($nota);
     }
 
@@ -58,7 +58,7 @@ class NotaTareasEstudianteController extends Controller
      */
     public function edit($id)
     {
-        $nota = NotaTareasEstudiante::findOrFail($id);
+        $nota = ComentarioTarea::findOrFail($id);
         $estudiantes = Estudiante::all();
         $sprints = Sprint::all();
         return response()->json(compact('nota', 'estudiantes', 'sprints'));
@@ -75,7 +75,7 @@ class NotaTareasEstudianteController extends Controller
             'comentario' => 'required|string|max:200',
         ]);
 
-        $nota = NotaTareasEstudiante::findOrFail($id);
+        $nota = ComentarioTarea::findOrFail($id);
         $nota->update($request->all());
         return response()->json($nota);
     }
@@ -85,7 +85,7 @@ class NotaTareasEstudianteController extends Controller
      */
     public function destroy($id)
     {
-        $nota = NotaTareasEstudiante::findOrFail($id);
+        $nota = ComentarioTarea::findOrFail($id);
         $nota->delete();
         return response()->json(['message' => 'Nota eliminada con éxito']);
     }

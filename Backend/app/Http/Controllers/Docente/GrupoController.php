@@ -34,27 +34,33 @@ class GrupoController extends Controller
         return response()->json($gruposDocentes, 200);
     }
 
-    public function obtenerEstudiantesPorGrupo($idGrupo, $gestionGrupo)
-{
-    // Consulta para obtener todos los estudiantes y el docente del grupo
-    $datosGrupo = DB::table('estudiantesgrupos')
-        ->join('grupo', 'estudiantesgrupos.idGrupo', '=', 'grupo.idGrupo')
-        ->join('estudiante', 'estudiantesgrupos.idEstudiante', '=', 'estudiante.idEstudiante')
-        ->join('docente', 'grupo.idDocente', '=', 'docente.idDocente')
-        ->leftJoin('estudiantesempresas AS ee', 'estudiantesgrupos.idEstudiante', '=', 'ee.idEstudiante')
-        ->leftJoin('empresa AS emp', 'ee.idEmpresa', '=', 'emp.idEmpresa')
-        ->where('grupo.idGrupo', '=', $idGrupo)
-        ->where('grupo.gestionGrupo', '=', $gestionGrupo)
-        ->select(
-            'grupo.numGrupo',
-            'estudiante.idEstudiante as id',
-            'estudiante.nombreEstudiante as nombreEstudiante',
-            'estudiante.primerApellido as apellidoPaternoEstudiante',
-            'estudiante.segundoApellido as apellidoMaternoEstudiante',
-            'emp.nombreEmpresa'
-        )
-        ->orderBy('estudiante.nombreEstudiante')
-        ->get();
+    public function obtenerEstudiantesPorGrupo(Request $request)
+    {
+        //
+        $idGrupo = $request->input('idGrupo');
+        $gestionGrupo = $request->input('gestionGrupo');
+        // Consulta para obtener todos los estudiantes y el docente del grupo
+        $datosGrupo = DB::table('estudiantesgrupos')
+            ->join('grupo', 'estudiantesgrupos.idGrupo', '=', 'grupo.idGrupo')
+            ->join('estudiante', 'estudiantesgrupos.idEstudiante', '=', 'estudiante.idEstudiante')
+            ->join('docente', 'grupo.idDocente', '=', 'docente.idDocente')
+            ->leftjoin('estudiantesempresas AS ee', 'estudiantesgrupos.idEstudiante', '=', 'ee.idEstudiante')
+            ->leftjoin('empresa AS emp', 'ee.idEmpresa', '=', 'emp.idEmpresa')
+            ->where('grupo.idGrupo',"=",   $idGrupo)
+            ->where('grupo.gestionGrupo',$gestionGrupo)
+            ->select(
+                'grupo.numGrupo',
+                'estudiante.idEstudiante as id',
+                'estudiante.nombreEstudiante as nombreEstudiante',
+                'estudiante.primerApellido as apellidoPaternoEstudiante',
+                'estudiante.segundoApellido as apellidoMaternoEstudiante',
+                'emp.nombreEmpresa'
+                /*'docente.nombreDocente as nombreDocente', 
+                'docente.primerApellido as apellidoPaternoDocente', 
+                'docente.segundoApellido as apellidoMaternoDocente'*/
+            )
+            ->orderBy('estudiante.nombreEstudiante')
+            ->get();
 
     // Si no se encuentran resultados
     if ($datosGrupo->isEmpty()) {

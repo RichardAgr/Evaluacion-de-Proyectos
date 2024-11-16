@@ -16,7 +16,7 @@ use App\Http\Controllers\Estudiante\EstudiantesEmpresasController;
 use App\Http\Controllers\Empresa\NotaSprintController;
 use App\Http\Controllers\Empresa\EntregablesController;
 use App\Http\Controllers\Empresa\EmpresaController;
-
+use App\Http\Controllers\ComentarioTareaController;
 use App\Http\Controllers\joaquinController;
 
 //============================= GET EMPRESA ================================
@@ -146,8 +146,9 @@ Route::post('/docente/darDeBaja', [GrupoController::class, 'darDeBaja']);
 Route::post('/tarea/{idTarea}/guardar', [TareaController::class, 'update']);
 
 // ---Realizar evaluacion semanal
-Route::post('/docente/evaluacion', [NotaSprintController::class, 'realizarEvaluacionSemana']);
+Route::post('/docente/evaluacion', [SprintController::class, 'crearOActualizarNotaTarea']);
 
+Route::get('/docente/notasTarea/{idEmpresa}', [SprintController::class, 'getNotasTareasEstudiantes']);
 
 
 Route::get('/empresa/{idEmpresa}/sprint/{idSprint}/tareas', [SprintController::class, 'getSprintEvaluar']);
@@ -191,3 +192,10 @@ Route::post('/crearGrupoEmpresa/paso3/{idEstudiante}',[joaquinController::class,
 Route::get('/estaMatriculado/{idEstudiante}',[joaquinController::class, 'estaMatriculado']);
 
 Route::get('prueba/notaSprintV2/{idEmpresa}/{semana}', [joaquinController::class, 'notaSprintV2']);
+
+
+
+// ============================  Funciones ComentarioTareaController  ====================================
+Route::get('/seguimientoSemanal/{idEmpresa}/SprintHastaSemanalActual', [ComentarioTareaController::class, 'seguimientoSemanalEmpresaHastaSemanaActual']);
+Route::get('/seguimientoSemanalComentarios/semanaElegida/{idSemana}', [ComentarioTareaController::class, 'seguimientoSemanaElegidaComentarios']);
+Route::post('/seguimientoSemanal/actualizarComentarios',[ComentarioTareaController::class, 'agregarComentarios']);

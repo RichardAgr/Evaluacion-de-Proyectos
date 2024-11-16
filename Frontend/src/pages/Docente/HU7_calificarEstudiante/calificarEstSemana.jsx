@@ -10,8 +10,6 @@ import {
     TableRow,
     Paper,
     Box,
-    CircularProgress,
-    Typography,
 } from "@mui/material";
 
 function CalificarEstSemana() {
