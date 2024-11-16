@@ -17,7 +17,6 @@ import DecisionButtons from "../../../components/Buttons/decisionButtons.jsx";
 import InfoSnackbar from "../../../components/infoSnackbar/infoSnackbar.jsx";
 import {
   getTareasSemana,
-  updateTareasSemana,
 } from "../../../api/validarTareas/tareas.jsx";
 
 export default function ModificarListaTareas() {
@@ -82,9 +81,12 @@ export default function ModificarListaTareas() {
         const newTasks = tasks.filter((task, i) => i !== index)
         const eliminada = tasks[index].idTarea;
         if(eliminada !== -1){
-          setTasksEliminadas([...tasksEliminadas, eliminada])
+          const newE = [...tasksEliminadas, {idTarea:eliminada}]
+          setTasksEliminadas(newE)
         }
+        console.log(eliminada)
         setTasks(newTasks);
+        console.log(tasksEliminadas)
         setCuadroDialogo({ ...cuadroDialogo, open: false });
       },
     });
@@ -144,13 +146,26 @@ export default function ModificarListaTareas() {
       return
     }
     try {
-      const result = await updateTareasSemana(
-        idEmpresa,
-        idSprint,
-        idSemana,
-        tasks
+      const response = await fetch(
+        `http://localhost:8000/api/estudiante/crearListaTareas`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            numeroSemana: Number(idSemana),
+            numeroSprint:Number(idSprint),
+            empresaID:Number(idEmpresa),
+            tareas: tasks
+          }),
+        }
       );
-      setSnackbar({ open: true, message: result.message, severity: "success" });
+  
+      if (!response.ok) {
+        throw new Error("Error al actualizar las tareas");
+      }
+      setSnackbar({ open: true, message:'Se Guardo la lista de tareas correctamente', severity: "success" });
     } catch (error) {
       console.log(error)
       setSnackbar({
@@ -158,6 +173,36 @@ export default function ModificarListaTareas() {
         message: "Error al guardar las tareas",
         severity: "error",
       });
+    }
+    if(tasksEliminadas.length > 0){
+      try {
+        const response = await fetch(
+          `http://localhost:8000/api/estudiante/eliminarTareas`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              numeroSemana: Number(idSemana),
+              numeroSprint:Number(idSprint),
+              idEmpresa:Number(idEmpresa),
+              tareas: tasksEliminadas
+            }),
+          }
+        );
+    
+        if (!response.ok) {
+          throw new Error("Error al eliminar las tareas");
+        }
+      } catch (error) {
+        console.log(error)
+        setSnackbar({
+          open: true,
+          message: "Error al Eliminar las tareas",
+          severity: "error",
+        });
+      }
     }
     setCuadroDialogo({ ...cuadroDialogo, open: false });
   };

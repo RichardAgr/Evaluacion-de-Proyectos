@@ -6,20 +6,28 @@ use App\Models\ComentarioTarea;
 
 class ComentarioTareaSeeder extends Seeder
 {
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
     public function run()
     {
-        ComentarioTarea::create([
-            'estudiante_idEstudiante' => 1, // Reemplaza con IDs existentes
-            'semana_idSemana' => 1,
-            'comentario' => 'Buen desempeño en las tareas.',
-        ]);
+        $data = [
+            [
+                'estudiante_idEstudiante' => 2,
+                'semana_idSemana' => 1,
+                'comentario' => 'Este es un comentario de ejemplo para el estudiante 1.',
+            ],
+            [
+                'estudiante_idEstudiante' => 5,
+                'semana_idSemana' => 1,
+                'comentario' => 'Este es otro comentario para el estudiante 2.',
+            ]
+        ];
 
-        ComentarioTarea::create([
-            'estudiante_idEstudiante' => 2,
-            'semana_idSemana' => 1,
-            'comentario' => 'Debe mejorar su participación.',
-        ]);
-
-        // Agrega más registros según sea necesario
+        foreach ($data as $item) {
+            ComentarioTarea::create($item);
+        }
     }
 }

@@ -6,23 +6,37 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateComentarioTareaTable extends Migration
 {
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
     public function up()
     {
         Schema::create('comentarioTarea', function (Blueprint $table) {
-            // Definir las columnas
-            $table->unsignedBigInteger('estudiante_idEstudiante');
-            $table->unsignedBigInteger('semana_idSemana');
-            $table->string('comentario', 255);
+            $table->unsignedBigInteger('estudiante_idEstudiante'); // Clave foránea hacia estudiantes.idEstudiante
+            $table->unsignedBigInteger('semana_idSemana');         // Clave foránea hacia semanas.idSemana
+            $table->text('comentario');                            // Comentario
 
-            // Claves foráneas
-            $table->foreign('estudiante_idEstudiante')->references('idEstudiante')->on('estudiante')->onDelete('cascade');
-            $table->foreign('semana_idSemana')->references('idSemana')->on('semana')->onDelete('cascade');
-
-            // Definir clave primaria compuesta
+            // Clave primaria compuesta
             $table->primary(['estudiante_idEstudiante', 'semana_idSemana']);
+
+            // Relaciones
+            $table->foreign('estudiante_idEstudiante')
+                ->references('idEstudiante')->on('estudiante')
+                ->onDelete('cascade'); // Borra comentarios al eliminar estudiante
+
+            $table->foreign('semana_idSemana')
+                ->references('idSemana')->on('semana')
+                ->onDelete('cascade'); // Borra comentarios al eliminar semana
         });
     }
 
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
     public function down()
     {
         Schema::dropIfExists('comentarioTarea');

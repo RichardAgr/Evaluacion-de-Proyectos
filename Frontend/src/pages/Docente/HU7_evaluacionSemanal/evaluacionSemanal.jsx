@@ -99,10 +99,12 @@ const EvaluarHito = () => {
         loading={loading}
         error={{error:error}}
       >
+        
             <NombreEmpresa
               nombreCorto={empresa.nombreCorto}
               nombreLargo={empresa.nombreLargo}
             />
+        <h2>SPRINT {idSprint} - SEMANA {idSemana}    </h2>
             {data2 !== undefined && comentarios !== undefined && <TablaEvaluacionSemanal sprint={data2} comenta={comentarios}/>} 
       </BaseUI>
       <InfoSnackbar

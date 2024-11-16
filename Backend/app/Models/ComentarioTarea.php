@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -9,7 +10,6 @@ class ComentarioTarea extends Model
     use HasFactory;
 
     protected $table = 'comentarioTarea';
-    public $incrementing = false;
     public $timestamps = false;
 
     protected $fillable = [
@@ -17,29 +17,55 @@ class ComentarioTarea extends Model
         'semana_idSemana',
         'comentario',
     ];
-    
 
-    // Definir la clave primaria como combinación de dos columnas
-    protected $primaryKey = ['estudiante_idEstudiante', 'semana_idSemana'];
-    public $keyType = 'array';
+    // Indicar que no hay claves incrementales (sin columna "id" autoincremental)
+    public $incrementing = false;
 
-    protected $attributesMap = [
-        'idEstudiante' => 'estudiante_idEstudiante',
-        'idSemana' => 'semana_idSemana',
-    ];
-    
-    // Sobrescribe el método de asignación masiva
-    public function setAttribute($key, $value)
+    /**
+     * Encuentra un registro por claves primarias compuestas.
+     *
+     * @param int $idEstudiante
+     * @param int $idSemana
+     * @return ComentarioTarea|null
+     */
+    public static function findByCompositeKey($idEstudiante, $idSemana)
     {
-        $key = $this->attributesMap[$key] ?? $key;
-        parent::setAttribute($key, $value);
+        return self::where('estudiante_idEstudiante', $idEstudiante)
+            ->where('semana_idSemana', $idSemana)
+            ->first();
     }
 
+    /**
+     * Crea o actualiza un registro basado en claves primarias compuestas.
+     *
+     * @param array $data
+     * @return void
+     */
+    public static function createOrUpdate($data)
+    {
+        // Encuentra el registro existente
+        $record = self::findByCompositeKey($data['estudiante_idEstudiante'], $data['semana_idSemana']);
+
+        if ($record) {
+            // Actualiza el registro si ya existe
+            $record->update(['comentario' => $data['comentario']]);
+        } else {
+            // Crea un nuevo registro si no existe
+            self::create($data);
+        }
+    }
+
+    /**
+     * Relación con el modelo Estudiante.
+     */
     public function estudiante()
     {
         return $this->belongsTo(Estudiante::class, 'estudiante_idEstudiante');
     }
 
+    /**
+     * Relación con el modelo Semana.
+     */
     public function semana()
     {
         return $this->belongsTo(Semana::class, 'semana_idSemana');

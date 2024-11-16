@@ -616,28 +616,25 @@ class SprintController extends Controller
     
         return response()->json($resultadoAgrupado);
     }
-
     public function crearOActualizarNotaTarea(Request $request)
     {
-        // Valida que el request sea un array y que cada elemento contenga los campos requeridos
         $validatedData = $request->validate([
             '*.idEstudiante' => 'required|integer',
             '*.idSemana' => 'required|integer',
             '*.comentario' => 'required|string',
         ]);
-
-        // Itera sobre cada elemento del array validado
-        foreach ($validatedData as $item) {
-            // Guarda o actualiza los datos utilizando Eloquent
-            comentariotarea::updateOrCreate([
-                'estudiante_idEstudiante' => $item['idEstudiante'],
-                'semana_idSemana' => $item['idSemana'],
-                'comentario' => $item['comentario'],
+    
+        foreach ($request->all() as $comentarioData) {
+            ComentarioTarea::createOrUpdate([
+                'estudiante_idEstudiante' => $comentarioData['idEstudiante'],
+                'semana_idSemana' => $comentarioData['idSemana'],
+                'comentario' => $comentarioData['comentario'],
             ]);
         }
-
+    
         return response()->json(['message' => 'Comentarios guardados exitosamente'], 201);
     }
+    
     public function getNotasTareasEstudiantes($empresa)
     {
     
@@ -680,6 +677,23 @@ class SprintController extends Controller
         })->values();
 
         return response()->json($groupedResults, 200);
+    }
+
+    public function guardarComentarios(Request $request)
+    {
+        foreach ($request->all() as $comentarioData) {
+            ComentarioTarea::updateOrCreate(
+                [
+                    'estudiante_idEstudiante' => $comentarioData['idEstudiante'],
+                    'semana_idSemana' => $comentarioData['idSemana'],
+                ],
+                [
+                    'comentario' => $comentarioData['comentario'],
+                ]
+            );
+        }
+
+        return response()->json(['message' => 'Comentarios guardados exitosamente'], 200);
     }
     
 }
