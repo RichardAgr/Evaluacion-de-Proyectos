@@ -189,5 +189,6 @@ Route::post('/crearGrupoEmpresa/paso1',[joaquinController::class, 'crearEmpresa'
 Route::put('/crearGrupoEmpresa/paso2/{idEmpresa}',[joaquinController::class, 'actualizarIntegrantes']);
 Route::post('/crearGrupoEmpresa/paso3/{idEstudiante}',[joaquinController::class, 'publicarEmpresaPorEstudiante']);
 
+Route::get('/estaMatriculado/{idEstudiante}',[joaquinController::class, 'estaMatriculado']);
 
 Route::get('prueba/notaSprintV2/{idEmpresa}/{semana}', [joaquinController::class, 'notaSprintV2']);

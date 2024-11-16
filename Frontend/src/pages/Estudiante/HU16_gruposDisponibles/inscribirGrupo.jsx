@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import BaseUI from '../../../components/baseUI/baseUI.jsx';
 import { styled, Box, Button, Stack, Snackbar } from '@mui/material';
 import MuiAlert from '@mui/material/Alert';
@@ -43,12 +44,13 @@ const enviarClave = async (idGrupo, clave, idEstudiante) => {
 
 
 function GrupoDescripcion() {
-  const { idGrupo } = useParams();
+  const { idGrupo,idEstudiante } = useParams();
   const [codigo, setCodigo] = useState('');
   const [datos, setDatos] = useState(null); 
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(true);
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -67,15 +69,23 @@ function GrupoDescripcion() {
   const validarCodigo = async () => {
   
       try {
-        const idEstudiante = "33";
         const response = await enviarClave(idGrupo, codigo, idEstudiante);
   
         if (response.status === 200) {
           setSnackbar({ open: true, message: 'Se matriculó correctamente', severity: 'success' });
+          setTimeout(() => {
+            setSnackbar(prevState => ({ ...prevState, open: false }));
+            navigate('/');
+          }, 2500);
+
         } else if(response.status === 201) {
           setSnackbar({ open: true, message:'Código de Acceso inválido.', severity: 'error' });
         }else {
           setSnackbar({ open: true, message: response.message || 'Error al matricularse', severity: 'error' });
+          setTimeout(() => {
+            setSnackbar(prevState => ({ ...prevState, open: false }));
+            navigate('/');
+          }, 2500);
         }       
       } catch (error) {
         setSnackbar({ open: true, message: 'Error al matricularse', severity: 'error' });
@@ -92,13 +102,7 @@ function GrupoDescripcion() {
 
 
   return (
-    <BaseUI 
-      titulo="MATRICULARSE CON UN DOCENTE" 
-      ocultarAtras={false} 
-      confirmarAtras={true} dirBack={`/homeEstudiante/gruposDisponibles`}
-      loading={loading}
-      error={{error:error}}
-    >
+    <BaseUI titulo="MATRICULARSE CON UN DOCENTE" ocultarAtras={false} confirmarAtras={true} dirBack={`/homeEstudiante/gruposDisponibles/${idEstudiante}`}>
       <Box component="section" sx={{ p: 2, pb: 0, border: '1p' }}>
         <h1 style={{ fontSize: '25px' }}>
           {datos?.apellidoPaternoDocente} {datos?.apellidoMaternoDocente} {datos?.nombreDocente} G{datos?.numGrupo}
