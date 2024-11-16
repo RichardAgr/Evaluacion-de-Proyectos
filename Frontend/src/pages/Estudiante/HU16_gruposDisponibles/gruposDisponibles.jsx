@@ -50,6 +50,7 @@ function GruposDocentes() {
   const [grupos, setGrupos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [isMatriculado,setIsMatriculado] =useState();
   const navigate = useNavigate(); // Usar useNavigate para la redirección
 
   useEffect(() => {
