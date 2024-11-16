@@ -26,7 +26,6 @@ class ComentarioTareaController extends Controller
 
         return response()->json($comentarios);
     }
-
     public function agregarComentarios(Request $request)
     {
         // Validación del array de comentarios
@@ -36,38 +35,48 @@ class ComentarioTareaController extends Controller
             'comentarios.*.semana_idSemana' => 'required|exists:semana,idSemana',
             'comentarios.*.comentario' => 'required|string|max:255',
         ]);
-
+    
         $comentariosGuardados = [];
-
+    
+        // Iterar sobre el array de comentarios
         foreach ($validated['comentarios'] as $comentarioData) {
             // Verificar si ya existe un comentario para el estudiante y semana especificados
-            $comentario = ComentarioTarea::
-                    where('estudiante_idEstudiante', $comentarioData['estudiante_idEstudiante'])
-                ->where('semana_idSemana', $comentarioData['semana_idSemana'])
-                ->first();
-
+            $comentario = ComentarioTarea::where('estudiante_idEstudiante', $comentarioData['estudiante_idEstudiante'])
+                                        ->where('semana_idSemana', $comentarioData['semana_idSemana'])
+                                        ->first();
+    
             if ($comentario) {
                 // Si el comentario ya existe y es diferente, actualizarlo
                 try {
-                    $comentario->update([
-                        'comentario' => $comentarioData['comentario'],
-                    ]);
+                    if ($comentario->comentario !== $comentarioData['comentario']) {
+                        $comentario->update([
+                            'comentario' => $comentarioData['comentario'],
+                        ]);
+                        $comentariosGuardados[] = $comentario; // Guardamos el comentario actualizado
+                    } else {
+                        $comentariosGuardados[] = $comentario; // No hubo cambio
+                    }
                 } catch (\Exception $e) {
-                    return response()->json(['error' => $e->getMessage()], 400);
-                }                
+                    return response()->json(['error' => 'Error al actualizar el comentario: ' . $e->getMessage()], 400);
+                }
             } else {
                 // Si el comentario no existe, crearlo
-                $comentario = ComentarioTarea::create([
-                    'estudiante_idEstudiante' => $comentarioData['estudiante_idEstudiante'],
-                    'semana_idSemana' => $comentarioData['semana_idSemana'],
-                    'comentario' => $comentarioData['comentario'],
-                ]);
-                $comentariosGuardados[] = $comentario;
+                try {
+                    $comentario = ComentarioTarea::create([
+                        'estudiante_idEstudiante' => $comentarioData['estudiante_idEstudiante'],
+                        'semana_idSemana' => $comentarioData['semana_idSemana'],
+                        'comentario' => $comentarioData['comentario'],
+                    ]);
+                    $comentariosGuardados[] = $comentario; // Guardamos el comentario creado
+                } catch (\Exception $e) {
+                    return response()->json(['error' => 'Error al crear el comentario: ' . $e->getMessage()], 400);
+                }
             }
         }
-
-        return response()->json(['message' => 'Comentarios procesados exitosamente', 'data' => $comentariosGuardados]);
+    
+        return response()->json(['message' => 'Comentarios procesados exitosamente', 'data' => $comentariosGuardados], 200);
     }
+    
 
 
 

@@ -69,7 +69,7 @@ export default function ModificarListaTareas() {
 
   const handleAddTask = () => {
     if(tasks.length > 30) return;
-    setTasks([...tasks, { idTarea: null, nombreTarea: `Nueva tarea ${tasks.length+1}` }]);
+    setTasks([...tasks, { idTarea: -1, nombreTarea: `Nueva tarea ${tasks.length+1}` }]);
     setErrorTexto([...errorTexto, false])
   };
 
@@ -80,8 +80,10 @@ export default function ModificarListaTareas() {
       description: "Esta acción eliminará la tarea seleccionada. ¿Estás seguro?",
       onConfirm: () => {
         const newTasks = tasks.filter((task, i) => i !== index)
-        const eliminada = tasks[index];
-        setTasksEliminadas([...tasksEliminadas, eliminada])
+        const eliminada = tasks[index].idTarea;
+        if(eliminada !== -1){
+          setTasksEliminadas([...tasksEliminadas, eliminada])
+        }
         setTasks(newTasks);
         setCuadroDialogo({ ...cuadroDialogo, open: false });
       },
