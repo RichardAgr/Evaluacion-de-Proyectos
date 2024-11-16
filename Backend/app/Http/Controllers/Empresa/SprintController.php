@@ -14,6 +14,7 @@ use App\Models\Empresa;
 use App\Models\NotaSprint;
 use App\Http\Controllers\Controller;
 use App\Models\NotaTareasEstudiante;
+use App\Models\ComentarioTarea;
 
 class SprintController extends Controller
 {
@@ -621,16 +622,16 @@ class SprintController extends Controller
         // Valida que el request sea un array y que cada elemento contenga los campos requeridos
         $validatedData = $request->validate([
             '*.idEstudiante' => 'required|integer',
-            '*.idSprint' => 'required|integer',
+            '*.idSemana' => 'required|integer',
             '*.comentario' => 'required|string',
         ]);
 
         // Itera sobre cada elemento del array validado
         foreach ($validatedData as $item) {
             // Guarda o actualiza los datos utilizando Eloquent
-            notatareasestudiante::create([
+            comentariotarea::create([
                 'estudiante_idEstudiante' => $item['idEstudiante'],
-                'sprint_idSprint' => $item['idSprint'],
+                'semana_idSemana' => $item['idSemana'],
                 'comentario' => $item['comentario'],
             ]);
         }
@@ -640,7 +641,7 @@ class SprintController extends Controller
     public function getNotasTareasEstudiantes($empresa)
     {
     
-        $result = DB::table('notatareasestudiante as nte')
+        $result = DB::table('comentariotarea as nte')
             ->join('estudiante as e', 'e.idEstudiante', '=', 'nte.estudiante_idEstudiante')
             ->join('sprint as sp', 'sp.idSprint', '=', 'nte.sprint_idSprint')
             ->join('semana as s', 's.idSprint', '=', 'sp.idSprint')
@@ -667,7 +668,7 @@ class SprintController extends Controller
             return [
                 'numeroSemana' => (int) $numeroSemana,
                 'numeroSprint' => (int) $numeroSprint,
-                'notasTareasEstudiante' => $items->map(function ($item) {
+                'comentariotarea' => $items->map(function ($item) {
                     return [
                         'idEstudiante' => $item->idEstudiante,
                         'nombreEstudiante' => "{$item->NombreEstudiante} {$item->primerApellido} {$item->segundoApellido}",
