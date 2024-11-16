@@ -14,11 +14,11 @@ class SprintSeeder extends Seeder
     public function run(): void
     {
         $planificaciones = DB::table('planificacion')
-            ->whereIn('idPlanificacion', [1])
+            ->whereIn('idPlanificacion', [1,2,3])
             ->pluck('idPlanificacion');
-// *las p
+
         foreach ($planificaciones as $idPlanificacion) {
-            $startDate = Carbon::now()->addDays(rand(1, 30));
+            $startDate = Carbon::now()->subDays(rand(1, 30));
             $totalCobro = 100.00;
             $sprints = rand(3, 6); // Número aleatorio de sprints entre 3 y 6
             $cobros = [];
@@ -44,7 +44,7 @@ class SprintSeeder extends Seeder
             // Mezclar los cobros para que el último no sea siempre el que ajusta
             shuffle($cobros);
 
-            // * Insertar los Sprints en la base de datos
+            // Insertar los Sprints en la base de datos
             for ($i = 0; $i < $sprints; $i++) {
                 DB::table('sprint')->insert([
                     'idPlanificacion' => $idPlanificacion,
@@ -53,8 +53,8 @@ class SprintSeeder extends Seeder
                     'fechaFin' => $startDate->copy()->addDays(14),
                     'cobro' => $cobros[$i],
                     'fechaEntrega' => $startDate->copy()->addDays(15),
-                    'comentario' => $this->generateRandomComment(),
-                    'nota' => $this->generateRandomNote(),
+                    'comentario' => $idPlanificacion == 1 ? $this->generateRandomComment() : null,
+                    'nota' => $idPlanificacion == 1 ? $this->generateRandomNote() : null,
                 ]);
 
                 $startDate->addDays(15);
@@ -65,9 +65,9 @@ class SprintSeeder extends Seeder
     /**
      * Generate a random comment.
      *
-     * @return string|null
+     * @return string
      */
-    private function generateRandomComment(): ?string
+    private function generateRandomComment(): string
     {
         $comments = [
             "Buen progreso en este sprint.",
@@ -83,12 +83,11 @@ class SprintSeeder extends Seeder
     /**
      * Generate a random note.
      *
-     * @return int|null
+     * @return int
      */
-    private function generateRandomNote(): ?int
+    private function generateRandomNote(): int
     {
-
-        // Generar una nota aleatoria entre 1 y 10
+        // Generar una nota aleatoria entre 1 y 100
         return rand(1, 100);
     }
 }
