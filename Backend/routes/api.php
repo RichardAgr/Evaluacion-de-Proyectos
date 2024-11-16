@@ -192,3 +192,8 @@ Route::post('/crearGrupoEmpresa/paso3/{idEstudiante}',[joaquinController::class,
 Route::get('/estaMatriculado/{idEstudiante}',[joaquinController::class, 'estaMatriculado']);
 
 Route::get('prueba/notaSprintV2/{idEmpresa}/{semana}', [joaquinController::class, 'notaSprintV2']);
+
+Route::post('/estudiante/crearListaTareas',[TareaController::class, 'createOrUpdateTareas']);
+
+Route::post('/estudiante/eliminarTareas',[TareaController::class, 'deleteTareas']);
+

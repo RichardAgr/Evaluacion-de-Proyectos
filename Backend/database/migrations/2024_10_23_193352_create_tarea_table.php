@@ -24,7 +24,7 @@ class CreateTareaTable extends Migration
                 ->on('semana')
                 ->onDelete('cascade');
                 
-            $table->dateTime('fechaEntrega');
+            $table->dateTime('fechaEntrega')->nullable();
             $table->charset = 'utf8mb4';
             $table->collation = 'utf8mb4_general_ci';
             $table->engine = 'InnoDB';
