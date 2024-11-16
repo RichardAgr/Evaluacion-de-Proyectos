@@ -2,19 +2,18 @@ import { Fragment, useState, useEffect } from "react";
 import BaseUI from "../../../components/baseUI/baseUI.jsx";
 import TablaEvaluacionSemanal from "../../../components/tablaEvaluacionSemanal/tablaEvaluacionSemanal.jsx";
 import NombreEmpresa from "../../../components/infoEmpresa/nombreEmpresa.jsx";
-import { getNotas } from "../../../api/getSprintsEmpresa.jsx";
-import Loading from "../../../components/loading/loading.jsx";
+import { getSeguimiento } from "../../../api/seguimientoSemanal.jsx";
 import InfoSnackbar from "../../../components/infoSnackbar/infoSnackbar.jsx";
-import { Filter } from "@mui/icons-material";
 
 const EvaluarHito = () => {
   const idEmpresa = 1;
-  const semana = 1 ; 
-
+  const idSprint = 1;
+  const idSemana =1; 
   const [data2, setData] = useState([]);
+  const [comentarios, setComentarios] = useState([]);
   const [empresa, setNombreEmpresa] = useState({});
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState(false);
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",
@@ -24,23 +23,18 @@ const EvaluarHito = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await getNotas(idEmpresa, semana);
-        
-        const dataFormato = Object.keys(data).map(clave => {
-          console.log(`${clave}: ${data[clave]}`);
-          return {
-              nombreCompleto: clave,
-              comentario: data[clave].comentario,
-              nota: data[clave].nota,
-              tareas: data[clave].tareas,
-              idEstudiante: data[clave].id
-          };
-      });
-        setData(dataFormato);
-        console.log(dataFormato);
+        const data = await getSeguimiento(idEmpresa);
+        const sprintElegido = (data.filter((sprint)=> sprint.idSprint===idSprint))[0]
+        const semanaElegida = (sprintElegido.semanas.filter((semana)=>semana.idSemana === idSemana))[0]
+        const newData = {
+          idSprint:sprintElegido.idSprint,
+          numSprint:sprintElegido.numSprint,
+          semana: semanaElegida
+        }
+        setData(newData);
       } catch (error) {
         console.error("Error en la solicitud:", error);
-        setError("Error al obtener los datos del sprint");
+        setError(true);
         setSnackbar({
           open: true,
           message: "Error al obtener los datos del sprint",
@@ -63,18 +57,37 @@ const EvaluarHito = () => {
           if (!response.ok) throw new Error('Error al obtener los datos de la empresa');
 
           const data = await response.json();
-          console.log(data)    
+          
           setNombreEmpresa({ nombreCorto: data.nombreEmpresa, nombreLargo: data.nombreLargo });
       } catch (error) {
           console.error('Error en la solicitud:', error);
-          setError(error.message);
+          setError(true);
       }finally{
         setLoading(false)
       }
-  };
+    };
+    const getComentarios = async () => {
+      try {
+          const response = await fetch(`http://localhost:8000/api/seguimientoSemanalComentarios/semanaElegida/${idSemana}`, {
+              method: 'GET',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+          });
+          const responseData = await response.json();
+          setComentarios(responseData)
+          if (!response.ok) throw new Error('Error al obtener los datos de los comentarios');
+      } catch (error) {
+          console.error('Error en la solicitud:', error);
+          setError(true);
+      }finally{
+        setLoading(false)
+      }
+    };
+    getComentarios();
     getNombreEmpresa();
     fetchData();
-  }, [idEmpresa, semana]);
+  }, [idEmpresa]);
 
   return (
     <Fragment>
@@ -90,7 +103,7 @@ const EvaluarHito = () => {
               nombreCorto={empresa.nombreCorto}
               nombreLargo={empresa.nombreLargo}
             />
-            {data2.length > 0 && <TablaEvaluacionSemanal estudiantes={data2} idSprint={semana} />} 
+            {data2 !== undefined && comentarios !== undefined && <TablaEvaluacionSemanal sprint={data2} comenta={comentarios}/>} 
       </BaseUI>
       <InfoSnackbar
         openSnackbar={snackbar.open}

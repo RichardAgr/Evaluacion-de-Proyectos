@@ -1,4 +1,5 @@
-import { useState } from "react";
+/* eslint-disable react/prop-types */
+import { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -13,12 +14,36 @@ import DecisionButtons from "../Buttons/decisionButtons";
 import CuadroDialogo from "../cuadroDialogo/cuadroDialogo";
 import InfoSnackbar from "../infoSnackbar/infoSnackbar";
 import { useParams } from "react-router-dom";
-import { updateSprintEvaluar } from "../../api/getSprintsEmpresa";
 
-const TablaEvaluacionSemanal = ({ estudiantes, idSprint }) => {
-  const { idEmpresa } = useParams();
-  //const [notas, setNotas] = useState(estudiantes.map(est => est.nota || ""));
-  const [comentarios, setComentarios] = useState(estudiantes.map(est => est.comentario || ""));
+const TablaEvaluacionSemanal = ({ sprint, comenta }) => {
+  const { idEmpresa} = useParams();
+  const [comentarios, setComentarios] = useState([]);
+  useEffect(() => {
+    console.log(comenta)
+    const iniciarComentarios = (
+      
+      sprint?.semana?.tareasEstudiante && Array.isArray(sprint.semana.tareasEstudiante)
+        ? sprint.semana.tareasEstudiante.map((estudiante) => ({
+            semana_idSemana: sprint.semana.idSemana,
+            estudiante_idEstudiante: estudiante.idEstudiante,
+            comentario: ''
+          }))
+        : []
+    );
+  
+    const newComentarios = iniciarComentarios.map((comentario) => {
+      const indice = comenta.findIndex(estudiante => estudiante.estudiante_idEstudiante === comentario.estudiante_idEstudiante);
+      
+      // Si no se encuentra el estudiante en "comenta", se conserva el valor de "comentario" vacío
+      return indice === -1 ? comentario : {...comentario, comentario: comenta[indice].comentario};
+    });
+  
+    console.log(newComentarios);
+    setComentarios(newComentarios);
+  }, [comenta]); // Asegúrate de que sprint también esté en las dependencias
+  
+
+
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",
@@ -57,28 +82,7 @@ const TablaEvaluacionSemanal = ({ estudiantes, idSprint }) => {
   };
 
   const handleSubmit = async () => {
-    try {
-      setCuadroDialogo({ ...cuadroDialogo, open: false });
-      const response = await updateSprintEvaluar(idEmpresa, idSprint, estudiantes.map((est, idx) => ({
-        idEmpresa: idEmpresa,
-        idEstudiante: est.idEstudiante,
-        idSprint: idSprint,
-        comentario: comentarios[idx],
-      })));
-
-      setSnackbar({
-        open: true,
-        message: response.message,
-        severity: "success",
-      });
-    } catch (error) {
-      console.log(error)
-      setSnackbar({
-        open: true,
-        message: "Error al guardar la evaluación",
-        severity: "error",
-      });
-    }
+    //
   };
 
   return (
@@ -89,36 +93,26 @@ const TablaEvaluacionSemanal = ({ estudiantes, idSprint }) => {
             <TableRow>
               <TableCell>Integrante</TableCell>
               <TableCell>Tareas</TableCell>
-              {/* <TableCell>Nota (1-100)</TableCell> */}
               <TableCell>Comentario</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {estudiantes?.map((estudiante, index) => (
+            {sprint.semana?.tareasEstudiante?.map((estudiante, index) => (
               <TableRow key={index}>
-                <TableCell>{estudiante.nombreCompleto}</TableCell>
+                <TableCell>{estudiante.nombre}</TableCell>
                 <TableCell>
                   <ul>
                     {estudiante?.tareas.map((tarea, idx) => (
-                      <li key={idx}>{tarea}</li>
+                      <li key={idx}>{tarea.nombreTarea}</li>
                     ))}
                   </ul>
                 </TableCell>
-                {/* <TableCell>
-                  <TextField
-                    type="number"
-                    value={notas[index]}
-                    onChange={(e) => handleNotaChange(index, e.target.value)}
-                    inputProps={{ min: 1, max: 100 }}
-                    size="small"
-                  />
-                </TableCell> */}
                 <TableCell>
                   <TextField
                     multiline
                     rows={3}
-                    defaultValue={estudiante.comentario[index]}
-                    value={comentarios[index]}
+                    defaultValue={comentarios[index]?.comentario || ''}
+                    value={comentarios[index]?.comentario || ''}
                     onChange={(e) => handleComentarioChange(index, e.target.value)}
                     fullWidth
                     placeholder="Ingrese un comentario"

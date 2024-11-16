@@ -1,7 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import HomeDocente from "../pages/Docente/homeDocente/homeDocente.jsx";
 import HomeGrupoDocente from "../pages/Docente/homeGrupoDocente/homeGrupoDocente.jsx";
-import EvaluacionSemanal from "../pages/Docente/evaluacionSemanal/evaluacionSemanal.jsx";
+import EvaluacionSemanal from "../pages/Docente/HU7_evaluacionSemanal/evaluacionSemanal.jsx";
 import CalificarEstSemana from "../pages/Docente/HU7_calificarEstudiante/calificarEstSemana.jsx";
 import CalificarSprint from "../pages/Docente/HU34_calificarSprint/calificarSprintU.jsx";
 import ListaSprints from "../pages/Docente/HU34_calificarSprint/listaSprints.jsx";
@@ -24,6 +24,11 @@ function Nav() {
     <Routes>
       {/** ROUTES JHON*/}
       
+
+      <Route
+        path="/evaluacionSemanal/empresa/:idEmpresa/sprint/:idSprint"
+        element={<EvaluacionSemanal />}
+      />
       <Route
         path="/homeGrupo/:idGrupo/listaEmpresaCalificarSprints"
         element={<ListaEmpresaSprints />}
@@ -106,10 +111,6 @@ function Nav() {
       <Route
         path="/validarPlanificacion/empresa/:idEmpresa"
         element={<ValidarPlanificacion />}
-      />
-      <Route
-        path="/evaluacionSemanal/empresa/:idEmpresa/sprint/:idSprint"
-        element={<EvaluacionSemanal />}
       />
     </Routes>
   );

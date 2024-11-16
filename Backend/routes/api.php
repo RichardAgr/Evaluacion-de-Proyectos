@@ -196,4 +196,6 @@ Route::get('prueba/notaSprintV2/{idEmpresa}/{semana}', [joaquinController::class
 
 
 // ============================  Funciones ComentarioTareaController  ====================================
-Route::get('/seguimientoSemanal/{idEmpresa}/semanaActual', [ComentarioTareaController::class, 'seguimientoSemanalEmpresaHastaSemanaActual']);
+Route::get('/seguimientoSemanal/{idEmpresa}/SprintHastaSemanalActual', [ComentarioTareaController::class, 'seguimientoSemanalEmpresaHastaSemanaActual']);
+Route::get('/seguimientoSemanalComentarios/semanaElegida/{idSemana}', [ComentarioTareaController::class, 'seguimientoSemanaElegidaComentarios']);
+Route::post('/seguimientoSemanal/actualizarComentarios',[ComentarioTareaController::class, 'agregarComentarios']);
