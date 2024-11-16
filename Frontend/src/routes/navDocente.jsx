@@ -7,12 +7,12 @@ import CalificarSprint from "../pages/Docente/HU34_calificarSprint/calificarSpri
 import ListaSprints from "../pages/Docente/HU34_calificarSprint/listaSprints.jsx";
 import ObtenerEstudiantesPorGrupo from "../pages/Docente/HU32_listaEstudiantes/listaEstudiantes.jsx";
 import EmpresasPorDocente from "../pages/Docente/HU31_listaEmpresas/listaEmpresaPorDocente.jsx";
-import SeleccionarEmpresaVisualizar from "../pages/VisualizacionCompartida/verPlanificacionDeDesarollo/seleccionarEmpresaVisualizar/seleccionarEmpresaVisualizar.jsx";
+import SeleccionarEmpresaVisualizar from "../pages/VisualizacionCompartida/HU36_verPlanificacionDeDesarollo/seleccionarEmpresaVisualizar/seleccionarEmpresaVisualizar.jsx";
 import SeleccionarEmpresaModificar from "../pages/Docente/AHUCompartidasDelEstudiante/seleccionarEmpresaModificar/seleccionarEmpresaModificar.jsx";
 import SeleccionarEmpresaPublicar from "../pages/Docente/AHUCompartidasDelEstudiante/seleccionarEmpresaPublicar/seleccionarEmpresaPublicar.jsx";
 import SeleccionarEmpresaVerSprints from "../pages/Docente/listas/seleccionarEmpresaVerSprints/seleccionarEmpresaVerSprints.jsx";
-import SeleccionarEmpresaSinValidar from "../pages/Docente/validarPlanificacion/seleccionarEmpresaSinValidar/seleccionarEmpresaSinValidar.jsx";
-import ValidarPlanificacion from "../pages/Docente/validarPlanificacion/validarPlanificacion.jsx";
+import SeleccionarEmpresaSinValidar from "../pages/Docente/HU33_validarPlanificacion/seleccionarEmpresaSinValidar/seleccionarEmpresaSinValidar.jsx";
+import ValidarPlanificacion from "../pages/Docente/HU33_validarPlanificacion/validarPlanificacion.jsx";
 //import ListaVerPlanificacion from "../pages/Docente/listas/seleccionarEmpresaVisualizar/seleccionarEmpresaVisualizar.jsx";
 import ListaEmpresaSprints from "../pages/Docente/HU34_calificarSprint/listaEmpresaSprints.jsx";
 

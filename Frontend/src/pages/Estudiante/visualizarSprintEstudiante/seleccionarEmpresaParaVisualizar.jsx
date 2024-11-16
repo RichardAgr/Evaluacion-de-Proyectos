@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import Loading from '../../../components/loading/loading';
 import Error from '../../../components/error/error';
 import ListaDefinitivaN from '../../../components/listaDefinitiva/listaDefinitivaN';
 
@@ -49,9 +48,6 @@ function EmpresasParaTareas() {
     fetchEmpresas();
   }, []);
 
-  if (loading) return <Loading />;
-  if (error.error) return <Error errorMessage={error.errorMessage} errorDetails={error.errorDetails} />;
-
   return (
     <ListaDefinitivaN
       titulo="SELECCIONE UNA EMPRESA PARA VISUALIZAR SUS TAREAS"
@@ -64,6 +60,8 @@ function EmpresasParaTareas() {
       dirForward= {`/${idEstudiante}/homeGrupoE/${idGrupo}/empresas/`}
       mensajeSearch="Buscar Empresa"
       nombreContador="Empresas"
+      loading={loading}
+      error={error}
     />
   );
 }

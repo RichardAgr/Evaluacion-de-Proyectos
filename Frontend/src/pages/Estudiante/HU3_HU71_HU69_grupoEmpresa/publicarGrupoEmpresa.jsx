@@ -13,6 +13,7 @@ const PublicarGrupoEmpresa = () => {
     const [integrantes, setIntegrantes] = useState([]);
     const [idRepresentanteLegal, setIdRepresentanteLegal] = useState(null);
     const [mensajeError, setMensajeError] = useState("");
+    const [error, setError] = useState(false)
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState("");
     const [isLoading,setLoading]= useState(true);
@@ -29,7 +30,7 @@ const PublicarGrupoEmpresa = () => {
                 setEmpresa({ idEmpresa, nombreEmpresa, nombreLargo, publicada });
                 setIntegrantes(integrantes);
                 setIdRepresentanteLegal(integrantes[0]?.idEstudiante);
-                setLoading(false);
+                
                 if (publicada === 1) {
                     // Si la empresa está publicada, mostrar el error 403 con el nombre de la empresa
                     setMensajeError(`La empresa "${nombreEmpresa}" ya ha sido publicada.`);
@@ -39,7 +40,10 @@ const PublicarGrupoEmpresa = () => {
     
             } catch (error) {
                 console.error(error);
+                setError(true);
                 setMensajeError("Error al cargar los datos.");
+            }finally{
+                setLoading(false);
             }
         };
 
@@ -84,8 +88,10 @@ const PublicarGrupoEmpresa = () => {
                 ocultarAtras={false}
                 confirmarAtras={false}
                 dirBack={`/`}
+                loading={isLoading}
+                error={error}
             >
-                {isLoading !== true &&(
+                (
                 <div style={{ display: 'grid' }}>
                     <NombreEmpresaCompleto>
                         <Box component="section" sx={{ p: 2 }}>
@@ -158,7 +164,7 @@ const PublicarGrupoEmpresa = () => {
                         </Alert>
                     </Snackbar>
                 </div>
-                )}
+                )
             </BaseUI>
         </Fragment>
     );

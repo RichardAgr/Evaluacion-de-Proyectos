@@ -1,7 +1,6 @@
 import {useState, useEffect } from 'react';
 import ListaDefinitivaN from '../../../components/listaDefinitiva/listaDefinitivaN';
-import Loading from '../../../components/loading/loading'
-import Error from '../../../components/error/error'
+import { useParams } from 'react-router-dom';
 const columns = [
   {
     field: 'nombreCompleto',
@@ -31,26 +30,21 @@ export default function DataTable() {
     errorMessage: "",
     errorDetails: "",
   });
-  const idGrupo = 1; 
-  const gestionGrupo = '2024-2'; 
+
+  const {idGrupo, gestionGrupo} = useParams()
 
   const fetchEstudiantes = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`http://localhost:8000/api/docente/listaEstudiantes?` +
-            new URLSearchParams({
-              idGrupo,
-              gestionGrupo,
-            }),
-          {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          
-        },
-        //credentials: 'include',
-      });
-
+      const response = await fetch(
+        `http://127.0.0.1:8000/api/grupo/estudiantes/${idGrupo}/${gestionGrupo}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
       if (!response.ok) {
         throw new Error('Error de grupo');
       }
@@ -73,11 +67,6 @@ export default function DataTable() {
     fetchEstudiantes();
   }, []);
 
-
-  if (loading) return <Loading />;
-  if (error.error) return <Error errorMessage={error.errorMessage} errorDetails={error.errorDetails} />;
-
-
   return (
     <ListaDefinitivaN
       titulo="LISTA DE ESTUDIANTES"
@@ -90,6 +79,8 @@ export default function DataTable() {
       dirForward=""
       mensajeSearch = "Buscar Estudiante o empresa"
       nombreContador = "Estudiantes"
+      loading={loading}
+      error={error}
     /> 
   );
 }

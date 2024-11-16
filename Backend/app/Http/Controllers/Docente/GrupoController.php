@@ -62,13 +62,14 @@ class GrupoController extends Controller
             ->orderBy('estudiante.nombreEstudiante')
             ->get();
 
-        // Si no se encuentran resultados
-        if ($datosGrupo->isEmpty()) {
-            return response()->json(['message' => 'No se encontraron estudiantes o docentes para este grupo.'], 404);
-        }
-
-        return response()->json($datosGrupo, 200);
+    // Si no se encuentran resultados
+    if ($datosGrupo->isEmpty()) {
+        return response()->json(['message' => 'No se encontraron estudiantes o docentes para este grupo.'], 404);
     }
+
+    return response()->json($datosGrupo, 200);
+}
+
 
     public function obtenerEmpresasPorGrupoYDocente(Request $request)
     {

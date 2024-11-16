@@ -1,20 +1,18 @@
-import React, { useState, useEffect } from "react";
+import  { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { getListaSprintsPorIdEmpresa } from "../../../../../api/visualizarSprint/visualizarSprint";
+import { getListaSprintsPorIdEmpresa } from "../../../../api/visualizarSprint/visualizarSprint";
 import {
-  Typography,
   List,
   ListItem,
   ListItemText,
-  CircularProgress,
   Box,
   Paper,
   styled,
 } from "@mui/material";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import BaseUI from "../../../../../components/baseUI/baseUI";
-import Loading from "../../../../../components/loading/loading";
-import Error from "../../../../../components/error/error";
+import BaseUI from "../../../../components/baseUI/baseUI";
+import Loading from "../../../../components/loading/loading";
+import Error from "../../../../components/error/error";
 
 // Estilos personalizados
 const StyledPaper = styled(Paper)({
@@ -86,6 +84,8 @@ function SeleccionarSprintVisualizar() {
       ocultarAtras={false}
       confirmarAtras={false}
       dirBack={`/`}
+      loading={false}
+      error={{error:false}}
     >
         {error.errorMessage || error.errorDetails ? (
         <Error

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import {
   Container,
@@ -11,15 +11,14 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
-import BaseUI from "../../../../components/baseUI/baseUI.jsx";
-import CuadroDialogo from "../../../../components/cuadroDialogo/cuadroDialogo.jsx";
-import DecisionButtons from "../../../../components/Buttons/decisionButtons.jsx";
-import InfoSnackbar from "../../../../components/infoSnackbar/infoSnackbar.jsx";
+import BaseUI from "../../../components/baseUI/baseUI.jsx";
+import CuadroDialogo from "../../../components/cuadroDialogo/cuadroDialogo.jsx";
+import DecisionButtons from "../../../components/Buttons/decisionButtons.jsx";
+import InfoSnackbar from "../../../components/infoSnackbar/infoSnackbar.jsx";
 import {
   getTareasSemana,
   updateTareasSemana,
-} from "../../../../api/validarTareas/tareas.jsx";
-import Loading from "../../../../components/loading/loading.jsx";
+} from "../../../api/validarTareas/tareas.jsx";
 
 export default function ModificarListaTareas() {
   const { idEmpresa, idSprint, idSemana } = useParams();
@@ -27,7 +26,7 @@ export default function ModificarListaTareas() {
   const [numSemana, setNumSemana] = useState(0);
   const [numSprint, setNumSprint] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState(false);
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",
@@ -135,12 +134,9 @@ export default function ModificarListaTareas() {
       ocultarAtras={false}
       confirmarAtras={false}
       dirBack="/"
+      loading={loading}
+      error={error}
     >
-      {error ? (
-        <p>Error: {error}</p>
-      ) : loading ? (
-        <Loading />
-      ) : (
         <Container maxWidth="md" sx={{ mt: 4, px: { xs: 2, sm: 3 } }}>
           <Typography
             variant="h4"
@@ -248,7 +244,6 @@ export default function ModificarListaTareas() {
             severity={snackbar.severity}
           />
         </Container>
-      )}
     </BaseUI>
   );
 }

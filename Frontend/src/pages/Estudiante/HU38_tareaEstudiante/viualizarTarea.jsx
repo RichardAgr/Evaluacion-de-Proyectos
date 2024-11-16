@@ -17,7 +17,11 @@ function VisualizarTarea() {
     const { idTarea } = useParams();
     const { idSprint } = useParams();
     const [loading, setLoading] = useState(true);
-
+    const [error, setError] = useState({
+      error: false,
+      errorMessage: "",
+      errorDetails: "",
+  });
     useEffect(() => {
       const fetchTareaData = async () => {
         try {
@@ -36,7 +40,13 @@ function VisualizarTarea() {
           setLoading(false);
         } catch (error) {
           console.error("Error al cargar la tarea:", error);
-          setLoading(false);
+          setError(
+            {
+              error: true,
+              errorMessage: "",
+              errorDetails: ""
+            }
+          )
         }
       };
   
@@ -79,6 +89,8 @@ function VisualizarTarea() {
             ocultarAtras = {false}
             confirmarAtras = {false}
             dirBack = {`/homeEstudiante/homeGrupoEstudiante/sprint/${idSprint}`}
+            loading={loading}
+            error={error}
           >
             <div>
               <div><h1>{nombreTarea}</h1></div>

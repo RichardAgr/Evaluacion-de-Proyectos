@@ -3,8 +3,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import BaseUI from '../../../components/baseUI/baseUI';
-import Loading from '../../../components/loading/loading'
-import Error from "../../../components/error/error";
 import { getSprintsEntregables } from "../../../api/getEmpresa"
 /* eslint-disable react/prop-types */
 
@@ -46,18 +44,14 @@ const ListaSprints = () => {
         console.log("click", sprint)
         navigate(`/homeGrupo/${idGrupo}/listaEmpresaCalificarSprints/${idEmpresa}/sprint/${sprint}`); 
     }
-    if (loading) {
-        return <Loading></Loading>
-    }
-    if(!error){
-        return <Error errorMessage={error.errorMessage} errorDetails={error.errorDetails}></Error>
-    }    
     return (
         <BaseUI        
             titulo={'SELECCIONE UN SPRINT PARA CALIFICAR'}
             ocultarAtras={false}
             confirmarAtras={false}
             dirBack={`/homeGrupo/${idGrupo}/listaEmpresaCalificarSprints`}
+            loading={loading}
+            error={error}
         >
         <DivLista>
             {sprints!==null? 

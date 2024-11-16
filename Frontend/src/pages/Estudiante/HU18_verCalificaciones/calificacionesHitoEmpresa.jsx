@@ -7,7 +7,7 @@ const NotaSprintTable = () => {
   const { idEmpresa } = useParams();
   const [notas, setNotas] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState(false);
   const [nombreEmpresa, setNombreEmpresa] = useState({ nombreCorto: '', nombreLargo: '' });
   useEffect(() => {
     getNombreEmpresa(idEmpresa);
@@ -48,9 +48,6 @@ const NotaSprintTable = () => {
     }
   };
 
-  if (loading) return <CircularProgress />;
-  if (error) return <div>Error: {error}</div>;
-
   const sprints = notas.sprints || [];
   const estudiantes = notas.estudiantes || [];
 
@@ -59,7 +56,9 @@ const NotaSprintTable = () => {
       titulo="VISUALIZAR CALIFICACIONES DE LA GRUPO EMPRESA"
       ocultarAtras={false}
       confirmarAtras={false}
-      dirBack="/1/homeGrupoE/1/empresa/calificaciones"
+      dirBack="/"
+      loading={loading}
+      error={error}
     >
     <NombreEmpresa nombreCorto={nombreEmpresa.nombreCorto} nombreLargo={nombreEmpresa.nombreLargo} />
     <TableContainer component={Paper}>

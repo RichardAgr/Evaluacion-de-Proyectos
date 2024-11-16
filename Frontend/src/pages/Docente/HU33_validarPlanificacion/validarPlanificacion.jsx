@@ -12,8 +12,6 @@ import { validar } from "../../../api/validarPlanificacion/validar.jsx";
 import { addRevision } from "../../../api/validarPlanificacion/addRevision.jsx";
 import InfoSnackbar from "../../../components/infoSnackbar/infoSnackbar.jsx";
 import CuadroComentario from "../../../components/cuadroComentario/cuadroComentario.jsx";
-import Loading from "../../../components/loading/loading.jsx";
-import Error from "../../../components/error/error.jsx";
 import NombreEmpresa from "../../../components/infoEmpresa/nombreEmpresa.jsx";
 import CuadroDialogo from "../../../components/cuadroDialogo/cuadroDialogo.jsx";
 import DecisionButtons from "../../../components/Buttons/decisionButtons.jsx";
@@ -28,6 +26,7 @@ function ValidarPlanificacion() {
   const [nota, setNota] = useState("");
   const navigate = useNavigate();
   const [error, setError] = useState({
+    error:false,
     errorMessage: "",
     errorDetails: "",
   });
@@ -73,6 +72,7 @@ function ValidarPlanificacion() {
       } catch (error) {
         console.error("Error en la solicitud:", error.message);
         setError({
+          error:true,
           errorMessage: "Ha ocurrido un error",
           errorDetails: error.message,
         });
@@ -165,19 +165,14 @@ function ValidarPlanificacion() {
         ocultarAtras={false}
         confirmarAtras={true}
         dirBack={"/"}
+        loading={loading}
+        error={error}
       >
-        {error.errorMessage || error.errorDetails ? (
-          <Error
-            errorMessage={error.errorMessage}
-            errorDetails={error.errorDetails}
-          />
-        ) : loading ? (
-          <Loading />
-        ) : (
+        (
           <>
             <NombreEmpresa
-              nombreLargo={empresaData.nombreLargo}
-              nombreCorto={empresaData.nombreEmpresa}
+              nombreLargo={empresaData?.nombreLargo}
+              nombreCorto={empresaData?.nombreEmpresa}
             />
             <EstadoPlanificacion estado={planificacionData.aceptada} />
             {planificacionData.aceptada ? (
@@ -259,7 +254,7 @@ function ValidarPlanificacion() {
               </>
             )}
           </>
-        )}
+        )
       </BaseUI>
     </Fragment>
   );

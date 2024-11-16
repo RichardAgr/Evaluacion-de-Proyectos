@@ -179,16 +179,14 @@ function CalificarSprintU() {
         }
     }
     
-    if (loading) return <Loading></Loading>
-    if(!error){
-        return <Error errorMessage={error.errorMessage} errorDetails={error.errorDetails}></Error>
-    }
     return (
         <BaseUI
             titulo={'CALIFICAR SPRINT'}
             ocultarAtras={false}
             confirmarAtras={true}
             dirBack={`/homeGrupo/${idGrupo}/listaEmpresaCalificarSprints/${idEmpresa}`}
+            loading={loading}
+            error={error}
         >
         <Container>
             

@@ -37,7 +37,7 @@ function CalificarEstSemana() {
             setNombreEmpresa({ nombreCorto: data.nombreEmpresa, nombreLargo: data.nombreLargo });
         } catch (error) {
             console.error('Error en la solicitud:', error);
-            setError(error.message);
+            setError(true);
         }
     };
 
@@ -67,18 +67,16 @@ function CalificarEstSemana() {
         getNotasSprint(empresaId, Sprint);
     }, []);
 
-    if (loading) {
-        return <CircularProgress />;
-    }
-
     return (
         <Fragment>
             <BaseUI
                 titulo={'RESULTADOS EVALUACIONES SEMANALES PREVIAS'}
-                dirBack={'/'}>
+                dirBack={'/'}
+                loading={loading}
+                error={{error:error}}
+            >
                 <NombreSprint><h1>SPRINT {Sprint}</h1></NombreSprint>
                 <InfoEmpresa nombreCorto={nombreEmpresa.nombreCorto} nombreLargo={nombreEmpresa.nombreLargo} />
-                {error && <Typography color="error">{error}</Typography>}
                 <TablaContainer component={Paper}>
                     <Table aria-label="team evaluation table" size="small">
                         <TableHead>

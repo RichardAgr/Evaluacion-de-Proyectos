@@ -41,6 +41,8 @@ function SprintsSemanas() {
                 ocultarAtras={false}
                 confirmarAtras={false}
                 dirBack={`/grupoDocente/calificarTareasEmpresas/empresas/${idEmpresa}/${idDocente}/sprints`}
+                loading={loading}
+                error={error}
             >
 
                 <div style={{ position: 'relative', marginBottom: '20px' }}>

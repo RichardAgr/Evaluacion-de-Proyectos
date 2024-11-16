@@ -2,16 +2,16 @@ import { Routes, Route } from "react-router-dom";
 import HomeEstudiante from "../pages/Estudiante/homeEstudiante/homeEstudiante.jsx";
 import HomeGrupoEstudiante from "../pages/Estudiante/homeGrupoEstudiante/homeGrupoEstudiante.jsx";
 import VisualizarSprintEst from "../pages/Estudiante/visualizarSprintEstudiante/visualizarSprint.jsx";
-import VisualizarTarea from "../pages/Estudiante/tareaEstudiante/viualizarTarea.jsx";
-import ModificarListaTareas from "../pages/Estudiante/editarPlanificacion/modificarListaTareas/modificarListaTareas.jsx";
-import ModificarGrupoEmpresa from "../pages/Estudiante/grupoEmpresa/modificarGrupoEmpresa.jsx";
-import GruposDisponibles from "../pages/Estudiante/gruposDisponibles/gruposDisponibles.jsx"; // Import the new page
-import InscribirGrupo from "../pages/Estudiante/gruposDisponibles/inscribirGrupo.jsx";
+import VisualizarTarea from "../pages/Estudiante/HU38_tareaEstudiante/viualizarTarea.jsx";
+import ModificarListaTareas from "../pages/Estudiante/HU40_modificarListaTareas/modificarListaTareas.jsx";
+import ModificarGrupoEmpresa from "../pages/Estudiante/HU3_HU71_HU69_grupoEmpresa/modificarGrupoEmpresa.jsx";
+import GruposDisponibles from "../pages/Estudiante/HU16_gruposDisponibles/gruposDisponibles.jsx"; // Import the new page
+import InscribirGrupo from "../pages/Estudiante/HU16_gruposDisponibles/inscribirGrupo.jsx";
 import ModificarTarea from "../pages/Estudiante/HU8_modificarTarea/modificarTarea.jsx";
 import ListaTareas from "../pages/Estudiante/HU8_modificarTarea/listaTareas.jsx";
 import CalificacionesHitoEmpresa from "../pages/Estudiante/HU18_verCalificaciones/calificacionesHitoEmpresa.jsx";
-import CrearGrupoEmpresa from "../pages/Estudiante/grupoEmpresa/crearGrupoEmpresa.jsx";
-import PublicarGrupoEmpresa from "../pages/Estudiante/grupoEmpresa/publicarGrupoEmpresa.jsx";
+import CrearGrupoEmpresa from "../pages/Estudiante/HU3_HU71_HU69_grupoEmpresa/crearGrupoEmpresa.jsx";
+import PublicarGrupoEmpresa from "../pages/Estudiante/HU3_HU71_HU69_grupoEmpresa/publicarGrupoEmpresa.jsx";
 import EmpresasParaTareas from "../pages/Estudiante/visualizarSprintEstudiante/seleccionarEmpresaParaVisualizar.jsx";
 import SprintTareas2 from "../pages/Estudiante/visualizarSprintEstudiante/visualizarSprint.jsx";
 

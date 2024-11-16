@@ -18,12 +18,11 @@ import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import BaseUI from "../../../components/baseUI/baseUI";
-import Error from "../../../components/error/error";
-import Loading from "../../../components/loading/loading";
 function VisualizarSprint() {
   const [sprint, setSprint] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState({
+    error:false,
     errorMessage: "",
     errorDetails: "",
   });
@@ -41,10 +40,10 @@ function VisualizarSprint() {
       } catch (error) {
         console.error("Error al obtener datos:", error);
         setError({
+          error:true,
           errorMessage: "Ha ocurrido un error",
           errorDetails: error.message,
         });
-        setLoading(false);
       }
     }
 
@@ -61,19 +60,17 @@ function VisualizarSprint() {
       ocultarAtras={false}
       confirmarAtras={false}
       dirBack={`/visualizarSprint/empresa/${idEmpresa}`}
+      loading={loading}
+      error={error}
     >
-      {error.errorMessage || error.errorDetails ? (
-        <Error
-          errorMessage={error.errorMessage}
-          errorDetails={error.errorDetails}
-        />
-      ) : loading ? (
-        <Loading />
-      ) : !sprint ? (
+      {!sprint ? 
+      (
         <Typography align="center">
           No se encontró información para este sprint.
         </Typography>
-      ) : (
+      ) 
+      : 
+      (
         <Paper elevation={3} sx={{ padding: 3, my: 3 }}>
           <Typography variant="h4" gutterBottom sx={{ fontWeight: "bold" }}>
             SPRINT {sprint.numeroSprint}
