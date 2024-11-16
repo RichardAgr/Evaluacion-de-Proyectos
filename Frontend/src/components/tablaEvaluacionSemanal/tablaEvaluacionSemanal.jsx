@@ -13,10 +13,8 @@ import {
 import DecisionButtons from "../Buttons/decisionButtons";
 import CuadroDialogo from "../cuadroDialogo/cuadroDialogo";
 import InfoSnackbar from "../infoSnackbar/infoSnackbar";
-import { useParams } from "react-router-dom";
 
 const TablaEvaluacionSemanal = ({ sprint, comenta }) => {
-  const { idEmpresa} = useParams();
   const [comentarios, setComentarios] = useState([]);
   useEffect(() => {
     console.log(comenta)
@@ -82,7 +80,37 @@ const TablaEvaluacionSemanal = ({ sprint, comenta }) => {
   };
 
   const handleSubmit = async () => {
-    //
+    try {  
+      const response = await fetch(
+        `http://localhost:8000/api/seguimientoSemanal/actualizarComentarios`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            comentarios:comentarios
+          }),
+        }
+      );
+      if(response.ok){
+        console.log('se subio correctamente')
+        setSnackbar({
+            open: true,
+            message: `Se guarod los comentarios correctamente`,
+            severity: "success",
+            autoHide: 6000,
+        });
+      }
+    } catch (error) {
+    console.error("Error al actualizar la tarea:", error);
+        setSnackbar({
+            open: true,
+            message: `Hubo un error al momento de subir, error: ${error}`,
+            severity: "error",
+            autoHide: 60000,
+        });
+    }
   };
 
   return (
@@ -112,7 +140,7 @@ const TablaEvaluacionSemanal = ({ sprint, comenta }) => {
                     multiline
                     rows={3}
                     defaultValue={comentarios[index]?.comentario || ''}
-                    value={comentarios[index]?.comentario || ''}
+                    value={comentarios[index]?.comentario}
                     onChange={(e) => handleComentarioChange(index, e.target.value)}
                     fullWidth
                     placeholder="Ingrese un comentario"

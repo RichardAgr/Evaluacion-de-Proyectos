@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Models\ComentarioTarea;
 use App\Models\Empresa;
@@ -40,16 +41,20 @@ class ComentarioTareaController extends Controller
 
         foreach ($validated['comentarios'] as $comentarioData) {
             // Verificar si ya existe un comentario para el estudiante y semana especificados
-            $comentario = ComentarioTarea::where('estudiante_idEstudiante', $comentarioData['estudiante_idEstudiante'])
+            $comentario = ComentarioTarea::
+                    where('estudiante_idEstudiante', $comentarioData['estudiante_idEstudiante'])
                 ->where('semana_idSemana', $comentarioData['semana_idSemana'])
                 ->first();
 
             if ($comentario) {
-                // Si el comentario ya existe, actualizarlo
-                $comentario->update([
-                    'comentario' => $comentarioData['comentario'],
-                ]);
-                $comentariosGuardados[] = $comentario;
+                // Si el comentario ya existe y es diferente, actualizarlo
+                try {
+                    $comentario->update([
+                        'comentario' => $comentarioData['comentario'],
+                    ]);
+                } catch (\Exception $e) {
+                    return response()->json(['error' => $e->getMessage()], 400);
+                }                
             } else {
                 // Si el comentario no existe, crearlo
                 $comentario = ComentarioTarea::create([
@@ -63,7 +68,6 @@ class ComentarioTareaController extends Controller
 
         return response()->json(['message' => 'Comentarios procesados exitosamente', 'data' => $comentariosGuardados]);
     }
-
 
 
 
