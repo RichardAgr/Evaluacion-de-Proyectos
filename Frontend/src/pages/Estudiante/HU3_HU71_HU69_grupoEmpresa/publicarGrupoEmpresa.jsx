@@ -22,7 +22,14 @@ const PublicarGrupoEmpresa = () => {
         const fetchInformacion = async () => {
             try {
                 const response = await fetch(`http://localhost:8000/api/estudiante/getDatosEstEmpresa/${idEstudiante}`);
-                if (!response.ok) throw new Error('Error al recuperar datos');
+                if (!response.ok) {
+                    if (response.status === 404) {
+                      setMensajeError("El estudiante no tiene empresa y no tiene registrada ninguna");
+                    } else {
+                      setMensajeError('Error al recuperar datos');
+                    }
+                    throw new Error('Error al recuperar datos');
+                  }
     
                 const data = await response.json();
     

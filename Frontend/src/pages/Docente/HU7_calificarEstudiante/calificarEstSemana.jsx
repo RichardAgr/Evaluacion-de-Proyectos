@@ -17,6 +17,7 @@ import {
 function CalificarEstSemana() {
     const empresaId = 1; 
     const Sprint = "1";
+    const semana = 1 ;
     const [nombreEmpresa, setNombreEmpresa] = useState({ nombreCorto: '', nombreLargo: '' });
     const [teamData, setTeamData] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -54,6 +55,7 @@ function CalificarEstSemana() {
     
             const data = await response.json();
             setTeamData(data);
+            console.log(data);
         } catch (error) {
             console.error('Error en la solicitud:', error);
             setError(error.message);
@@ -83,7 +85,6 @@ function CalificarEstSemana() {
                             <TableRow>
                                 <TableCell>Integrante</TableCell>
                                 <TableCell>Tareas</TableCell>
-                                <TableCell>Nota (1-100)</TableCell>
                                 <TableCell>Comentario</TableCell>
                             </TableRow>
                         </TableHead>  
@@ -98,20 +99,6 @@ function CalificarEstSemana() {
                                                     <li key={index}>{tarea}</li>
                                                 ))}
                                             </ul>
-                                        </TableCell>
-                                        <TableCell sx={{ py: 2 }}>
-                                            <Box
-                                                sx={{
-                                                    width: "40px",
-                                                    textAlign: 'left',
-                                                    padding: '8px',
-                                                    border: '1px solid #e0e0e0',
-                                                    borderRadius: '4px',
-                                                    color: detalles.nota < 50 ? 'red' : 'black'
-                                                }}
-                                            >
-                                                {detalles.nota}
-                                            </Box>
                                         </TableCell>
                                         <TableCell sx={{ py: 1 }}>
                                             <Box
