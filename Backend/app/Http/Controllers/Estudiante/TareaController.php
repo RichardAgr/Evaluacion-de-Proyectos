@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Carbon;
+use App\Models\Empresa;
+use App\Models\Planificacion;
 class TareaController extends Controller
 {
     public function obtenerTarea($idTarea)
@@ -190,37 +192,158 @@ class TareaController extends Controller
     
 
     // Actualizar las tareas de una semana específica
-    public function updateTareasSemana(Request $request, $idEmpresa, $idSprint, $idSemana)
-    {
-        try {
-            $tareas = $request->input('tareas');
+    public function createOrUpdateTareas(Request $request)
+{
+    // Validar la solicitud
+    $validated = $request->validate([
+        'numeroSemana' => 'required|integer',
+        'numeroSprint' => 'required|integer',
+        'empresaID' => 'required|integer',
+        'tareas' => 'required|array',
+        'tareas.*.idTarea' => 'nullable|integer', // Permitir nulo para nuevas tareas
+        'tareas.*.nombreTarea' => 'required|string',
+        'tareas.*.textoTarea' => 'nullable|string',
+        'tareas.*.fechaEntrega' => 'nullable|date',
+    ]);
 
-            foreach ($tareas as $tareaData) {
-                if (isset($tareaData['idTarea']) && !empty($tareaData['deleted'])) {
-                    // Eliminar tarea
-                    Tarea::where('idTarea', $tareaData['idTarea'])->delete();
-                } elseif (isset($tareaData['idTarea'])) {
-                    // Actualizar tarea existente
-                    Tarea::where('idTarea', $tareaData['idTarea'])->update([
-                        'nombreTarea' => $tareaData['nombreTarea'],
-                        'comentario' => $tareaData['comentario'] ?? '',
-                        'fechaEntrega' => $tareaData['fechaEntrega'] ?? null,
-                    ]);
-                } else {
-                    // Crear nueva tarea si no tiene idTarea
-                    Tarea::create([
-                        'idSemana' => $idSemana,
-                        'nombreTarea' => $tareaData['nombreTarea'],
-                        'textoTarea' => '',
-                        'comentario' => $tareaData['comentario'] ?? '',
-                        'fechaEntrega' => $tareaData['fechaEntrega'] ?? Carbon::now(),
-                    ]);
-                }
-            }
+    DB::beginTransaction();
 
-            return response()->json(['message' => 'Tareas actualizadas correctamente'], 200);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Error al actualizar las tareas: ' . $e->getMessage()], 500);
+    try {
+        // Verificar si la empresa existe
+        $empresa = Empresa::find($validated['empresaID']);
+        if (!$empresa) {
+            throw new \Exception('Empresa no encontrada.');
         }
+
+        // Insertar o actualizar en la tabla 'planificacion'
+        $planificacion = Planificacion::updateOrCreate(
+            ['idEmpresa' => $empresa->idEmpresa],
+            [
+                'idEmpresa' => $empresa->idEmpresa,
+                'aceptada' => 0, // Valor por defecto
+                'publicada' => 0, // Valor por defecto
+            ]
+        );
+
+        // Insertar o actualizar en la tabla 'sprint'
+        $sprint = Sprint::updateOrCreate(
+            ['numeroSprint' => $validated['numeroSprint'], 'idPlanificacion' => $planificacion->idPlanificacion],
+            [
+                'numeroSprint' => $validated['numeroSprint'],
+                'fechaInicio' => now(), // Asignar fecha actual como ejemplo
+                'fechaFin' => now()->addWeeks(2), // Ejemplo: 2 semanas después
+            ]
+        );
+
+        // Insertar o actualizar en la tabla 'semana'
+        $semana = Semana::updateOrCreate(
+            ['numeroSemana' => $validated['numeroSemana'], 'idSprint' => $sprint->idSprint],
+            [
+                'numeroSemana' => $validated['numeroSemana'],
+                'fechaInicio' => now()->startOfWeek(),
+                'fechaFin' => now()->endOfWeek(),
+            ]
+        );
+
+        // Insertar o actualizar en la tabla 'tarea'
+        foreach ($validated['tareas'] as $tareaData) {
+            Tarea::updateOrCreate(
+                [
+                    'idTarea' => $tareaData['idTarea'] ?? null, // Permitir creación de nuevas tareas
+                    'idSemana' => $semana->idSemana,
+                ],
+                [
+                    'nombreTarea' => $tareaData['nombreTarea'],
+                    'textoTarea' => $tareaData['textoTarea'] ?? null,
+                    'fechaEntrega' => $tareaData['fechaEntrega'] ?? null,
+                ]
+            );
+        }
+
+        DB::commit();
+
+        return response()->json(['message' => 'Datos insertados o actualizados exitosamente'], 201);
+    } catch (\Exception $e) {
+        DB::rollBack();
+        return response()->json(['error' => $e->getMessage()], 400);
     }
+}
+
+public function deleteTareas(Request $request)
+{
+    // Validar la solicitud
+    $validated = $request->validate([
+        'tareas' => 'required|array',
+        'tareas.*.idTarea' => 'required|integer', // Los IDs de las tareas son obligatorios
+        'numeroSemana' => 'required|integer',
+        'numeroSprint' => 'required|integer',
+        'idEmpresa' => 'required|integer',
+    ]);
+
+    DB::beginTransaction();
+
+    try {
+        // Verificar si la empresa existe
+        $empresa = Empresa::find($validated['idEmpresa']);
+        if (!$empresa) {
+            throw new \Exception('Empresa no encontrada.');
+        }
+
+        // Buscar la planificación relacionada
+        $planificacion = Planificacion::where('idEmpresa', $empresa->idEmpresa)->first();
+        if (!$planificacion) {
+            throw new \Exception('No se encontró una planificación asociada a la empresa.');
+        }
+
+        // Buscar el sprint relacionado
+        $sprint = Sprint::where('numeroSprint', $validated['numeroSprint'])
+                        ->where('idPlanificacion', $planificacion->idPlanificacion)
+                        ->first();
+        if (!$sprint) {
+            throw new \Exception('No se encontró un sprint asociado a la planificación.');
+        }
+
+        // Buscar la semana relacionada
+        $semana = Semana::where('numeroSemana', $validated['numeroSemana'])
+                        ->where('idSprint', $sprint->idSprint)
+                        ->first();
+        if (!$semana) {
+            throw new \Exception('No se encontró una semana asociada al sprint.');
+        }
+
+        // Eliminar tareas especificadas en el array
+        foreach ($validated['tareas'] as $tareaData) {
+            $tarea = Tarea::where('idTarea', $tareaData['idTarea'])
+                          ->where('idSemana', $semana->idSemana)
+                          ->first();
+            if (!$tarea) {
+                throw new \Exception("La tarea con ID {$tareaData['idTarea']} no se encontró en la semana especificada.");
+            }
+            $tarea->delete();
+        }
+
+        // Verificar si se deben eliminar semanas, sprints o planificación huérfanos
+        if (Tarea::where('idSemana', $semana->idSemana)->count() === 0) {
+            $semana->delete();
+        }
+
+        if (Semana::where('idSprint', $sprint->idSprint)->count() === 0) {
+            $sprint->delete();
+        }
+
+        if (Sprint::where('idPlanificacion', $planificacion->idPlanificacion)->count() === 0) {
+            $planificacion->delete();
+        }
+
+        DB::commit();
+
+        return response()->json(['message' => 'Tareas eliminadas exitosamente'], 200);
+
+    } catch (\Exception $e) {
+        DB::rollBack();
+        return response()->json(['error' => $e->getMessage()], 400);
+    }
+}
+
+
 }
