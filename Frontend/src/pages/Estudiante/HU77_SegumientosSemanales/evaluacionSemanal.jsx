@@ -8,7 +8,7 @@ import InfoSnackbar from "../../../components/infoSnackbar/infoSnackbar.jsx";
 const EvaluarHito = () => {
   const idEmpresa = 1;
   const idSprint = 1;
-  const idSemana =1; 
+  const idSemana =2; 
   const [data2, setData] = useState([]);
   const [comentarios, setComentarios] = useState([]);
   const [empresa, setNombreEmpresa] = useState({});
@@ -103,7 +103,7 @@ const EvaluarHito = () => {
               nombreCorto={empresa.nombreCorto}
               nombreLargo={empresa.nombreLargo}
             />
-            {data2 !== undefined && comentarios !== undefined && <TablaEvaluacionSemanal sprint={data2} comenta={comentarios} showButtons={true}/>} 
+            {data2 !== undefined && comentarios !== undefined && <TablaEvaluacionSemanal sprint={data2} comenta={comentarios} showButtons={false}/>} 
       </BaseUI>
       <InfoSnackbar
         openSnackbar={snackbar.open}

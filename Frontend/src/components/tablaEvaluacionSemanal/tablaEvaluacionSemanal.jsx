@@ -15,7 +15,7 @@ import CuadroDialogo from "../cuadroDialogo/cuadroDialogo";
 import InfoSnackbar from "../infoSnackbar/infoSnackbar";
 import { useParams } from "react-router-dom";
 
-const TablaEvaluacionSemanal = ({ sprint, comenta }) => {
+const TablaEvaluacionSemanal = ({ sprint, comenta, showButtons = true }) => {
   const { idEmpresa} = useParams();
   const [comentarios, setComentarios] = useState([]);
   useEffect(() => {
@@ -123,7 +123,7 @@ const TablaEvaluacionSemanal = ({ sprint, comenta }) => {
           </TableBody>
         </Table>
       </TableContainer>
-      
+      {showButtons &&(
       <DecisionButtons
         rejectButtonText="Descartar"
         validateButtonText="Guardar Evaluación"
@@ -131,7 +131,7 @@ const TablaEvaluacionSemanal = ({ sprint, comenta }) => {
         onValidate={handleSave}
         disabledButton={0}
       />
-
+      )}
       <CuadroDialogo
         open={cuadroDialogo.open}
         onClose={() => setCuadroDialogo({ ...cuadroDialogo, open: false })}
