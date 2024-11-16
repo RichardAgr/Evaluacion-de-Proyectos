@@ -4,17 +4,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class NotaTareasEstudiante extends Model
+class ComentarioTarea extends Model
 {
     use HasFactory;
 
-    protected $table = 'notaTareasEstudiante';
+    protected $table = 'comentarioTarea';
     public $incrementing = false;
     public $timestamps = false;
 
     protected $fillable = [
         'estudiante_idEstudiante',
-        'sprint_idSprint',
+        'semana_idSemana',
         'comentario',
     ];
 
@@ -23,8 +23,8 @@ class NotaTareasEstudiante extends Model
         return $this->belongsTo(Estudiante::class, 'estudiante_idEstudiante');
     }
 
-    public function sprint()
+    public function semana()
     {
-        return $this->belongsTo(Sprint::class, 'sprint_idSprint');
+        return $this->belongsTo(Semana::class, 'semana_idSemana');
     }
 }

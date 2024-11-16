@@ -4,26 +4,26 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateNotaTareasEstudianteTable extends Migration
+class CreateComentarioTareaTable extends Migration
 {
     public function up()
     {
-        Schema::create('notaTareasEstudiante', function (Blueprint $table) {
+        Schema::create('comentarioTarea', function (Blueprint $table) {
             $table->unsignedBigInteger('estudiante_idEstudiante');
-            $table->unsignedBigInteger('sprint_idSprint');
+            $table->unsignedBigInteger('semana_idSemana');
             $table->string('comentario', 200);
             
             // Llave primaria compuesta
-            $table->primary(['estudiante_idEstudiante', 'sprint_idSprint']);
+            $table->primary(['estudiante_idEstudiante', 'semana_idSemana']);
             
             // Relaciones
             $table->foreign('estudiante_idEstudiante')->references('idEstudiante')->on('estudiante')->onDelete('cascade');
-            $table->foreign('sprint_idSprint')->references('idSprint')->on('sprint')->onDelete('cascade');
+            $table->foreign('semana_idSemana')->references('idSemana')->on('semana')->onDelete('cascade');
         });
     }
 
     public function down()
     {
-        Schema::dropIfExists('notaTareasEstudiante');
+        Schema::dropIfExists('comentarioTarea');
     }
 }

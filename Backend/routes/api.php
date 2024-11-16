@@ -16,7 +16,7 @@ use App\Http\Controllers\Estudiante\EstudiantesEmpresasController;
 use App\Http\Controllers\Empresa\NotaSprintController;
 use App\Http\Controllers\Empresa\EntregablesController;
 use App\Http\Controllers\Empresa\EmpresaController;
-
+use App\Http\Controllers\ComentarioTareaController;
 use App\Http\Controllers\joaquinController;
 
 //============================= GET EMPRESA ================================
@@ -190,3 +190,8 @@ Route::post('/crearGrupoEmpresa/paso3/{idEstudiante}',[joaquinController::class,
 
 
 Route::get('prueba/notaSprintV2/{idEmpresa}/{semana}', [joaquinController::class, 'notaSprintV2']);
+
+
+
+// ============================  Funciones ComentarioTareaController  ====================================
+Route::get('/seguimientoSemanal/{idEmpresa}/semanaActual', [ComentarioTareaController::class, 'seguimientoSemanalEmpresaHastaSemanaActual']);

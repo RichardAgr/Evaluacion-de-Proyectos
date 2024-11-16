@@ -23,10 +23,12 @@ import {
 export default function ModificarListaTareas() {
   const { idEmpresa, idSprint, idSemana } = useParams();
   const [tasks, setTasks] = useState([]);
+  const [tasksEliminadas, setTasksEliminadas] = useState([]);
   const [numSemana, setNumSemana] = useState(0);
   const [numSprint, setNumSprint] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [errorTexto, setErrorTexto] = useState([]);
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",
@@ -45,6 +47,9 @@ export default function ModificarListaTareas() {
       setNumSemana(tareas.numeroSemana);
       setNumSprint(tareas.numeroSprint);
       setTasks(tareas.tareas);
+      const tareasV = tareas.tareas
+      const newTextos = tareasV.map(()=>false)
+      setErrorTexto(newTextos)
     } catch (error) {
       console.error("Error fetching tasks:", error);
       setError("Error al obtener las tareas de la semana");
@@ -63,32 +68,51 @@ export default function ModificarListaTareas() {
   }, []);
 
   const handleAddTask = () => {
-    setTasks([...tasks, { idTarea: null, nombreTarea: "Nueva tarea" }]);
+    if(tasks.length > 30) return;
+    setTasks([...tasks, { idTarea: null, nombreTarea: `Nueva tarea ${tasks.length+1}` }]);
+    setErrorTexto([...errorTexto, false])
   };
 
-  const handleDeleteTask = (idTarea) => {
+  const handleDeleteTask = (index) => {
     setCuadroDialogo({
       open: true,
       title: "Eliminar tarea",
-      description: "¿Está seguro de que desea eliminar esta tarea?",
+      description: "Esta acción eliminará la tarea seleccionada. ¿Estás seguro?",
       onConfirm: () => {
-        setTasks(
-          tasks.map((task) =>
-            task.idTarea === idTarea ? { ...task, deleted: true } : task
-          )
-        );
+        const newTasks = tasks.filter((task, i) => i !== index)
+        const eliminada = tasks[index];
+        setTasksEliminadas([...tasksEliminadas, eliminada])
+        setTasks(newTasks);
         setCuadroDialogo({ ...cuadroDialogo, open: false });
       },
     });
   };
 
-  const handleEditTask = (idTarea, newName) => {
-    setTasks(
-      tasks.map((task) =>
-        task.idTarea === idTarea ? { ...task, nombreTarea: newName } : task
-      )
+  const handleEditTask = (index, newName) => {
+    const newTasks = tasks.map((task, i) =>
+      i === index ? { ...task, nombreTarea: newName } : task
     );
+    setTasks(newTasks);
+    const coincidencias = [];
+    console.log('este es el nuevo: '+newName)
+    newTasks.forEach((tarea, i) => {
+      console.log(tarea.nombreTarea)
+      if (tarea.nombreTarea === newName) {
+        if(i !== index) coincidencias.push(i);
+      }
+    });
+    if (coincidencias.length > 0) {
+      coincidencias.push(index)
+      const newTextoError = errorTexto.map((err, i) =>
+        coincidencias.includes(i) ? true : err
+      );
+      setErrorTexto(newTextoError);
+    }else{
+      const newTextos = newTasks.map(()=>false)
+      setErrorTexto(newTextos)
+    }
   };
+  
 
   const handleReject = () => {
     setCuadroDialogo({
@@ -103,13 +127,20 @@ export default function ModificarListaTareas() {
     setCuadroDialogo({
       open: true,
       title: "Guardar cambios",
-      description:
-        "¿Está seguro de que desea guardar los cambios en la lista de tareas?",
+      description:"¿Estás seguro de que quieres guardar los cambios?",
       onConfirm: handleConfirmSave,
     });
   };
 
   const handleConfirmSave = async () => {
+    if(errorTexto.includes(true)){
+      setSnackbar({
+        open: true,
+        message: "Debe revisar los nombres de las tareas, hay repeticion de nombres",
+        severity: "info",
+      });
+      return
+    }
     try {
       const result = await updateTareasSemana(
         idEmpresa,
@@ -119,6 +150,7 @@ export default function ModificarListaTareas() {
       );
       setSnackbar({ open: true, message: result.message, severity: "success" });
     } catch (error) {
+      console.log(error)
       setSnackbar({
         open: true,
         message: "Error al guardar las tareas",
@@ -170,11 +202,16 @@ export default function ModificarListaTareas() {
               }}
             >
               {tasks.map(
-                (task) =>
-                  !task.deleted && (
+                (task, index) =>(
+                    <>
                     <ListItem
                       key={task.idTarea}
-                      sx={{ bgcolor: "#CFD4E1", mb: 1, py: 2, px: 3 }}
+                      sx={{ bgcolor: "#CFD4E1", mb: 1, py: 2, px: 3,
+                        border: "solid 0.1rem transparent", // Borde inicial transparente
+                        ":focus-within": {
+                          border: "solid 0.1rem blue", // Cambia a azul cuando el TextField tiene foco
+                        },
+                      }}
                     >
                       <Box
                         sx={{
@@ -184,9 +221,10 @@ export default function ModificarListaTareas() {
                         }}
                       >
                         <TextField
+                          autoFocus
                           value={task.nombreTarea}
                           onChange={(e) =>
-                            handleEditTask(task.idTarea, e.target.value)
+                            handleEditTask(index, e.target.value)
                           }
                           variant="standard"
                           fullWidth
@@ -197,31 +235,37 @@ export default function ModificarListaTareas() {
                               fontWeight: "medium",
                             },
                           }}
+                          error={errorTexto[index]}
+                          helperText={errorTexto[index] && 'No tiene que ser un nombre similar'}
                         />
                       </Box>
+                      
                       <Button
                         variant="contained"
                         color="secondary"
                         startIcon={<DeleteIcon />}
-                        onClick={() => handleDeleteTask(task.idTarea)}
+                        onClick={() => handleDeleteTask(index)}
                         sx={{ ml: 2 }}
                       >
                         Eliminar
                       </Button>
                     </ListItem>
+                    </>
                   )
               )}
             </List>
           )}
-          <Box sx={{ display: "flex", justifyContent: "center", mt: 3, mb: 2 }}>
-            <Button
-              variant="contained"
-              color="primary"
-              startIcon={<AddIcon />}
-              onClick={handleAddTask}
-            >
-              Añadir tarea
-            </Button>
+          <Box>
+            {tasks.length < 30 &&
+              <Button
+                variant="contained"
+                color="primary"
+                startIcon={<AddIcon />}
+                onClick={handleAddTask}
+              >
+                Añadir tarea
+              </Button>
+            }
           </Box>
           <DecisionButtons
             rejectButtonText="Descartar"
