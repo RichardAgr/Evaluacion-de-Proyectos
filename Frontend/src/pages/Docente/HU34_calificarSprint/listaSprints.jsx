@@ -82,7 +82,7 @@ const ListaSprints = () => {
                          <></>
                         )
                     ))}
-                    {new Date(sprints[0].fechaFin) > new Date()?<h3 style={{marginLeft:'calc(2vw + 1rem)'}}>EL PRIMER SPRINT DE ESTE GRUPO NO TERMINO, NO SE PUEDE CALIFICAR</h3>:<></>}
+                    {new Date(sprints[0]?.fechaFin) > new Date()?<h3 style={{marginLeft:'calc(2vw + 1rem)'}}>EL PRIMER SPRINT DE ESTE GRUPO NO TERMINO, NO SE PUEDE CALIFICAR</h3>:<></>}
                 </>
                 :
                 <h3 style={{marginLeft:'calc(2vw + 1rem)'}}>No se encontro ningun sprint en la base de datos</h3>

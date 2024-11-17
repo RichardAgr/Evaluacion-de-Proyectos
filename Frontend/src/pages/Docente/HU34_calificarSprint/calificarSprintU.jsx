@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Box, Typography, Checkbox, TextField, Paper, Grid, Link, FormControl } from '@mui/material';
-import { styled, typography } from '@mui/system';
+import { styled} from '@mui/system';
 import BaseUI from '../../../components/baseUI/baseUI';
 
 import DescriptionIcon from '@mui/icons-material/Description';
@@ -177,7 +177,8 @@ function CalificarSprintU() {
             )
         }
     }
-    
+    if(loading)return <Loading></Loading>
+    if (error.error)return <Error></Error>
     return (
         <BaseUI
             titulo={'CALIFICAR SPRINT'}
