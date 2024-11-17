@@ -19,7 +19,6 @@ const VisualizarSprintEst = ({titulo, navigateLink, bloquearFechas, verSprints})
                 console.log([data])
                 setSprints([data]);
                 const newOpens = [data]?.map(()=> false);
-                console.log('hola')
                 console.log(newOpens)
                 setSprintOpen(newOpens)
             } catch (err) {

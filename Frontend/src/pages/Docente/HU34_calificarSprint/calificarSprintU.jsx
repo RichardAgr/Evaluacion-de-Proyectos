@@ -118,7 +118,6 @@ function CalificarSprintU() {
     const handleSubmit = async () =>{
         if(comentario === '' && comentario.length < 20) {
             setError(true);
-            console.log('hola   ') 
             return
         }
         try {
