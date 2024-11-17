@@ -20,6 +20,9 @@ import EvaluacionSemanalSprints from "../pages/Docente/HU7_evaluacionSemanal/Eva
 //ACCIONES COMPARTIDAS
 import ListaCali from "../pages/Docente/AHUCompartidasDelEstudiante/HU18_listaVerCalificaciones/listaCalificaciones.jsx";
 import CalificacionesHitoEmpresa from "../pages/Estudiante/HU18_verCalificaciones/calificacionesHitoEmpresa.jsx";
+import EmpresasParaTareas from "../pages/Docente/HU38_tareaEstudiante/seleccionarEmpresaParaVisualizar.jsx";
+import VisualizarTarea from "../pages/Docente/HU38_tareaEstudiante/viualizarTarea.jsx";
+import VisualizarSprintEst from "../pages/Docente/HU38_tareaEstudiante/visualizarSprint.jsx";
 function Nav() {
   return (
     <Routes>
@@ -71,6 +74,20 @@ function Nav() {
             element={<CalificacionesHitoEmpresa/>}
           />
       {/** ROUTES JOAQUIN*/}
+      
+      <Route
+          path="/homeGrupo/:idGrupo/empresasVerTareas"
+          element={<EmpresasParaTareas />}
+      />
+      <Route
+          path="/homeGrupo/:idGrupo/empresasVerTareas/:idEmpresa"
+          element={<VisualizarSprintEst />}
+      />
+      <Route
+          path="/homeGrupo/:idGrupo/empresaVerTareas/:idEmpresa/SprintSemanatarea/:idTarea"
+          element={<VisualizarTarea />}
+      />
+
       {/** ROUTES JHAIR*/}
 
       {/** Seleccionar una planificacion para visualizar*/}

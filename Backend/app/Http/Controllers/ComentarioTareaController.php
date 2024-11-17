@@ -241,5 +241,27 @@ class ComentarioTareaController extends Controller
 
         return response()->json($resultado);
     }
+    public function getSemanaActualTareas($idEmpresa)
+    {
+        try {
+            $fechaDeLaConsulta = now(); // Fecha actual
 
+            // Recuperar los sprints que cumplan con la condición
+            $empresa = Empresa::findOrFail($idEmpresa);
+
+            $sprints = $empresa->sprints()
+                ->where('fechaIni', '<=', $fechaDeLaConsulta)
+                ->where('fechaFin', '>=', $fechaDeLaConsulta)
+                ->with(['semanas' => function ($query) {
+                    // Elimina el filtro de fechas para obtener todas las semanas
+                    $query->with(['tareas:idSemana,idTarea,nombreTarea']);
+                }])->get();
+
+
+            // Transformar los datos al formato solicitado
+            return response()->json($sprints, 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error al obtener los datos: ' . $e->getMessage()], 500);
+        }
+    }
 }

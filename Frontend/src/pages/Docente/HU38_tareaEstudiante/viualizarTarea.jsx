@@ -15,7 +15,7 @@ function VisualizarTarea() {
     const [existingFiles, setExistingFiles] = useState([]); 
     const [nombreTarea,setNombreTarea] = useState([]);
     const { idTarea } = useParams();
-    const { idSprint } = useParams();
+    const { idEmpresa, idGrupo } = useParams();
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState({
       error: false,
@@ -88,7 +88,7 @@ function VisualizarTarea() {
             titulo = {'VISUALIZAR TAREA'}
             ocultarAtras = {false}
             confirmarAtras = {false}
-            dirBack = {`/homeEstudiante/homeGrupoEstudiante/sprint/${idSprint}`}
+            dirBack = {`/homeGrupo/${idGrupo}/empresaVerTareas/${idEmpresa}`}
             loading={loading}
             error={error}
           >

@@ -140,4 +140,5 @@ class ComentarioTareaController extends Controller
         $nota->delete();
         return response()->json(['message' => 'Nota eliminada con éxito']);
     }
+    
 }
