@@ -84,7 +84,7 @@ function Home() {
     },
     {
       label: "HU16_Grupos Disponibles",
-      onClick: () => navigate("/homeEstudiante/gruposDisponibles"),
+      onClick: () => navigate("/homeEstudiante/gruposDisponibles/1"),
     },
     {
       label: "HU8__Modificar Tarea",

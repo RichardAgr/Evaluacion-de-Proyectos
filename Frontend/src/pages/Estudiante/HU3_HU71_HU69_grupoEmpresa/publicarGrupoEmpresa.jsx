@@ -98,7 +98,6 @@ const PublicarGrupoEmpresa = () => {
                 loading={isLoading}
                 error={error}
             >
-                (
                 <div style={{ display: 'grid' }}>
                     <NombreEmpresaCompleto>
                         <Box component="section" sx={{ p: 2 }}>
@@ -171,7 +170,6 @@ const PublicarGrupoEmpresa = () => {
                         </Alert>
                     </Snackbar>
                 </div>
-                )
             </BaseUI>
         </Fragment>
     );
