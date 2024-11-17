@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import {
   Table,
   TableBody,
@@ -105,7 +106,7 @@ const TablaEvaluacionSemanal = ({ sprint, comenta, showButtons = true }) => {
         console.log('se subio correctamente')
         setSnackbar({
             open: true,
-            message: `Se guarod los comentarios correctamente`,
+            message: `Se guardo los comentarios correctamente`,
             severity: "success",
             autoHide: 6000,
         });
