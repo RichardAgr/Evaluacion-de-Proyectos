@@ -29,6 +29,6 @@ class Semana extends Model
 
     public function comentarioTarea()
     {
-        return $this->hasMany(ComentarioTarea::class, 'semana_idSemana');
+        return $this->hasMany(ComentarioTarea::class, 'idSemana');
     }
 }

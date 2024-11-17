@@ -626,7 +626,7 @@ class SprintController extends Controller
         ]);
     
         foreach ($request->all() as $comentarioData) {
-            ComentarioTarea::createOrUpdate([
+            ComentarioTarea::create([
                 'idEstudiante' => $comentarioData['idEstudiante'],
                 'idSemana' => $comentarioData['idSemana'],
                 'comentario' => $comentarioData['comentario'],
