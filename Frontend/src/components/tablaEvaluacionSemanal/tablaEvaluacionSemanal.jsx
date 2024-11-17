@@ -23,8 +23,8 @@ const TablaEvaluacionSemanal = ({ sprint, comenta, showButtons = true }) => {
     const iniciarComentarios = (
       sprint?.semana?.tareasEstudiante && Array.isArray(sprint.semana.tareasEstudiante)
         ? sprint.semana.tareasEstudiante.map((estudiante) => ({
-            semana_idSemana: sprint.semana.idSemana,
-            estudiante_idEstudiante: estudiante.idEstudiante,
+            idSemana: sprint.semana.idSemana,
+            idEstudiante: estudiante.idEstudiante,
             comentario: '',
             subido: false
           }))
@@ -33,7 +33,7 @@ const TablaEvaluacionSemanal = ({ sprint, comenta, showButtons = true }) => {
     const newComentarios = iniciarComentarios.map((comentario) => {
       // Busca si el estudiante tiene un comentario en "comenta"
       const indice = comenta.findIndex(
-        (estudiante) => estudiante.estudiante_idEstudiante === comentario.estudiante_idEstudiante
+        (estudiante) => estudiante.idEstudiante === comentario.idEstudiante
       );
       
       // Si se encuentra, actualiza el comentario; si no, mantiene el comentario vacío
@@ -89,7 +89,7 @@ const TablaEvaluacionSemanal = ({ sprint, comenta, showButtons = true }) => {
   };
 
   const handleSubmit = async () => {
-    const comentariosNoSubidos = comentarios.filter((comentario)=> comentario.subido === false)
+    const comentariosNoSubidos = comentarios.filter((comentario)=> comentario.subido === false && comentario.comentario !== '')
     console.log(comentariosNoSubidos)
     try {  
       const response = await fetch(
@@ -136,7 +136,7 @@ const TablaEvaluacionSemanal = ({ sprint, comenta, showButtons = true }) => {
           <TableBody>
             {sprint.semana?.tareasEstudiante?.map((estudiante, index) => (
               <TableRow key={index}>
-                <TableCell>{estudiante.nombre}</TableCell>
+                <TableCell>{estudiante.nombre} {estudiante.apellido}</TableCell>
                 <TableCell>
                   <ul>
                     {estudiante?.tareas.map((tarea, idx) => (

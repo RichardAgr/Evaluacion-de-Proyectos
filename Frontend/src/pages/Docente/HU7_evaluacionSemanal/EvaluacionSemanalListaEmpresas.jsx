@@ -64,7 +64,7 @@ function ListaEmpresasEvaluacionSemanal() {
         cabezeras={columns}
         datosTabla={listaEmpresas}
         ocultarAtras={false}
-        confirmarAtras={false}
+        confirmarAtras={false} 
         dirBack={`/`}
         dirForward= {`/homeGrupo/${idGrupo}/listaEmpresas/evaluacionSemanal/`}
         mensajeSearch="Buscar Grupo Empresa"

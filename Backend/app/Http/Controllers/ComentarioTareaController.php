@@ -21,7 +21,7 @@ class ComentarioTareaController extends Controller
     public function seguimientoSemanaElegidaComentarios($idSemana)
     {
         $comentarios = ComentarioTarea::with('estudiante')
-            ->where('semana_idSemana', $idSemana)
+            ->where('idSemana', $idSemana)
             ->get();
 
         return response()->json($comentarios);
@@ -31,8 +31,8 @@ class ComentarioTareaController extends Controller
         // Validación del array de comentarios
         $validated = $request->validate([
             'comentarios' => 'required|array',
-            'comentarios.*.estudiante_idEstudiante' => 'required|exists:estudiante,idEstudiante',
-            'comentarios.*.semana_idSemana' => 'required|exists:semana,idSemana',
+            'comentarios.*.idEstudiante' => 'required|exists:estudiante,idEstudiante',
+            'comentarios.*.idSemana' => 'required|exists:semana,idSemana',
             'comentarios.*.comentario' => 'required|string|max:255',
         ]);
     
@@ -44,8 +44,8 @@ class ComentarioTareaController extends Controller
                 // Actualizar o crear comentario en una sola operación
                 $comentario = ComentarioTarea::updateOrCreate(
                     [
-                        'estudiante_idEstudiante' => $comentarioData['estudiante_idEstudiante'],
-                        'semana_idSemana' => $comentarioData['semana_idSemana'],
+                        'idEstudiante' => $comentarioData['idEstudiante'],
+                        'idSemana' => $comentarioData['idSemana'],
                     ],
                     [
                         'comentario' => $comentarioData['comentario'],
@@ -56,8 +56,8 @@ class ComentarioTareaController extends Controller
             } catch (\Exception $e) {
                 // Capturar errores específicos por comentario
                 return response()->json([
-                    'error' => 'Error al procesar el comentario para el estudiante: ' . $comentarioData['estudiante_idEstudiante'] . 
-                               ', semana: ' . $comentarioData['semana_idSemana'] . '. Detalles: ' . $e->getMessage()
+                    'error' => 'Error al procesar el comentario para el estudiante: ' . $comentarioData['idEstudiante'] . 
+                               ', semana: ' . $comentarioData['idSemana'] . '. Detalles: ' . $e->getMessage()
                 ], 400);
             }
         }
@@ -117,7 +117,7 @@ class ComentarioTareaController extends Controller
                 // Obtener los comentariosTareas para cada semana
                 $comentariosTareas = $semana->comentarioTarea()->get()->map(function ($comentario) {
                     return [
-                        'idEstudiante' => $comentario->estudiante_idEstudiante,
+                        'idEstudiante' => $comentario->idEstudiante,
                         'comentario' => $comentario->comentario,
                     ];
                 });
