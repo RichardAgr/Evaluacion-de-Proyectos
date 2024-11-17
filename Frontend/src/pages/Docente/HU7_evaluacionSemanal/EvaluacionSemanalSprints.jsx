@@ -50,37 +50,37 @@ function SeguimientoSemanalSprints () {
         fetchSprintsData()
     }, []); 
     useEffect(()=>{
-      if(comentarios.length>0 && sprints.length>0){
-        console.log(comentarios)
-        console.log(sprints)
+        if (comentarios.length > 0 && sprints.length > 0 && comentarios.length === sprints.length) {
         let newVerificacion = []
         const tam = sprints.length
         for (let i = 0; i < tam; i++) {
             const tamSemana = (sprints[i].semanas).length;
             const semanasSprint = sprints[i].semanas
             const semanasComentario = comentarios[i].semanas
-            let verificacionSemanas = [];
+            console.log(semanasSprint)
+            console.log(semanasComentario)
+            const verificacionSemanas = [];
             let bandera = false
             for (let j = 0; j < tamSemana; j++) {
-                const evaluado = semanasSprint[j].tareasEstudiante.length === semanasComentario[j].comentariosTareas.length;
-                console.log(evaluado)
+                const tam1 = semanasSprint[j]?.tareasEstudiante?.length;
+                const tam2 = semanasComentario[j]?.comentariosTareas?.length; 
+                console.log(""+tam1+' '+tam2)
+                const evaluado =  (tam1 === tam2)&& tam1!==0 && tam2!==0
                 if(!evaluado){
                     bandera = true
                 }
                 verificacionSemanas.push(evaluado)
             }
-            if(bandera){
-                newVerificacion.push(
-                    {
-                        completo: !bandera,
-                        completoSemanas: verificacionSemanas
-                    }
-                )
+            console.log(verificacionSemanas)
+        
+            const a = {
+                completo: !bandera,
+                completoSemanas: verificacionSemanas
             }
-
+            newVerificacion.push(a)
         }
+        console.log(newVerificacion)
         setVerificacion(newVerificacion)
-        console.log(newVerificacion)        
       }
     },[comentarios, sprints ])
     const togglePanel = (index) => {
