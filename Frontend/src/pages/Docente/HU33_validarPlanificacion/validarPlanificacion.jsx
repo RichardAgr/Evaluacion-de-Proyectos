@@ -168,7 +168,6 @@ function ValidarPlanificacion() {
         loading={loading}
         error={error}
       >
-        (
           <>
             <NombreEmpresa
               nombreLargo={empresaData?.nombreLargo}
@@ -254,7 +253,6 @@ function ValidarPlanificacion() {
               </>
             )}
           </>
-        )
       </BaseUI>
     </Fragment>
   );
