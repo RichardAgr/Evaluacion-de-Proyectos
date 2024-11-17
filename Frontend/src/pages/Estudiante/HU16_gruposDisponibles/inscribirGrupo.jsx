@@ -102,7 +102,7 @@ function GrupoDescripcion() {
 
 
   return (
-    <BaseUI titulo="MATRICULARSE CON UN DOCENTE" ocultarAtras={false} confirmarAtras={true} dirBack={`/homeEstudiante/gruposDisponibles/${idEstudiante}`}>
+    <BaseUI titulo="MATRICULARSE CON UN DOCENTE" ocultarAtras={false} confirmarAtras={true} dirBack={`/homeEstudiante/gruposDisponibles/${idEstudiante}`}error={{error:error}}>
       <Box component="section" sx={{ p: 2, pb: 0, border: '1p' }}>
         <h1 style={{ fontSize: '25px' }}>
           {datos?.apellidoPaternoDocente} {datos?.apellidoMaternoDocente} {datos?.nombreDocente} G{datos?.numGrupo}

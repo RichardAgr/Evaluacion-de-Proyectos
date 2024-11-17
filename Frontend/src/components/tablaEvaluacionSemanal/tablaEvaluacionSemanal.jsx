@@ -14,7 +14,8 @@ import DecisionButtons from "../Buttons/decisionButtons";
 import CuadroDialogo from "../cuadroDialogo/cuadroDialogo";
 import InfoSnackbar from "../infoSnackbar/infoSnackbar";
 
-const TablaEvaluacionSemanal = ({ sprint, comenta }) => {
+const TablaEvaluacionSemanal = ({ sprint, comenta, showButtons = true }) => {
+  const { idEmpresa} = useParams();
   const [comentarios, setComentarios] = useState([]);
   useEffect(() => {
     console.log(comenta)
