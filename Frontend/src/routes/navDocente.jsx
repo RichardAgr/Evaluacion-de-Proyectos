@@ -15,7 +15,8 @@ import SeleccionarEmpresaSinValidar from "../pages/Docente/HU33_validarPlanifica
 import ValidarPlanificacion from "../pages/Docente/HU33_validarPlanificacion/validarPlanificacion.jsx";
 //import ListaVerPlanificacion from "../pages/Docente/listas/seleccionarEmpresaVisualizar/seleccionarEmpresaVisualizar.jsx";
 import ListaEmpresaSprints from "../pages/Docente/HU34_calificarSprint/listaEmpresaSprints.jsx";
-
+import EvaluacionSemanalListaEmpresas from "../pages/Docente/HU7_evaluacionSemanal/EvaluacionSemanalListaEmpresas.jsx";
+import EvaluacionSemanalSprints from "../pages/Docente/HU7_evaluacionSemanal/EvaluacionSemanalSprints.jsx";
 //ACCIONES COMPARTIDAS
 import ListaCali from "../pages/Docente/AHUCompartidasDelEstudiante/HU18_listaVerCalificaciones/listaCalificaciones.jsx";
 import CalificacionesHitoEmpresa from "../pages/Estudiante/HU18_verCalificaciones/calificacionesHitoEmpresa.jsx";
@@ -24,9 +25,16 @@ function Nav() {
     <Routes>
       {/** ROUTES JHON*/}
       
-
       <Route
-        path="/evaluacionSemanal/empresa/:idEmpresa/sprint/:idSprint"
+        path="/homeGrupo/:idGrupo/listaEmpresas/evaluacionSemanal"
+        element={<EvaluacionSemanalListaEmpresas />}
+      />
+      <Route
+        path="/homeGrupo/:idGrupo/listaEmpresas/evaluacionSemanal/:idEmpresa"
+        element={<EvaluacionSemanalSprints />}
+      />
+      <Route
+        path="/homeGrupo/:idGrupo/listaEmpresas/evaluacionSemanal/:idEmpresa/Sprint/:idSprint/semana/:idSemana"
         element={<EvaluacionSemanal />}
       />
       <Route

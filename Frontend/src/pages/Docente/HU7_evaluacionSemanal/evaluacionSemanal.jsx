@@ -4,11 +4,9 @@ import TablaEvaluacionSemanal from "../../../components/tablaEvaluacionSemanal/t
 import NombreEmpresa from "../../../components/infoEmpresa/nombreEmpresa.jsx";
 import { getSeguimiento } from "../../../api/seguimientoSemanal.jsx";
 import InfoSnackbar from "../../../components/infoSnackbar/infoSnackbar.jsx";
-
-const EvaluarHito = () => {
-  const idEmpresa = 1;
-  const idSprint = 1;
-  const idSemana =1; 
+import { useParams } from "react-router-dom";
+const SeguimientoSemanal = () => {
+  const {idGrupo, idEmpresa, idSprint, idSemana} = useParams()
   const [data2, setData] = useState([]);
   const [comentarios, setComentarios] = useState([]);
   const [empresa, setNombreEmpresa] = useState({});
@@ -21,28 +19,30 @@ const EvaluarHito = () => {
   });
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
+    const fetchData = async () => {try {
         const data = await getSeguimiento(idEmpresa);
-        const sprintElegido = (data.filter((sprint)=> sprint.idSprint===idSprint))[0]
-        const semanaElegida = (sprintElegido.semanas.filter((semana)=>semana.idSemana === idSemana))[0]
+        const sprintElegido = data.find((sprint) => sprint.idSprint === Number(idSprint));
+        const semanaElegida = sprintElegido.semanas?.find((semana) => semana.idSemana === Number(idSemana));
         const newData = {
-          idSprint:sprintElegido.idSprint,
-          numSprint:sprintElegido.numSprint,
-          semana: semanaElegida
-        }
+          idSprint: sprintElegido.idSprint,
+          numSprint: sprintElegido.numSprint,
+          semana: semanaElegida,
+        };
+      
         setData(newData);
+        console.log(newData);
       } catch (error) {
         console.error("Error en la solicitud:", error);
         setError(true);
         setSnackbar({
           open: true,
-          message: "Error al obtener los datos del sprint",
+          message: error.message || "Error al obtener los datos del sprint",
           severity: "error",
         });
       } finally {
         setLoading(false);
       }
+    
     };
 
     const getNombreEmpresa = async () => {
@@ -87,7 +87,7 @@ const EvaluarHito = () => {
     getComentarios();
     getNombreEmpresa();
     fetchData();
-  }, [idEmpresa]);
+  }, []);
 
   return (
     <Fragment>
@@ -95,7 +95,7 @@ const EvaluarHito = () => {
         titulo="EVALUACION SEMANAL"
         ocultarAtras={false}
         confirmarAtras={false}
-        dirBack="/"
+        dirBack={`/homeGrupo/${idGrupo}/listaEmpresas/evaluacionSemanal/${idEmpresa}`}
         loading={loading}
         error={{error:error}}
       >
@@ -117,4 +117,4 @@ const EvaluarHito = () => {
   );
 };
 
-export default EvaluarHito;
+export default SeguimientoSemanal;

@@ -42,7 +42,7 @@ function Home() {
     },
     {
       label: "HU7__Seguimiento Semanal",
-      onClick: () => navigate("/evaluacionSemanal/empresa/1/sprint/1"),
+      onClick: () => navigate("/homeGrupo/1/listaEmpresas/evaluacionSemanal"),
     },
     {
       label: "HU34__Calificar Sprints",

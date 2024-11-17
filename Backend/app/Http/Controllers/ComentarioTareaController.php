@@ -76,17 +76,17 @@ class ComentarioTareaController extends Controller
     {
         // Obtener la empresa
         $empresa = Empresa::findOrFail($idEmpresa);
-    
+
         // Obtener la planificación aceptada y publicada de la empresa
         $planificacion = $empresa->planificaciones()
             ->where('aceptada', true)
             ->where('publicada', true)
             ->first();
-    
+
         if (!$planificacion) {
             return response()->json(['error' => 'No se encontró planificación aceptada y publicada'], 404);
         }
-    
+
         // Obtener los sprints de la planificación que cumplen con la condición de fecha
         $sprints = $planificacion->sprints()
             ->where(function ($query) {
@@ -94,79 +94,85 @@ class ComentarioTareaController extends Controller
                     ->whereDate('fechaFin', '>=', now());
             })
             ->orWhereDate('fechaFin', '<', now())
-            ->where('idPlanificacion', $planificacion->idPlanificacion) // Filtrar sprints por planificación
+            ->where('idPlanificacion', $planificacion->idPlanificacion)
             ->get();
-    
+
         $resultado = [];
         $fechaDeLaConsulta = now();
-        $resultado = [];
 
-foreach ($sprints as $sprint) {
-    $sprintData = [
-        'idSprint' => $sprint->idSprint,
-        'numSprint' => $sprint->numeroSprint,
-        'semanas' => []
-    ];
+        foreach ($sprints as $sprint) {
+            $sprintData = [
+                'idSprint' => $sprint->idSprint,
+                'numSprint' => $sprint->numeroSprint,
+                'semanas' => []
+            ];
 
-    // Obtener las semanas del sprint
-    $semanas = $sprint->semanas()
-        ->where(function ($query) use ($fechaDeLaConsulta, $sprint) {
-            $query->where('idSprint', $sprint->idSprint) // Filtrar semanas por el sprint actual
-                ->where(function ($subQuery) use ($fechaDeLaConsulta) {
-                    // Condición 1: (fechaIni <= fechaDeLaConsulta < fechaFin)
-                    $subQuery->whereDate('fechaIni', '<=', $fechaDeLaConsulta)
-                        ->whereDate('fechaFin', '>', $fechaDeLaConsulta);
+            // Obtener las semanas del sprint
+            $semanas = $sprint->semanas()
+                ->where(function ($query) use ($fechaDeLaConsulta, $sprint) {
+                    $query->where('idSprint', $sprint->idSprint)
+                        ->where(function ($subQuery) use ($fechaDeLaConsulta) {
+                            $subQuery->whereDate('fechaIni', '<=', $fechaDeLaConsulta)
+                                ->whereDate('fechaFin', '>', $fechaDeLaConsulta);
+                        })
+                        ->orWhere(function ($subQuery) use ($fechaDeLaConsulta) {
+                            $subQuery->whereDate('fechaFin', '<=', $fechaDeLaConsulta);
+                        });
                 })
-                ->orWhere(function ($subQuery) use ($fechaDeLaConsulta) {
-                    // Condición 2: (fechaFin <= fechaDeLaConsulta)
-                    $subQuery->whereDate('fechaFin', '<=', $fechaDeLaConsulta);
-                });
-        })
-        ->get();
+                ->get();
 
-    foreach ($semanas as $semana) {
-        // Inicializar las tareas de los estudiantes
-        $tareasEstudianteData = [];
+            foreach ($semanas as $semana) {
+                // Inicializar arreglo de tareas únicas
+                $tareasSemana = [];
+                $tareasEstudianteData = [];
 
-        foreach ($semana->tareas as $tarea) {
-            foreach ($tarea->tareaEstudiantes as $tareaEstudiante) {
-                $idEstudiante = $tareaEstudiante->estudiantes->idEstudiante;
+                foreach ($semana->tareas as $tarea) {
+                    // Asegurarse de que no haya duplicados en tareas de la semana
+                    if (!isset($tareasSemana[$tarea->idTarea])) {
+                        $tareasSemana[$tarea->idTarea] = [
+                            'idTarea' => $tarea->idTarea,
+                            'nombreTarea' => $tarea->nombreTarea
+                        ];
+                    }
 
-                // Si el estudiante ya está en el arreglo, agregar la tarea
-                if (isset($tareasEstudianteData[$idEstudiante])) {
-                    $tareasEstudianteData[$idEstudiante]['tareas'][] = [
-                        'idTarea' => $tarea->idTarea,
-                        'nombreTarea' => $tarea->nombreTarea
-                    ];
-                } else {
-                    // Si el estudiante no existe, crear su entrada
-                    $tareasEstudianteData[$idEstudiante] = [
-                        'idEstudiante' => $idEstudiante,
-                        'nombre' => $tareaEstudiante->estudiantes->nombreEstudiante,
-                        'apellido' => $tareaEstudiante->estudiantes->primerApellido,
-                        'tareas' => [
-                            [
+                    // Procesar las tareas por estudiantes
+                    foreach ($tarea->tareaEstudiantes as $tareaEstudiante) {
+                        $idEstudiante = $tareaEstudiante->estudiantes->idEstudiante;
+
+                        if (isset($tareasEstudianteData[$idEstudiante])) {
+                            $tareasEstudianteData[$idEstudiante]['tareas'][] = [
                                 'idTarea' => $tarea->idTarea,
                                 'nombreTarea' => $tarea->nombreTarea
-                            ]
-                        ]
-                    ];
+                            ];
+                        } else {
+                            $tareasEstudianteData[$idEstudiante] = [
+                                'idEstudiante' => $idEstudiante,
+                                'nombre' => $tareaEstudiante->estudiantes->nombreEstudiante,
+                                'apellido' => $tareaEstudiante->estudiantes->primerApellido,
+                                'tareas' => [
+                                    [
+                                        'idTarea' => $tarea->idTarea,
+                                        'nombreTarea' => $tarea->nombreTarea
+                                    ]
+                                ]
+                            ];
+                        }
+                    }
                 }
+
+                // Agregar la información de la semana al sprint
+                $sprintData['semanas'][] = [
+                    'idSemana' => $semana->idSemana,
+                    'numSemana' => $semana->numeroSemana,
+                    'tareas' => array_values($tareasSemana), // Tareas únicas en la semana
+                    'tareasEstudiante' => array_values($tareasEstudianteData) // Tareas por estudiante
+                ];
             }
+
+            $resultado[] = $sprintData;
         }
 
-        // Convertir a valores indexados para no mantener las claves asociativas
-        $sprintData['semanas'][] = [
-            'idSemana' => $semana->idSemana,
-            'numSemana' => $semana->numeroSemana,
-            'tareasEstudiante' => array_values($tareasEstudianteData)
-        ];
-    }
-
-    $resultado[] = $sprintData;
-}
-
-    
         return response()->json($resultado);
     }
+
 }

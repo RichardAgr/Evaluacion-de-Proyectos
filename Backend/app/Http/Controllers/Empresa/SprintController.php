@@ -619,15 +619,16 @@ class SprintController extends Controller
     public function crearOActualizarNotaTarea(Request $request)
     {
         $validatedData = $request->validate([
-            '*.idEstudiante' => 'required|integer',
-            '*.idSemana' => 'required|integer',
+            '*.estudiante_idEstudiante' => 'required|integer',
+            '*.semana_idSemana' => 'required|integer',
             '*.comentario' => 'required|string',
+            '*.subido' => 'required|boolean'
         ]);
     
         foreach ($request->all() as $comentarioData) {
             ComentarioTarea::createOrUpdate([
-                'estudiante_idEstudiante' => $comentarioData['idEstudiante'],
-                'semana_idSemana' => $comentarioData['idSemana'],
+                'estudiante_idEstudiante' => $comentarioData['estudiante_idEstudiante'],
+                'semana_idSemana' => $comentarioData['semana_idSemana'],
                 'comentario' => $comentarioData['comentario'],
             ]);
         }

@@ -19,24 +19,27 @@ const TablaEvaluacionSemanal = ({ sprint, comenta }) => {
   useEffect(() => {
     console.log(comenta)
     const iniciarComentarios = (
-      
       sprint?.semana?.tareasEstudiante && Array.isArray(sprint.semana.tareasEstudiante)
         ? sprint.semana.tareasEstudiante.map((estudiante) => ({
             semana_idSemana: sprint.semana.idSemana,
             estudiante_idEstudiante: estudiante.idEstudiante,
-            comentario: ''
+            comentario: '',
+            subido: false
           }))
         : []
     );
-  
     const newComentarios = iniciarComentarios.map((comentario) => {
-      const indice = comenta.findIndex(estudiante => estudiante.estudiante_idEstudiante === comentario.estudiante_idEstudiante);
+      // Busca si el estudiante tiene un comentario en "comenta"
+      const indice = comenta.findIndex(
+        (estudiante) => estudiante.estudiante_idEstudiante === comentario.estudiante_idEstudiante
+      );
       
-      // Si no se encuentra el estudiante en "comenta", se conserva el valor de "comentario" vacío
-      return indice === -1 ? comentario : {...comentario, comentario: comenta[indice].comentario};
-    });
-  
-    console.log(newComentarios);
+      // Si se encuentra, actualiza el comentario; si no, mantiene el comentario vacío
+      return indice === -1 
+        ? comentario  // Si no se encuentra, deja el comentario vacío
+        : { ...comentario, comentario: comenta[indice].comentario, subido: true }; // Si se encuentra, actualiza el comentario
+    });  
+    //console.log(newComentarios);
     setComentarios(newComentarios);
   }, [comenta]); // Asegúrate de que sprint también esté en las dependencias
   
@@ -57,9 +60,13 @@ const TablaEvaluacionSemanal = ({ sprint, comenta }) => {
 
   const handleComentarioChange = (index, value) => {
     const newComentarios = [...comentarios];
-    newComentarios[index] = value;
+    newComentarios[index] = {
+      ...newComentarios[index],
+      comentario: value,
+    };
     setComentarios(newComentarios);
   };
+  
 
   const handleSave = () => {
     setCuadroDialogo({
@@ -80,17 +87,17 @@ const TablaEvaluacionSemanal = ({ sprint, comenta }) => {
   };
 
   const handleSubmit = async () => {
+    const comentariosNoSubidos = comentarios.filter((comentario)=> comentario.subido === false)
+    console.log(comentariosNoSubidos)
     try {  
       const response = await fetch(
-        `http://localhost:8000/api/seguimientoSemanal/actualizarComentarios`,
+        `http://localhost:8000/api/docente/evaluacion`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({
-            comentarios:comentarios
-          }),
+          body: JSON.stringify(comentariosNoSubidos),
         }
       );
       if(response.ok){
@@ -115,7 +122,7 @@ const TablaEvaluacionSemanal = ({ sprint, comenta }) => {
 
   return (
     <>
-      <TableContainer component={Paper}>
+      {sprint.semana?.tareasEstudiante?.length > 0&&<TableContainer component={Paper}>
         <Table aria-label="team evaluation table">
           <TableHead>
             <TableRow>
@@ -136,29 +143,35 @@ const TablaEvaluacionSemanal = ({ sprint, comenta }) => {
                   </ul>
                 </TableCell>
                 <TableCell>
-                  <TextField
-                    multiline
-                    rows={3}
-                    defaultValue={comentarios[index]?.comentario || ''}
-                    value={comentarios[index]?.comentario}
-                    onChange={(e) => handleComentarioChange(index, e.target.value)}
-                    fullWidth
-                    placeholder="Ingrese un comentario"
-                  />
+                  {!(comentarios[index]?.subido)?
+                    <TextField
+                      multiline
+                      rows={3}
+                      defaultValue={''}
+                      value={comentarios[index]?.comentario}
+                      onChange={(e) => handleComentarioChange(index, e.target.value)}
+                      fullWidth
+                      placeholder="Ingrese un comentario"
+                    />
+                    :
+                    <>{comentarios[index]?.comentario}</>
+                  }
                 </TableCell>
               </TableRow>
             ))}
+            
           </TableBody>
         </Table>
       </TableContainer>
-      
-      <DecisionButtons
+      }
+      {sprint.semana?.tareasEstudiante?.length < 1 &&<h2 style={{color:'red'}}>No Asignaron tareas a los estudiantes en este semana</h2>}
+      {sprint.semana?.tareasEstudiante?.length > 0 &&<DecisionButtons
         rejectButtonText="Descartar"
         validateButtonText="Guardar Evaluación"
         onReject={handleCancel}
         onValidate={handleSave}
         disabledButton={0}
-      />
+      />}
 
       <CuadroDialogo
         open={cuadroDialogo.open}
