@@ -21,6 +21,7 @@ function ListaCali() {
     const { idGrupo, idEstudiante} = useParams()
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState({
+        error:false,
         errorMessage: "",
         errorDetails: "",
     });
@@ -33,8 +34,9 @@ function ListaCali() {
                 
               if (responseData.error !== undefined && responseData.error !== null) {
                     setError({
-                    errorMessage: "Ha ocurrido un error",
-                    errorDetails: error.message,
+                        error:true,
+                        errorMessage: "Ha ocurrido un error",
+                        errorDetails: error.message,
                     });
                 } else{
                     const [lista] = await responseData
