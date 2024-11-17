@@ -89,7 +89,7 @@ const TablaEvaluacionSemanal = ({ sprint, comenta, showButtons = true }) => {
   };
 
   const handleSubmit = async () => {
-    const comentariosNoSubidos = comentarios.filter((comentario)=> comentario.subido === false && comentario.comentario !== '')
+    const comentariosNoSubidos = comentarios.filter((comentario)=> comentario.subido === false)
     console.log(comentariosNoSubidos)
     try {  
       const response = await fetch(
@@ -106,7 +106,7 @@ const TablaEvaluacionSemanal = ({ sprint, comenta, showButtons = true }) => {
         console.log('se subio correctamente')
         setSnackbar({
             open: true,
-            message: `Se guardo los comentarios correctamente`,
+            message: `Se guarod los comentarios correctamente`,
             severity: "success",
             autoHide: 6000,
         });
@@ -136,7 +136,7 @@ const TablaEvaluacionSemanal = ({ sprint, comenta, showButtons = true }) => {
           <TableBody>
             {sprint.semana?.tareasEstudiante?.map((estudiante, index) => (
               <TableRow key={index}>
-                <TableCell>{estudiante.nombre} {estudiante.apellido}</TableCell>
+                <TableCell>{estudiante.nombre}</TableCell>
                 <TableCell>
                   <ul>
                     {estudiante?.tareas.map((tarea, idx) => (
