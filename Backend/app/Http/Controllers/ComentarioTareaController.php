@@ -69,6 +69,73 @@ class ComentarioTareaController extends Controller
         ], 200);
     }
         
+    public function seguimientoSemanalHastaSemanaActualcomentarios($idEmpresa)
+    {
+        // Obtener la empresa
+        $empresa = Empresa::findOrFail($idEmpresa);
+
+        // Obtener la planificación aceptada y publicada de la empresa
+        $planificacion = $empresa->planificaciones()
+            ->where('aceptada', true)
+            ->where('publicada', true)
+            ->first();
+
+        if (!$planificacion) {
+            return response()->json(['error' => 'No se encontró planificación aceptada y publicada'], 404);
+        }
+
+        // Obtener los sprints de la planificación que cumplen con la condición de fecha
+        $sprints = $planificacion->sprints()
+            ->where(function ($query) {
+                $query->whereDate('fechaIni', '<=', now())
+                    ->whereDate('fechaFin', '>=', now());
+            })
+            ->orWhereDate('fechaFin', '<', now())
+            ->where('idPlanificacion', $planificacion->idPlanificacion)
+            ->get();
+
+        $resultado = [];
+        $fechaDeLaConsulta = now();
+
+        foreach ($sprints as $sprint) {
+            $sprintData = [
+                'idSprint' => $sprint->idSprint,
+                'numSprint' => $sprint->numeroSprint,
+                'semanas' => []
+            ];
+
+            // Obtener las semanas del sprint
+            $semanas = $sprint->semanas()
+                ->where(function ($query) use ($fechaDeLaConsulta) {
+                    $query->whereDate('fechaIni', '<=', $fechaDeLaConsulta)
+                        ->whereDate('fechaFin', '>', $fechaDeLaConsulta)
+                        ->orWhereDate('fechaFin', '<=', $fechaDeLaConsulta);
+                })
+                ->get();
+
+            foreach ($semanas as $semana) {
+                // Obtener los comentariosTareas para cada semana
+                $comentariosTareas = $semana->comentarioTarea()->get()->map(function ($comentario) {
+                    return [
+                        'idEstudiante' => $comentario->estudiante_idEstudiante,
+                        'comentario' => $comentario->comentario,
+                    ];
+                });
+
+                $semanaData = [
+                    'idSemana' => $semana->idSemana,
+                    'numeroSemana' => $semana->numeroSemana,
+                    'comentariosTareas' => $comentariosTareas,
+                ];
+
+                $sprintData['semanas'][] = $semanaData;
+            }
+
+            $resultado[] = $sprintData;
+        }
+
+    return response()->json($resultado);
+}
 
 
 

@@ -9,7 +9,9 @@ function SeguimientoSemanalSprints () {
     const { idEmpresa, idGrupo } = useParams(); 
     const [sprints, setSprints] = useState([]);
     const [sprintOpen, setSprintOpen] = useState([])
+    const [comentarios, setComentarios] = useState([])
     const [error, setError] = useState(false);
+    const [verificacion, setVerificacion] = useState([])
     const [loading, setLoading] = useState(true); 
     useEffect(() => {
         const fetchSprintsData = async () => {
@@ -17,9 +19,7 @@ function SeguimientoSemanalSprints () {
             const data = await getSeguimiento(idEmpresa);
             const newOpens = data?.map(()=> false);
             setSprintOpen(newOpens)
-            console.log(newOpens)
             setSprints(data);
-            console.log(data)
           } catch (error) {
             console.error("Error en la solicitud:", error);
             setError(true);
@@ -27,9 +27,62 @@ function SeguimientoSemanalSprints () {
             setLoading(false);
           }
         };
+        
+        const getComentarios = async () => {
+            try {
+                const response = await fetch(`http://localhost:8000/api/seguimientoSemanal/${idEmpresa}/SprintHastaSemanalActualComentarios`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                const responseData = await response.json();
+                setComentarios(responseData)
+                if (!response.ok) throw new Error('Error al obtener los datos de los comentarios');
+            } catch (error) {
+                console.error('Error en la solicitud:', error);
+                setError(true);
+            }finally{
+            setLoading(false)
+            }
+      };
+        getComentarios();
         fetchSprintsData()
     }, []); 
+    useEffect(()=>{
+      if(comentarios.length>0 && sprints.length>0){
+        console.log(comentarios)
+        console.log(sprints)
+        let newVerificacion = []
+        const tam = sprints.length
+        for (let i = 0; i < tam; i++) {
+            const tamSemana = (sprints[i].semanas).length;
+            const semanasSprint = sprints[i].semanas
+            const semanasComentario = comentarios[i].semanas
+            let verificacionSemanas = [];
+            let bandera = false
+            for (let j = 0; j < tamSemana; j++) {
+                const evaluado = semanasSprint[j].tareasEstudiante.length === semanasComentario[j].comentariosTareas.length;
+                console.log(evaluado)
+                if(!evaluado){
+                    bandera = true
+                }
+                verificacionSemanas.push(evaluado)
+            }
+            if(bandera){
+                newVerificacion.push(
+                    {
+                        completo: !bandera,
+                        completoSemanas: verificacionSemanas
+                    }
+                )
+            }
 
+        }
+        setVerificacion(newVerificacion)
+        console.log(newVerificacion)        
+      }
+    },[comentarios, sprints ])
     const togglePanel = (index) => {
         const newOpens = sprintOpen.map((open,i)=>{
             if(i === index){
@@ -70,19 +123,20 @@ function SeguimientoSemanalSprints () {
                                 marginLeft: 'calc(1vw + 0.1rem)',
                                 pl: 2,
                                 fontSize: '1.5rem',
-                                bgcolor: '#d0d4e4', 
+                                bgcolor: verificacion[i]?.completo? 'green':'#d0d4e4', 
                                 textTransform: 'uppercase',
                                 display: 'flex', 
                                 cursor: 'pointer',
                                 justifyContent: 'flex-start', 
                                 alignItems: 'center', 
                                 '&:hover': {
-                                    bgcolor: '#c0c4d4', 
+                                    bgcolor: verificacion[i]?.completo? '#006700':'#c0c5db',
+                                    cursor:'pointer' 
                                 },
                             }}            
                         >
                             {sprintOpen[i] ? <div className='arrow-down'></div> : <div className='arrow-right'></div> }
-                            SPRINT {i+1}
+                            SPRINT {i+1} {verificacion[i]?.completo?'(YA EVALUADO)':''}
                         </Box>      
                         {sprintOpen[i]&& sprint.semanas.map((semana, index) => (
                             <Box 
@@ -96,18 +150,19 @@ function SeguimientoSemanalSprints () {
                                     marginLeft: 'calc(2vw + 0.5rem)',
                                     pl: 2,
                                     fontSize: '1.5rem',
-                                    bgcolor: '#d0d4e4', 
+                                    bgcolor: verificacion[i]?.completoSemanas[index]? 'green':'#d0d4e4', 
                                     textTransform: 'uppercase',
                                     display: 'flex', 
                                     cursor: 'pointer',
                                     justifyContent: 'flex-start', 
                                     alignItems: 'center', 
                                     '&:hover': {
-                                        bgcolor: '#c0c4d4', 
+                                        bgcolor: verificacion[i]?.completoSemanas[index]? '#006700':'#c0c5db', 
+                                        cursor:'pointer'
                                     },
                                 }}            
                             >
-                                SEMANA {semana.numSemana}
+                                SEMANA {semana.numSemana} 
                             </Box>
                           ))
                         }
