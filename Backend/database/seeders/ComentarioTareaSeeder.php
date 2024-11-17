@@ -15,13 +15,13 @@ class ComentarioTareaSeeder extends Seeder
     {
         $data = [
             [
-                'estudiante_idEstudiante' => 2,
-                'semana_idSemana' => 1,
+                'idEstudiante' => 2,
+                'idSemana' => 1,
                 'comentario' => 'Este es un comentario de ejemplo para el estudiante 1.',
             ],
             [
-                'estudiante_idEstudiante' => 5,
-                'semana_idSemana' => 1,
+                'idEstudiante' => 5,
+                'idSemana' => 1,
                 'comentario' => 'Este es otro comentario para el estudiante 2.',
             ]
         ];

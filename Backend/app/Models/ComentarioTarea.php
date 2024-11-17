@@ -2,72 +2,39 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class ComentarioTarea extends Model
 {
-    use HasFactory;
-
     protected $table = 'comentarioTarea';
+    protected $primaryKey = ['idEstudiante', 'idSemana'];
+
+    /**
+     * No es autoincremental por tener llave primaria compuesta
+     */
+    public $incrementing = false;
+
     public $timestamps = false;
 
     protected $fillable = [
-        'estudiante_idEstudiante',
-        'semana_idSemana',
+        'idEstudiante',
+        'idSemana',
         'comentario',
     ];
 
-    // Indicar que no hay claves incrementales (sin columna "id" autoincremental)
-    public $incrementing = false;
-
     /**
-     * Encuentra un registro por claves primarias compuestas.
-     *
-     * @param int $idEstudiante
-     * @param int $idSemana
-     * @return ComentarioTarea|null
-     */
-    public static function findByCompositeKey($idEstudiante, $idSemana)
-    {
-        return self::where('estudiante_idEstudiante', $idEstudiante)
-            ->where('semana_idSemana', $idSemana)
-            ->first();
-    }
-
-    /**
-     * Crea o actualiza un registro basado en claves primarias compuestas.
-     *
-     * @param array $data
-     * @return void
-     */
-    public static function createOrUpdate($data)
-    {
-        // Encuentra el registro existente
-        $record = self::findByCompositeKey($data['estudiante_idEstudiante'], $data['semana_idSemana']);
-
-        if ($record) {
-            // Actualiza el registro si ya existe
-            $record->update(['comentario' => $data['comentario']]);
-        } else {
-            // Crea un nuevo registro si no existe
-            self::create($data);
-        }
-    }
-
-    /**
-     * Relación con el modelo Estudiante.
+     * obtiene el estudiante que tiene el comentario
      */
     public function estudiante()
     {
-        return $this->belongsTo(Estudiante::class, 'estudiante_idEstudiante');
+        return $this->belongsTo(Estudiante::class, 'idEstudiante');
     }
 
     /**
-     * Relación con el modelo Semana.
+     * obtiene la semana que tiene el comentario
      */
     public function semana()
     {
-        return $this->belongsTo(Semana::class, 'semana_idSemana');
+        return $this->belongsTo(Semana::class, 'idSemana');
     }
 }
