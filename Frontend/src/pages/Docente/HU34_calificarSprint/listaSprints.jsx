@@ -44,6 +44,26 @@ const ListaSprints = () => {
         console.log("click", sprint)
         navigate(`/homeGrupo/${idGrupo}/listaEmpresaCalificarSprints/${idEmpresa}/sprint/${sprint}`); 
     }
+
+    if(sprints?.length === 0 || new Date(sprints[0]?.fechaFin) > new Date()) return (
+        <BaseUI
+                titulo={'SELECCIONE UN SPRINT PARA CALIFICAR'}
+                ocultarAtras={false}
+                confirmarAtras={false}
+                dirBack={`/homeGrupo/${idGrupo}/listaEmpresaCalificarSprints`}
+                loading={loading}
+                error={error}
+        >
+            <div className='mensajeVacio'>
+               <h1>{sprints?.length === 0?
+                'ESTA EMPRESA NO TIENE SPRINTS' 
+                : 
+                'EL PRIMER SPRINT DE ESTE GRUPO NO TERMINO TODAIVA, NO SE PUEDE CALIFICAR'
+               }</h1>
+            </div>
+        </BaseUI>
+    )
+
     return (
         <BaseUI        
             titulo={'SELECCIONE UN SPRINT PARA CALIFICAR'}
@@ -54,39 +74,33 @@ const ListaSprints = () => {
             error={error}
         >
         <DivLista>
-            {sprints!==null? 
-                <>
-                    {sprints.map((sprint, index)=>(
-                        ( new Date() > new Date(sprint.fechaFin)?<Box 
-                            key={index}
-                            onClick={() => clickBoton(sprint.idSprint)}
-                            sx={{
-                                width: '85%', height: 60,
-                                borderRadius: 0.6, margin: 0.7,
-                                marginLeft: 'calc(2vw + 1rem)', pl: 2,
-                                fontSize: '1.5rem',
-                                bgcolor: sprint.nota === null ? '#d0d4e4' : '#32cd32',
-                                textTransform: 'uppercase',
-                                display: 'flex', 
-                                cursor: 'pointer',
-                                justifyContent: 'flex-start', 
-                                alignItems: 'center', 
-                                '&:hover': {
-                                    bgcolor: sprint.nota === null ? '#c0c4d4' : '#68ba44',
-                                },
-                            }}            
-                        >
-                            Sprint {sprint.numeroSprint}{sprint.nota === null ? "":"(YA EVALUADO)"}
-                        </Box>
-                        :
-                         <></>
-                        )
-                    ))}
-                    {new Date(sprints[0]?.fechaFin) > new Date()?<h3 style={{marginLeft:'calc(2vw + 1rem)'}}>EL PRIMER SPRINT DE ESTE GRUPO NO TERMINO, NO SE PUEDE CALIFICAR</h3>:<></>}
-                </>
+            {sprints.map((sprint, index)=>(
+                ( new Date() > new Date(sprint.fechaFin)?<Box 
+                    key={index}
+                    onClick={() => clickBoton(sprint.idSprint)}
+                    sx={{
+                        width: '85%', height: 60,
+                        borderRadius: 0.6, margin: 0.7,
+                        marginLeft: 'calc(2vw + 1rem)', pl: 2,
+                        fontSize: '1.5rem',
+                        bgcolor: sprint.nota === null ? '#d0d4e4' : '#32cd32',
+                        textTransform: 'uppercase',
+                        display: 'flex', 
+                        cursor: 'pointer',
+                        justifyContent: 'flex-start', 
+                        alignItems: 'center', 
+                        '&:hover': {
+                            bgcolor: sprint.nota === null ? '#c0c4d4' : '#68ba44',
+                        },
+                    }}            
+                >
+                    Sprint {sprint.numeroSprint}{sprint.nota === null ? "":"(YA EVALUADO)"}
+                </Box>
                 :
-                <h3 style={{marginLeft:'calc(2vw + 1rem)'}}>No se encontro ningun sprint en la base de datos</h3>
-            }
+                    <></>
+                )
+            ))}
+    
         </DivLista>
         </BaseUI>
     );

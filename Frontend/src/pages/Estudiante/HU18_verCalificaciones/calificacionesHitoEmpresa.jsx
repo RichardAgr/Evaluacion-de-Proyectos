@@ -1,15 +1,16 @@
 import { useState, useEffect } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, CircularProgress } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 import { useParams } from 'react-router-dom';
 import BaseUI from '../../../components/baseUI/baseUI';
 import NombreEmpresa from '../../../components/infoEmpresa/nombreEmpresa';
 const NotaSprintTable = () => {
-  const { idEmpresa } = useParams();
+  const { idEmpresa, idEstudiante, idGrupo } = useParams();
   const [notas, setNotas] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [nombreEmpresa, setNombreEmpresa] = useState({ nombreCorto: '', nombreLargo: '' });
   useEffect(() => {
+    setLoading(true);
     getNombreEmpresa(idEmpresa);
     fetchNotas();
   }, []);
@@ -30,6 +31,7 @@ const NotaSprintTable = () => {
     }
   };
   const getNombreEmpresa = async (idEmpresa) => {
+    setLoading(true);
     try {
       const response = await fetch(`http://127.0.0.1:8000/api/nombreEmpresa/${idEmpresa}`);
       if (!response.ok) {
@@ -56,7 +58,7 @@ const NotaSprintTable = () => {
       titulo="VISUALIZAR CALIFICACIONES DE LA GRUPO EMPRESA"
       ocultarAtras={false}
       confirmarAtras={false}
-      dirBack="/"
+      dirBack={idEstudiante === undefined?`/homeGrupo/${idGrupo}/empresa/calificaciones`:`/`}
       loading={loading}
       error={error}
     >
