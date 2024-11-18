@@ -11,7 +11,7 @@ const columns = [
   },
   {
     field: 'nombreEmpresa',
-    headerName: 'Equipo',
+    headerName: 'Grupo Empresa',
     type: 'string',
     flex: 2,
     renderCell: ({ value }) => (

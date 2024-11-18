@@ -5,8 +5,7 @@ import ListaDefinitivaN from '../../../components/listaDefinitiva/listaDefinitiv
 
 const columns = [
   { field: 'nombreEmpresa', headerName: 'Nombre Empresa', type: 'string', flex: 2 },
-  { field: 'nombreLargo', headerName: 'Nombre Empresa largo', type: 'string', flex: 2 },
-  { field: 'totalEstudiantes', headerName: 'Numero de Integrantes', type: 'string', flex: 2 },
+  { field: 'nombreLargo', headerName: 'Nombre Empresa largo', type: 'string', flex: 2 }
 ];
 
 function EmpresasParaTareas() {

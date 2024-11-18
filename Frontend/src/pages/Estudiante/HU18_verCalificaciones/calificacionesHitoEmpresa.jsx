@@ -67,7 +67,7 @@ const NotaSprintTable = () => {
       <Table sx={{ borderCollapse: 'separate', borderSpacing: '1rem' }}>
         <TableHead>
           <TableRow>
-            <TableCell>Estudiante</TableCell>
+            <TableCell>Nombre Integrante</TableCell>
             {sprints.map((sprint) => (
               <TableCell key={sprint.idSprint}>Sprint {sprint.numeroSprint}</TableCell>
             ))}
