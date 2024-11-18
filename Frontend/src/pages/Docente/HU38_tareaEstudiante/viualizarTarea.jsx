@@ -2,17 +2,12 @@ import { useParams} from "react-router-dom";
 import { Fragment,useEffect,useState } from 'react';
 import { styled } from '@mui/material';
 import BaseUI from '../../../components/baseUI/baseUI';
-import {getTareaData} from "../../../api/validarTareas/tareas";
-import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
-import FolderZipIcon from "@mui/icons-material/FolderZip";
-import ImageIcon from "@mui/icons-material/Image"; // Ícono para imágenes
-import TextSnippetIcon from "@mui/icons-material/TextSnippet"; // Ícono para archivos de texto
+import {getTareaData} from "../../../api/validarTareas/tareas";// Ícono para archivos de texto
 
 function VisualizarTarea() {
     const [descripcion, setDescripcion] = useState("");
     const [comentarioD, setComentario] = useState("");
     const [responsables, setResponsables] = useState([]);
-    const [existingFiles, setExistingFiles] = useState([]); 
     const [nombreTarea,setNombreTarea] = useState([]);
     const { idTarea } = useParams();
     const { idEmpresa, idGrupo } = useParams();
@@ -30,13 +25,6 @@ function VisualizarTarea() {
           setComentario(data.comentario);
           setResponsables(data.estudiantes);
           setNombreTarea(data.nombreTarea);
-          setExistingFiles(
-            data.archivotarea.map((file) => ({
-              name: file.nombreArchivo,
-              url: file.archivo,
-            })),
-            console.log(data),
-          );
           setLoading(false);
         } catch (error) {
           console.error("Error al cargar la tarea:", error);
@@ -53,34 +41,6 @@ function VisualizarTarea() {
       fetchTareaData();
     }, [idTarea]);
   
-    const renderIconForFileType = (fileName) => {
-      if (!fileName || typeof fileName !== "string") {
-        return <TextSnippetIcon style={{ fontSize: 30 }} />; // Ícono por defecto si el nombre de archivo es indefinido
-      }
-      if (fileName.endsWith(".pdf")) {
-        return <PictureAsPdfIcon style={{ fontSize: 30 }} />;
-      }
-      if (fileName.endsWith(".zip") || fileName.endsWith(".rar")) {
-        return <FolderZipIcon style={{ fontSize: 30 }} />;
-      }
-      if (
-        fileName.endsWith(".png") ||
-        fileName.endsWith(".jpg") ||
-        fileName.endsWith(".jpeg")
-      ) {
-        return <ImageIcon style={{ fontSize: 30 }} />;
-      }
-      if (
-        fileName.endsWith(".txt") ||
-        fileName.endsWith(".doc") ||
-        fileName.endsWith(".docx") ||
-        fileName.endsWith(".xls") ||
-        fileName.endsWith(".xlsx")
-      ) {
-        return <TextSnippetIcon style={{ fontSize: 30 }} />;
-      }
-      return <TextSnippetIcon style={{ fontSize: 30 }} />; // Ícono por defecto para otros tipos
-    };
 
     return (
         <Fragment>
@@ -88,7 +48,7 @@ function VisualizarTarea() {
             titulo = {'VISUALIZAR TAREA'}
             ocultarAtras = {false}
             confirmarAtras = {false}
-            dirBack = {`/homeGrupo/${idGrupo}/empresaVerTareas/${idEmpresa}`}
+            dirBack = {`/homeGrupo/${idGrupo}/empresasVerTareas/${idEmpresa}`}
             loading={loading}
             error={error}
           >
@@ -108,31 +68,6 @@ function VisualizarTarea() {
                   )}
                 </Responsables>
               </DescripcionTarea>
-              <ArchivosSection>
-                <h3>Archivos:</h3>
-                <ArchivosWrapper>
-                  <div className="uploadedFiles">
-                    {existingFiles.length > 0 ? (
-                      existingFiles.map((file, index) => (
-                        <div key={index} className="fileItem">
-                          {renderIconForFileType(file.name)}
-                          <a
-                            href={file.url}  // URL al archivo
-                            target="_blank"   // Abrir en una nueva pestaña
-                            rel="noopener noreferrer"
-                          >
-                            <p className="fileName">
-                              {file?.name || "Nombre desconocido"}
-                            </p>
-                          </a>
-                        </div>
-                      ))
-                    ) : (
-                      <p>No hay archivos existentes</p>
-                    )}
-                  </div>
-                </ArchivosWrapper>
-              </ArchivosSection>
             </div>
             <h3>Descripcion de la tarea</h3>
             <Rectangulo>{descripcion}</Rectangulo>
@@ -152,26 +87,6 @@ export default VisualizarTarea;
 
 const DescripcionTarea = styled('div')`
   margin-top: 1rem;
-`;
-
-const ArchivosSection = styled('div')`
-  margin-top: 1rem;
-`;
-
-const ArchivosWrapper = styled('div')`
-  box-sizing: border-box;
-  padding: 1rem;
-  min-height: 6vw;
-  border-radius: 0.1rem;
-  width: 80%;
-  .archivos-icons {
-    display: flex;
-    gap: 1rem;
-  }
-  .archivo-ejemplo {
-    width: 50px;
-    height: 50px;
-  }
 `;
 
 const Responsables = styled('div')`

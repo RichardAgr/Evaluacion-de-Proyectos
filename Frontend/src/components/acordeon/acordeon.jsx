@@ -3,7 +3,7 @@ import SprintSemanas from '../SprintTareas/sprintSemanas';
 import { Box } from '@mui/material';
 import { useParams } from 'react-router-dom'
 // eslint-disable-next-line react/prop-types
-const VisualizarSprintEst = ({navigateLink, bloquearFechas, verSprints, sprints=[]}) => {
+const VisualizarSprintEst = ({navigateLink, verSprints, sprints=[]}) => {
     const {idSprint} = useParams()
     const [sprintOpen, setSprintOpen] = useState([])
     useEffect(()=>{
@@ -60,21 +60,20 @@ const VisualizarSprintEst = ({navigateLink, bloquearFechas, verSprints, sprints=
                             :
                             <div>
                                 <h1 style={{ fontSize: '2rem', display: 'flex', overflow: 'hidden', marginBottom: '0.1rem' }}>
-                                    SPRINT {idSprint}
+                                    SPRINT {sprint.numeroSprint}
                                 </h1>
                             </div>
                         }
                             
-                        {(!(verSprints === undefined || verSprints === true)||sprintOpen[i]) && sprint.semanas.map((semana, index) => {
-                            if(bloquearFechas === true && !(new Date(semana.fechaIni) <= new Date()  && new Date() <= new Date(semana.fechaFin))) return <></>
+                        {(!(verSprints === true)||sprintOpen[i]) && sprint.semanas.map((semana, index) => {
                             return (<SprintSemanas 
                                 key={index} 
-                                title={`Semana ${index + 1}`} 
+                                title={`Semana ${semana.numeroSemana}`} 
                                 semana={semana} 
                                 idSprint={idSprint} 
                                 navigateLink={navigateLink}
-                                semanaTexto = {bloquearFechas}
-                                isOpenSprint = {(verSprints === undefined || verSprints === true)? true : sprintOpen[i]}
+                                semanaTexto = {!verSprints}
+                                isOpenSprint = {verSprints === true? true : sprintOpen[i]}
                             >
                             </SprintSemanas>)
                         })}

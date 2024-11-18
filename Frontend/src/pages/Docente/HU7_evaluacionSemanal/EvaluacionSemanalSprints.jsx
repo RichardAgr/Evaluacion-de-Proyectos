@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import BaseUI from '../../../components/baseUI/baseUI';
 import { getSeguimiento } from '../../../api/seguimientoSemanal';
 import { Box } from '@mui/material';
+import Loading from '../../../components/loading/loading';
 // eslint-disable-next-line react/prop-types
 function SeguimientoSemanalSprints () {
     const navigate = useNavigate();
@@ -15,6 +16,7 @@ function SeguimientoSemanalSprints () {
     const [loading, setLoading] = useState(true); 
     useEffect(() => {
         const fetchSprintsData = async () => {
+            setLoading(true)
           try {
             const data = await getSeguimiento(idEmpresa);
             const newOpens = data?.map(()=> false);
@@ -29,6 +31,7 @@ function SeguimientoSemanalSprints () {
         };
         
         const getComentarios = async () => {
+            setLoading(true)
             try {
                 const response = await fetch(`http://localhost:8000/api/seguimientoSemanal/${idEmpresa}/SprintHastaSemanalActualComentarios`, {
                     method: 'GET',
@@ -50,6 +53,7 @@ function SeguimientoSemanalSprints () {
         fetchSprintsData()
     }, []); 
     useEffect(()=>{
+        setLoading(true)
         if (comentarios.length > 0 && sprints.length > 0 && comentarios.length === sprints.length) {
         let newVerificacion = []
         const tam = sprints.length
@@ -81,6 +85,7 @@ function SeguimientoSemanalSprints () {
         }
         console.log(newVerificacion)
         setVerificacion(newVerificacion)
+        setLoading(false)
       }
     },[comentarios, sprints ])
     const togglePanel = (index) => {
@@ -100,6 +105,22 @@ function SeguimientoSemanalSprints () {
     const navigateSemana=(idSprint, idSemana)=>{
       navigate(`/homeGrupo/${idGrupo}/listaEmpresas/evaluacionSemanal/${idEmpresa}/Sprint/${idSprint}/semana/${idSemana}`)
     }
+
+    if(sprints?.length === 0) return (
+        <BaseUI
+                titulo={'SELECCIONE UNA SEMANA PARA EL SEGUIMIENTO'}
+                ocultarAtras={false}
+                confirmarAtras={false}
+                dirBack={`/homeGrupo/${idGrupo}/listaEmpresas/evaluacionSemanal`}
+                loading={loading}
+                error={error}
+        >
+            <div className='mensajeVacio'>
+               <h1>NO HAY SEMANAS PARA EVALUAR</h1>
+            </div>
+        </BaseUI>
+    )
+
     return (
         <Fragment>
             <BaseUI
