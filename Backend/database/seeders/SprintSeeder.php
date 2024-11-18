@@ -14,12 +14,12 @@ class SprintSeeder extends Seeder
     public function run(): void
     {
         $planificaciones = DB::table('planificacion')
-            ->whereIn('idPlanificacion', [1,2,3,4])
+            ->whereIn('idPlanificacion', [1,2,3,4,5,6])
             ->pluck('idPlanificacion');
 
         foreach ($planificaciones as $idPlanificacion) 
         {
-            if($idPlanificacion===4){
+            if($idPlanificacion===4 || $idPlanificacion===5 || $idPlanificacion===6){   
                 $startDate = Carbon::now()->addDays(rand(1, 30));
             }else{
                 $startDate = Carbon::now()->subDays(rand(1, 30));
