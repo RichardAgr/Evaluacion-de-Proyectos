@@ -2,31 +2,45 @@ import { Fragment, useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import BaseUI from "../../../components/baseUI/baseUI";
 import { styled } from "@mui/material"; 
-import { Snackbar, Alert, Grid2 } from "@mui/material";
+import { Grid2 } from "@mui/material";
 import Box from '@mui/material/Box';
 import { Button } from '@mui/material';
-
+import InfoSnackbar from '../../../components/infoSnackbar/infoSnackbar'
 const PublicarGrupoEmpresa = () => {
     const { idEstudiante } = useParams();
-    const [intentoEnviar, setIntentoEnviar] = useState(false);
     const [empresa, setEmpresa] = useState([]);
     const [integrantes, setIntegrantes] = useState([]);
     const [idRepresentanteLegal, setIdRepresentanteLegal] = useState(null);
     const [mensajeError, setMensajeError] = useState("");
     const [error, setError] = useState(false)
-    const [snackbarOpen, setSnackbarOpen] = useState(false);
-    const [snackbarMessage, setSnackbarMessage] = useState("");
     const [isLoading,setLoading]= useState(true);
-
+    const [snackbar, setSnackbar] = useState({
+        open: false,
+        message: "",
+        severity: "info",
+      });
     useEffect(() => {
         const fetchInformacion = async () => {
             try {
                 const response = await fetch(`http://localhost:8000/api/estudiante/getDatosEstEmpresa/${idEstudiante}`);
                 if (!response.ok) {
                     if (response.status === 404) {
+                        setSnackbar({
+                            open: true,
+                            message: `El estudiante no tiene empresa y no tiene registrada ninguna`,
+                            severity: "info",
+                            autoHide: 6000,
+                        });
                       setMensajeError("El estudiante no tiene empresa y no tiene registrada ninguna");
                     } else {
+                        setSnackbar({
+                            open: true,
+                            message: `Error al recuperar datos`,
+                            severity: "error",
+                            autoHide: 6000,
+                        });
                       setMensajeError('Error al recuperar datos');
+                      setError(true);
                     }
                     throw new Error('Error al recuperar datos');
                   }
@@ -39,7 +53,12 @@ const PublicarGrupoEmpresa = () => {
                 setIdRepresentanteLegal(integrantes[0]?.idEstudiante);
                 
                 if (publicada === 1) {
-                    // Si la empresa está publicada, mostrar el error 403 con el nombre de la empresa
+                    setSnackbar({
+                        open: true,
+                        message: `La empresa "${nombreEmpresa}" ya ha sido publicada.`,
+                        severity: "info",
+                        autoHide: 6000,
+                    });    
                     setMensajeError(`La empresa "${nombreEmpresa}" ya ha sido publicada.`);
                     return; // No seguir con la carga de los datos si la empresa está publicada
                 }
@@ -49,6 +68,12 @@ const PublicarGrupoEmpresa = () => {
                 console.error(error);
                 setError(true);
                 setMensajeError("Error al cargar los datos.");
+                setSnackbar({
+                    open: true,
+                    message: `Error al cargar los datos`,
+                    severity: "error",
+                    autoHide: 6000,
+                });
             }finally{
                 setLoading(false);
             }
@@ -70,18 +95,26 @@ const PublicarGrupoEmpresa = () => {
             });
     
             if (!response.ok) {
-                const errorData = await response.json();
-                setMensajeError(errorData.mensaje); 
+                
                 return; 
+            }else{
+                setSnackbar({
+                    open: true,
+                    message: `Se guarod los comentarios correctamente`,
+                    severity: "success",
+                    autoHide: 6000,
+                });
             }
-    
-            const result = await response.json();
-            setSnackbarMessage(result.mensaje); 
-            setSnackbarOpen(true); 
     
         } catch (error) {
             console.error(error);
             setMensajeError("Error al publicar la empresa.");
+            setSnackbar({
+                open: true,
+                message: `Error al publicar la empresa.`,
+                severity: "error",
+                autoHide: 6000,
+            });
         }
     };
     
@@ -145,9 +178,6 @@ const PublicarGrupoEmpresa = () => {
                             </Box>
                         ))}
                     </Grid2>
-
-                    {mensajeError && <Mensaje>{mensajeError}</Mensaje>}
-
                     {empresa.publicada !== 1 && (
                         <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                             <Button  
@@ -160,16 +190,17 @@ const PublicarGrupoEmpresa = () => {
                             </Button>
                         </div>
                     )}
-                    <Snackbar 
-                        open={snackbarOpen} 
-                        autoHideDuration={3000} 
-                        onClose={() => setSnackbarOpen(false)}
-                    >
-                        <Alert onClose={() => setSnackbarOpen(false)} severity="success">
-                            {snackbarMessage}
-                        </Alert>
-                    </Snackbar>
+                    <InfoSnackbar
+                        openSnackbar={snackbar.open}
+                        setOpenSnackbar={(open) => setSnackbar({ ...snackbar, open })}
+                        message={snackbar.message}
+                        severity={snackbar.severity}
+                    />
                 </div>
+                
+                <Box sx={{width:'100%',justifyContent:'center', justifyItems:'center'}}>
+                    {mensajeError && <Mensaje sx={{textAlign:'center'}}>{mensajeError}</Mensaje>}
+                </Box>
             </BaseUI>
         </Fragment>
     );
