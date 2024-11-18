@@ -6,13 +6,12 @@ import { getSeguimiento } from "../../../api/seguimientoSemanal.jsx";
 import InfoSnackbar from "../../../components/infoSnackbar/infoSnackbar.jsx";
 import { useParams } from "react-router-dom";
 const SeguimientoSemanal = () => {
-  const {idGrupo, idEmpresa, idSprint, idSemana} = useParams()
+  const {idEmpresa, idSprint, idSemana} = useParams()
   const [data2, setData] = useState([]);
   const [comentarios, setComentarios] = useState([]);
   const [empresa, setNombreEmpresa] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  const [mostrarBotones, setMostrarBotones] = useState(false)
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",
@@ -29,7 +28,9 @@ const SeguimientoSemanal = () => {
           numSprint: sprintElegido.numSprint,
           semana: semanaElegida,
         };
+      
         setData(newData);
+        console.log(newData);
       } catch (error) {
         console.error("Error en la solicitud:", error);
         setError(true);
@@ -87,19 +88,14 @@ const SeguimientoSemanal = () => {
     getNombreEmpresa();
     fetchData();
   }, []);
-  useEffect(()=>{
-      console.log(comentarios?.length)
-      console.log(data2.semana?.tareasEstudiante?.length)
-      const mostrar = comentarios?.length !== data2.semana?.tareasEstudiante?.length
-      setMostrarBotones(mostrar)
-  },[comentarios, data2])
+
   return (
     <Fragment>
       <BaseUI
-        titulo="EVALUACION SEMANAL"
+        titulo="RESULTADOS EVALUACION SEMANAL"
         ocultarAtras={false}
         confirmarAtras={false}
-        dirBack={`/homeGrupo/${idGrupo}/listaEmpresas/evaluacionSemanal/${idEmpresa}`}
+        dirBack={`/homeEstudiante/visCalificar/${idEmpresa}`}
         loading={loading}
         error={{error:error}}
       >
@@ -109,8 +105,9 @@ const SeguimientoSemanal = () => {
               nombreLargo={empresa.nombreLargo}
             />
 
-            <h2>SPRINT {data2.numSprint} - SEMANA {data2.semana?.numSemana}</h2>
-            {data2 !== undefined && comentarios !== undefined && <TablaEvaluacionSemanal sprint={data2} comenta={comentarios} showButtons={mostrarBotones}/>} 
+        <h2>SPRINT {data2.numSprint} - SEMANA {data2.semana?.numSemana}    </h2>
+            {data2 !== undefined && 
+            comentarios !== undefined && <TablaEvaluacionSemanal sprint={data2} comenta={comentarios} showButtons={false}/>} 
       </BaseUI>
       <InfoSnackbar
         openSnackbar={snackbar.open}

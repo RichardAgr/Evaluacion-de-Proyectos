@@ -2,7 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import HomeDocente from "../pages/Docente/homeDocente/homeDocente.jsx";
 import HomeGrupoDocente from "../pages/Docente/homeGrupoDocente/homeGrupoDocente.jsx";
 import EvaluacionSemanal from "../pages/Docente/HU7_evaluacionSemanal/evaluacionSemanal.jsx";
-import CalificarEstSemana from "../pages/Docente/HU7_calificarEstudiante/calificarEstSemana.jsx";
+import VerEvaluacionSemanal from "../pages/Docente/HU77_calificarEstudiante/calificarEstSemana.jsx";
 import CalificarSprint from "../pages/Docente/HU34_calificarSprint/calificarSprintU.jsx";
 import ListaSprints from "../pages/Docente/HU34_calificarSprint/listaSprints.jsx";
 import ObtenerEstudiantesPorGrupo from "../pages/Docente/HU32_listaEstudiantes/listaEstudiantes.jsx";
@@ -23,6 +23,8 @@ import CalificacionesHitoEmpresa from "../pages/Estudiante/HU18_verCalificacione
 import EmpresasParaTareas from "../pages/Docente/HU38_tareaEstudiante/seleccionarEmpresaParaVisualizar.jsx";
 import VisualizarTarea from "../pages/Docente/HU38_tareaEstudiante/viualizarTarea.jsx";
 import VisualizarSprintEst from "../pages/Docente/HU38_tareaEstudiante/visualizarSprint.jsx";
+import VerEvaluacionSemanalSprints from '../pages/Docente/HU77_calificarEstudiante/listaSprintsVerCalificacionesSemanales.jsx'
+import VerEvaluacionSemanalListaEmpresas from '../pages/Docente/HU77_calificarEstudiante/listaEmpresasVerCalificaciones.jsx'
 function Nav() {
   return (
     <Routes>
@@ -60,10 +62,6 @@ function Nav() {
         path="/homeGrupo/:idGrupo/listaEmpresas/:idDocente" //NO_NECESITAS_DOCENTE
         element={<EmpresasPorDocente />}
       />
-      <Route
-        path="/homeEstudiante/visCalificar"
-        element={<CalificarEstSemana />}
-      />
           {/** ROUTES COMPARTIDAS JHON*/} 
           <Route
               path="/homeGrupo/:idGrupo/empresa/calificaciones"
@@ -74,7 +72,18 @@ function Nav() {
             element={<CalificacionesHitoEmpresa/>}
           />
       {/** ROUTES JOAQUIN*/}
-      
+      <Route
+        path="/homeEstudiante/visCalificar"
+        element={<VerEvaluacionSemanalListaEmpresas />}
+      />
+      <Route
+        path="/homeEstudiante/visCalificar/:idEmpresa"
+        element={<VerEvaluacionSemanalSprints />}
+      />
+      <Route
+        path="/homeEstudiante/visCalificar/:idEmpresa/sprint/:idSprint/Semana/:idSemana"
+        element={<VerEvaluacionSemanal />}
+      />
       <Route
           path="/homeGrupo/:idGrupo/empresasVerTareas"
           element={<EmpresasParaTareas />}
