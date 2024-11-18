@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { getPlanificacionesAceptadas } from '../../../api/getPlanificacionesAceptadas';
 import ListaDefinitivaN from '../../../components/listaDefinitiva/listaDefinitivaN';
 import { useParams } from 'react-router-dom';
+import BaseUI from '../../../components/baseUI/baseUI';
 const columns = [
     {
         field: 'nombreEmpresa',
@@ -25,7 +26,7 @@ function ListaEmpresaSprints() {
         errorMessage: "",
         errorDetails: "",
     });
-    const [listaEmpresas, setListaEmpresas] = useState(null);
+    const [listaEmpresas, setListaEmpresas] = useState([]);
     useEffect(() => {
         const fetchData = async () => {
           try {
@@ -45,7 +46,20 @@ function ListaEmpresaSprints() {
         };
         fetchData();
       }, []);
-      
+  if(listaEmpresas.length === 0) return (
+    <BaseUI
+        titulo={'SELECCIONE UNA EMPRESA PARA CALIFICAR'}
+        ocultarAtras={false}
+        confirmarAtras={false}
+        dirBack={`/homeGrupo/${idGrupo}/listaEmpresaCalificarSprints/`}
+        loading={loading}
+        error={error}
+    >
+      <div className='mensajeVacio'>
+          <h1>NO HAY EMPRESAS PARA CALIFICAR SPRINTS</h1>
+      </div>
+    </BaseUI>
+  )    
   return (
     <ListaDefinitivaN
       loading={loading}

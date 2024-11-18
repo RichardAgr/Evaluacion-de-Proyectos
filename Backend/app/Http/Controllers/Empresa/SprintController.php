@@ -193,7 +193,7 @@ class SprintController extends Controller
         }
 
         // Obtener los datos de las semanas asociadas al sprint
-        $semanas = Semana::where('idSprint', $idSprint)->get(['idSemana', 'fechaIni', 'fechaFin']);
+        $semanas = Semana::where('idSprint', $idSprint)->get(['idSemana', 'numeroSemana','fechaIni', 'fechaFin']);
 
         // Preparar la respuesta
         $response = [
@@ -214,6 +214,7 @@ class SprintController extends Controller
             // Agregar la semana y sus tareas al response
             $response['semanas'][] = [
                 'idSemana' => $semana->idSemana,
+                'numeroSemana' => $semana->numeroSemana,
                 'fechaIni' => $semana->fechaIni,
                 'fechaFin' => $semana->fechaFin,
                 'tareas' => $tareas
@@ -626,7 +627,7 @@ class SprintController extends Controller
         ]);
     
         foreach ($request->all() as $comentarioData) {
-            ComentarioTarea::createOrUpdate([
+            ComentarioTarea::create([
                 'idEstudiante' => $comentarioData['idEstudiante'],
                 'idSemana' => $comentarioData['idSemana'],
                 'comentario' => $comentarioData['comentario'],

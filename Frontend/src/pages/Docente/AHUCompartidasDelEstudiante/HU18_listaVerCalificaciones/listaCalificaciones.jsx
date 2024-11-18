@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import ListaDefinitivaN from '../../../../components/listaDefinitiva/listaDefinitivaN';
 import { useParams } from 'react-router-dom';
+import { getPlanificacionesAceptadas } from '../../../../api/getPlanificacionesAceptadas'
 const columns = [
     {
         field: 'nombreEmpresa',
@@ -20,6 +21,7 @@ function ListaCali() {
     const { idGrupo, idEstudiante} = useParams()
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState({
+        error:false,
         errorMessage: "",
         errorDetails: "",
     });
@@ -28,17 +30,30 @@ function ListaCali() {
         const fetchData = async () => {
             setLoading(true);
             try {
-                const response = await fetch(`http://localhost:8000/api/grupo/${idGrupo}/empresas`);
-                if (!response.ok) {
-                    throw new Error('Error al obtener los datos.');
+                const responseData = await Promise.all([getPlanificacionesAceptadas()]);
+                
+              if (responseData.error !== undefined && responseData.error !== null) {
+                    setError({
+                        error:true,
+                        errorMessage: "Ha ocurrido un error",
+                        errorDetails: error.message,
+                    });
+                } else{
+                    const [lista] = await responseData
+                    setListaEmpresas(lista);
+                    console.log(lista);
                 }
-                const data = await response.json();
-                setListaEmpresas(data)
-            } catch (err) {
-                setError(err.message);
-            } finally {
+                
                 setLoading(false);
-            }
+              } catch (err) {
+                setError({
+                  error: true,
+                  errorMessage: err.message,
+                  errorDetails: err,
+                });
+              } finally {
+                setLoading(false);
+              }
         };
         fetchData();
       }, []);

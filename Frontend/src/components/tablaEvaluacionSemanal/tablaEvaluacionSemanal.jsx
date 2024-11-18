@@ -10,6 +10,7 @@ import {
   TableRow,
   Paper,
   TextField,
+  Box
 } from "@mui/material";
 import DecisionButtons from "../Buttons/decisionButtons";
 import CuadroDialogo from "../cuadroDialogo/cuadroDialogo";
@@ -145,7 +146,7 @@ const TablaEvaluacionSemanal = ({ sprint, comenta, showButtons = true }) => {
                   </ul>
                 </TableCell>
                 <TableCell>
-                  {!(comentarios[index]?.subido)?
+                  {!(comentarios[index]?.subido) && showButtons?
                     <TextField
                       multiline
                       rows={3}
@@ -156,7 +157,18 @@ const TablaEvaluacionSemanal = ({ sprint, comenta, showButtons = true }) => {
                       placeholder="Ingrese un comentario"
                     />
                     :
-                    <>{comentarios[index]?.comentario}</>
+                    <Box
+                        
+                        sx={{
+                            textAlign: 'left',
+                            minHeight: '70px',
+                            padding: '8px',
+                            border: '1px solid #e0e0e0',
+                            borderRadius: '4px'
+                        }}
+                    >
+                        {comentarios[index]?.comentario}
+                    </Box>
                   }
                 </TableCell>
               </TableRow>
@@ -167,13 +179,15 @@ const TablaEvaluacionSemanal = ({ sprint, comenta, showButtons = true }) => {
       </TableContainer>
       }
       {sprint.semana?.tareasEstudiante?.length < 1 &&<h2 style={{color:'red'}}>No Asignaron tareas a los estudiantes en este semana</h2>}
-      {sprint.semana?.tareasEstudiante?.length > 0 &&<DecisionButtons
+      {sprint.semana?.tareasEstudiante?.length > 0 && 
+        showButtons && <DecisionButtons
         rejectButtonText="Descartar"
         validateButtonText="Guardar Evaluación"
         onReject={handleCancel}
         onValidate={handleSave}
         disabledButton={0}
-      />}
+        />
+      }
 
       <CuadroDialogo
         open={cuadroDialogo.open}

@@ -74,9 +74,6 @@ function GruposDocentes() {
     fetchData();
   }, [idEstudiante]);
 
-  if (loading) return <p>Cargando datos...</p>;
-  if (error) return <p>Error: {error}</p>;
-
   const handleMatricularse = (grupo) => {
     const url = `/homeEstudiante/inscribirGrupo/${idEstudiante}/${grupo.idGrupo}`; 
     navigate(url); 

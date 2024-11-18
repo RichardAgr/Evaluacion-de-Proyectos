@@ -21,32 +21,33 @@ const SprintSemanas = ({ title, semana, idSprint, navigateLink, semanaTexto, isO
 
     return (
         <DivLista>
-            {(semanaTexto!==true || isOpenSprint)?  <Box 
-                onClick={togglePanel}
-                sx={{
-                    width: '90%',
-                    height: 60,
-                    borderRadius: 0.6,
-                    margin: 0.7,
-                    marginLeft: 'calc(2vw + 0.5rem)',
-                    pl: 2,
-                    fontSize: '1.5rem',
-                    bgcolor: '#d0d4e4', 
-                    textTransform: 'uppercase',
-                    display: 'flex', 
-                    cursor: 'pointer',
-                    justifyContent: 'flex-start', 
-                    alignItems: 'center', 
-                    '&:hover': {
-                        bgcolor: '#c0c4d4', 
-                    },
-                }}            
-            >
-                {isOpen ? <div className='arrow-down'></div> : <div className='arrow-right'></div> }
-                {title}
-            </Box>
-            :
-            <Typography variant='h5' sx={{marginLeft: 'calc(2vw + 0.5rem)', }}>{title}</Typography>
+            {(semanaTexto!==true || isOpenSprint)?  
+                <Box 
+                    onClick={togglePanel}
+                    sx={{
+                        width: '90%',
+                        height: 60,
+                        borderRadius: 0.6,
+                        margin: 0.7,
+                        marginLeft: 'calc(2vw + 0.5rem)',
+                        pl: 2,
+                        fontSize: '1.5rem',
+                        bgcolor: '#d0d4e4', 
+                        textTransform: 'uppercase',
+                        display: 'flex', 
+                        cursor: 'pointer',
+                        justifyContent: 'flex-start', 
+                        alignItems: 'center', 
+                        '&:hover': {
+                            bgcolor: '#c0c4d4', 
+                        },
+                    }}            
+                >
+                    {isOpen ? <div className='arrow-down'></div> : <div className='arrow-right'></div> }
+                    {title}
+                </Box>
+                :
+                <Typography variant='h5' sx={{marginLeft: 'calc(2vw + 0.5rem)', }}>{title}</Typography>
             }
 
             {(semanaTexto === true || isOpen) && (

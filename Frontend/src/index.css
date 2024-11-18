@@ -204,3 +204,12 @@ h3 {
     border-left: 10px solid black;
     margin-right: 0.5rem;
 }
+
+.mensajeVacio{
+    display: flex;
+    height: 100%;
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+    color: #E30613;
+}
