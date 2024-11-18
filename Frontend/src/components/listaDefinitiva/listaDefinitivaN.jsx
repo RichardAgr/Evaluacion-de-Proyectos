@@ -66,7 +66,6 @@ function ListaDefinitivaN({
             loading={loading}
             error={error}
         >
-            hola
             {cabezeraTitulo&&
                 <NombreEmpresa nombreCorto={cabezeraTitulo.nombreCorto} nombreLargo={cabezeraTitulo.nombreLargo} />
             }

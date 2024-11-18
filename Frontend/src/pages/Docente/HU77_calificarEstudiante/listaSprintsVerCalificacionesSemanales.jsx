@@ -3,7 +3,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import BaseUI from '../../../components/baseUI/baseUI';
 import { getSeguimiento } from '../../../api/seguimientoSemanal';
 import { Box } from '@mui/material';
-import Loading from '../../../components/loading/loading';
 // eslint-disable-next-line react/prop-types
 function SeguimientoSemanalSprints () {
     const navigate = useNavigate();
@@ -103,7 +102,7 @@ function SeguimientoSemanalSprints () {
         setSprintOpen(newOpens)
     };
     const navigateSemana=(idSprint, idSemana)=>{
-      navigate(`/homeGrupo/${idGrupo}/listaEmpresas/evaluacionSemanal/${idEmpresa}/Sprint/${idSprint}/semana/${idSemana}`)
+      navigate(`/homeEstudiante/visCalificar/${idEmpresa}/sprint/${idSprint}/Semana/${idSemana}`)
     }
 
     if(sprints?.length === 0) return (
@@ -111,7 +110,7 @@ function SeguimientoSemanalSprints () {
                 titulo={'SELECCIONE UNA SEMANA PARA EL SEGUIMIENTO'}
                 ocultarAtras={false}
                 confirmarAtras={false}
-                dirBack={`/homeGrupo/${idGrupo}/listaEmpresas/evaluacionSemanal`}
+                dirBack={`/homeEstudiante/visCalificar`}
                 loading={loading}
                 error={error}
         >
@@ -157,7 +156,7 @@ function SeguimientoSemanalSprints () {
                             }}            
                         >
                             {sprintOpen[i] ? <div className='arrow-down'></div> : <div className='arrow-right'></div> }
-                            SPRINT {i+1} {verificacion[i]?.completo?'(YA EVALUADO)':''}
+                            SPRINT {i+1} {verificacion[i]?.completo?'(YA EVALURON ESTE SPRINT, CLICK PARA VER)':''}
                         </Box>      
                         {sprintOpen[i]&& sprint.semanas.map((semana, index) => (
                             <Box 
@@ -183,7 +182,7 @@ function SeguimientoSemanalSprints () {
                                     },
                                 }}            
                             >
-                                SEMANA {semana.numSemana} 
+                                SEMANA {semana.numSemana} {verificacion[i]?.completoSemanas[index]?'(YA EVALURON ESTE SPRINT, CLICK PARA VER)':''}
                             </Box>
                           ))
                         }

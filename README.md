@@ -4,8 +4,19 @@ El sistema que se construirá tiene como objetivo la evaluación de proyectos qu
 ## Tabla de Contenidos
 1. [Requisitos Previos](#requisitos-previos)
 2. [Instalación](#instalación)
+   - [Clonar el Repositorio](#1-clonar-el-repositorio)
+   - [Abrir una Terminal](#2-abrir-una-terminal)
+   - [Navegar al Directorio del Proyecto](#3-navegar-al-directorio-del-proyecto)
+   - [Configurar el Frontend](#4-configurar-el-frontend)
+   - [Volver a la Raíz del Proyecto](#5-volver-a-la-raíz-del-proyecto)
+   - [Configurar el Backend](#6-configurar-el-backend)
+   - [Configurar las Variables de Entorno](#7-configurar-las-variables-de-entorno)
+   - [Generar la Clave de la Aplicación](#8-generar-la-clave-de-la-aplicación)
+   - [Configurar la Base de Datos](#9-configurar-la-base-de-datos)
+   - [Conectar la Base de Datos a la Ruta de Archivos](#10-conectar-la-base-de-datos-a-la-ruta-de-archivos)
 3. [Uso](#uso)
-4. [Cuentas](#Cuentas)
+4. [Cuentas](#cuentas)
+
 ## Requisitos Previos
 
 Lista de las dependencias y software necesario para correr tu proyecto.
@@ -20,55 +31,116 @@ Lista de las dependencias y software necesario para correr tu proyecto.
 
 ## Instalación
 
-Pasos detallados sobre cómo instalar y configurar el proyecto.
+Sigue estos pasos para instalar y configurar el proyecto.
 
-1. Elige un direccion para clonar el repositorio
-2.  Clona el repositorio:
-    ```bash
-    git clone https://github.com/RichardAgr/Evaluacion-de-Proyectos.git
-    ```
-3. Abre bash si no tienes abre powershell si instalaste para poder usar bash en terminal, son los mismos comandos
-4. Navega al directorio del proyecto:
-    ```bash
-    cd Evaluacion-de-
-    ```
-5. Navega al directorio del FrontEnd:
-    ```bash
-    cd frontend 
-    ```
-6. Instala las dependencias:
-    ```bash
-    npm install
-    ```
-7. Regresa a la direccion raiz del proyecto
+###### 1. Clonar el Repositorio
+
+
+1. Clonar el Repositorio
+
+Clona el repositorio en tu máquina local:
+
+```bash
+git clone https://github.com/RichardAgr/Evaluacion-de-Proyectos.git
+```
+
+###### 2. Abrir una Terminal
+
+Abre una terminal (puedes usar Bash o PowerShell) para ejecutar los comandos.
+
+###### 3. Navegar al Directorio del Proyecto
+
+Accede a la carpeta raíz del proyecto:
+
+```bash
+cd Evaluacion-de-Proyectos
+```
+
+###### 4. Configurar el Frontend
+
+1. Navega al directorio del frontend:
+
    ```bash
-    cd ..
+   cd frontend
    ```
-8. Navega al directorio del backend en el proyecto
+
+2. Instala las dependencias de Node.js:
+
    ```bash
-    cd backend
-   ``` 
-9. Instalacion dependencias Backend
+   npm install
+   ```
+
+###### 5. Volver a la Raíz del Proyecto
+
+Vuelve al directorio raíz del proyecto:
+
+```bash
+cd ..
+```
+
+###### 6. Configurar el Backend
+
+1. Navega al directorio del backend:
+
    ```bash
-    composer install
-   ``` 
-10. Configura las variables de entorno:
-    -en la carpeta backend crea un archivo `.env`
-    -abre el archivo .env
-    -abre el archivo .env.example
-    -copia todo de el contenido de .enx.example
-    -pega lo copiado en .env
-    -revisa si los puertos son correctos DB_HOST Y DB_PORT
-    -pon el DB_USERNAME
-    -pon el DB_PASSWORD
-    -abre el bash
-    ```bash
-    php artisan key:generate
-     ```
-    
-    ```bash
-    php artisan migrate
-     ```
+   cd backend
+   ```
+
+2. Instala las dependencias de PHP:
+
+   ```bash
+   composer install
+   ```
+
+###### 7. Configurar las Variables de Entorno
+
+1. Crea un archivo `.env` en el directorio `backend`:
+
+   ```bash
+   cp .env.example .env
+   ```
+
+2. Abre el archivo `.env` y configura los siguientes parámetros:
+   - `DB_HOST`, `DB_PORT`, `DB_USERNAME`, `DB_PASSWORD` según tu configuración.
+
+###### 8. Generar la Clave de la Aplicación
+
+Ejecuta el siguiente comando para generar la clave de la aplicación:
+
+```bash
+php artisan key:generate
+```
+
+###### 9. Configurar la Base de Datos
+
+1. Si no tienes la base de datos, ejecuta el siguiente comando para crear la estructura:
+
+   ```bash
+   php artisan migrate
+   ```
+
+2. Si ya tienes la base de datos y deseas actualizarla, ejecuta:
+
+   ```bash
+   php artisan migrate:fresh
+   ```
+
+3. Pobla la base de datos con datos de ejemplo:
+
+   ```bash
+   php artisan db:seed
+   ```
+
+###### 10. Conectar la Base de Datos a la Ruta de Archivos
+
+1. Navega al directorio `public` dentro del backend y elimina la carpeta `storage`.
+
+2. Vuelve al directorio `backend` y ejecuta el siguiente comando para crear un enlace simbólico entre el almacenamiento y la carpeta pública:
+
+   ```bash
+   php artisan storage:link
+   ```
+
 ## Uso
 
 Instrucciones básicas sobre cómo ejecutar el proyecto.
@@ -81,7 +153,7 @@ Instrucciones básicas sobre cómo ejecutar el proyecto.
     ```bash
     php artisan serv
     ```
-3. Para iniciar el servidor de desarrollo:
+2. Para iniciar el servidor de desarrollo:
    -Navegamos a la direccion del proyecto
    ```bash
     cd frontend
@@ -89,6 +161,6 @@ Instrucciones básicas sobre cómo ejecutar el proyecto.
     ```bash
     npm start
     ```
-5. Abre tu navegador en `http://localhost:5173`
+3. Abre tu navegador el siguiente link, `http://localhost:5173`  si no tienes otro proyecto vite corriendo 
 
 ## Cuentas

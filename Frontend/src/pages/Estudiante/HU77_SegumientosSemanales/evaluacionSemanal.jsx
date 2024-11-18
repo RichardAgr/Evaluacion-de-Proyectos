@@ -4,15 +4,16 @@ import TablaEvaluacionSemanal from "../../../components/tablaEvaluacionSemanal/t
 import NombreEmpresa from "../../../components/infoEmpresa/nombreEmpresa.jsx";
 import { getSeguimiento } from "../../../api/seguimientoSemanal.jsx";
 import InfoSnackbar from "../../../components/infoSnackbar/infoSnackbar.jsx";
-import { useParams } from "react-router-dom";
-const SeguimientoSemanal = () => {
-  const {idGrupo, idEmpresa, idSprint, idSemana} = useParams()
+
+const EvaluarHito = () => {
+  const idEmpresa = 1;
+  const idSprint = 1;
+  const idSemana =2; 
   const [data2, setData] = useState([]);
   const [comentarios, setComentarios] = useState([]);
   const [empresa, setNombreEmpresa] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  const [mostrarBotones, setMostrarBotones] = useState(false)
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",
@@ -20,28 +21,28 @@ const SeguimientoSemanal = () => {
   });
 
   useEffect(() => {
-    const fetchData = async () => {try {
+    const fetchData = async () => {
+      try {
         const data = await getSeguimiento(idEmpresa);
-        const sprintElegido = data.find((sprint) => sprint.idSprint === Number(idSprint));
-        const semanaElegida = sprintElegido.semanas?.find((semana) => semana.idSemana === Number(idSemana));
+        const sprintElegido = (data.filter((sprint)=> sprint.idSprint===idSprint))[0]
+        const semanaElegida = (sprintElegido.semanas.filter((semana)=>semana.idSemana === idSemana))[0]
         const newData = {
-          idSprint: sprintElegido.idSprint,
-          numSprint: sprintElegido.numSprint,
-          semana: semanaElegida,
-        };
+          idSprint:sprintElegido.idSprint,
+          numSprint:sprintElegido.numSprint,
+          semana: semanaElegida
+        }
         setData(newData);
       } catch (error) {
         console.error("Error en la solicitud:", error);
         setError(true);
         setSnackbar({
           open: true,
-          message: error.message || "Error al obtener los datos del sprint",
+          message: "Error al obtener los datos del sprint",
           severity: "error",
         });
       } finally {
         setLoading(false);
       }
-    
     };
 
     const getNombreEmpresa = async () => {
@@ -86,31 +87,23 @@ const SeguimientoSemanal = () => {
     getComentarios();
     getNombreEmpresa();
     fetchData();
-  }, []);
-  useEffect(()=>{
-      console.log(comentarios?.length)
-      console.log(data2.semana?.tareasEstudiante?.length)
-      const mostrar = comentarios?.length !== data2.semana?.tareasEstudiante?.length
-      setMostrarBotones(mostrar)
-  },[comentarios, data2])
+  }, [idEmpresa]);
+
   return (
     <Fragment>
       <BaseUI
         titulo="EVALUACION SEMANAL"
         ocultarAtras={false}
         confirmarAtras={false}
-        dirBack={`/homeGrupo/${idGrupo}/listaEmpresas/evaluacionSemanal/${idEmpresa}`}
+        dirBack="/"
         loading={loading}
         error={{error:error}}
       >
-        
             <NombreEmpresa
               nombreCorto={empresa.nombreCorto}
               nombreLargo={empresa.nombreLargo}
             />
-
-            <h2>SPRINT {data2.numSprint} - SEMANA {data2.semana?.numSemana}</h2>
-            {data2 !== undefined && comentarios !== undefined && <TablaEvaluacionSemanal sprint={data2} comenta={comentarios} showButtons={mostrarBotones}/>} 
+            {data2 !== undefined && comentarios !== undefined && <TablaEvaluacionSemanal sprint={data2} comenta={comentarios} showButtons={false}/>} 
       </BaseUI>
       <InfoSnackbar
         openSnackbar={snackbar.open}
@@ -122,4 +115,4 @@ const SeguimientoSemanal = () => {
   );
 };
 
-export default SeguimientoSemanal;
+export default EvaluarHito;

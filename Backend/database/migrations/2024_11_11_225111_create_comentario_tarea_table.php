@@ -14,19 +14,20 @@ class CreateComentarioTareaTable extends Migration
     public function up()
     {
         Schema::create('comentarioTarea', function (Blueprint $table) {
-            $table->unsignedBigInteger('estudiante_idEstudiante'); // Clave foránea hacia estudiantes.idEstudiante
-            $table->unsignedBigInteger('semana_idSemana');         // Clave foránea hacia semanas.idSemana
+            $table->unsignedBigInteger('idEstudiante'); // Clave foránea hacia estudiantes.idEstudiante
+            $table->unsignedBigInteger('idSemana');         // Clave foránea hacia semanas.idSemana
             $table->text('comentario');                            // Comentario
 
             // Clave primaria compuesta
-            $table->primary(['estudiante_idEstudiante', 'semana_idSemana']);
+            $table->primary(['idEstudiante', 'idSemana']);
 
-            // Relaciones
-            $table->foreign('estudiante_idEstudiante')
+            // Llave foranea idEstudiante
+            $table->foreign('idEstudiante')
                 ->references('idEstudiante')->on('estudiante')
                 ->onDelete('cascade'); // Borra comentarios al eliminar estudiante
 
-            $table->foreign('semana_idSemana')
+            // Llave foranea idSemana
+            $table->foreign('idSemana')
                 ->references('idSemana')->on('semana')
                 ->onDelete('cascade'); // Borra comentarios al eliminar semana
         });

@@ -59,14 +59,14 @@ function ListaEmpresasEvaluacionSemanal() {
 
   return (
     <ListaDefinitivaN
-        titulo="SELECCIONE UNA EMPRESA PARA EL SEGUIMIENTO SEMANAL"
+        titulo="SELECCIONE UNA EMPRESA PARA VER SEGUIMIENTO SEMANAL"
         cabezeraTitulo={null}
         cabezeras={columns}
         datosTabla={listaEmpresas}
         ocultarAtras={false}
         confirmarAtras={false} 
         dirBack={`/`}
-        dirForward= {`/homeGrupo/${idGrupo}/listaEmpresas/evaluacionSemanal/`}
+        dirForward= {`/homeEstudiante/visCalificar/`}
         mensajeSearch="Buscar Grupo Empresa"
         nombreContador="GRUPOS"
         loading={loading}

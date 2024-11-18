@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import {
   Table,
   TableBody,
@@ -9,20 +10,22 @@ import {
   TableRow,
   Paper,
   TextField,
+  Box
 } from "@mui/material";
 import DecisionButtons from "../Buttons/decisionButtons";
 import CuadroDialogo from "../cuadroDialogo/cuadroDialogo";
 import InfoSnackbar from "../infoSnackbar/infoSnackbar";
 
-const TablaEvaluacionSemanal = ({ sprint, comenta }) => {
+const TablaEvaluacionSemanal = ({ sprint, comenta, showButtons = true }) => {
+  const { idEmpresa} = useParams();
   const [comentarios, setComentarios] = useState([]);
   useEffect(() => {
     console.log(comenta)
     const iniciarComentarios = (
       sprint?.semana?.tareasEstudiante && Array.isArray(sprint.semana.tareasEstudiante)
         ? sprint.semana.tareasEstudiante.map((estudiante) => ({
-            semana_idSemana: sprint.semana.idSemana,
-            estudiante_idEstudiante: estudiante.idEstudiante,
+            idSemana: sprint.semana.idSemana,
+            idEstudiante: estudiante.idEstudiante,
             comentario: '',
             subido: false
           }))
@@ -31,7 +34,7 @@ const TablaEvaluacionSemanal = ({ sprint, comenta }) => {
     const newComentarios = iniciarComentarios.map((comentario) => {
       // Busca si el estudiante tiene un comentario en "comenta"
       const indice = comenta.findIndex(
-        (estudiante) => estudiante.estudiante_idEstudiante === comentario.estudiante_idEstudiante
+        (estudiante) => estudiante.idEstudiante === comentario.idEstudiante
       );
       
       // Si se encuentra, actualiza el comentario; si no, mantiene el comentario vacío
@@ -87,7 +90,7 @@ const TablaEvaluacionSemanal = ({ sprint, comenta }) => {
   };
 
   const handleSubmit = async () => {
-    const comentariosNoSubidos = comentarios.filter((comentario)=> comentario.subido === false)
+    const comentariosNoSubidos = comentarios.filter((comentario)=> comentario.subido === false && comentario.comentario !== '')
     console.log(comentariosNoSubidos)
     try {  
       const response = await fetch(
@@ -104,7 +107,7 @@ const TablaEvaluacionSemanal = ({ sprint, comenta }) => {
         console.log('se subio correctamente')
         setSnackbar({
             open: true,
-            message: `Se guarod los comentarios correctamente`,
+            message: `Se guardo los comentarios correctamente`,
             severity: "success",
             autoHide: 6000,
         });
@@ -134,7 +137,7 @@ const TablaEvaluacionSemanal = ({ sprint, comenta }) => {
           <TableBody>
             {sprint.semana?.tareasEstudiante?.map((estudiante, index) => (
               <TableRow key={index}>
-                <TableCell>{estudiante.nombre}</TableCell>
+                <TableCell>{estudiante.nombre} {estudiante.apellido}</TableCell>
                 <TableCell>
                   <ul>
                     {estudiante?.tareas.map((tarea, idx) => (
@@ -143,7 +146,7 @@ const TablaEvaluacionSemanal = ({ sprint, comenta }) => {
                   </ul>
                 </TableCell>
                 <TableCell>
-                  {!(comentarios[index]?.subido)?
+                  {!(comentarios[index]?.subido) && showButtons?
                     <TextField
                       multiline
                       rows={3}
@@ -154,7 +157,18 @@ const TablaEvaluacionSemanal = ({ sprint, comenta }) => {
                       placeholder="Ingrese un comentario"
                     />
                     :
-                    <>{comentarios[index]?.comentario}</>
+                    <Box
+                        
+                        sx={{
+                            textAlign: 'left',
+                            minHeight: '70px',
+                            padding: '8px',
+                            border: '1px solid #e0e0e0',
+                            borderRadius: '4px'
+                        }}
+                    >
+                        {comentarios[index]?.comentario}
+                    </Box>
                   }
                 </TableCell>
               </TableRow>
@@ -165,13 +179,15 @@ const TablaEvaluacionSemanal = ({ sprint, comenta }) => {
       </TableContainer>
       }
       {sprint.semana?.tareasEstudiante?.length < 1 &&<h2 style={{color:'red'}}>No Asignaron tareas a los estudiantes en este semana</h2>}
-      {sprint.semana?.tareasEstudiante?.length > 0 &&<DecisionButtons
+      {sprint.semana?.tareasEstudiante?.length > 0 && 
+        showButtons && <DecisionButtons
         rejectButtonText="Descartar"
         validateButtonText="Guardar Evaluación"
         onReject={handleCancel}
         onValidate={handleSave}
         disabledButton={0}
-      />}
+        />
+      }
 
       <CuadroDialogo
         open={cuadroDialogo.open}

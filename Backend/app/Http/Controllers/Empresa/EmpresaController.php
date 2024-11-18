@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Empresa;
-
+use Carbon\Carbon;
 use App\Models\Empresa;
 use App\Models\Semana;
 use App\Models\NotasSemana;
@@ -261,7 +261,7 @@ class EmpresaController extends Controller
             $empresa = Empresa::findOrFail($idEmpresa);
 
             $sprints = $empresa->sprints()->with(['semanas' => function ($query) {
-                $query->with(['tareas:idSemana,nombreTarea']);
+                $query->with(['tareas:idSemana,idTarea,nombreTarea']);
             }])->get();
 
             return response()->json($sprints, 200);
@@ -269,7 +269,6 @@ class EmpresaController extends Controller
             return response()->json(['error' => 'Error al obtener los datos: ' . $e->getMessage()], 500);
         }
     }
-
     public function obtenerSprintsYEstudiantes($idEmpresa)
     {
         try {

@@ -47,15 +47,15 @@ class PlanificacionSeeder extends Seeder
                 'comentariopublico' => 'Tienen que corregir las fechas de entrega de los Sprint 1, 2 y 4',
             ],
             [
-                // * Planificacion no revisada y no publicada
+                // * Planificacion no revisada y publicada
                 'idEmpresa' => 5,
                 'aceptada' => false,
-                'publicada' => false,
+                'publicada' => true,
                 'fechaEntrega' => Carbon::now()->addDays(50),
                 'comentariopublico' => null,
             ],
             [
-                // * Planificacion no revisada y publicada
+                // * Planificacion no revisada y no publicada
                 'idEmpresa' => 6,
                 'aceptada' => false,
                 'publicada' => false,

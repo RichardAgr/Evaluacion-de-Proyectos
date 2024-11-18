@@ -193,7 +193,7 @@ class SprintController extends Controller
         }
 
         // Obtener los datos de las semanas asociadas al sprint
-        $semanas = Semana::where('idSprint', $idSprint)->get(['idSemana', 'fechaIni', 'fechaFin']);
+        $semanas = Semana::where('idSprint', $idSprint)->get(['idSemana', 'numeroSemana','fechaIni', 'fechaFin']);
 
         // Preparar la respuesta
         $response = [
@@ -214,6 +214,7 @@ class SprintController extends Controller
             // Agregar la semana y sus tareas al response
             $response['semanas'][] = [
                 'idSemana' => $semana->idSemana,
+                'numeroSemana' => $semana->numeroSemana,
                 'fechaIni' => $semana->fechaIni,
                 'fechaFin' => $semana->fechaFin,
                 'tareas' => $tareas
@@ -619,16 +620,16 @@ class SprintController extends Controller
     public function crearOActualizarNotaTarea(Request $request)
     {
         $validatedData = $request->validate([
-            '*.estudiante_idEstudiante' => 'required|integer',
-            '*.semana_idSemana' => 'required|integer',
+            '*.idEstudiante' => 'required|integer',
+            '*.idSemana' => 'required|integer',
             '*.comentario' => 'required|string',
             '*.subido' => 'required|boolean'
         ]);
     
         foreach ($request->all() as $comentarioData) {
-            ComentarioTarea::createOrUpdate([
-                'estudiante_idEstudiante' => $comentarioData['estudiante_idEstudiante'],
-                'semana_idSemana' => $comentarioData['semana_idSemana'],
+            ComentarioTarea::create([
+                'idEstudiante' => $comentarioData['idEstudiante'],
+                'idSemana' => $comentarioData['idSemana'],
                 'comentario' => $comentarioData['comentario'],
             ]);
         }
@@ -640,7 +641,7 @@ class SprintController extends Controller
     {
     
         $result = DB::table('comentariotarea as nte')
-            ->join('estudiante as e', 'e.idEstudiante', '=', 'nte.estudiante_idEstudiante')
+            ->join('estudiante as e', 'e.idEstudiante', '=', 'nte.idEstudiante')
             ->join('sprint as sp', 'sp.idSprint', '=', 'nte.sprint_idSprint')
             ->join('semana as s', 's.idSprint', '=', 'sp.idSprint')
             ->join('planificacion as p', 'p.idPlanificacion', '=', 'sp.idPlanificacion')
@@ -685,8 +686,8 @@ class SprintController extends Controller
         foreach ($request->all() as $comentarioData) {
             ComentarioTarea::updateOrCreate(
                 [
-                    'estudiante_idEstudiante' => $comentarioData['idEstudiante'],
-                    'semana_idSemana' => $comentarioData['idSemana'],
+                    'idEstudiante' => $comentarioData['idEstudiante'],
+                    'idEstudiante' => $comentarioData['idSemana'],
                 ],
                 [
                     'comentario' => $comentarioData['comentario'],

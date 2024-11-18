@@ -184,7 +184,6 @@ const ModificarGrupoEmpresa = () => {
                 loading={isLoading}
                 error={mensajeError}
             >
-                {mensajeError && <Mensaje>{mensajeError}</Mensaje>}
 
                 {isLoading !== true && (
                 <div style={{ display: 'grid' }}>

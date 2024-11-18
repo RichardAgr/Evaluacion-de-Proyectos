@@ -16,7 +16,7 @@ import CancelRoundedIcon from '@mui/icons-material/CancelSharp';;
 
 
 function ModificarTarea() {
-  const { idTarea, idSprint, idGrupo, idEstudiante } = useParams();
+  const { idTarea, idGrupo, idEstudiante, idEmpresa } = useParams();
   const [responsables, setResponsables] = useState([]);
   const [responsablesError, setResponsablesError] = useState(false);
   const [descripcion, setDescripcion] = useState('Descripcion...');
@@ -174,7 +174,7 @@ function ModificarTarea() {
         titulo={'MODIFICAR TAREA'}
         ocultarAtras={false}
         confirmarAtras={true}
-        dirBack={`/${idEstudiante}/homeGrupoE/${idGrupo}/sprintE/${idSprint}`}
+        dirBack={`/${idEstudiante}/homeGrupoE/${idGrupo}/Empresas/${idEmpresa}`}
         loading={loading}
         error={error}
       >

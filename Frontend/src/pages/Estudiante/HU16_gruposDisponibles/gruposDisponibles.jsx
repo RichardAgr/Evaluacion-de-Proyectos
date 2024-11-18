@@ -50,7 +50,8 @@ function GruposDocentes() {
   const [grupos, setGrupos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  const navigate = useNavigate(); // Usar useNavigate para la redirección
+  const navigate = useNavigate(); 
+  const [isMatriculado,setIsMatriculado]= useState();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -72,9 +73,6 @@ function GruposDocentes() {
     };
     fetchData();
   }, [idEstudiante]);
-
-  if (loading) return <p>Cargando datos...</p>;
-  if (error) return <p>Error: {error}</p>;
 
   const handleMatricularse = (grupo) => {
     const url = `/homeEstudiante/inscribirGrupo/${idEstudiante}/${grupo.idGrupo}`; 

@@ -10,6 +10,57 @@ use App\Models\Sprint;
 class ComentarioTareaController extends Controller
 {
     /**
+     * Crea/aniade un nuevo comentario
+     */
+    public function anadirComentario(Request $request)
+    {
+        $request->validate([
+            'idEstudiante' => 'required|exists:estudiante,idEstudiante',
+            'idSemana' => 'required|exists:semana,idSemana',
+            'comentario' => 'required|string',
+        ]);
+
+        $comentario = ComentarioTarea::create($request->all());
+
+        return response()->json([
+            'message' => 'Comentario creado exitosamente',
+            'comentario' => $comentario
+        ], 201);
+    }
+
+    /**
+     * Modifica un comentario existente
+     */
+    public function modificarComentario(Request $request)
+    {
+        $validated = $request->validate([
+            'idEstudiante' => 'required|exists:estudiante,idEstudiante',
+            'idSemana' => 'required|exists:semana,idSemana',
+            'comentario' => 'required|string',
+        ]);
+
+        try {
+            $comentario = ComentarioTarea::findOrFail([
+                $validated['idEstudiante'],
+                $validated['idSemana']
+            ]);
+
+            $comentario->update(['comentario' => $validated['comentario']]);
+
+            return response()->json([
+                'message' => 'Comentario actualizado exitosamente',
+                'comentario' => $comentario
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error al actualizar el comentario',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+
+    /**
      * Muestra una lista de las notas de tareas de estudiantes.
      */
     public function index()
@@ -89,4 +140,5 @@ class ComentarioTareaController extends Controller
         $nota->delete();
         return response()->json(['message' => 'Nota eliminada con éxito']);
     }
+    
 }

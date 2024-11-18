@@ -10,7 +10,7 @@ const columns = [
 ];
 
 function EmpresasParaTareas() {
-  const {idGrupo, idEstudiante, idEmpresa} = useParams();
+  const {idGrupo, idEmpresa} = useParams();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState({
@@ -57,7 +57,7 @@ function EmpresasParaTareas() {
       ocultarAtras={false}
       confirmarAtras={false}
       dirBack="/"
-      dirForward= {`/${idEstudiante}/homeGrupoE/${idGrupo}/empresas/`}
+      dirForward= {`/homeGrupo/${idGrupo}/empresasVerTareas/`}
       mensajeSearch="Buscar Empresa"
       nombreContador="Empresas"
       loading={loading}

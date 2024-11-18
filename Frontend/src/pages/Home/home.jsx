@@ -84,12 +84,12 @@ function Home() {
     },
     {
       label: "HU16_Grupos Disponibles",
-      onClick: () => navigate("/homeEstudiante/gruposDisponibles"),
+      onClick: () => navigate("/homeEstudiante/gruposDisponibles/1"),
     },
     {
       label: "HU8__Modificar Tarea",
       onClick: () =>
-        navigate("/1/homeGrupoE/1/sprintE/3"),
+        navigate("/1/homeGrupoE/1/Empresas/1"),
     },
     {
       label: "HU18__Ver Calificaciones",
@@ -104,7 +104,7 @@ function Home() {
   const sharedButtons = [
     {
       label: "HU38_Visualizar tareas",
-      onClick: () => navigate(`/1/homeGrupoE/1/empresaTareas`),
+      onClick: () => navigate(`/homeGrupo/1/empresasVerTareas`),
     },
     {
       label: "HU36_Ver Planificación",
