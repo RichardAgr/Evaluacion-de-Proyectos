@@ -90,7 +90,7 @@ const TablaEvaluacionSemanal = ({ sprint, comenta, showButtons = true }) => {
   };
 
   const handleSubmit = async () => {
-    const comentariosNoSubidos = comentarios.filter((comentario)=> comentario.subido === false)
+    const comentariosNoSubidos = comentarios.filter((comentario)=> comentario.subido === false && comentario.comentario !== '')
     console.log(comentariosNoSubidos)
     try {  
       const response = await fetch(

@@ -9,6 +9,7 @@ use App\Models\Planificacion;
 use App\Models\Sprint;
 use App\Models\Semana;
 use App\Models\EstudiantesEmpresas;
+use App\Models\TareaEstudiante;
 use Illuminate\Support\Facades\Log;
 
 class ComentarioTareaSeeder extends Seeder
@@ -26,7 +27,7 @@ class ComentarioTareaSeeder extends Seeder
             $sprints = $planificacion->sprints;
             Log::info('Sprints encontrados', ['count' => $sprints->count()]);
 
-            // Obtener la empresa de la planificacion
+            // Obtener la empresa de la planificación
             $empresa = $planificacion->empresa;
             Log::info('Empresa encontrada', ['id' => $empresa->idEmpresa]);
 
@@ -44,12 +45,19 @@ class ComentarioTareaSeeder extends Seeder
 
             foreach ($estudiantes as $estudiante) {
                 foreach ($semanas as $semana) {
-                    ComentarioTarea::create([
-                        'idEstudiante' => $estudiante->idEstudiante,
-                        'idSemana' => $semana->idSemana,
-                        'comentario' => $this->generateRandomComment(),
-                    ]);
-                    $comentariosCreados++;
+                    // Verificar si el estudiante tiene alguna tarea asignada en esta semana
+                    $tieneTarea = TareaEstudiante::whereHas('tareas', function ($query) use ($semana) {
+                        $query->where('idSemana', $semana->idSemana);
+                    })->where('idEstudiante', $estudiante->idEstudiante)->exists();
+
+                    if ($tieneTarea) {
+                        ComentarioTarea::create([
+                            'idEstudiante' => $estudiante->idEstudiante,
+                            'idSemana' => $semana->idSemana,
+                            'comentario' => $this->generateRandomComment(),
+                        ]);
+                        $comentariosCreados++;
+                    }
                 }
             }
 
@@ -79,7 +87,6 @@ class ComentarioTareaSeeder extends Seeder
             "El trabajo en equipo fue destacable, con aportaciones significativas al proyecto.",
             "Se observó poca atención a los detalles en la documentación del proyecto."
         ];
-        
 
         return $comments[array_rand($comments)];
     }

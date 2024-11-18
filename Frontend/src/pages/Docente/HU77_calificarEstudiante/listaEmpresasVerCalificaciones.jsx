@@ -20,7 +20,7 @@ const columns = [
 
 function ListaEmpresasEvaluacionSemanal() {
   const {idGrupo} = useParams()    
-    const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState({
     errorMessage: "",
     errorDetails: "",
@@ -59,7 +59,7 @@ function ListaEmpresasEvaluacionSemanal() {
 
   return (
     <ListaDefinitivaN
-        titulo="SELECCIONE UNA EMPRESA PARA VER SEGUIMIENTO SEMANAL"
+        titulo="SELECCIONE UNA EMPRESA PARA VER EL SEGUIMIENTO SEMANAL"
         cabezeraTitulo={null}
         cabezeras={columns}
         datosTabla={listaEmpresas}

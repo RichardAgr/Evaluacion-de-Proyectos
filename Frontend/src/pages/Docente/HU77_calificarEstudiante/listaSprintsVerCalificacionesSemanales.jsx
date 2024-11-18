@@ -182,7 +182,7 @@ function SeguimientoSemanalSprints () {
                                     },
                                 }}            
                             >
-                                SEMANA {semana.numSemana} {verificacion[i]?.completoSemanas[index]?'(YA EVALURON ESTE SPRINT, CLICK PARA VER)':''}
+                                SEMANA {semana.numSemana} {verificacion[i]?.completoSemanas[index]?'(YA EVALURON ESTE SEMANA, CLICK PARA VER)':''}
                             </Box>
                           ))
                         }
