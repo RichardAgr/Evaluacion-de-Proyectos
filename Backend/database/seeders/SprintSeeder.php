@@ -22,7 +22,7 @@ class SprintSeeder extends Seeder
             if($idPlanificacion===4 || $idPlanificacion===5 || $idPlanificacion===6){   
                 $startDate = Carbon::now()->addDays(rand(1, 30));
             }else{
-                $startDate = Carbon::now()->subDays(rand(1, 30));
+                $startDate = Carbon::now()->subDays(25);
             }
             $totalCobro = 100.00;
             $sprints = rand(3, 6); // Número aleatorio de sprints entre 3 y 6
