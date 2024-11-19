@@ -8,8 +8,12 @@ import Box from '@mui/material/Box';
 import { Button } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from "@mui/icons-material/Add";
+import CuadroDialogo from "../../../components/cuadroDialogo/cuadroDialogo";
+import DecisionButtons from "../../../components/Buttons/decisionButtons";
 
 const ModificarGrupoEmpresa = () => {
+    const [openValidateDialog, setOpenValidateDialog] = useState(false);
+    const [openRejectDialog, setOpenRejectDialog] = useState(false);
     const { idEstudiante } = useParams();
     const [empresa, setEmpresa] = useState([]);
     const [integrantes, setIntegrantes] = useState([]);
@@ -146,6 +150,7 @@ const ModificarGrupoEmpresa = () => {
 
             setSnackbarMessage("Integrante agregado correctamente.");
             setSnackbarOpen(true);
+
         } else {
             setMensajeError("Debe seleccionar un integrante.");
         }
@@ -171,7 +176,26 @@ const ModificarGrupoEmpresa = () => {
             setSnackbarOpen(true);
         }
     };
+
+    const handleValidate = () => {
+        setOpenValidateDialog(true);
+      };
     
+      const handleReject = () => {
+        setOpenRejectDialog(true);
+      };
+      const rechazarModificacion = () => {
+        // Restaurar los integrantes al estado original (sin cambios)
+
+        setOpenRejectDialog(false);
+        setTimeout(() => {
+            irInicio();
+        }, 2000); 
+
+        // Notificar que la modificación ha sido rechazada
+        console.log("La modificación ha sido rechazada. Los integrantes no fueron modificados.");
+        
+    };
 
 
     return (
@@ -264,28 +288,33 @@ const ModificarGrupoEmpresa = () => {
                     {/* Solo renderizar el botón de publicar si la empresa no está publicada */}
                     {empresa.publicada !== 1 && (
                         <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                            <Button  
-                                variant="contained"
-                                color="secondary"
-                                onClick={irInicio}
-                                sx={{ minWidth: 50, width: '100px', height: '30px', marginTop: '50px',mr:5 }}
-                            >
-                                Descartar
-                            </Button>
-                            <Button  
-                                variant="contained"
-                                color="primary"
-                                onClick={actualizarIntegrantes}
-                                sx={{ minWidth: 50, width: '200px', height: '30px', marginTop: '50px' }}
-                            >
-                                Guardar Cambios
-                            </Button>
+                            <DecisionButtons
+                                rejectButtonText="Descartar Cambios"
+                                validateButtonText="Guardar cambios"
+                                onReject={handleReject}
+                                onValidate={handleValidate}
+                                disabledButton={0}
+                            />
+                            <CuadroDialogo
+                                open={openValidateDialog}
+                                onClose={() => setOpenValidateDialog(false)}
+                                title="Confirmar Modificación del Grupo"
+                                description="¿Está seguro de que desea modificar los integrantes de este grupo?"
+                                onConfirm={actualizarIntegrantes}
+                            />
+                            <CuadroDialogo
+                                open={openRejectDialog}
+                                onClose={() => setOpenRejectDialog(false)}
+                                title="Confirmar Rechazo de Modificación"
+                                description="¿Está seguro de que desea rechazar la modificación de los integrantes de este grupo?"
+                                onConfirm={rechazarModificacion}
+                            />
                         </div>
                     )}
 
                     <Modal open={openModal} onClose={() => setOpenModal(false)}>
                         <div style={{ padding: "20px", backgroundColor: "white", margin: "auto", marginTop: "20%", width: "300px", borderRadius: "8px" }}>
-                            <h2>Añadir Integrante</h2>
+                            <h2 style={{marginBottom: "8px"}}>Añadir Integrante</h2>
                             <Autocomplete
                                 options={integrantesN}
                                 getOptionLabel={(option) => `${option.nombreEstudiante} ${option.primerApellido} ${option.segundoApellido}`}
