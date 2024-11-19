@@ -1,9 +1,6 @@
 import { Fragment, useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import {
-  Box,
-  Typography,
-} from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import BaseUI from "../../../components/baseUI/baseUI.jsx";
 import TablaPlanificacion from "../../../components/tablaPlanificacionDeDesarollo/tablaPlanificacion.jsx";
 import { getEmpresaData } from "../../../api/getEmpresa.jsx";
@@ -26,7 +23,7 @@ function ValidarPlanificacion() {
   const [nota, setNota] = useState("");
   const navigate = useNavigate();
   const [error, setError] = useState({
-    error:false,
+    error: false,
     errorMessage: "",
     errorDetails: "",
   });
@@ -72,7 +69,7 @@ function ValidarPlanificacion() {
       } catch (error) {
         console.error("Error en la solicitud:", error.message);
         setError({
-          error:true,
+          error: true,
           errorMessage: "Ha ocurrido un error",
           errorDetails: error.message,
         });
@@ -103,36 +100,33 @@ function ValidarPlanificacion() {
   const confirmValidate = async () => {
     setOpenValidateDialog(false);
 
-      const validarResult = await validar(idEmpresa);
-      if (validarResult.error == null) {
-        setSnackbar({
-          open: true,
-          message: validarResult.message,
-          severity: "success",
-        });
-        setTimeout(() => {
-          setPlanificacionData((prevState) => ({
-            ...prevState,
-            aceptada: true,
-          }));
-        }, 3000);
-      } else {
-        setSnackbar({
-          open: true,
-          message: validarResult.error,
-          severity: "error",
-        });
-      }
+    const validarResult = await validar(idEmpresa);
+    if (validarResult.error == null) {
+      setSnackbar({
+        open: true,
+        message: validarResult.message,
+        severity: "success",
+      });
+      setTimeout(() => {
+        setPlanificacionData((prevState) => ({
+          ...prevState,
+          aceptada: true,
+        }));
+      }, 3000);
+    } else {
+      setSnackbar({
+        open: true,
+        message: validarResult.error,
+        severity: "error",
+      });
+    }
   };
 
   const confirmReject = async () => {
     setOpenRejectDialog(false);
     console.log(idEmpresa);
     console.log(groupComment);
-    const revisionResult = await addRevision(
-      idEmpresa,
-      groupComment
-    );
+    const revisionResult = await addRevision(idEmpresa, groupComment);
 
     if (revisionResult.errors != null) {
       const errorMessages = Object.keys(revisionResult.errors)
@@ -168,31 +162,20 @@ function ValidarPlanificacion() {
         loading={loading}
         error={error}
       >
-          <>
-            <NombreEmpresa
-              nombreLargo={empresaData?.nombreLargo}
-              nombreCorto={empresaData?.nombreEmpresa}
-            />
-            <EstadoPlanificacion estado={planificacionData.aceptada} />
-            {planificacionData.aceptada ? (
-              <Redirecting />
-            ) : planificacionData.message !== null &&
-              planificacionData.message !== undefined ? (
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  minHeight: "200px",
-                }}
-              >
-                <Typography variant="h5" sx={{ mt: 2 }}>
-                  {planificacionData.message}
-                </Typography>
-              </Box>
-            ) : planificacionData.publicada === 0 ? (
-              <Box
+        <>
+          <NombreEmpresa
+            nombreLargo={empresaData?.nombreLargo}
+            nombreCorto={empresaData?.nombreEmpresa}
+          />
+          <EstadoPlanificacion
+            estado={planificacionData.aceptada}
+            comentariopublico={planificacionData.comentariopublico}
+          />
+          {planificacionData.aceptada ? (
+            <Redirecting />
+          ) : planificacionData.message !== null &&
+            planificacionData.message !== undefined ? (
+            <Box
               sx={{
                 display: "flex",
                 flexDirection: "column",
@@ -202,57 +185,69 @@ function ValidarPlanificacion() {
               }}
             >
               <Typography variant="h5" sx={{ mt: 2 }}>
-                La  planificación no ha sido publicada
-
+                {planificacionData.message}
               </Typography>
             </Box>
-            ) : (
-              <>
+          ) : planificacionData.publicada === 0 ? (
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                minHeight: "200px",
+              }}
+            >
+              <Typography variant="h5" sx={{ mt: 2 }}>
+                La planificación no ha sido publicada
+              </Typography>
+            </Box>
+          ) : (
+            <>
+              <TablaPlanificacion sprints={planificacionData.sprints} />
+              {planificacionData.comentariopublico && (
+                <Comentario
+                  titulo="MOTIVOS DE RECHAZO PREVIOS:"
+                  comentario={planificacionData.comentariopublico}
+                />
+              )}
+              <CuadroComentario
+                title="Motivos de rechazo"
+                maxChars={200}
+                onTextChange={(text) => setGroupComment(text)}
+              />
 
-                <TablaPlanificacion sprints={planificacionData.sprints} />
-                {planificacionData.comentariopublico && (
-                  <Comentario
-                    titulo="MOTIVOS DE RECHAZO PREVIOS:"
-                    comentario={planificacionData.comentariopublico}
-                  />
-                )}
-                <CuadroComentario
-                  title="Motivos de rechazo"
-                  maxChars={200}
-                  onTextChange={(text) => setGroupComment(text)}
-                />
+              <DecisionButtons
+                rejectButtonText="Rechazar Planificación"
+                validateButtonText="Validar Planificación"
+                onReject={handleReject}
+                onValidate={handleValidate}
+                disabledButton={0}
+              />
+              <CuadroDialogo
+                open={openValidateDialog}
+                onClose={() => setOpenValidateDialog(false)}
+                title="Confirmar Validar planificación"
+                description="¿Está seguro de que desea validar esta planificación?"
+                onConfirm={confirmValidate}
+              />
+              <CuadroDialogo
+                open={openRejectDialog}
+                onClose={() => setOpenRejectDialog(false)}
+                title="Confirmar Rechazar Planificacion"
+                description="¿Está seguro de que desea rechazar esta planificación?"
+                onConfirm={confirmReject}
+              />
 
-                <DecisionButtons
-                  rejectButtonText="Rechazar Planificación"
-                  validateButtonText="Validar Planificación"
-                  onReject={handleReject}
-                  onValidate={handleValidate}
-                  disabledButton= {0}
-                />
-                <CuadroDialogo
-                  open={openValidateDialog}
-                  onClose={() => setOpenValidateDialog(false)}
-                  title="Confirmar Validar planificación"
-                  description="¿Está seguro de que desea validar esta planificación?"
-                  onConfirm={confirmValidate}
-                />
-                <CuadroDialogo
-                  open={openRejectDialog}
-                  onClose={() => setOpenRejectDialog(false)}
-                  title="Confirmar Rechazar Planificacion"
-                  description="¿Está seguro de que desea rechazar esta planificación?"
-                  onConfirm={confirmReject}
-                />
-
-                <InfoSnackbar
-                  openSnackbar={snackbar.open}
-                  setOpenSnackbar={(open) => setSnackbar({ ...snackbar, open })}
-                  message={snackbar.message}
-                  severity={snackbar.severity}
-                />
-              </>
-            )}
-          </>
+              <InfoSnackbar
+                openSnackbar={snackbar.open}
+                setOpenSnackbar={(open) => setSnackbar({ ...snackbar, open })}
+                message={snackbar.message}
+                severity={snackbar.severity}
+              />
+            </>
+          )}
+        </>
       </BaseUI>
     </Fragment>
   );
