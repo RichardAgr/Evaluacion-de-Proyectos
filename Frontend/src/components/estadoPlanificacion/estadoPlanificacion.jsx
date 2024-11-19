@@ -12,7 +12,7 @@ function EstadoPlanificacion({ estado, comentariopublico }) {
         <Typography variant="subtitle" component="h2" color="green">
           Validada
         </Typography>
-      ) : estado === 0 && comentariopublico !== null ? (
+      ) : estado === 0 && (comentariopublico !== null && comentariopublico !== undefined) ? (
         <Typography variant="subtitle" component="h2" color="red">
           Rechazada
         </Typography>
