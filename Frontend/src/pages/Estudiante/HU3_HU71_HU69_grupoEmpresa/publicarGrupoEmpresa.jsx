@@ -100,7 +100,7 @@ const PublicarGrupoEmpresa = () => {
             }else{
                 setSnackbar({
                     open: true,
-                    message: `Se guarod los comentarios correctamente`,
+                    message: `Se guardo los comentarios correctamente`,
                     severity: "success",
                     autoHide: 6000,
                 });
