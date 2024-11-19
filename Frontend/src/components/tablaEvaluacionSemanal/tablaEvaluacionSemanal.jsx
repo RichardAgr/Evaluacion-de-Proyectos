@@ -16,7 +16,7 @@ import DecisionButtons from "../Buttons/decisionButtons";
 import CuadroDialogo from "../cuadroDialogo/cuadroDialogo";
 import InfoSnackbar from "../infoSnackbar/infoSnackbar";
 
-const TablaEvaluacionSemanal = ({ sprint, comenta, showButtons = true }) => {
+const TablaEvaluacionSemanal = ({ sprint, comenta, showButtons = true, setSeSubio }) => {
   const { idEmpresa} = useParams();
   const [comentarios, setComentarios] = useState([]);
   useEffect(() => {
@@ -111,6 +111,7 @@ const TablaEvaluacionSemanal = ({ sprint, comenta, showButtons = true }) => {
             severity: "success",
             autoHide: 6000,
         });
+        setSeSubio(true)
       }
     } catch (error) {
     console.error("Error al actualizar la tarea:", error);
@@ -120,6 +121,13 @@ const TablaEvaluacionSemanal = ({ sprint, comenta, showButtons = true }) => {
             severity: "error",
             autoHide: 60000,
         });
+    } finally{
+      setCuadroDialogo({
+        open: false,
+        title: "Guardar los cambios",
+        description: "Esta acción guardará todos los cambios realizados en la tarea. ¿Está seguro?",
+        onConfirm: handleSubmit,
+      });
     }
   };
 

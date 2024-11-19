@@ -13,6 +13,7 @@ const SeguimientoSemanal = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [mostrarBotones, setMostrarBotones] = useState(false)
+  const [seSubio, setSeSubio] = useState(false);
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",
@@ -20,73 +21,75 @@ const SeguimientoSemanal = () => {
   });
   const [sprints, setSprints] = useState(null)
   useEffect(() => {
-    const fetchData = async () => {try {
-        const data = await getSeguimiento(idEmpresa);
-        const sprintElegido = data.find((sprint) => sprint.idSprint === Number(idSprint));
-        const semanaElegida = sprintElegido.semanas?.find((semana) => semana.idSemana === Number(idSemana));
-        const newData = {
-          idSprint: sprintElegido.idSprint,
-          numSprint: sprintElegido.numSprint,
-          semana: semanaElegida,
-        };
-        setData(newData);
-      } catch (error) {
-        console.error("Error en la solicitud:", error);
-        setError(true);
-        setSnackbar({
-          open: true,
-          message: error.message || "Error al obtener los datos del sprint",
-          severity: "error",
-        });
-      } finally {
-        setLoading(false);
-      }
-    
-    };
-
-    const getNombreEmpresa = async () => {
-      try {
-          const response = await fetch(`http://127.0.0.1:8000/api/empresa/${idEmpresa}`, {
-              method: 'GET',
-              headers: {
-                  'Content-Type': 'application/json',
-              },
-          });
-
-          if (!response.ok) throw new Error('Error al obtener los datos de la empresa');
-
-          const data = await response.json();
-          setNombreEmpresa({ nombreCorto: data.nombreEmpresa, nombreLargo: data.nombreLargo, integrantes: data.integrantes });
-          console.log(data)
-      } catch (error) {
-          console.error('Error en la solicitud:', error);
-          setError(true);
-      }finally{
-        setLoading(false)
-      }
-    };
-    const getComentarios = async () => {
-      try {
-          const response = await fetch(`http://localhost:8000/api/seguimientoSemanalComentarios/semanaElegida/${idSemana}`, {
-              method: 'GET',
-              headers: {
-                  'Content-Type': 'application/json',
-              },
-          });
-          const responseData = await response.json();
-          setComentarios(responseData)
-          if (!response.ok) throw new Error('Error al obtener los datos de los comentarios');
-      } catch (error) {
-          console.error('Error en la solicitud:', error);
-          setError(true);
-      }finally{
-        setLoading(false)
-      }
-    };
     getComentarios();
     getNombreEmpresa();
     fetchData();
-  }, []);
+  }, [seSubio]);
+  
+  const fetchData = async () => {
+    try {
+      const data = await getSeguimiento(idEmpresa);
+      const sprintElegido = data.find((sprint) => sprint.idSprint === Number(idSprint));
+      const semanaElegida = sprintElegido.semanas?.find((semana) => semana.idSemana === Number(idSemana));
+      const newData = {
+        idSprint: sprintElegido.idSprint,
+        numSprint: sprintElegido.numSprint,
+        semana: semanaElegida,
+      };
+      setData(newData);
+    } catch (error) {
+      console.error("Error en la solicitud:", error);
+      setError(true);
+      setSnackbar({
+        open: true,
+        message: error.message || "Error al obtener los datos del sprint",
+        severity: "error",
+      });
+    } finally {
+      setLoading(false);
+    }
+
+  };
+
+  const getNombreEmpresa = async () => {
+    try {
+        const response = await fetch(`http://127.0.0.1:8000/api/empresa/${idEmpresa}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (!response.ok) throw new Error('Error al obtener los datos de la empresa');
+
+        const data = await response.json();
+        setNombreEmpresa({ nombreCorto: data.nombreEmpresa, nombreLargo: data.nombreLargo, integrantes: data.integrantes });
+        console.log(data)
+    } catch (error) {
+        console.error('Error en la solicitud:', error);
+        setError(true);
+    }finally{
+      setLoading(false)
+    }
+  };
+  const getComentarios = async () => {
+    try {
+        const response = await fetch(`http://localhost:8000/api/seguimientoSemanalComentarios/semanaElegida/${idSemana}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        const responseData = await response.json();
+        setComentarios(responseData)
+        if (!response.ok) throw new Error('Error al obtener los datos de los comentarios');
+    } catch (error) {
+        console.error('Error en la solicitud:', error);
+        setError(true);
+    }finally{
+      setLoading(false)
+    }
+  };
   useEffect(() => {
     if (!data2 || !data2.semana || !empresa || !empresa.integrantes) return;
     const resSemana = data2.semana;
@@ -141,7 +144,12 @@ const SeguimientoSemanal = () => {
 
             <h2>SPRINT {data2.numSprint} - SEMANA {data2.semana?.numSemana}</h2>
             {data2 !== undefined && comentarios !== undefined && 
-              <TablaEvaluacionSemanal sprint={sprints !== null? sprints:[]} comenta={comentarios} showButtons={!mostrarBotones}/>
+              <TablaEvaluacionSemanal 
+                sprint={sprints !== null? sprints:[]} 
+                comenta={comentarios} 
+                showButtons={!mostrarBotones} 
+                setSeSubio={(subio)=> setSeSubio(subio)}
+              />
             } 
       </BaseUI>
       <InfoSnackbar
