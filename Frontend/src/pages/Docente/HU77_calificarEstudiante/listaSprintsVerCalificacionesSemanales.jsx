@@ -13,6 +13,7 @@ function SeguimientoSemanalSprints () {
     const [error, setError] = useState(false);
     const [verificacion, setVerificacion] = useState([])
     const [loading, setLoading] = useState(true); 
+    const [estudiantes, setEstudiante] = useState([]);
     useEffect(() => {
         const fetchSprintsData = async () => {
             setLoading(true)
@@ -28,6 +29,34 @@ function SeguimientoSemanalSprints () {
             setLoading(false);
           }
         };
+        
+        const getEstudiantes = async () =>{
+            setLoading(true)
+            try {
+                const response = await fetch(
+                  `http://127.0.0.1:8000/api/empresa/${idEmpresa}`,
+                  {
+                    method: "GET",
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                  }
+                );
+            
+                if (!response.ok) {
+                  throw new Error("Error al obtener los datos de la empresa");
+                }
+            
+                const data = await response.json();
+                setEstudiante(data.integrantes);
+                return data;
+              } catch (error) {
+                console.error("Error en la solicitud:", error);
+                throw error;
+              }finally{
+                setLoading(false)
+              }
+        }
         
         const getComentarios = async () => {
             setLoading(true)
@@ -48,14 +77,16 @@ function SeguimientoSemanalSprints () {
             setLoading(false)
             }
       };
+        getEstudiantes()
         getComentarios();
         fetchSprintsData()
     }, []); 
     useEffect(()=>{
         setLoading(true)
-        if (comentarios.length > 0 && sprints.length > 0 && comentarios.length === sprints.length) {
+        if (comentarios.length > 0 && sprints.length > 0 && estudiantes.length>0) {
         let newVerificacion = []
         const tam = sprints.length
+        const tamEstu = estudiantes.length
         for (let i = 0; i < tam; i++) {
             const tamSemana = (sprints[i].semanas).length;
             const semanasSprint = sprints[i].semanas
@@ -63,9 +94,9 @@ function SeguimientoSemanalSprints () {
             console.log(semanasSprint)
             console.log(semanasComentario)
             const verificacionSemanas = [];
-            let bandera = false
+            let bandera = false;
             for (let j = 0; j < tamSemana; j++) {
-                const tam1 = semanasSprint[j]?.tareasEstudiante?.length;
+                const tam1 = tamEstu;
                 const tam2 = semanasComentario[j]?.comentariosTareas?.length; 
                 console.log(""+tam1+' '+tam2)
                 const evaluado =  (tam1 === tam2)&& tam1!==0 && tam2!==0
@@ -86,7 +117,7 @@ function SeguimientoSemanalSprints () {
         setVerificacion(newVerificacion)
         setLoading(false)
       }
-    },[comentarios, sprints ])
+    },[comentarios, sprints, estudiantes ])
     const togglePanel = (index) => {
         const newOpens = sprintOpen.map((open,i)=>{
             if(i === index){
@@ -102,12 +133,12 @@ function SeguimientoSemanalSprints () {
         setSprintOpen(newOpens)
     };
     const navigateSemana=(idSprint, idSemana)=>{
-      navigate(`/homeEstudiante/visCalificar/${idEmpresa}/sprint/${idSprint}/Semana/${idSemana}`)
+        navigate(`/homeEstudiante/visCalificar/${idEmpresa}/sprint/${idSprint}/Semana/${idSemana}`)
     }
 
     if(sprints?.length === 0) return (
         <BaseUI
-                titulo={'SELECCIONE UNA SEMANA PARA EL SEGUIMIENTO'}
+                titulo={'SELECCIONE UNA SEMANA PARA RECUPERAR RESULTADOS DE EL SEGUIMIENTO SEMANAL'}
                 ocultarAtras={false}
                 confirmarAtras={false}
                 dirBack={`/homeEstudiante/visCalificar`}
@@ -123,10 +154,10 @@ function SeguimientoSemanalSprints () {
     return (
         <Fragment>
             <BaseUI
-                titulo={'SELECCIONE UNA SEMANA PARA EL SEGUIMIENTO'}
+                titulo={'SELECCIONE UNA SEMANA PARA RECUPERAR RESULTADOS DE EL SEGUIMIENTO SEMANAL'}
                 ocultarAtras={false}
                 confirmarAtras={false}
-                dirBack={`/homeGrupo/${idGrupo}/listaEmpresas/evaluacionSemanal`}
+                dirBack={`/homeEstudiante/visCalificar`}
                 loading={loading}
                 error={error}
             >

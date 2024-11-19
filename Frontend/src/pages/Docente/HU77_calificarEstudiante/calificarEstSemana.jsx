@@ -17,7 +17,7 @@ const SeguimientoSemanal = () => {
     message: "",
     severity: "info",
   });
-
+  const [sprints, setSprints] = useState(null)
   useEffect(() => {
     const fetchData = async () => {try {
         const data = await getSeguimiento(idEmpresa);
@@ -28,9 +28,7 @@ const SeguimientoSemanal = () => {
           numSprint: sprintElegido.numSprint,
           semana: semanaElegida,
         };
-      
         setData(newData);
-        console.log(newData);
       } catch (error) {
         console.error("Error en la solicitud:", error);
         setError(true);
@@ -47,7 +45,7 @@ const SeguimientoSemanal = () => {
 
     const getNombreEmpresa = async () => {
       try {
-          const response = await fetch(`http://127.0.0.1:8000/api/nombreEmpresa/${idEmpresa}`, {
+          const response = await fetch(`http://127.0.0.1:8000/api/empresa/${idEmpresa}`, {
               method: 'GET',
               headers: {
                   'Content-Type': 'application/json',
@@ -57,8 +55,8 @@ const SeguimientoSemanal = () => {
           if (!response.ok) throw new Error('Error al obtener los datos de la empresa');
 
           const data = await response.json();
-          
-          setNombreEmpresa({ nombreCorto: data.nombreEmpresa, nombreLargo: data.nombreLargo });
+          setNombreEmpresa({ nombreCorto: data.nombreEmpresa, nombreLargo: data.nombreLargo, integrantes: data.integrantes });
+          console.log(data)
       } catch (error) {
           console.error('Error en la solicitud:', error);
           setError(true);
@@ -88,11 +86,42 @@ const SeguimientoSemanal = () => {
     getNombreEmpresa();
     fetchData();
   }, []);
-
+  useEffect(() => {
+    if (!data2 || !data2.semana || !empresa || !empresa.integrantes) return;
+    const resSemana = data2.semana;
+    if (!resSemana.tareasEstudiante) return;
+    const nuevaListaTareasEstudiante = [
+      ...resSemana.tareasEstudiante,
+      ...empresa.integrantes
+        .filter(integrante => 
+          !resSemana.tareasEstudiante.some(estudiante => estudiante.idEstudiante === integrante.idEstudiante)
+        )
+        .map(integrante => ({
+          apellido: `${integrante.primerApellido} ${integrante.segundoApellido}`,
+          idEstudiante: integrante.idEstudiante,
+          nombre: integrante.nombreEstudiante,
+          tareas: []
+        }))
+    ];
+    nuevaListaTareasEstudiante.sort((a, b) => a.idEstudiante - b.idEstudiante);
+    const newSemana = {
+      idSemana: resSemana.idSemana,
+      numSemana: resSemana.numSemana,
+      tareas: resSemana.tareas,
+      tareasEstudiante: nuevaListaTareasEstudiante
+    };
+    const dataBuena = {
+      idSprint: data2.idSprint,
+      numSprint: data2.numSprint,
+      semana: newSemana
+    };
+    setSprints(dataBuena)
+  }, [comentarios, data2, empresa]);
+  
   return (
     <Fragment>
       <BaseUI
-        titulo="RESULTADOS EVALUACION SEMANAL"
+        titulo="RECUPERAR RESULTADOS DE SEGUIMIENTO SEMANAL PREVIO"
         ocultarAtras={false}
         confirmarAtras={false}
         dirBack={`/homeEstudiante/visCalificar/${idEmpresa}`}
@@ -105,9 +134,8 @@ const SeguimientoSemanal = () => {
               nombreLargo={empresa.nombreLargo}
             />
 
-        <h2>SPRINT {data2.numSprint} - SEMANA {data2.semana?.numSemana}    </h2>
-            {data2 !== undefined && 
-            comentarios !== undefined && <TablaEvaluacionSemanal sprint={data2} comenta={comentarios} showButtons={false}/>} 
+            <h2>SPRINT {data2.numSprint} - SEMANA {data2.semana?.numSemana}</h2>
+            {data2 !== undefined && comentarios !== undefined && <TablaEvaluacionSemanal sprint={sprints !== null? sprints:[]} comenta={comentarios} showButtons={false}/>} 
       </BaseUI>
       <InfoSnackbar
         openSnackbar={snackbar.open}

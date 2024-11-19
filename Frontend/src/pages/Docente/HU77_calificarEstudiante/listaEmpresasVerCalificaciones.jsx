@@ -59,7 +59,7 @@ function ListaEmpresasEvaluacionSemanal() {
 
   return (
     <ListaDefinitivaN
-        titulo="SELECCIONE UNA EMPRESA PARA VER EL SEGUIMIENTO SEMANAL"
+        titulo={'SELECCIONE UNA EMPRESA PARA RECUPERAR RESULTADOS DE EL SEGUIMIENTO SEMANAL'}
         cabezeraTitulo={null}
         cabezeras={columns}
         datosTabla={listaEmpresas}

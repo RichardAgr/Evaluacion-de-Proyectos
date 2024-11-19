@@ -215,7 +215,7 @@ class ComentarioTareaController extends Controller
                             $tareasEstudianteData[$idEstudiante] = [
                                 'idEstudiante' => $idEstudiante,
                                 'nombre' => $tareaEstudiante->estudiantes->nombreEstudiante,
-                                'apellido' => $tareaEstudiante->estudiantes->primerApellido,
+                                'apellido' => $tareaEstudiante->estudiantes->primerApellido . ' ' . $tareaEstudiante->estudiantes->segundoApellido,
                                 'tareas' => [
                                     [
                                         'idTarea' => $tarea->idTarea,

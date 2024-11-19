@@ -130,7 +130,7 @@ function Home() {
   return (
     <>
       <Header />
-      <Container maxWidth="lg" sx={{ my: 4 }}>
+      <Container maxWidth="lg" sx={{ my: 10 }}>
         <Typography variant="h4" gutterBottom align="center">
           Panel de Control
         </Typography>

@@ -137,12 +137,15 @@ const TablaEvaluacionSemanal = ({ sprint, comenta, showButtons = true }) => {
           <TableBody>
             {sprint.semana?.tareasEstudiante?.map((estudiante, index) => (
               <TableRow key={index}>
-                <TableCell>{estudiante.nombre}</TableCell>
+                <TableCell>{estudiante.nombre} {estudiante.apellido}</TableCell>
                 <TableCell>
                   <ul>
                     {estudiante?.tareas.map((tarea, idx) => (
                       <li key={idx}>{tarea.nombreTarea}</li>
                     ))}
+                    {
+                      estudiante?.tareas?.length === 0 && <li style={{color:'red'}}>Sin tareas asignadas</li>
+                    }
                   </ul>
                 </TableCell>
                 <TableCell>
