@@ -1,7 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import HomeEstudiante from "../pages/Estudiante/homeEstudiante/homeEstudiante.jsx";
 import HomeGrupoEstudiante from "../pages/Estudiante/homeGrupoEstudiante/homeGrupoEstudiante.jsx";
-
+import Home from "../pages/Home/home.jsx";
 import ModificarListaTareas from "../pages/Estudiante/HU40_modificarListaTareas/modificarListaTareas.jsx";
 import ModificarGrupoEmpresa from "../pages/Estudiante/HU3_HU71_HU69_grupoEmpresa/modificarGrupoEmpresa.jsx";
 import GruposDisponibles from "../pages/Estudiante/HU16_gruposDisponibles/gruposDisponibles.jsx"; // Import the new page
@@ -16,6 +16,7 @@ import SprintTareas2 from "../pages/Docente/HU38_tareaEstudiante/visualizarSprin
 function Nav() {
     return (
       <Routes>
+        <Route path="/2" element={<Home />} />
         {/** ROUTES JHON*/}
         <Route
           path="/:idEstudiante/homeGrupoE/:idGrupo/Empresas/:idEmpresa"

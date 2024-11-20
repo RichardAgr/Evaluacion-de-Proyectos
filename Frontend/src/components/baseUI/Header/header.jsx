@@ -13,7 +13,24 @@ function Header() {
   const [auth] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [grupo] = React.useState(true);
+  
+  const logout = async () => {
+      try {
+          const token = localStorage.getItem('token');
 
+          await fetch('http://localhost:8000/api/logout', {
+              method: 'POST',
+              headers: {
+                  'Authorization': `Bearer ${token}`,
+              },
+          });
+
+          localStorage.removeItem('token');
+          localStorage.removeItem('role');
+      } catch (error) {
+          console.error('Error al cerrar sesión:', error);
+      }
+  };
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -75,7 +92,7 @@ function Header() {
                 onClose={handleClose}
               >
                 <MenuItem onClick={handleClose}>Profile</MenuItem>
-                <MenuItem onClick={handleClose}>Cerrar Sesión</MenuItem>
+                <MenuItem onClick={logout}>Cerrar Sesión</MenuItem>
               </Menu>
             </div>
           ) : null}

@@ -1,16 +1,16 @@
 import { Routes, Route } from "react-router-dom";
-import Home from "../pages/Home/home.jsx";
 import VerPlanificacionDeDesarollo from "../pages/VisualizacionCompartida/HU36_verPlanificacionDeDesarollo/VerPlanifacionDeDesarollo.jsx";
 import SeleccionarSprintVisualizar from "../pages/VisualizacionCompartida/HU37_visualizarSprint/seleccionarSprintVisualizar/seleccionarSprintVisualizar.jsx";
 import VisualizarSprint from "../pages/VisualizacionCompartida/HU37_visualizarSprint/visualizarSprint.jsx";
 import ModificarPlanificacion from "../pages/Estudiante/HU4_editarPlanificacion/editarPlanificacion.jsx";
 import PublicarPlanificacion from "../pages/Estudiante/publicarPlanificacion/publicarPlanificacion.jsx";
+import IniciarSesion from "../pages/Home/iniciarSesion.jsx";
 
 function Nav() {
   return (
     <Routes>
       {/** Ruta compartidas*/}
-      <Route path="/" element={<Home />} />
+      <Route path="/" element={<IniciarSesion />} />
 
       {/** Visualizar Planificacion*/}
       <Route
