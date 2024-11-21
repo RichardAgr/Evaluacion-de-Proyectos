@@ -68,7 +68,7 @@ function Home() {
   return (
     <>
       <Header />
-      <Container maxWidth="lg" sx={{ my: 10 }}>
+      <Container maxWidth="lg" sx={{minHeight:'72.8vh', marginTop: '5rem' }}>
         <Typography variant="h4" gutterBottom align="center">
           Panel de Control
         </Typography>
