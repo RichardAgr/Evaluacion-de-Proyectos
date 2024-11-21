@@ -1,11 +1,82 @@
-import { Fragment } from 'react';
+import Footer from "../../../components/baseUI/Footer/footer.jsx";
+import Header from "../../../components/baseUI/Header/header.jsx";
+import { useNavigate } from "react-router-dom";
+import { Container, Grid2, Button, Typography, Paper } from "@mui/material";
 
-function homeGrupoEstudiante() {
+const ButtonGroup = ({ title, buttons }) => (
+  <Paper elevation={3} sx={{ p: 3, mb: 4 }}>
+    <Typography variant="h5" gutterBottom>
+      {title}
+    </Typography>
+    <Grid2 container spacing={2}>
+      {buttons.map((button, index) => (
+        <Grid2 item xs={12} sm={6} md={4} key={index}>
+          <Button
+            variant="contained"
+            color="primary"
+            fullWidth
+            onClick={button.onClick}
+            sx={{
+              height: "100%",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              textAlign: "center",
+            }}
+          >
+            {button.label}
+          </Button>
+        </Grid2>
+      ))}
+    </Grid2>
+  </Paper>
+);
+
+function Home() {
+  const navigate = useNavigate();
+  const studentButtons = [
+    {
+      label: "HU3_Registrar Empresa",
+      onClick: () => navigate("/homeEstudiante/homeGrupoEstudiante/crearGrupo/25"),
+    },
+    {
+      label: "HU69_Modificar Empresa",
+      onClick: () => navigate("/homeEstudiante/homeGrupoEstudiante/modificarGrupo/25"),
+    },    {
+      label: "HU71_Publicar Empresa",
+      onClick: () => navigate("/homeEstudiante/homeGrupoEstudiante/publicarEmpresa/25"),
+    },
+    {
+      label: "HU16_Grupos Disponibles",
+      onClick: () => navigate("/homeEstudiante/gruposDisponibles/1"),
+    },
+    {
+      label: "HU8__Modificar Tarea",
+      onClick: () =>
+        navigate("/1/homeGrupoE/1/Empresas/1"),
+    },
+    {
+      label: "HU18__Ver Calificaciones",
+      onClick: () =>
+        navigate(
+          "/1/homeGrupoE/1/empresa/calificaciones/1"
+        ),
+    },
+
+  ];
+
   return (
-    <Fragment>
-      
-    </Fragment>
+    <>
+      <Header />
+      <Container maxWidth="lg" sx={{minHeight:'72.8vh', marginTop: '5rem' }}>
+        <Typography variant="h4" gutterBottom align="center">
+          Panel de Control
+        </Typography>
+        <ButtonGroup title="Acciones del Estudiante" buttons={studentButtons} />
+      </Container>
+      <Footer />
+    </>
   );
 }
 
-export default homeGrupoEstudiante;
+export default Home;

@@ -10,8 +10,11 @@ import {
   import { Formik, Field, Form } from "formik";
   import * as Yup from "yup";
   import myImage from '../../assets/img/inicio.jpg';
+  import CryptoJS from 'crypto-js';
+  import Cookies from 'js-cookie';
   
   function IniciarSesion() {
+
     const login = async (nombreCuenta, contrasena) => {
         console.log(nombreCuenta)
         console.log(contrasena)
@@ -26,6 +29,7 @@ import {
              contrasena: contrasena
             }
             ),
+            credentials: 'include',
         });
   
         if (!response.ok) {
@@ -33,8 +37,13 @@ import {
         }
   
         const data = await response.json();
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('role', data.role);
+        const sessionCookie = Cookies.get('laravel_session');
+        console.log(sessionCookie)
+        const ENCRYPTION_KEY = 'mi_clave_super_segura';
+        const encryp = CryptoJS.AES.encrypt(data.role, ENCRYPTION_KEY).toString();
+
+        localStorage.setItem('role', encryp);
+        window.location.reload();
       } catch (error) {
         console.error('Error en el inicio de sesión:', error);
       }
@@ -44,6 +53,7 @@ import {
       nombreCuenta: Yup.string().required('El nombre de la cuenta es obligatorio'),
       contrasena: Yup.string().required('La contraseña es obligatoria'),
     });
+
   
     return (
       <Container
@@ -61,11 +71,12 @@ import {
           elevation={3}
           sx={{
             display: "flex",
-            width: "60vw",
+            width: "calc(50vw + 10rem)",
             maxWidth: "100vw",
             borderRadius: "12px",
             overflow: "hidden",
             minHeight: "60vh",
+            flexWrap: 'wrap'
           }}
         >
           <Box
@@ -90,8 +101,8 @@ import {
           </Box>
   
           {/* Sección del Formulario */}
-          <Box sx={{ flex: 1, padding: "40px" }}>
-            <Typography variant="h4" gutterBottom sx={{ marginTop: '2rem', marginBottom: '2rem', fontWeight: 'bold' }}>
+          <Box sx={{ flex: 1, padding: "2.8rem", paddingTop:{xs:'0',sm: '1rem' ,md:'2.8rem'} }}>
+            <Typography variant="h4" gutterBottom sx={{ marginTop:{xs:'0',sm: '1rem', md:'2rem'}, marginBottom:{xs:'0', sm: '1rem',md:'2.rem'}, fontWeight: 'bold' }}>
               BIENVENIDO
             </Typography>
             <Divider sx={{ marginBottom: "20px" }} />

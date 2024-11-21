@@ -1,5 +1,4 @@
-import { Routes, Route } from "react-router-dom";
-import HomeDocente from "../pages/Docente/homeDocente/homeDocente.jsx";
+import { Routes, Route, Navigate } from 'react-router-dom';
 import HomeGrupoDocente from "../pages/Docente/homeGrupoDocente/homeGrupoDocente.jsx";
 import EvaluacionSemanal from "../pages/Docente/HU7_evaluacionSemanal/evaluacionSemanal.jsx";
 import VerEvaluacionSemanal from "../pages/Docente/HU77_calificarEstudiante/calificarEstSemana.jsx";
@@ -28,6 +27,13 @@ import VerEvaluacionSemanalListaEmpresas from '../pages/Docente/HU77_calificarEs
 function Nav() {
   return (
     <Routes>
+
+      
+      <Route
+        path="/"
+        element={<HomeGrupoDocente />}
+      />
+
       {/** ROUTES JHON*/}
       
       <Route
@@ -136,16 +142,12 @@ function Nav() {
         element={<ValidarPlanificacion />}
       />
 
-      <Route path="/homeDocente" element={<HomeDocente />} />
-      <Route
-        path="/homeDocente/homeGrupoDocente"
-        element={<HomeGrupoDocente />}
-      />
-
       <Route
         path="/validarPlanificacion/empresa/:idEmpresa"
         element={<ValidarPlanificacion />}
       />
+      
+      <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   );
 }
