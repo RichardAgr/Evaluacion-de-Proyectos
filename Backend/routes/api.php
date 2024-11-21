@@ -3,7 +3,7 @@
 esto es un prueba de subir al git 2
 */
 
-use App\Http\Controllers\AuthController;
+
 use App\Http\Controllers\Estudiante\TareaController;
 use App\Http\Controllers\Docente\GrupoController;
 use App\Http\Controllers\Estudiante\EstudianteController;
@@ -18,6 +18,15 @@ use App\Http\Controllers\Empresa\EntregablesController;
 use App\Http\Controllers\Empresa\EmpresaController;
 use App\Http\Controllers\ComentarioTareaController;
 use App\Http\Controllers\joaquinController;
+
+
+
+Route::post('/login/admin', [AuthController::class, 'loginAdmin']);
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/logout', [AuthController::class, 'logout']);
+Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
+Route::post('/reset-password', [AuthController::class, 'resetPassword']);
+
 
 //============================= GET EMPRESA ================================
 
@@ -163,21 +172,6 @@ Route::post('/empresa/{idEmpresa}/sprint/{idSprint}/evaluacion', [SprintControll
 
 // ----post docente nota sprint
 Route::post('/sprint/{idSprint}/actualizar', [SprintController::class, 'actualizarNotaComentario']);
-
-
-// ============================      SESIONES DOCENTE     ======================================
-
-Route::get('/session/active/docente', [AuthController::class, 'isSessionActiveDocente']);
-Route::get('/session/logeado/docente/{idDoc}', [AuthController::class, 'loginConIdDocente']);
-Route::get('/session/logout/docente/{idDoc}', [AuthController::class, 'logoutDocente']);
-
-// ============================      SESIONES ESTUDIANTE  ====================================
-
-Route::get('/session/active/estudiante', [AuthController::class, 'isSessionActiveEstudiante']);
-Route::post('/session/logeado/estudiante', [AuthController::class, 'loginConIdEstudiante']);
-Route::post('/session/logout/estudiante', [AuthController::class, 'logoutEstudiante']);
-
-
 
 
 

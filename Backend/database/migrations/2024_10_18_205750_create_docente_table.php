@@ -17,8 +17,9 @@ class CreateDocenteTable extends Migration
             $table->string('nombreDocente',10)->nullable();
             $table->string('primerApellido',10)->nullable();
             $table ->string('segundoApellido',10)->nullable();
-            $table->string ('contrasena',60)->nullable();
+            $table->string ('password',60)->nullable();
             $table->string ('descripcionDocente',500)->nullable();
+            $table->string('email')->unique();
 
         });
     }

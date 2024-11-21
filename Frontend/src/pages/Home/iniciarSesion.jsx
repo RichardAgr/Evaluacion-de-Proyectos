@@ -16,7 +16,7 @@ import {
         console.log(nombreCuenta)
         console.log(contrasena)
       try {
-        const response = await fetch('http://localhost:8000/api/login', {
+        const response = await fetch('http://localhost:8000/api/estudiante/login', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

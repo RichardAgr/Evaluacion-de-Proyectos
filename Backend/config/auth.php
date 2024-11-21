@@ -14,9 +14,10 @@ return [
     */
 
     'defaults' => [
-        'guard' => 'web',
-        'passwords' => 'users',
+        'guard' => 'sanctum',
+        'password' => 'users',
     ],
+
 
     /*
     |--------------------------------------------------------------------------
@@ -40,7 +41,21 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        'docente' => [
+            'driver' => 'sanctum',
+            'provider' => 'docentes',
+        ],
+        'estudiante' => [
+            'driver' => 'sanctum',
+            'provider' => 'estudiantes',
+        ],
+        'admin' => [
+            'driver' => 'sanctum',
+            'provider' => 'admins',
+        ],
     ],
+
+
 
     /*
     |--------------------------------------------------------------------------
@@ -58,18 +73,21 @@ return [
     | Supported: "database", "eloquent"
     |
     */
-
     'providers' => [
-        'users' => [
+        'docentes' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Docente::class,
+        ],
+        'estudiantes' => [
             'driver' => 'eloquent',
             'model' => App\Models\Estudiante::class,
         ],
-
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+        'admins' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Admin::class,
+        ],
     ],
+
 
     /*
     |--------------------------------------------------------------------------
@@ -91,13 +109,26 @@ return [
     */
 
     'passwords' => [
-        'users' => [
-            'provider' => 'users',
+        'docentes' => [
+            'provider' => 'docentes',
+            'table' => 'password_reset_tokens',
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+        'estudiantes' => [
+            'provider' => 'estudiantes',
+            'table' => 'password_reset_tokens',
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+        'admins' => [
+            'provider' => 'admins',
             'table' => 'password_reset_tokens',
             'expire' => 60,
             'throttle' => 60,
         ],
     ],
+
 
     /*
     |--------------------------------------------------------------------------

@@ -49,14 +49,16 @@ class EstudianteSeeder extends Seeder
         ];
 
         foreach ($estudiantes as $index => $estudiante) {
+            $nombre = $estudiante[1];
             DB::table('estudiante')->insert([
                 'idEstudiante' => $index + 1,
                 'nombreCuenta' => $estudiante[0],
                 'nombreEstudiante' => $estudiante[1],
                 'primerApellido' => $estudiante[2],
                 'segundoApellido' => $estudiante[3],
-                'contrasena' => Hash::make($estudiante[4]),
+                'password' => Hash::make($estudiante[4]),
                 'numerodefaltasest' => $estudiante[5],
+                'email' => $nombre . '_' . $index . '@gmail.com'
             ]);
         }
     }

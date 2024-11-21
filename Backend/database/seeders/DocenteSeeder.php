@@ -19,7 +19,8 @@ class DocenteSeeder extends Seeder
                 'nombreDocente' => 'Leticia',
                 'primerApellido' => 'Blanco',
                 'segundoApellido' => 'Coca',
-                'contrasena' => bcrypt('password1'),
+                'password' => Hash::make('password1'),
+                'email' => 'pruebaemailleti@gmail.com'
             ],
             [
                 'idDocente' => 2,
@@ -27,7 +28,8 @@ class DocenteSeeder extends Seeder
                 'nombreDocente' => 'Carlos',
                 'primerApellido' => 'Flores',
                 'segundoApellido' => 'Villaroel',
-                'contrasena' => bcrypt('password2'),
+                'password' => Hash::make('password2'),
+                'email' => 'pruebaemail@gmail.com'
             ],
         ]);
     }

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Docente extends Model
 {
     use HasFactory;
+    use HasApiTokens; // Importante para Sanctum
 
     protected $table = 'docente'; // Nombre de la tabla en la base de datos
     protected $primaryKey = 'idDocente';
@@ -15,8 +16,12 @@ class Docente extends Model
         'nombreDocente',
         'primerApellido',
         'segundoApellido',
-        'contrasena',
+        'password',
+        'email'
     ];
+
+    protected $hidden = ['password']; // Ocultar el campo de las respuestas JSON
+
 
     public function grupos()
     {

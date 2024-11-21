@@ -19,9 +19,9 @@ class CreateEstudianteTable extends Migration
             $table->string('nombreEstudiante', 20)->nullable();
             $table->string('primerApellido', 20)->nullable();
             $table->string('segundoApellido', 20)->nullable();
-            $table->string('contrasena', 60)->nullable();
+            $table->string('password', 60)->nullable();
             $table->tinyInteger('numerodefaltasest')->nullable();
-
+            $table->string('email')->unique();
 
             $table->charset = 'utf8mb4';
             $table->collation = 'utf8mb4_unicode_ci';

@@ -13,14 +13,6 @@ use App\Http\Controllers\ControllersGlobal\Estudiante\EstudianteController;
 use App\Http\Controllers\RevisionPlaniController;
 use App\Models\RevisionPlani;
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
-
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
 
 
 
@@ -49,7 +41,3 @@ Route::get('/grupo/empresas/{idDocente}/{gestionGrupo}', [GrupoController::class
 //HU Validar Planificion
 Route::put('/validar', [PlanificacionController::class, 'validar']);
 Route::get('/prueba', [PlanificacionController::class, 'testAdd']);
-
-Route::get('/token', function () {
-    return csrf_token();
-});
