@@ -19,7 +19,7 @@ class DocenteSeeder extends Seeder
                 'nombreDocente' => 'Leticia',
                 'primerApellido' => 'Blanco',
                 'segundoApellido' => 'Coca',
-                'contrasena' => bcrypt('password1'),
+                'contrasena' => Hash::make('password1'),
             ],
             [
                 'idDocente' => 2,
@@ -27,7 +27,7 @@ class DocenteSeeder extends Seeder
                 'nombreDocente' => 'Carlos',
                 'primerApellido' => 'Flores',
                 'segundoApellido' => 'Villaroel',
-                'contrasena' => bcrypt('password2'),
+                'contrasena' => Hash::make('password2'),
             ],
         ]);
     }

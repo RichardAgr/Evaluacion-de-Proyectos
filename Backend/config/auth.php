@@ -40,6 +40,17 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        // Guard para Estudiantes
+        /*'estudiante' => [
+            'driver' => 'session',
+            'provider' => 'estudiante',
+        ],
+
+        // Guard para Docentes
+        'docente' => [
+            'driver' => 'session',
+            'provider' => 'docente',
+        ],*/
     ],
 
     /*
@@ -64,12 +75,24 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\Estudiante::class,
         ],
+        // Proveedor para Estudiantes
+        'estudiante' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Estudiante::class,
+        ],
+
+        // Proveedor para Docentes
+            'docente' => [
+                'driver' => 'eloquent',
+                'model' => App\Models\Docente::class,
+        ],
+    ],
 
         // 'users' => [
         //     'driver' => 'database',
         //     'table' => 'users',
         // ],
-    ],
+  
 
     /*
     |--------------------------------------------------------------------------

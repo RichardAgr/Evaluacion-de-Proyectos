@@ -1,7 +1,5 @@
-import { Routes, Route } from "react-router-dom";
-import HomeEstudiante from "../pages/Estudiante/homeEstudiante/homeEstudiante.jsx";
+import { Routes, Route, Navigate } from 'react-router-dom';
 import HomeGrupoEstudiante from "../pages/Estudiante/homeGrupoEstudiante/homeGrupoEstudiante.jsx";
-import Home from "../pages/Home/home.jsx";
 import ModificarListaTareas from "../pages/Estudiante/HU40_modificarListaTareas/modificarListaTareas.jsx";
 import ModificarGrupoEmpresa from "../pages/Estudiante/HU3_HU71_HU69_grupoEmpresa/modificarGrupoEmpresa.jsx";
 import GruposDisponibles from "../pages/Estudiante/HU16_gruposDisponibles/gruposDisponibles.jsx"; // Import the new page
@@ -16,7 +14,7 @@ import SprintTareas2 from "../pages/Docente/HU38_tareaEstudiante/visualizarSprin
 function Nav() {
     return (
       <Routes>
-        <Route path="/2" element={<Home />} />
+        <Route path="/" element={<HomeGrupoEstudiante />} />
         {/** ROUTES JHON*/}
         <Route
           path="/:idEstudiante/homeGrupoE/:idGrupo/Empresas/:idEmpresa"
@@ -50,11 +48,6 @@ function Nav() {
         path="/homeEstudiante/homeGrupoEstudiante/publicarEmpresa/:idEstudiante"
         element={<PublicarGrupoEmpresa />}
         />
-        <Route path="/homeEstudiante" element={<HomeEstudiante />} />
-        <Route
-          path="/homeEstudiante/homeGrupoEstudiante"
-          element={<HomeGrupoEstudiante />}
-        />
         <Route
           path="/modificarListaTareas/empresa/:idEmpresa/sprint/:idSprint/semana/:idSemana"
           element={<ModificarListaTareas />}
@@ -67,6 +60,8 @@ function Nav() {
           path="/homeEstudiante/inscribirGrupo/:idEstudiante/:idGrupo"
           element={<InscribirGrupo />}
         />
+        <Route path="*" element={<Navigate to="/" />} />
+
       </Routes>
     );
   }

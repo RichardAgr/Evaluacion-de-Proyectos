@@ -13,7 +13,6 @@ use App\Http\Controllers\Empresa\PlanificacionController;
 use App\Http\Controllers\Empresa\DocenteController;
 use App\Http\Controllers\Empresa\SprintController;
 use App\Http\Controllers\Estudiante\EstudiantesEmpresasController;
-use App\Http\Controllers\Empresa\NotaSprintController;
 use App\Http\Controllers\Empresa\EntregablesController;
 use App\Http\Controllers\Empresa\EmpresaController;
 use App\Http\Controllers\ComentarioTareaController;
@@ -32,8 +31,7 @@ Route::get('/empresas/obtenerEstudiantes',[EstudianteController::class, 'obtener
 Route::get('/empresas/{idEmpresa}/calificaciones', [EmpresaController::class, 'getCalificacionesEmpresa']);
 //---Recibe la nota del sprint seleccionado
 Route::get('/empresas/notaSprint/{idEmpresa}/{semana}', [SprintController::class, 'obtenerResultadoEvaluacionesPrevias']);
-//---Recibe las notas de todo los sprints
-Route::get('/empresas/notasSprint/{idEmpresa}', [NotaSprintController::class, 'notasSprint']);
+
 
 //============================= GET ESTUDIANTE =============================
 //---Recupera la tarea
@@ -47,8 +45,6 @@ Route::get('/estudiante/sprint/semana/{idSprint}',[SprintController::class, 'spr
 Route::get('/docente/listaEstudiantes', [GrupoController::class, 'obtenerEstudiantesPorGrupo']);
 //---Recibe las empresas del grupo del docente y del docente activo
 Route::get('/docente/obtenerEmpresasPorGrupoYDocente',[GrupoController::class, 'obtenerEmpresasPorGrupoYDocente']);
-//---Recibe las tareas de un estudiante {Puuede no funcionar}
-Route::get('/docente/obtenerTareas', [NotaSprintController::class, 'obtenerTareaYEstudiante']);
 //-- sprints con toda su informacion y los entragables
 Route::get('/empresa/{idEmpresa}/sprintsEntregables', [EmpresaController::class, 'getSprintsEntregables']);
 
@@ -176,7 +172,7 @@ Route::get('/session/logout/docente/{idDoc}', [AuthController::class, 'logoutDoc
 // ============================      SESIONES ESTUDIANTE  ====================================
 
 Route::get('/session/active/estudiante', [AuthController::class, 'isSessionActiveEstudiante']);
-Route::post('/session/logeado/estudiante', [AuthController::class, 'loginConIdEstudiante']);
+Route::post('/login', [AuthController::class, 'login']);
 Route::post('/session/logout/estudiante', [AuthController::class, 'logoutEstudiante']);
 
 
