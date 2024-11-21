@@ -9,9 +9,6 @@ function App() {
   const userRole = localStorage.getItem('role');
 
   function decrypt(encryptedValue) {
-    // Verifica si la cookie de sesión está disponible
-    //const sessionCookie = Cookies?.get('laravel_sesion');
-
     const ENCRYPTION_KEY = 'mi_clave_super_segura';
     try {
       const bytes = CryptoJS.AES.decrypt(encryptedValue, ENCRYPTION_KEY);

@@ -70,47 +70,14 @@ function Home() {
     },
   ];
 
-  const studentButtons = [
-    {
-      label: "HU3_Registrar Empresa",
-      onClick: () => navigate("/homeEstudiante/homeGrupoEstudiante/crearGrupo/25"),
-    },
-    {
-      label: "HU69_Modificar Empresa",
-      onClick: () => navigate("/homeEstudiante/homeGrupoEstudiante/modificarGrupo/25"),
-    },    {
-      label: "HU71_Publicar Empresa",
-      onClick: () => navigate("/homeEstudiante/homeGrupoEstudiante/publicarEmpresa/25"),
-    },
-    {
-      label: "HU16_Grupos Disponibles",
-      onClick: () => navigate("/homeEstudiante/gruposDisponibles/1"),
-    },
-    {
-      label: "HU8__Modificar Tarea",
-      onClick: () =>
-        navigate("/1/homeGrupoE/1/Empresas/1"),
-    },
-    {
-      label: "HU18__Ver Calificaciones",
-      onClick: () =>
-        navigate(
-          "/1/homeGrupoE/1/empresa/calificaciones/1"
-        ),
-    },
-
-  ];
-
   return (
     <>
       <Header />
-      <Container maxWidth="lg" sx={{ my: 10 }}>
+      <Container maxWidth="lg" sx={{minHeight:'72.8vh', marginTop: '5rem' }}>
         <Typography variant="h4" gutterBottom align="center">
           Panel de Control
         </Typography>
         <ButtonGroup title="Acciones del Docente" buttons={teacherButtons} />
-        <ButtonGroup title="Acciones del Estudiante" buttons={studentButtons} />
-        <ButtonGroup title="Acciones Compartidas" buttons={sharedButtons} />
       </Container>
       <Footer />
     </>

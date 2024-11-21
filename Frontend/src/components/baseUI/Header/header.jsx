@@ -23,10 +23,14 @@ function Header() {
                   'Authorization': true,
               },
           });
+
+
+
           localStorage.removeItem('role');
           Cookies.remove('laravel_sesion', { path: '/' });
           Cookies.remove('laravel_sesion', { path: '/', domain: 'yourdomain.com' });
-          window.location.reload();
+          localStorage.removeItem('role');
+        window.location.reload();  
       } catch (error) {
           console.error('Error al cerrar sesión:', error);
       }

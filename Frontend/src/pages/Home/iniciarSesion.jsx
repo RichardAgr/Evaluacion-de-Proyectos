@@ -11,7 +11,7 @@ import {
   import * as Yup from "yup";
   import myImage from '../../assets/img/inicio.jpg';
   import CryptoJS from 'crypto-js';
-  //import Cookies from 'js-cookie';
+  import Cookies from 'js-cookie';
   
   function IniciarSesion() {
 
@@ -37,7 +37,8 @@ import {
         }
   
         const data = await response.json();
-        //const sessionCookie = Cookies.get('laravel_session'); // o el nombre correcto de la cookie
+        const sessionCookie = Cookies.get('laravel_session');
+        console.log(sessionCookie)
         const ENCRYPTION_KEY = 'mi_clave_super_segura';
         const encryp = CryptoJS.AES.encrypt(data.role, ENCRYPTION_KEY).toString();
 
