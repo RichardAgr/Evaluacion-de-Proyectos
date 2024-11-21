@@ -26,6 +26,7 @@ import {
              contrasena: contrasena
             }
             ),
+            credentials: 'include',
         });
   
         if (!response.ok) {
@@ -33,8 +34,11 @@ import {
         }
   
         const data = await response.json();
-        localStorage.setItem('token', data.token);
+        //localStorage.setItem('token', data.token);
+        //console.log(data);
         localStorage.setItem('role', data.role);
+        //window.location.reload();
+        console.log(data.role);
       } catch (error) {
         console.error('Error en el inicio de sesión:', error);
       }

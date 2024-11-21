@@ -174,7 +174,7 @@ Route::get('/session/logout/docente/{idDoc}', [AuthController::class, 'logoutDoc
 // ============================      SESIONES ESTUDIANTE  ====================================
 
 Route::get('/session/active/estudiante', [AuthController::class, 'isSessionActiveEstudiante']);
-Route::post('/session/logeado/estudiante', [AuthController::class, 'loginConIdEstudiante']);
+Route::post('/login', [AuthController::class, 'login']);
 Route::post('/session/logout/estudiante', [AuthController::class, 'logoutEstudiante']);
 
 

@@ -6,36 +6,73 @@ use App\Models\Estudiante;
 use App\Models\Docente;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
     public function login(Request $request)
     {
-        // Validar los datos recibidos
-        $request->validate([
-            'nombreCuenta' => 'required|email',
-            'password' => 'required'
-        ]);
+        $credentials = $request->only('nombreCuenta', 'contrasena');
 
-        // Intentar autenticación con las credenciales en la tabla personalizada
-        if (Auth::attempt($request->only('nombreCuenta', 'password'))) {
-            // Obtener el usuario autenticado
-            $usuario = Auth::user();
+        // Primero, intentamos encontrar al usuario como estudiante
+        $userE = Estudiante::where('nombreCuenta', $credentials['nombreCuenta'])->first();
 
-            // Retornar respuesta de éxito
-            return response()->json([
-                'mensaje' => 'Login exitoso',
-                'usuario' => [
-                    'id' => $usuario->id_usuario, // Usa el nombre de la columna en tu tabla
-                    'nombre' => $usuario->nombre, // Asegúrate de que coincida con el campo en tu tabla
-                    'email' => $usuario->email
-                ]
-            ]);
+        // También comprobamos si es un docente
+        $userD = Docente::where('nombreCuenta', $credentials['nombreCuenta'])->first();
+
+        // Si encontramos un estudiante
+        if ($userE) {
+            // Verificamos la contraseña del estudiante
+            if (Hash::check($credentials['contrasena'], $userE->contrasena)) {
+                // Autenticación exitosa
+                // Aquí no necesitamos llamar a session()->start() explícitamente, Laravel lo maneja automáticamente
+                
+                // Almacenamos los datos del estudiante en la sesión manualmente
+                session()->put('estudiante', [
+                    'id' => $userE->idEstudiante,
+                    'nombre' => $userE->nombreEstudiante,
+                    'primerApellido' => $userE->primerApellido,
+                    'segundoApellido' => $userE->segundoApellido,
+                    'role' => 'estudiante'
+                ]);
+                
+                // Aquí simplemente retornamos la respuesta con el usuario en la sesión
+                return response()->json([
+                    'mensaje' => 'Login exitoso',
+                    //'usuario' => session('estudiante'), // Esto accede a los datos almacenados en la sesión
+                    'role' => 'estudiante'
+                ]);
+            } else {
+                // Contraseña incorrecta
+                return response()->json(['error' => 'Credenciales incorrectas'], 401);
+            }
+        } elseif ($userD) {
+            // Si es un docente, verificamos la contraseña de la misma manera
+            if (Hash::check($credentials['contrasena'], $userD->contrasena)) {
+                // Autenticación exitosa para docente
+                session()->put('docente', [
+                    'id' => $userD->idDocente,
+                    'nombre' => $userD->nombreDocente,
+                    'primerApellido' => $userD->primerApellido,
+                    'segundoApellido' => $userD->segundoApellido,
+                    'role' => 'docente'
+                ]);
+
+                return response()->json([
+                    'mensaje' => 'Login exitoso',
+                    'usuario' => session('docente')
+                ]);
+            } else {
+                // Contraseña incorrecta
+                return response()->json(['error' => 'Credenciales incorrectas'], 401);
+            }
         } else {
-            // Retornar error si las credenciales son incorrectas
-            return response()->json(['mensaje' => 'Credenciales incorrectas'], 401);
+            // Usuario no encontrado
+            return response()->json(['error' => 'Usuario no encontrado'], 404);
         }
-    }
+
+    }   
+
 
     //Logeo De Estudiante
     public function loginConIdEstudiante(Request $request)
@@ -55,12 +92,7 @@ class AuthController extends Controller
 
         if ($usuario) {
             // Crear una sesión para el usuario
-            session()->put('estudiante', [
-                'id' => $usuario->idEstudiante,
-                'nombre' => $usuario->nombreEstudiante,
-                'primerApellido' => $usuario->primerApellido,
-                'segundoApellido' => $usuario->segundoApellido
-            ]);
+            
 
             return response()->json(['mensaje' => 'Login exitoso', 'usuario' => session('estudiante')]);
         } else {
@@ -88,6 +120,7 @@ class AuthController extends Controller
         } else {
             return response()->json(['mensaje' => 'No hay sesión activa'], 401);
         }
+        
     }
     
     //Logeo de docente
