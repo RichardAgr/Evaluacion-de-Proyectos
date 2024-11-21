@@ -74,6 +74,7 @@ function ModificarPlanificacion() {
             <EstadoPlanificacion
               estado={planificacionData?.aceptada}
               comentariopublico={planificacionData?.comentariopublico}
+              publicada={planificacionData?.publicada}
             />
             {planificacionData?.aceptada ? (
               <Redirecting />
