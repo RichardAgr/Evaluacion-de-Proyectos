@@ -9,6 +9,7 @@ import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
+import Cookies from 'js-cookie';
 function Header() {
   const [auth] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -16,15 +17,15 @@ function Header() {
   
   const logout = async () => {
       try {
-          const token = localStorage.getItem('token');
-
           await fetch('http://localhost:8000/api/logout', {
               method: 'POST',
               headers: {
-                  'Authorization': `Bearer ${token}`,
+                  'Authorization': true,
               },
           });
           localStorage.removeItem('role');
+          Cookies.remove('laravel_sesion', { path: '/' });
+          Cookies.remove('laravel_sesion', { path: '/', domain: 'yourdomain.com' });
           window.location.reload();
       } catch (error) {
           console.error('Error al cerrar sesión:', error);
