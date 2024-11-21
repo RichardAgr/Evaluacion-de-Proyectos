@@ -24,9 +24,8 @@ function Header() {
                   'Authorization': `Bearer ${token}`,
               },
           });
-
-          localStorage.removeItem('token');
           localStorage.removeItem('role');
+          window.location.reload();
       } catch (error) {
           console.error('Error al cerrar sesión:', error);
       }

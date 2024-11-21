@@ -34,10 +34,7 @@ import {
         }
   
         const data = await response.json();
-        //localStorage.setItem('token', data.token);
-        //console.log(data);
         localStorage.setItem('role', data.role);
-        
         console.log(data.role);
         window.location.reload();
       } catch (error) {

@@ -11,7 +11,7 @@ function App() {
       <NavDocente/>
     )
   }
-  if(userRole==='docente'){ 
+  if(userRole==='estudiante'){ 
     return(
       <NavEstudiante/>
     )

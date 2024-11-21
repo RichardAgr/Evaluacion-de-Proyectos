@@ -16,7 +16,7 @@ import SprintTareas2 from "../pages/Docente/HU38_tareaEstudiante/visualizarSprin
 function Nav() {
     return (
       <Routes>
-        <Route path="/2" element={<Home />} />
+        <Route path="/" element={<Home />} />
         {/** ROUTES JHON*/}
         <Route
           path="/:idEstudiante/homeGrupoE/:idGrupo/Empresas/:idEmpresa"
