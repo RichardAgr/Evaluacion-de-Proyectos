@@ -60,7 +60,8 @@ class AuthController extends Controller
 
                 return response()->json([
                     'mensaje' => 'Login exitoso',
-                    'usuario' => session('docente')
+                    'usuario' => session('docente'),
+                    'role' => 'docente'
                 ]);
             } else {
                 // Contraseña incorrecta
