@@ -37,8 +37,9 @@ import {
         //localStorage.setItem('token', data.token);
         //console.log(data);
         localStorage.setItem('role', data.role);
-        //window.location.reload();
+        
         console.log(data.role);
+        window.location.reload();
       } catch (error) {
         console.error('Error en el inicio de sesión:', error);
       }
