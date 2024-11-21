@@ -39,7 +39,7 @@ class AuthController extends Controller
                 // Aquí simplemente retornamos la respuesta con el usuario en la sesión
                 return response()->json([
                     'mensaje' => 'Login exitoso',
-                    //'usuario' => session('estudiante'), // Esto accede a los datos almacenados en la sesión
+                    'usuario' => session('estudiante'), // Esto accede a los datos almacenados en la sesión
                     'role' => 'estudiante'
                 ]);
             } else {
