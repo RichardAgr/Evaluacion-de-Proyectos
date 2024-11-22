@@ -9,7 +9,10 @@ function CardResumen() {
         info = {<></>}
         buttons={<> 
         <Button variant="contained" color="primary" fullWidth >
-            VISUALIZAR SPRINTS
+          SUBIR ENTREGABLES SPRINTS
+        </Button>
+        <Button variant="outlined" color="primary" fullWidth >
+          VISUALIZAR SPRINTS
         </Button>
         </>}
     />

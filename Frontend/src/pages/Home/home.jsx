@@ -40,11 +40,7 @@ function Home() {
       label: "HU33_Validar Planificaciones",
       onClick: () => navigate("/validarPlanificacion/"),
     },
-    {
-      label: "HU40_Modificar Lista de Tareas",
-      onClick: () =>
-        navigate("/modificarListaTareas/empresa/1/sprint/2/semana/2"),
-    },
+    
   ];
 
   const studentButtons = [
