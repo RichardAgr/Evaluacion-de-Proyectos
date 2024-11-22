@@ -64,7 +64,7 @@ import {
           minWidth: '100VW',
           alignItems: "center",
           justifyContent: "center",
-          background: 'linear-gradient(to right, #0074E5, #009DE4);'
+          background: '#114093;'
         }}
       >
         <Paper
@@ -90,12 +90,12 @@ import {
               padding: "40px",
               display: "flex",
               flexDirection: "column",
-              justifyContent: "center",
+              alignItems:'center',
               border: 'solid white 1rem',
               borderRadius: '1.5rem',
             }}
           >
-            <Typography variant="h3" sx={{ fontWeight: "bold" }}>
+            <Typography variant="h3" sx={{ fontWeight: "bold"}}>
               WEB TIS
             </Typography>
           </Box>
