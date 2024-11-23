@@ -73,36 +73,6 @@ class AuthController extends Controller
         }
 
     }   
-
-
-    //Logeo De Estudiante
-    public function loginConIdEstudiante(Request $request)
-    {
-        // Asegúrate de que la sesión esté disponible
-        
-            session()->start(); // Inicia la sesión si no está iniciada
-        
-
-        // Validar que el ID esté presente en la solicitud
-        $request->validate([
-            'idEstudiante' => 'required|integer'
-        ]);
-
-        // Buscar al usuario por el ID
-        $usuario = Estudiante::find($request->idEstudiante);
-
-        if ($usuario) {
-            // Crear una sesión para el usuario
-            
-
-            return response()->json(['mensaje' => 'Login exitoso', 'usuario' => session('estudiante')]);
-        } else {
-            // Retornar error si el usuario no existe
-            return response()->json(['mensaje' => 'Usuario no encontrado'], 403);
-        }
-    }
-
-
     public function logoutEstudiante()
     {   
         session()->forget('estudiante');
@@ -123,40 +93,6 @@ class AuthController extends Controller
         }
         
     }
-    
-    //Logeo de docente
-    public function loginConIdDocente($idDoc)
-    {
-        // Asegúrate de que la sesión esté disponible
-        
-            session()->start(); // Inicia la sesión si no está iniciada
-        
-
-        // Validar que el ID esté presente en la solicitud
-       /* $request->validate([
-            'idDocente' => 'required|integer'
-        ]);*/
-
-        // Buscar al usuario por el ID
-        $usuario = Docente::find($idDoc);
-
-        if ($usuario) {
-            // Crear una sesión para el usuario
-            session()->put('docente', [
-                'id' => $usuario->idDocente,
-                'nombre' => $usuario->nombreDocente,
-                'primerApellido' => $usuario->primerApellido,
-                'segundoApellido' => $usuario->segundoApellido
-            ]);
-
-            return response()->json(['mensaje' => 'Login exitoso', 'usuario' => session('docente')]);
-        } else {
-            // Retornar error si el usuario no existe
-            return response()->json(['mensaje' => 'Usuario no encontrado'], 403);
-        }
-    }
-
-     
     public function logoutDocente($idDoc)
     {   
         session()->forget('docente');
@@ -176,4 +112,14 @@ class AuthController extends Controller
             return response()->json(['mensaje' => 'No hay sesión activa'], 401);
         }
     }   
+
+    public function logout(){
+        if(session()->has('estudiante')){
+            session()->forget('estudiante');
+            return response()->json(['mensaje' => 'Sesión Estudiante cerrada'], 200);
+        }else if(session()->has('docente')){
+            session()->forget('docente');
+            return response()->json(['mensaje' => 'Sesión Docente cerrada'], 200);
+        }
+    }
 }
