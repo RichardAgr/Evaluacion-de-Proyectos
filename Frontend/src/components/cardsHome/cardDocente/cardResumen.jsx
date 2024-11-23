@@ -26,7 +26,7 @@ function CardResumen() {
             32_LISTA DE ESTUDIANTES
         </Button>
         <Button variant="outlined" color="primary" fullWidth onClick={() => navigate("/homeGrupo/1/listaEmpresas/1")}>
-            31LISTA DE GRUPO-EMPRESAS
+            31_LISTA DE GRUPO-EMPRESAS
         </Button>
         </>}
     />
