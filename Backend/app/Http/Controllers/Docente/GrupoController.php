@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Grupo;
 use App\Http\Controllers\Controller;
 use function Laravel\Prompts\select;
+use App\Http\Controllers\Docente\SesionDocenteController as SesionDocente;
 
 class GrupoController extends Controller
 {
@@ -37,29 +38,38 @@ class GrupoController extends Controller
     public function obtenerEstudiantesPorGrupo(Request $request)
     {
         //
-        $idGrupo = $request->input('idGrupo');
-        $gestionGrupo = $request->input('gestionGrupo');
+        $sesiondocente = new SesionDocente();
+        $idDocente = session('docente.id');
+        if (!$idDocente) {
+            return response()->json(['message' => 'No se ha encontrado al docente en la sesión.'], 400);
+        }
+    
+        $response = $sesiondocente->getGrupoSesion();
+        $idGrupo = $response->getData()->idGrupo;
+        //$gestionGrupo = $request->input('gestionGrupo');
         // Consulta para obtener todos los estudiantes y el docente del grupo
-        $datosGrupo = DB::table('estudiantesgrupos')
-            ->join('grupo', 'estudiantesgrupos.idGrupo', '=', 'grupo.idGrupo')
-            ->join('estudiante', 'estudiantesgrupos.idEstudiante', '=', 'estudiante.idEstudiante')
-            ->join('docente', 'grupo.idDocente', '=', 'docente.idDocente')
-            ->leftjoin('estudiantesempresas AS ee', 'estudiantesgrupos.idEstudiante', '=', 'ee.idEstudiante')
+        $datosGrupo = DB::table('estudiantesgrupos as eg')
+            ->join('grupo as g', 'eg.idGrupo', '=', 'g.idGrupo')
+            ->join('estudiante as e', 'eg.idEstudiante', '=', 'e.idEstudiante')
+            ->join('docente as d', 'g.idDocente', '=', 'd.idDocente')
+            ->leftjoin('estudiantesempresas AS ee', 'eg.idEstudiante', '=', 'ee.idEstudiante')
             ->leftjoin('empresa AS emp', 'ee.idEmpresa', '=', 'emp.idEmpresa')
-            ->where('grupo.idGrupo',"=",   $idGrupo)
-            ->where('grupo.gestionGrupo',$gestionGrupo)
+            ->where('g.idGrupo',"=",   $idGrupo)
+            //->where('grupo.gestionGrupo',$gestionGrupo) REEMPLAZAMOS
+            ->whereRaw('CURDATE() >= g.fechaIniGestion') // Usamos whereRaw para CURDATE()
+            ->whereRaw('CURDATE() <= g.fechaFinGestion') // Usamos whereRaw para CURDATE()
             ->select(
-                'grupo.numGrupo',
-                'estudiante.idEstudiante as id',
-                'estudiante.nombreEstudiante as nombreEstudiante',
-                'estudiante.primerApellido as apellidoPaternoEstudiante',
-                'estudiante.segundoApellido as apellidoMaternoEstudiante',
+                'g.numGrupo',
+                'e.idEstudiante as id',
+                'e.nombreEstudiante as nombreEstudiante',
+                'e.primerApellido as apellidoPaternoEstudiante',
+                'e.segundoApellido as apellidoMaternoEstudiante',
                 'emp.nombreEmpresa'
                 /*'docente.nombreDocente as nombreDocente', 
                 'docente.primerApellido as apellidoPaternoDocente', 
                 'docente.segundoApellido as apellidoMaternoDocente'*/
             )
-            ->orderBy('estudiante.nombreEstudiante')
+            ->orderBy('e.nombreEstudiante')
             ->get();
 
     // Si no se encuentran resultados
@@ -105,7 +115,7 @@ class GrupoController extends Controller
         }
 
         // Si hay resultados, retornarlos
-        return response()->json($resultados);
+        return response()->json($resultados,200);
     }
     public function getDescripcion($id)
     {

@@ -36,16 +36,15 @@ export default function DataTable() {
   const fetchEstudiantes = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`http://localhost:8000/api/docente/listaEstudiantes?` +
-        new URLSearchParams({
-          idGrupo,
-          gestionGrupo,
-        })
-      );
-      if (!response.ok) {
-        throw new Error('Error de grupo');
-      }
-
+      const response = await fetch('http://localhost:8000/api/docente/listaEstudiantes', {
+        method: 'GET',  // El método de la solicitud, si es GET o POST, depende de tu API
+        credentials: 'include',  // Incluye las cookies de sesión si es necesario
+        // Si estás enviando parámetros de consulta:
+        // headers: {
+        //   'Content-Type': 'application/json',  // Dependiendo de tu API
+        // },
+        // body: JSON.stringify({idGrupo, gestionGrupo}),  // Si necesitas enviar datos en el cuerpo de la solicitud
+      });
       const data = await response.json();
       setEstudiantes(data); 
     } catch (err) {
