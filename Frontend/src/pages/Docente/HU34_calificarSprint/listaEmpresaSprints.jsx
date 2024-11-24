@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getPlanificacionesAceptadas } from '../../../api/getPlanificacionesAceptadas';
 import ListaDefinitivaN from '../../../components/listaDefinitiva/listaDefinitivaN';
-import { useParams } from 'react-router-dom';
 import BaseUI from '../../../components/baseUI/baseUI';
 const columns = [
     {
@@ -19,7 +18,6 @@ const columns = [
   ];
 
 function ListaEmpresaSprints() {
-    const { idGrupo } = useParams()
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState({
         error:false,
@@ -51,7 +49,7 @@ function ListaEmpresaSprints() {
         titulo={'SELECCIONE UNA EMPRESA PARA CALIFICAR'}
         ocultarAtras={false}
         confirmarAtras={false}
-        dirBack={`/homeGrupo/${idGrupo}/listaEmpresaCalificarSprints/`}
+        dirBack={`/homeDocente`}
         loading={loading}
         error={error}
     >
@@ -70,8 +68,8 @@ function ListaEmpresaSprints() {
       datosTabla={listaEmpresas}
       ocultarAtras={false}
       confirmarAtras={false}
-      dirBack={`/`}
-      dirForward= {`/homeGrupo/${idGrupo}/listaEmpresaCalificarSprints/`}
+      dirBack={`/homeDocente`}
+      dirForward= {`/homeDocente/listaEmpresaCalificarSprints/empresa`}
       mensajeSearch = "Buscar empresa"
       nombreContador = "Empresas"
     />

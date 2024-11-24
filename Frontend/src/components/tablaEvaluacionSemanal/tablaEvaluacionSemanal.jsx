@@ -1,6 +1,5 @@
 /* eslint-disable react/prop-types */
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 import {
   Table,
   TableBody,
@@ -17,7 +16,7 @@ import CuadroDialogo from "../cuadroDialogo/cuadroDialogo";
 import InfoSnackbar from "../infoSnackbar/infoSnackbar";
 
 const TablaEvaluacionSemanal = ({ sprint, comenta, showButtons = true, setSeSubio }) => {
-  const { idEmpresa} = useParams();
+  const idEmpresa = localStorage.getItem("idEmpresa")
   const [comentarios, setComentarios] = useState([]);
   useEffect(() => {
     console.log(comenta)

@@ -16,7 +16,7 @@ function CardResumen() {
           variant="outlined" 
           color="primary" 
           fullWidth 
-          onClick = {() => navigate("/homeGrupo/1/listaEmpresaCalificarSprints")}
+          onClick = {() => navigate("/homeDocente/listaEmpresaCalificarSprints")}
         >
             34_CALIFICAR SPRINT
         </Button>

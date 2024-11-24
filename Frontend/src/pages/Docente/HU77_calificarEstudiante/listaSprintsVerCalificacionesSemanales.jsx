@@ -1,12 +1,12 @@
 import { Fragment, useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate} from 'react-router-dom';
 import BaseUI from '../../../components/baseUI/baseUI';
 import { getSeguimiento } from '../../../api/seguimientoSemanal';
 import { Box } from '@mui/material';
 // eslint-disable-next-line react/prop-types
 function SeguimientoSemanalSprints () {
     const navigate = useNavigate();
-    const { idEmpresa, idGrupo } = useParams(); 
+    const idEmpresa = localStorage.getItem("idEmpresa")
     const [sprints, setSprints] = useState([]);
     const [sprintOpen, setSprintOpen] = useState([])
     const [comentarios, setComentarios] = useState([])
@@ -133,7 +133,9 @@ function SeguimientoSemanalSprints () {
         setSprintOpen(newOpens)
     };
     const navigateSemana=(idSprint, idSemana)=>{
-        navigate(`/homeEstudiante/visCalificar/${idEmpresa}/sprint/${idSprint}/Semana/${idSemana}`)
+        localStorage.setItem("idSprint", idSprint)
+        localStorage.setItem("idSemana", idSemana)
+        navigate(`/homeDocente/listaEmpresaVerCalificacionesSemanal/empresaSprints/semana`)
     }
 
     if(sprints?.length === 0) return (
@@ -141,7 +143,7 @@ function SeguimientoSemanalSprints () {
                 titulo={'SELECCIONE UNA SEMANA PARA RECUPERAR RESULTADOS DE EL SEGUIMIENTO SEMANAL'}
                 ocultarAtras={false}
                 confirmarAtras={false}
-                dirBack={`/homeEstudiante/visCalificar`}
+                dirBack={`/homeDocente/listaEmpresaVerCalificacionesSemanal`}
                 loading={loading}
                 error={error}
         >
@@ -157,7 +159,7 @@ function SeguimientoSemanalSprints () {
                 titulo={'SELECCIONE UNA SEMANA PARA RECUPERAR RESULTADOS DE EL SEGUIMIENTO SEMANAL'}
                 ocultarAtras={false}
                 confirmarAtras={false}
-                dirBack={`/homeEstudiante/visCalificar`}
+                dirBack={`/homeDocente/listaEmpresaVerCalificacionesSemanal`}
                 loading={loading}
                 error={error}
             >

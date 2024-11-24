@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import ListaDefinitivaN from '../../../../components/listaDefinitiva/listaDefinitivaN';
-import { useParams } from 'react-router-dom';
 import { getPlanificacionesAceptadas } from '../../../../api/getPlanificacionesAceptadas'
 const columns = [
     {
@@ -18,7 +17,6 @@ const columns = [
   ];
 
 function ListaCali() {
-    const { idGrupo, idEstudiante} = useParams()
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState({
         error:false,
@@ -66,8 +64,8 @@ function ListaCali() {
       datosTabla={listaEmpresas}
       ocultarAtras={false}
       confirmarAtras={false}
-      dirBack={`/`}
-      dirForward= {`/homeGrupo/${idGrupo}/empresa/calificaciones/`}
+      dirBack={`/homeDocente`}
+      dirForward= {`/homeDocente/listaEmpresaCalificaciones/empresa`}
       mensajeSearch = "Buscar empresa"
       nombreContador = "Empresas"
       loading={loading}
