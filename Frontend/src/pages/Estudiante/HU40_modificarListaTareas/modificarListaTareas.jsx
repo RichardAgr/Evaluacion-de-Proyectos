@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
 import {
   Container,
   Typography,
@@ -20,7 +19,9 @@ import {
 } from "../../../api/validarTareas/tareas.jsx";
 
 export default function ModificarListaTareas() {
-  const { idEmpresa, idSprint, idSemana } = useParams();
+  const idEmpresa = localStorage.getItem("idEmpresa")
+  const idSprint = localStorage.getItem("idSprint")
+  const idSemana = localStorage.getItem("idSemana")
   const [tasks, setTasks] = useState([]);
   const [tasksEliminadas, setTasksEliminadas] = useState([]);
   const [numSemana, setNumSemana] = useState(0);
@@ -212,7 +213,7 @@ export default function ModificarListaTareas() {
       titulo="MODIFICAR LISTA SEMANAL DE TAREAS"
       ocultarAtras={false}
       confirmarAtras={false}
-      dirBack="/"
+      dirBack="/homeEstu"
       loading={loading}
       error={error}
     >

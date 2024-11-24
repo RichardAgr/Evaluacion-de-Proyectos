@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import {useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import BaseUI from '../../../components/baseUI/baseUI.jsx';
 import { styled, Box, Button, Stack, Snackbar } from '@mui/material';
@@ -44,7 +43,8 @@ const enviarClave = async (idGrupo, clave, idEstudiante) => {
 
 
 function GrupoDescripcion() {
-  const { idGrupo,idEstudiante } = useParams();
+  const idGrupo = localStorage.getItem("idGrupo")
+  const idEstudiante = localStorage.getItem("idEstudiante")
   const [codigo, setCodigo] = useState('');
   const [datos, setDatos] = useState(null); 
   const [error, setError] = useState(false);
@@ -88,6 +88,7 @@ function GrupoDescripcion() {
           }, 2500);
         }       
       } catch (error) {
+        console.log(error)
         setSnackbar({ open: true, message: 'Error al matricularse', severity: 'error' });
       }
   };
@@ -102,7 +103,7 @@ function GrupoDescripcion() {
 
 
   return (
-    <BaseUI titulo="MATRICULARSE CON UN DOCENTE" ocultarAtras={false} confirmarAtras={true} dirBack={`/homeEstudiante/gruposDisponibles/${idEstudiante}`}error={{error:error}}>
+    <BaseUI titulo="MATRICULARSE CON UN DOCENTE" ocultarAtras={false} confirmarAtras={true} dirBack={`/GruposDocente`}error={{error:error}} loading={loading}>
       <Box component="section" sx={{ p: 2, pb: 0, border: '1p' }}>
         <h1 style={{ fontSize: '25px' }}>
           {datos?.apellidoPaternoDocente} {datos?.apellidoMaternoDocente} {datos?.nombreDocente} G{datos?.numGrupo}

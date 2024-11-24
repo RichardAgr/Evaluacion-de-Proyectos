@@ -10,7 +10,7 @@ function CardResumen() {
         </>}
         buttons={<> 
         <Button variant="contained" color="primary" fullWidth
-          onClick={()=>navigate("/modificarListaTareas/empresa/1/sprint/2/semana/2")}
+          onClick={()=>navigate("/homeEstu/modificarListaTareas")}
         >
             40_MODIFICAR LISTA SEMANAL DE TAREAS
         </Button>
