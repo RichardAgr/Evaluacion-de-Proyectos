@@ -12,6 +12,8 @@ class SesionDocenteController extends Controller
 {
     public function getGrupoSesion() {
         if ($idDocente = session('docente.id')) {
+            $docente = Docente::find($idDocente);
+            $nombreCompleto = trim("{$docente->nombreDocente} {$docente->primerApellido} {$docente->segundoApellido}");
             $grupo = DB::table('grupo as g')
                 ->join('docente as d', 'g.idDocente', '=', 'd.idDocente')
                 ->where('d.idDocente', $idDocente)
@@ -20,7 +22,11 @@ class SesionDocenteController extends Controller
                 ->select('g.idGrupo') 
                 ->first(); 
             if ($grupo) {
-                return response()->json(['idGrupo' => $grupo->idGrupo], 200);
+                return response()->json([
+                    'idGrupo' => $grupo->idGrupo,
+                    'idDocente' => $idDocente,
+                    'nombreCompleto' => $nombreCompleto
+                ], 200);
             }else {
             return response()->json(['idGrupo' => '-1'], 200);}
         }else{
