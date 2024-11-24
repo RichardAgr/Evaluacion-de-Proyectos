@@ -24,50 +24,55 @@ import VisualizarTarea from "../pages/Docente/HU38_tareaEstudiante/viualizarTare
 import VisualizarSprintEst from "../pages/Docente/HU38_tareaEstudiante/visualizarSprint.jsx";
 import VerEvaluacionSemanalSprints from '../pages/Docente/HU77_calificarEstudiante/listaSprintsVerCalificacionesSemanales.jsx'
 import VerEvaluacionSemanalListaEmpresas from '../pages/Docente/HU77_calificarEstudiante/listaEmpresasVerCalificaciones.jsx'
+import RedirigirHome from '../pages/Docente/homeGrupoDocente/redirigirHome.jsx';
 function Nav() {
   return (
     <Routes>
 
-      
       <Route
         path="/"
+        element={<RedirigirHome/>}
+      />
+      <Route
+        path="/homeDocente"
         element={<HomeGrupoDocente />}
       />
-
-      {/** ROUTES JHON*/}
-      
+      {/** ROUTES JHON NUEVO*/}
       <Route
-        path="/homeGrupo/:idGrupo/listaEmpresas/evaluacionSemanal"
-        element={<EvaluacionSemanalListaEmpresas />}
-      />
-      <Route
-        path="/homeGrupo/:idGrupo/listaEmpresas/evaluacionSemanal/:idEmpresa"
-        element={<EvaluacionSemanalSprints />}
-      />
-      <Route
-        path="/homeGrupo/:idGrupo/listaEmpresas/evaluacionSemanal/:idEmpresa/Sprint/:idSprint/semana/:idSemana"
-        element={<EvaluacionSemanal />}
-      />
-      <Route
-        path="/homeGrupo/:idGrupo/listaEmpresaCalificarSprints"
-        element={<ListaEmpresaSprints />}
-      />
-      <Route
-        path="/homeGrupo/:idGrupo/listaEmpresaCalificarSprints/:idEmpresa"
-        element={<ListaSprints />}
-      />
-      <Route
-        path="/homeGrupo/:idGrupo/listaEmpresaCalificarSprints/:idEmpresa/sprint/:idSprint"
-        element={<CalificarSprint />}
-      />
-      <Route
-        path="/homeGrupo/:idGrupo/listaEstudiantes/:gestionGrupo" //NO_NECESITAS_GESTION
+        path="/homeDocente/listaEstudiantes"
         element={<ObtenerEstudiantesPorGrupo />}
       />
       <Route
-        path="/homeGrupo/:idGrupo/listaEmpresas/:idDocente" //NO_NECESITAS_DOCENTE
+        path="/homeDocente/listaEmpresas"
         element={<EmpresasPorDocente />}
       />
+      <Route
+        path="/homeDocente/listaEmpresasEvaluacionSemanal"
+        element={<EvaluacionSemanalListaEmpresas />}
+      />
+      <Route
+        path="/homeDocente/listaEmpresasEvaluacionSemanal/empresaSprints"
+        element={<EvaluacionSemanalSprints />}
+      />
+      <Route
+        path="/homeDocente/listaEmpresasEvaluacionSemanal/empresaSprints/semana"
+        element={<EvaluacionSemanal />}
+      />
+
+      <Route
+        path="/homeDocente/listaEmpresaCalificarSprints"
+        element={<ListaEmpresaSprints />}
+      />
+      <Route
+        path="/homeDocente/listaEmpresaCalificarSprints/empresa"
+        element={<ListaSprints />}
+      />
+      <Route
+        path="/homeDocente/listaEmpresaCalificarSprints/empresa/sprint"
+        element={<CalificarSprint />}
+      />
+      {/** ROUTES JHON*/}
+
           {/** ROUTES COMPARTIDAS JHON*/} 
           <Route
               path="/homeGrupo/:idGrupo/empresa/calificaciones"
@@ -146,7 +151,6 @@ function Nav() {
         path="/validarPlanificacion/empresa/:idEmpresa"
         element={<ValidarPlanificacion />}
       />
-      
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   );

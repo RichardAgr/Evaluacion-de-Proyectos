@@ -41,8 +41,11 @@ import {
         console.log(sessionCookie)
         const ENCRYPTION_KEY = 'mi_clave_super_segura';
         const encryp = CryptoJS.AES.encrypt(data.role, ENCRYPTION_KEY).toString();
-
-        localStorage.setItem('role', encryp);
+        Cookies.set('random', encryp, {
+          path: '/',
+          secure: true,
+          sameSite: 'strict'
+        });
         window.location.reload();
       } catch (error) {
         console.error('Error en el inicio de sesión:', error);

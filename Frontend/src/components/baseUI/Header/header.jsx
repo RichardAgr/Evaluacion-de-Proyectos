@@ -23,12 +23,8 @@ function Header() {
                   'Authorization': true,
               },
           });
-
-
-
-          localStorage.removeItem('role');
+          Cookies.remove('random', { path: '/' });
           Cookies.remove('laravel_sesion', { path: '/' });
-          Cookies.remove('laravel_sesion', { path: '/', domain: 'yourdomain.com' });
           localStorage.removeItem('role');
         window.location.reload();  
       } catch (error) {

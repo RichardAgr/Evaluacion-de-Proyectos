@@ -1,4 +1,3 @@
-import { useParams } from 'react-router-dom';
 import { useEffect, useState } from "react";
 import ListaDefinitivaN from '../../../components/listaDefinitiva/listaDefinitivaN'
 import { getPlanificacionesAceptadas } from "../../../api/getPlanificacionesAceptadas";
@@ -17,9 +16,8 @@ const columns = [
       flex: 2,
     }
 ];
-
+const idGrupo = localStorage.getItem("idGrupo")
 function ListaEmpresasEvaluacionSemanal() {
-  const {idGrupo} = useParams()    
     const [loading, setLoading] = useState(true);
   const [error, setError] = useState({
     errorMessage: "",
@@ -30,7 +28,7 @@ function ListaEmpresasEvaluacionSemanal() {
     setLoading(true);
     const fetchEmpresas = async () => {
       try {
-        const responseData = await Promise.all([getPlanificacionesAceptadas()]);
+        const responseData = await Promise.all([getPlanificacionesAceptadas()]);//mandaraqui id grupo
         
       if (responseData.error !== undefined && responseData.error !== null) {
             setError({
@@ -65,8 +63,8 @@ function ListaEmpresasEvaluacionSemanal() {
         datosTabla={listaEmpresas}
         ocultarAtras={false}
         confirmarAtras={false} 
-        dirBack={`/`}
-        dirForward= {`/homeGrupo/${idGrupo}/listaEmpresas/evaluacionSemanal/`}
+        dirBack={`/homeDocente`}
+        dirForward= {`/homeDocente/listaEmpresasEvaluacionSemanal/empresaSprints`}
         mensajeSearch="Buscar Grupo Empresa"
         nombreContador="GRUPOS"
         loading={loading}

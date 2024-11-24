@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import ListaDefinitivaN from '../../../components/listaDefinitiva/listaDefinitivaN';
-
 const columns = [
   {
     field: 'nombreEmpresa',
@@ -31,9 +30,7 @@ function EmpresasPorGrupo() {
     errorMessage: "",
     errorDetails: "",
   });
-  
-  const idDocente = 1; 
-  const gestionGrupo = '2024-2'; 
+  const idGrupo = localStorage.getItem("idGrupo")
   // Initial data fetch with GET request
   useEffect(() => {
     setLoading(true)
@@ -42,9 +39,14 @@ function EmpresasPorGrupo() {
       try {
         const response = await fetch(`http://localhost:8000/api/docente/obtenerEmpresasPorGrupoYDocente?` +
           new URLSearchParams({
-            idDocente,
-            gestionGrupo,
-          })
+            idGrupo
+          }),{
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include"
+         }
         );
 
         if (!response.ok) throw new Error('Error fetching data');
@@ -71,7 +73,7 @@ function EmpresasPorGrupo() {
       datosTabla={data}
       ocultarAtras={false}
       confirmarAtras={false}
-      dirBack="/"
+      dirBack="/homeDocente"
       dirForward=""
       mensajeSearch = "Buscar Empresa"
       nombreContador = "Empresas"

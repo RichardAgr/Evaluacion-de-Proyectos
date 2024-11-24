@@ -10,11 +10,15 @@ import CalificacionesHitoEmpresa from "../pages/Estudiante/HU18_verCalificacione
 import CrearGrupoEmpresa from "../pages/Estudiante/HU3_HU71_HU69_grupoEmpresa/crearGrupoEmpresa.jsx";
 import PublicarGrupoEmpresa from "../pages/Estudiante/HU3_HU71_HU69_grupoEmpresa/publicarGrupoEmpresa.jsx";
 import SprintTareas2 from "../pages/Docente/HU38_tareaEstudiante/visualizarSprint.jsx";
-
+import RedirigirHome from '../pages/Estudiante/homeGrupoEstudiante/redirigirHomeEstu.jsx';
 function Nav() {
     return (
       <Routes>
-        <Route path="/" element={<HomeGrupoEstudiante />} />
+        <Route
+          path="/"
+          element={<RedirigirHome/>}
+        />
+        <Route path="/homeEstu" element={<HomeGrupoEstudiante />} />
         {/** ROUTES JHON*/}
         <Route
           path="/:idEstudiante/homeGrupoE/:idGrupo/Empresas/:idEmpresa"
@@ -61,7 +65,6 @@ function Nav() {
           element={<InscribirGrupo />}
         />
         <Route path="*" element={<Navigate to="/" />} />
-
       </Routes>
     );
   }
