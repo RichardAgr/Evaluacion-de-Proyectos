@@ -22,9 +22,7 @@ class GrupoController extends Controller
                 'docente.primerApellido as apellidoPaterno',
                 'docente.segundoApellido as apellidoMaterno',
                 //'grupo.gestionGrupo'
-            )
-            ->where('grupo.gestionGrupo', '=', '2024-2')
-            ->get();
+            )->get();
 
         // Si no se encuentran resultados
         if ($gruposDocentes->isEmpty()) {
@@ -38,7 +36,6 @@ class GrupoController extends Controller
     {
         //
         $idGrupo = $request->input('idGrupo');
-        $gestionGrupo = $request->input('gestionGrupo');
         // Consulta para obtener todos los estudiantes y el docente del grupo
         $datosGrupo = DB::table('estudiantesgrupos')
             ->join('grupo', 'estudiantesgrupos.idGrupo', '=', 'grupo.idGrupo')
@@ -47,7 +44,6 @@ class GrupoController extends Controller
             ->leftjoin('estudiantesempresas AS ee', 'estudiantesgrupos.idEstudiante', '=', 'ee.idEstudiante')
             ->leftjoin('empresa AS emp', 'ee.idEmpresa', '=', 'emp.idEmpresa')
             ->where('grupo.idGrupo',"=",   $idGrupo)
-            ->where('grupo.gestionGrupo',$gestionGrupo)
             ->select(
                 'grupo.numGrupo',
                 'estudiante.idEstudiante as id',
@@ -55,9 +51,6 @@ class GrupoController extends Controller
                 'estudiante.primerApellido as apellidoPaternoEstudiante',
                 'estudiante.segundoApellido as apellidoMaternoEstudiante',
                 'emp.nombreEmpresa'
-                /*'docente.nombreDocente as nombreDocente', 
-                'docente.primerApellido as apellidoPaternoDocente', 
-                'docente.segundoApellido as apellidoMaternoDocente'*/
             )
             ->orderBy('estudiante.nombreEstudiante')
             ->get();
@@ -74,11 +67,7 @@ class GrupoController extends Controller
     public function obtenerEmpresasPorGrupoYDocente(Request $request)
     {
         // Validar los parámetros de entrada
-        $request->validate([
-            'idDocente' => 'required|integer',
-            'gestionGrupo' => 'required|string',
-        ]);
-        // $idDocente = session()->get('docente.id');
+        $idGrupo = $request->input('idGrupo');
 
         // Ejecutar la consulta
         $resultados = DB::table('estudiantesgrupos AS eg')
@@ -88,9 +77,7 @@ class GrupoController extends Controller
             ->join('empresa AS emp', 'ee.idEmpresa', '=', 'emp.idEmpresa')
             ->join('estudiante AS e', 'eg.idEstudiante', '=', 'e.idEstudiante')
             ->select('emp.nombreEmpresa', 'emp.nombreLargo', 'emp.idEmpresa as id', 'g.gestionGrupo', DB::raw('count(eg.idEstudiante) as totalEstudiantes'), 'g.numGrupo')
-            ->where('d.idDocente', $request->idDocente)
-            // ->where('g.idGrupo', $request->idGrupo)
-            ->where('g.gestionGrupo', $request->gestionGrupo)
+            ->where('g.idGrupo',"=",   $idGrupo)
             ->groupBy('emp.nombreEmpresa', 'emp.nombreLargo', 'emp.idEmpresa', 'g.gestionGrupo', 'g.numGrupo')
             ->orderByDesc('g.gestionGrupo')
             ->orderBy('emp.nombreEmpresa')

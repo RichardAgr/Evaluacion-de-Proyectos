@@ -13,7 +13,7 @@ function CardResumen() {
             VISUALIZAR TAREAS
         </Button>
         <Button variant="outlined" color="primary" fullWidth
-          onClick= {() => navigate("/homeGrupo/1/listaEmpresas/evaluacionSemanal")}
+          onClick= {() => navigate("/homeDocente/listaEmpresasEvaluacionSemanal")}
         >
             07_REALIZAR SEGUIMIENTO
         </Button>

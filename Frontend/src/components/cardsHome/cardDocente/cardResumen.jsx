@@ -22,10 +22,10 @@ function CardResumen() {
         </Box>
         </>}
         buttons={<> 
-        <Button variant="contained" color="primary" fullWidth onClick={() => navigate("/homeGrupo/1/listaEstudiantes/2024-2")} >
+        <Button variant="contained" color="primary" fullWidth onClick={() => navigate("/homeDocente/listaEstudiantes")} >
             32_LISTA DE ESTUDIANTES
         </Button>
-        <Button variant="outlined" color="primary" fullWidth onClick={() => navigate("/homeGrupo/1/listaEmpresas/1")}>
+        <Button variant="outlined" color="primary" fullWidth onClick={() => navigate("/homeDocente/listaEmpresas")}>
             31_LISTA DE GRUPO-EMPRESAS
         </Button>
         </>}

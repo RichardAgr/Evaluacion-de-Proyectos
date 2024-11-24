@@ -4,9 +4,10 @@ import TablaEvaluacionSemanal from "../../../components/tablaEvaluacionSemanal/t
 import NombreEmpresa from "../../../components/infoEmpresa/nombreEmpresa.jsx";
 import { getSeguimiento } from "../../../api/seguimientoSemanal.jsx";
 import InfoSnackbar from "../../../components/infoSnackbar/infoSnackbar.jsx";
-import { useParams } from "react-router-dom";
 const SeguimientoSemanal = () => {
-  const {idGrupo, idEmpresa, idSprint, idSemana} = useParams()
+  const idEmpresa = localStorage.getItem("idEmpresa")
+  const idSprint = localStorage.getItem("idSprint")
+  const idSemana = localStorage.getItem("idSemana")
   const [data2, setData] = useState([]);
   const [comentarios, setComentarios] = useState([]);
   const [empresa, setNombreEmpresa] = useState({});
@@ -132,7 +133,7 @@ const SeguimientoSemanal = () => {
         titulo="EVALUACION SEMANAL"
         ocultarAtras={false}
         confirmarAtras={false}
-        dirBack={`/homeGrupo/${idGrupo}/listaEmpresas/evaluacionSemanal/${idEmpresa}`}
+        dirBack={`/homeDocente/listaEmpresasEvaluacionSemanal/empresaSprints`}
         loading={loading}
         error={{error:error}}
       >

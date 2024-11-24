@@ -20,3 +20,4 @@ export const getPlanificacionesAceptadas   = async () => {
       throw error;
     }
   };
+  
