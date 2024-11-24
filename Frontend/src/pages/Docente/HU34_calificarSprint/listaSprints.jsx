@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate} from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import BaseUI from '../../../components/baseUI/baseUI';
@@ -10,7 +10,7 @@ const ListaSprints = () => {
     const navigate = useNavigate();
     const [sprints, setSprints] = useState([
     ])
-    const { idEmpresa, idGrupo } = useParams();
+    const idEmpresa = localStorage.getItem("idEmpresa")
     const [loading, setLoading] = useState(true);  
     const [error, setError] = useState({
         error: false,
@@ -41,8 +41,8 @@ const ListaSprints = () => {
         fetchSprints();
     },[])
     const clickBoton = (sprint) => {
-        console.log("click", sprint)
-        navigate(`/homeGrupo/${idGrupo}/listaEmpresaCalificarSprints/${idEmpresa}/sprint/${sprint}`); 
+        localStorage.setItem("idSprint", sprint)
+        navigate(`/homeDocente/listaEmpresaCalificarSprints/empresa/sprint`); 
     }
 
     if(sprints?.length === 0 || new Date(sprints[0]?.fechaFin) > new Date()) return (
@@ -50,7 +50,7 @@ const ListaSprints = () => {
                 titulo={'SELECCIONE UN SPRINT PARA CALIFICAR'}
                 ocultarAtras={false}
                 confirmarAtras={false}
-                dirBack={`/homeGrupo/${idGrupo}/listaEmpresaCalificarSprints`}
+                dirBack={`/homeDocente/listaEmpresaCalificarSprints`}
                 loading={loading}
                 error={error}
         >
@@ -69,7 +69,7 @@ const ListaSprints = () => {
             titulo={'SELECCIONE UN SPRINT PARA CALIFICAR'}
             ocultarAtras={false}
             confirmarAtras={false}
-            dirBack={`/homeGrupo/${idGrupo}/listaEmpresaCalificarSprints`}
+            dirBack={`/homeDocente/listaEmpresaCalificarSprints`}
             loading={loading}
             error={error}
         >

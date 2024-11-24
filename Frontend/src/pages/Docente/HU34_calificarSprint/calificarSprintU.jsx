@@ -5,7 +5,6 @@ import {
   Checkbox,
   TextField,
   Paper,
-  Grid,
   Link,
   FormControl,
   Grid2,
@@ -21,7 +20,6 @@ import FolderZipIcon from "@mui/icons-material/FolderZip";
 import DecisionButtons from "../../../components/Buttons/decisionButtons";
 import InfoSnackbar from "../../../components/infoSnackbar/infoSnackbar";
 import CuadroDialogo from "../../../components/cuadroDialogo/cuadroDialogo";
-import { useParams } from "react-router-dom";
 import Loading from "../../../components/loading/loading";
 import Error from "../../../components/error/error";
 import { getSprintsEntregables } from "../../../api/getEmpresa";
@@ -38,7 +36,9 @@ const FileInfo = styled(Box)(({ theme }) => ({
 }));
 
 function CalificarSprintU() {
-  const { idEmpresa, idSprint, idGrupo } = useParams();
+  const idEmpresa = localStorage.getItem("idEmpresa")
+  const idSprint = localStorage.getItem("idSprint")
+
   const [sprints, setSprints] = useState([]);
   const [datosSprint, setDatosSprint] = useState({
     idSprint: "2",
@@ -206,7 +206,7 @@ function CalificarSprintU() {
       titulo={"CALIFICAR SPRINT"}
       ocultarAtras={false}
       confirmarAtras={true}
-      dirBack={`/homeGrupo/${idGrupo}/listaEmpresaCalificarSprints/${idEmpresa}`}
+      dirBack={`/homeDocente/listaEmpresaCalificarSprints/empresa`}
       loading={loading}
       error={error}
     >

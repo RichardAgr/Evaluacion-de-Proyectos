@@ -71,28 +71,26 @@ function Nav() {
         path="/homeDocente/listaEmpresaCalificarSprints/empresa/sprint"
         element={<CalificarSprint />}
       />
-      {/** ROUTES JHON*/}
-
-          {/** ROUTES COMPARTIDAS JHON*/} 
+          {/** ROUTES COMPARTIDAS JHON NUEVAS*/} 
           <Route
-              path="/homeGrupo/:idGrupo/empresa/calificaciones"
-              element={<ListaCali/>}
-            />
+            path="/homeDocente/listaEmpresaCalificaciones"
+            element={<ListaCali/>}
+          />
           <Route
-            path="/homeGrupo/:idGrupo/empresa/calificaciones/:idEmpresa"
+            path="/homeDocente/listaEmpresaCalificaciones/empresa"
             element={<CalificacionesHitoEmpresa/>}
           />
       {/** ROUTES JOAQUIN*/}
       <Route
-        path="/homeEstudiante/visCalificar"
+        path="/homeDocente/listaEmpresaVerCalificacionesSemanal"
         element={<VerEvaluacionSemanalListaEmpresas />}
       />
       <Route
-        path="/homeEstudiante/visCalificar/:idEmpresa"
+        path="/homeDocente/listaEmpresaVerCalificacionesSemanal/empresaSprints"
         element={<VerEvaluacionSemanalSprints />}
       />
       <Route
-        path="/homeEstudiante/visCalificar/:idEmpresa/sprint/:idSprint/Semana/:idSemana"
+        path="/homeDocente/listaEmpresaVerCalificacionesSemanal/empresaSprints/semana"
         element={<VerEvaluacionSemanal />}
       />
       <Route

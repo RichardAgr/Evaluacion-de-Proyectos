@@ -9,10 +9,10 @@ function CardResumen() {
         info = {<>
         </>}
         buttons={<>
-        <Button variant="outlined" color="primary" fullWidth onClick={() => navigate("/homeGrupo/1/empresa/calificaciones")}>
+        <Button variant="outlined" color="primary" fullWidth onClick={() => navigate("/homeDocente/listaEmpresaCalificaciones")}>
             18_RECUPERAR CALIFICACIONES SPRINTS PREVIOS
         </Button>
-        <Button variant="contained" color="primary" fullWidth onClick={() => navigate("/homeEstudiante/visCalificar")}>
+        <Button variant="contained" color="primary" fullWidth onClick={() => navigate("/homeDocente/listaEmpresaVerCalificacionesSemanal")}>
             77_RECUPERAR SEGUIMIENTO SEMANALES PREVIOS
         </Button>
         </>}

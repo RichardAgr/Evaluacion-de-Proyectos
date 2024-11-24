@@ -1,15 +1,22 @@
 import { useState, useEffect } from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
-import { useParams } from 'react-router-dom';
 import BaseUI from '../../../components/baseUI/baseUI';
 import NombreEmpresa from '../../../components/infoEmpresa/nombreEmpresa';
+import {decrypt} from '../../../api/decrypt'
+import Cookies from 'js-cookie';
 const NotaSprintTable = () => {
-  const { idEmpresa, idEstudiante, idGrupo } = useParams();
+  const userRole = Cookies.get('random');
+  const [role, setRole] = useState('docente')
+  const idEmpresa = localStorage.getItem("idEmpresa")
   const [notas, setNotas] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [nombreEmpresa, setNombreEmpresa] = useState({ nombreCorto: '', nombreLargo: '' });
   useEffect(() => {
+    if(userRole){
+      const role2 = decrypt(userRole);
+      setRole(role2)
+    }
     setLoading(true);
     getNombreEmpresa(idEmpresa);
     fetchNotas();
@@ -58,7 +65,7 @@ const NotaSprintTable = () => {
       titulo="VISUALIZAR CALIFICACIONES DE LA GRUPO EMPRESA"
       ocultarAtras={false}
       confirmarAtras={false}
-      dirBack={idEstudiante === undefined?`/homeGrupo/${idGrupo}/empresa/calificaciones`:`/`}
+      dirBack={role === 'docente'?`/homeDocente/listaEmpresaCalificaciones`:`/homeEstu`}
       loading={loading}
       error={error}
     >
