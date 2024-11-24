@@ -19,6 +19,11 @@ function Nav() {
           element={<RedirigirHome/>}
         />
         <Route path="/homeEstu" element={<HomeGrupoEstudiante />} />
+        {/** ROUTES JHON NUEVO FORMATO*/}
+        <Route
+          path="/homeEstu/modificarListaTareas"
+          element={<ModificarListaTareas />}
+        />
         {/** ROUTES JHON*/}
         <Route
           path="/:idEstudiante/homeGrupoE/:idGrupo/Empresas/:idEmpresa"
@@ -48,20 +53,17 @@ function Nav() {
           path="/homeEstudiante/homeGrupoEstudiante/modificarGrupo/:idEstudiante"
           element={<ModificarGrupoEmpresa />}
         />
+
         <Route
-        path="/homeEstudiante/homeGrupoEstudiante/publicarEmpresa/:idEstudiante"
-        element={<PublicarGrupoEmpresa />}
+          path="/homeEstudiante/homeGrupoEstudiante/publicarEmpresa/:idEstudiante"
+          element={<PublicarGrupoEmpresa />}
         />
         <Route
-          path="/modificarListaTareas/empresa/:idEmpresa/sprint/:idSprint/semana/:idSemana"
-          element={<ModificarListaTareas />}
-        />
-        <Route
-          path="/homeEstudiante/gruposDisponibles/:idEstudiante"
+          path="/GruposDocente"
           element={<GruposDisponibles />}
         />
         <Route
-          path="/homeEstudiante/inscribirGrupo/:idEstudiante/:idGrupo"
+          path="/GruposDocente/incribirse"
           element={<InscribirGrupo />}
         />
         <Route path="*" element={<Navigate to="/" />} />

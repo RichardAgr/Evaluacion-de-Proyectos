@@ -75,7 +75,8 @@ function GruposDocentes() {
   }, [idEstudiante]);
 
   const handleMatricularse = (grupo) => {
-    const url = `/homeEstudiante/inscribirGrupo/${idEstudiante}/${grupo.idGrupo}`; 
+    localStorage.setItem("idGrupo", grupo)
+    const url = `/GruposDocente/incribirse`; 
     navigate(url); 
   };
 
@@ -85,7 +86,7 @@ function GruposDocentes() {
     <Fragment>
       <BaseUI
         titulo={`SELECCIONAR UN DOCENTE PARA MATRICULARSE`}
-        ocultarAtras={false}
+        ocultarAtras={true}
         confirmarAtras={false}
         dirBack={`/`}
         loading={loading}

@@ -37,7 +37,7 @@ function Nav() {
         path="/homeDocente"
         element={<HomeGrupoDocente />}
       />
-      {/** ROUTES JHON NUEVO*/}
+      {/** ROUTES JHON NUEVOFORMATO*/}
       <Route
         path="/homeDocente/listaEstudiantes"
         element={<ObtenerEstudiantesPorGrupo />}
@@ -71,7 +71,7 @@ function Nav() {
         path="/homeDocente/listaEmpresaCalificarSprints/empresa/sprint"
         element={<CalificarSprint />}
       />
-          {/** ROUTES COMPARTIDAS JHON NUEVAS*/} 
+          {/** ROUTES COMPARTIDAS JHON NUEVO FORMATO*/} 
           <Route
             path="/homeDocente/listaEmpresaCalificaciones"
             element={<ListaCali/>}
@@ -80,7 +80,7 @@ function Nav() {
             path="/homeDocente/listaEmpresaCalificaciones/empresa"
             element={<CalificacionesHitoEmpresa/>}
           />
-      {/** ROUTES JOAQUIN*/}
+      {/** ROUTES JOAQUIN NUEVO FORMATO*/}
       <Route
         path="/homeDocente/listaEmpresaVerCalificacionesSemanal"
         element={<VerEvaluacionSemanalListaEmpresas />}
@@ -93,6 +93,7 @@ function Nav() {
         path="/homeDocente/listaEmpresaVerCalificacionesSemanal/empresaSprints/semana"
         element={<VerEvaluacionSemanal />}
       />
+      {/** ROUTES JOAQUIN*/}
       <Route
           path="/homeGrupo/:idGrupo/empresasVerTareas"
           element={<EmpresasParaTareas />}
