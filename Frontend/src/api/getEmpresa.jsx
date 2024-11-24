@@ -79,6 +79,7 @@ export const getSprintSemanasTareas = async (idEmpresa) => {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials:'include'
       }
     );
 

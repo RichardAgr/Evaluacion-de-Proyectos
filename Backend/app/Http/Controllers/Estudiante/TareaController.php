@@ -171,18 +171,18 @@ class TareaController extends Controller
                 ->join('planificacion as p', 'sp.idPlanificacion', '=', 'p.idPlanificacion')
                 ->join('empresa as emp', 'emp.idEmpresa', '=', 'p.idEmpresa')
                 ->where('emp.idEmpresa', $idEmpresa)
-                ->where('sp.numeroSprint', $idSprint)
-                ->where('s.numeroSemana', $idSemana)
+                ->where('sp.idSprint', $idSprint)
+                ->where('s.idSemana', $idSemana)
                 ->select('tarea.*', 's.numeroSemana', 'sp.numeroSprint')
                 ->get();
     
             // Obtener el número de semana y número de sprint directamente de la consulta
-            $numeroSemana = $idSemana;
-            $numeroSprint = $idSprint;
     
             return response()->json([
-                'numeroSemana' => $numeroSemana,
-                'numeroSprint' => $numeroSprint,
+                'idSprint' => $idSprint,
+                'idSemana' => $idSemana,
+                'numeroSemana' => $tareas->isNotEmpty() ? $tareas->first()->numeroSemana : -1,
+                'numeroSprint' => $tareas->isNotEmpty() ? $tareas->first()->numeroSprint : -1,
                 'tareas' => $tareas,
             ], 200);
         } catch (\Exception $e) {

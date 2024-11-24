@@ -1,6 +1,5 @@
 import { Fragment, useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-
+import { useNavigate } from "react-router-dom";
 import BaseUI from "../../../components/baseUI/baseUI";
 import { styled } from "@mui/material"; 
 import { Modal, TextField, Autocomplete, Snackbar, Alert, Grid2 } from "@mui/material";
@@ -14,7 +13,7 @@ import DecisionButtons from "../../../components/Buttons/decisionButtons";
 const ModificarGrupoEmpresa = () => {
     const [openValidateDialog, setOpenValidateDialog] = useState(false);
     const [openRejectDialog, setOpenRejectDialog] = useState(false);
-    const { idEstudiante } = useParams();
+    let idEstudiante = localStorage.getItem("idEstudiante")
     const [empresa, setEmpresa] = useState([]);
     const [integrantes, setIntegrantes] = useState([]);
     const [integrantesN, setIntegrantesN] = useState([]);
@@ -204,9 +203,9 @@ const ModificarGrupoEmpresa = () => {
                 titulo={`MODIFICAR GRUPO EMPRESA`}
                 ocultarAtras={false}
                 confirmarAtras={false}
-                dirBack={`/`}
+                dirBack={`/homeEstu`}
                 loading={isLoading}
-                error={mensajeError}
+                error={{error: error}}
             >
 
                 {isLoading !== true && (

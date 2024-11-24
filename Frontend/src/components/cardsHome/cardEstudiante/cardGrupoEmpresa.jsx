@@ -10,17 +10,17 @@ function CardResumen() {
         </>}
         buttons={<> 
         <Button variant="contained" color="primary" fullWidth
-          onClick = { () => navigate("/homeEstudiante/homeGrupoEstudiante/crearGrupo/25")}
+          onClick = { () => navigate("/homeEstu/CrearGrupoEmpresa")}
         >
             03_REGISTRAR GRUPO EMPRESA
         </Button>
         <Button variant="outlined" color="primary" fullWidth
-          onClick= {() => navigate("/homeEstudiante/homeGrupoEstudiante/modificarGrupo/25")}
+          onClick= {() => navigate("/homeEstu/ModificarGrupoEmpresa")}
         >
             69_MODIFICAR GRUPO EMPRESA
         </Button>
         <Button variant="outlined" color="primary" fullWidth
-          onClick= {() => navigate("/homeEstudiante/homeGrupoEstudiante/publicarEmpresa/25")}
+          onClick= {() => navigate("/homeEstu/PublicarGrupoEmpresa")}
         >
             71_PUBLICAR GRUPO EMPRESA
         </Button>

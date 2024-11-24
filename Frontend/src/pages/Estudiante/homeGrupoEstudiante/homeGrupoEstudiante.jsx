@@ -16,7 +16,6 @@ function HomeEstudiante() {
       <Header />
       <Title variant="h5" sx={{marginTop:'5rem', textAlign:'center'}}>Bienvenid@, {nombreCompleto}</Title>
       <Container>
-
         <CardProgreso></CardProgreso>
         <CardPlanificacion></CardPlanificacion>
         <CardTareas></CardTareas>
