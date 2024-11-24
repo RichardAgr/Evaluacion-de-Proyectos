@@ -22,7 +22,7 @@ function CardResumen() {
             VISUALIZAR TAREAS
         </Button>
         <Button variant="contained" color="primary" fullWidth
-          onClick={()=>navigate("/1/homeGrupoE/1/Empresas/1")}
+          onClick={()=>navigate("/homeEstu/listaTareas")}
         >
             08_MODIFICAR TAREAS
         </Button>

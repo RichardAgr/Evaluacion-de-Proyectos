@@ -9,10 +9,10 @@ function CardResumen() {
         info = {<>
         </>}
         buttons={<>
-        <Button variant="contained" color="primary" fullWidth onClick={() => navigate("/1/homeGrupoE/1/empresa/calificaciones/1")} >
+        <Button variant="contained" color="primary" fullWidth onClick={() => navigate("/homeEstu/VerCalificacionesSprints")} >
             18_ VISUALIZAR NOTAS SPRINT
         </Button>
-        <Button variant="outlined" color="primary" fullWidth onClick={() => navigate("/1/homeGrupoE/1/empresa/calificaciones/1")} >
+        <Button variant="outlined" color="primary" fullWidth onClick={() => navigate("")} >
             VISUALIZAR COMENTARIOS TAREAS SEMANA
         </Button>
         <Button variant="contained" color="primary" fullWidth onClick={() => navigate("")} >

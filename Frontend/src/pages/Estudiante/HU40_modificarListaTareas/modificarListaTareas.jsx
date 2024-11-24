@@ -47,6 +47,7 @@ export default function ModificarListaTareas() {
       setNumSemana(tareas.numeroSemana);
       setNumSprint(tareas.numeroSprint);
       setTasks(tareas.tareas);
+      console.log(tareas)
       const tareasV = tareas.tareas
       const newTextos = tareasV.map(()=>false)
       setErrorTexto(newTextos)
@@ -190,6 +191,7 @@ export default function ModificarListaTareas() {
               idEmpresa:Number(idEmpresa),
               tareas: tasksEliminadas
             }),
+            credentials:'include'
           }
         );
     

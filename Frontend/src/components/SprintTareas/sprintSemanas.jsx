@@ -15,8 +15,10 @@ const SprintSemanas = ({ title, semana, idSprint, navigateLink, semanaTexto, isO
     };
 
     const clickBoton = (tarea) => {
+        localStorage.setItem("idSprint", idSprint)
+        localStorage.setItem("idTarea", tarea.idTarea)
         console.log("click", tarea)
-        navigate(navigateLink?navigateLink+`${tarea.idTarea}`:`/homeEstudiante/homeGrupoEstudiante/sprint/${idSprint}/tarea/${tarea.idTarea}`); 
+        navigate(navigateLink); 
     }
 
     return (

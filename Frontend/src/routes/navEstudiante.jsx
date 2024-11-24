@@ -24,19 +24,20 @@ function Nav() {
           path="/homeEstu/modificarListaTareas"
           element={<ModificarListaTareas />}
         />
-        {/** ROUTES JHON*/}
         <Route
-          path="/:idEstudiante/homeGrupoE/:idGrupo/Empresas/:idEmpresa"
+          path="/homeEstu/listaTareas"
           element={<ListaTareas />}
         />
         <Route  
-          path="/:idEstudiante/homeGrupoE/:idGrupo/Empresa/:idEmpresa/sprintSemanaEditarTarea/:idTarea"
+          path="/homeEstu/listaTareas/modificarTarea"
           element={<ModificarTarea />}
         />
         <Route
-          path="/:idEstudiante/homeGrupoE/:idGrupo/empresa/calificaciones/:idEmpresa"
+          path="/homeEstu/VerCalificacionesSprints"
           element={<CalificacionesHitoEmpresa />}
         />
+        {/** ROUTES JHON*/}
+        
         {/** ROUTES JOAQUIN*/}
         <Route
           path="/prueba123/:idEmpresa"
@@ -46,16 +47,16 @@ function Nav() {
         
         
         <Route
-          path="/homeEstudiante/homeGrupoEstudiante/crearGrupo/:idEstudiante"
+          path="/homeEstu/CrearGrupoEmpresa"
           element={<CrearGrupoEmpresa />}
         />
         <Route
-          path="/homeEstudiante/homeGrupoEstudiante/modificarGrupo/:idEstudiante"
+          path="/homeEstu/ModificarGrupoEmpresa"
           element={<ModificarGrupoEmpresa />}
         />
 
         <Route
-          path="/homeEstudiante/homeGrupoEstudiante/publicarEmpresa/:idEstudiante"
+          path="/homeEstu/PublicarGrupoEmpresa"
           element={<PublicarGrupoEmpresa />}
         />
         <Route

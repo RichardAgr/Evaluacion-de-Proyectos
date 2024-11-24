@@ -1,5 +1,4 @@
 import { Fragment, useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
 import BaseUI from "../../../components/baseUI/baseUI";
 import { styled } from "@mui/material"; 
 import { Grid2 } from "@mui/material";
@@ -7,7 +6,7 @@ import Box from '@mui/material/Box';
 import { Button } from '@mui/material';
 import InfoSnackbar from '../../../components/infoSnackbar/infoSnackbar'
 const PublicarGrupoEmpresa = () => {
-    const { idEstudiante } = useParams();
+    let idEstudiante = localStorage.getItem("idEstudiante")
     const [empresa, setEmpresa] = useState([]);
     const [integrantes, setIntegrantes] = useState([]);
     const [idRepresentanteLegal, setIdRepresentanteLegal] = useState(null);
@@ -127,7 +126,7 @@ const PublicarGrupoEmpresa = () => {
                 titulo={`PUBLICAR GRUPO EMPRESA`}
                 ocultarAtras={false}
                 confirmarAtras={false}
-                dirBack={`/`}
+                dirBack={`/homeEstu`}
                 loading={isLoading}
                 error={error}
             >
