@@ -13,11 +13,12 @@ function ListaTareas() {
         try {
           const data = await getSprintSemanasTareas(idEmpresa);
           const dateNow = new Date()
+          console.log(data);
           const sprintActual = data.filter((sprint) => 
-            normalizeDate(sprint.fechaIni) <= normalizeDate(dateNow) && normalizeDate(dateNow) <= normalizeDate(sprint.fechaFin)
+            sprint.fechaIni <= normalizeDate(dateNow) && normalizeDate(dateNow) <= sprint.fechaFin
           );
           const semanaActual = sprintActual[0]?.semanas.filter((semana) => 
-              normalizeDate(semana.fechaIni) <= normalizeDate(dateNow) && normalizeDate(dateNow) <= normalizeDate(semana.fechaFin)
+              semana.fechaIni <= normalizeDate(dateNow) && normalizeDate(dateNow) <= semana.fechaFin
           ) || [];
           console.log(semanaActual);
           const sprintNew = [{...sprintActual[0], semanas: semanaActual }];
@@ -33,8 +34,9 @@ function ListaTareas() {
       fetchSprints();
     }, []); 
     function normalizeDate(date) {
-      const d = new Date(date);
-      return new Date(d.getFullYear(), d.getMonth(), d.getDate()); // Normaliza la fecha a 00:00:00
+      const array = (date.toLocaleDateString()).split('/')
+      const formatoDate =  ""+array[2]+"-"+array[1]+"-"+array[0]
+      return formatoDate;
     }
   return (
     <BaseUI
