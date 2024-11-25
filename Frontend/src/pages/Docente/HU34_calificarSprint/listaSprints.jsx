@@ -53,7 +53,7 @@ const ListaSprints = () => {
         if (hasPendingSprints) {
             setSnackbar({
                 open: true,
-                message: "Debes primero calificar los anteriores a este Sprint",
+                message: "Primero debes calificar los anteriores Sprints a este",
                 severity: "info",
                 autoHide: 6000,
             });
