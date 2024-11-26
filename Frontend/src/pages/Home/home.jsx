@@ -49,11 +49,6 @@ function Home() {
       onClick: () => navigate("/homeGrupo/1/listaEmpresaCalificarSprints"),
     },
     {
-      label: "HU40_Modificar Lista de Tareas",
-      onClick: () =>
-        navigate("/modificarListaTareas/empresa/1/sprint/2/semana/2"),
-    },
-    {
       label: "HU31__Lista Empresas",
       onClick: () => navigate("/homeGrupo/1/listaEmpresas/1"),
     },
@@ -97,6 +92,11 @@ function Home() {
         navigate(
           "/1/homeGrupoE/1/empresa/calificaciones/1"
         ),
+    },
+    {
+      label: "HU40_Modificar Lista de Tareas",
+      onClick: () =>
+        navigate("/modificarListaTareas/empresa/1/sprint/2/semana/2"),
     },
 
   ];

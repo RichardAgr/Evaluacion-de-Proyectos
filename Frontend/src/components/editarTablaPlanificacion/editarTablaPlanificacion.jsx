@@ -545,7 +545,6 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
             Añadir fila
           </Button>
         )}
-+
         <DecisionButtons
           rejectButtonText="Descartar"
           validateButtonText="Guardar cambios"

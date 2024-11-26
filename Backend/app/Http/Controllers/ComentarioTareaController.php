@@ -171,6 +171,8 @@ class ComentarioTareaController extends Controller
             $sprintData = [
                 'idSprint' => $sprint->idSprint,
                 'numSprint' => $sprint->numeroSprint,
+                'fechaIni' => $sprint->fechaIni,
+                'fechaFin' => $sprint->fechaFin,
                 'semanas' => []
             ];
 
@@ -231,6 +233,8 @@ class ComentarioTareaController extends Controller
                 $sprintData['semanas'][] = [
                     'idSemana' => $semana->idSemana,
                     'numSemana' => $semana->numeroSemana,
+                    'fechaIni' => $semana->fechaIni,
+                    'fechaFin' => $semana->fechaFin,
                     'tareas' => array_values($tareasSemana), // Tareas únicas en la semana
                     'tareasEstudiante' => array_values($tareasEstudianteData) // Tareas por estudiante
                 ];
