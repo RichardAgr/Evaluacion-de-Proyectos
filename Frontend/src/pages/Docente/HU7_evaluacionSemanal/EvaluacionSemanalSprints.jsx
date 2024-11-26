@@ -98,10 +98,8 @@ function SeguimientoSemanalSprints () {
         const tamEstu = estudiantes.length
         for (let i = 0; i < tam; i++) {
             const tamSemana = (sprints[i].semanas).length;
-            const semanasSprint = sprints[i].semanas
             const semanasComentario = comentarios[i].semanas
-            console.log(semanasSprint)
-            console.log(semanasComentario)
+            
             const verificacionSemanas = [];
             let bandera = false;
             for (let j = 0; j < tamSemana; j++) {
@@ -114,15 +112,12 @@ function SeguimientoSemanalSprints () {
                 }
                 verificacionSemanas.push(evaluado)
             }
-            console.log(verificacionSemanas)
-        
             const a = {
                 completo: !bandera,
                 completoSemanas: verificacionSemanas
             }
             newVerificacion.push(a)
         }   
-        console.log(newVerificacion)
         setVerificacion(newVerificacion)
         setLoading(false)
       }
@@ -138,7 +133,6 @@ function SeguimientoSemanalSprints () {
             }
             
         })
-        console.log(newOpens)
         setSprintOpen(newOpens)
     };
     const navigateSemana=(idSprint, idSemana, sprintIndex, semanaIndex)=>{

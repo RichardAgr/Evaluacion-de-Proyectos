@@ -212,3 +212,4 @@ Route::get('/seguimientoSemanal/{idEmpresa}/SprintHastaSemanalActualComentarios'
 Route::get('/modificarTarea/{idEmpresa}/semanaActualTareas', [ComentarioTareaController::class, 'getSemanaActualTareas']);
 
 Route::get('/empresasSinSprintCalificado', [SprintController::class, 'empresasSinSprintCalificado']);
+Route::get('/empresasSinSemanaCalificada', [SprintController::class, 'empresasSinSemanaCalificada']);

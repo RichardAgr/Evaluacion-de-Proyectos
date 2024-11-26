@@ -157,10 +157,8 @@ class ComentarioTareaController extends Controller
         // Obtener los sprints de la planificación que cumplen con la condición de fecha
         $sprints = $planificacion->sprints()
             ->where(function ($query) {
-                $query->whereDate('fechaIni', '<=', now())
-                    ->whereDate('fechaFin', '>=', now());
+                $query->whereDate('fechaFin', '<=', now());
             })
-            ->orWhereDate('fechaFin', '<', now())
             ->where('idPlanificacion', $planificacion->idPlanificacion)
             ->get();
 
@@ -180,11 +178,7 @@ class ComentarioTareaController extends Controller
             $semanas = $sprint->semanas()
                 ->where(function ($query) use ($fechaDeLaConsulta, $sprint) {
                     $query->where('idSprint', $sprint->idSprint)
-                        ->where(function ($subQuery) use ($fechaDeLaConsulta) {
-                            $subQuery->whereDate('fechaIni', '<=', $fechaDeLaConsulta)
-                                ->whereDate('fechaFin', '>', $fechaDeLaConsulta);
-                        })
-                        ->orWhere(function ($subQuery) use ($fechaDeLaConsulta) {
+                        ->Where(function ($subQuery) use ($fechaDeLaConsulta) {
                             $subQuery->whereDate('fechaFin', '<=', $fechaDeLaConsulta);
                         });
                 })

@@ -75,51 +75,68 @@ class SprintController extends Controller
         // Obtener todas las empresas
         $empresas = Empresa::all();
 
-        // Inicializar un array para almacenar los datos de planificación
         $data = [];
 
         foreach ($empresas as $empresa) {
-            // Obtener la planificación de la empresa
-            $planificacion = Planificacion::with('sprints')
+            // Obtener el número de estudiantes de la empresa
+            $numEstudiantes = $empresa->estudiantes()->count();
+
+            // Obtener la planificación aceptada más reciente
+            $planificacion = $empresa->planificaciones()
+                ->where('aceptada', true)
                 ->orderBy('fechaEntrega', 'desc')
-                ->where('idEmpresa', $empresa->idEmpresa)
                 ->first();
 
-            // Verificar si la planificación existe y está aceptada
-            if ($planificacion && $planificacion->aceptada) {
-                // Filtrar los sprints que cumplen las condiciones
-                $filteredSprints = $empresa->sprints->filter(function ($sprint) {
-                    $now = now();
-                    return $now >= $sprint->fechaFin && is_null($sprint->nota);
-                })->map(function ($sprint) {
-                    return [
-                        'idSprint' => $sprint->idSprint,
-                        'numeroSprint' => $sprint->numeroSprint,
-                        'fechaIni' => $sprint->fechaIni,
-                        'fechaFin' => $sprint->fechaFin,
-                        'fechaEntrega' => $sprint->fechaEntrega,
-                        'cobro' => $sprint->cobro,
-                        'comentario' => $sprint->comentario,
-                        'nota' => $sprint->nota,
-                    ];
-                });
+            if ($planificacion) {
+                // Obtener los sprints entre las fechas actuales
+                $sprints = $planificacion->sprints()
+                    ->where('fechaIni', '<=', now())
+                    ->where('fechaFin', '>=', now())
+                    ->get();
 
-                // Agregar a los datos si hay sprints filtrados
-                if ($filteredSprints->isNotEmpty()) {
-                    $data[] = [
-                        'id' => $planificacion->idPlanificacion,
-                        'idEmpresa' => $planificacion->idEmpresa,            
-                        'nombreEmpresa' => $empresa->nombreEmpresa,
-                        'nombreLargo' => $empresa->nombreLargo,
-                        'idSprints' => $filteredSprints,
-                    ];
+                $empresaValida = false; // Marca para incluir la empresa si alguna semana no cumple la condición
+
+                foreach ($sprints as $sprint) {
+                    $semanas = $sprint->semanas()
+                        ->where('fechaIni', '<=', now())
+                        ->where('fechaFin', '>=', now())
+                        ->get();
+
+                    foreach ($semanas as $semana) {
+                        // Obtener todos los comentarios de la semana
+                        $comentariosTareas = $semana->comentarioTarea()->count();
+
+                        // Verificar si los comentarios no coinciden con el número de estudiantes
+                        if ($comentariosTareas !== $numEstudiantes) {
+                            $empresaValida = true; // La empresa tiene al menos una semana que no cumple la condición
+                            $data[] = [
+                                'id' => $planificacion->idPlanificacion,
+                                'idEmpresa' => $empresa->idEmpresa,
+                                'nombreEmpresa' => $empresa->nombreEmpresa,
+                                'nombreLargo' => $empresa->nombreLargo,
+                                'numEstudiantes' => $numEstudiantes,
+                                'idPlanificacion' => $planificacion->idPlanificacion,
+                                'idSprint' => $sprint->idSprint,
+                                'numeroSprint' => $sprint->numeroSprint,
+                                'idSemana' => $semana->idSemana,
+                                'numeroSemana' => $semana->numeroSemana,
+                                'comentariosTareas' => $comentariosTareas,
+                            ];
+                            break 2; // Salir del loop de semanas y sprints
+                        }
+                    }
+                }
+
+                // Si todas las semanas cumplen la condición, no agregar la empresa
+                if (!$empresaValida) {
+                    continue;
                 }
             }
         }
 
-        // Retornar la respuesta JSON con los datos de empresas aceptadas
         return response()->json($data);
     }
+
 
     public function modificarSprint(Request $request): JsonResponse
     {
