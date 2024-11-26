@@ -5,7 +5,6 @@ import {
   Checkbox,
   TextField,
   Paper,
-  Grid,
   Link,
   FormControl,
   Grid2,
@@ -17,7 +16,7 @@ import DescriptionIcon from "@mui/icons-material/Description";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import PhotoIcon from "@mui/icons-material/Photo";
 import FolderZipIcon from "@mui/icons-material/FolderZip";
-
+import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import DecisionButtons from "../../../components/Buttons/decisionButtons";
 import InfoSnackbar from "../../../components/infoSnackbar/infoSnackbar";
 import CuadroDialogo from "../../../components/cuadroDialogo/cuadroDialogo";
@@ -211,9 +210,36 @@ function CalificarSprintU() {
       error={error}
     >
       <Container>
-        <Typography variant="h4" className="titulo">
-          SPRINT {datosSprint.numeroSprint}
-        </Typography>
+        <Box >
+          <div>
+            <Typography variant="h4" className="titulo">
+              SPRINT {datosSprint.numeroSprint} 
+            </Typography>
+          </div>
+          <Box display="flex">
+            <Box display="flex" alignItems="center" m={2}>
+              <CalendarTodayIcon sx={{ mr: 1 }} />
+              <Typography variant="body1">
+                <strong>Fecha de Inicio:</strong>{" "}
+                {new Date(datosSprint.fechaIni).toLocaleDateString()}
+              </Typography>
+            </Box>
+            <Box display="flex" alignItems="center" m={2}>
+              <CalendarTodayIcon sx={{ mr: 1 }} />
+              <Typography variant="body1">
+                <strong>Fecha de Fin:</strong>{" "}
+                {new Date(datosSprint.fechaFin).toLocaleDateString()}
+              </Typography>
+            </Box>
+            <Box display="flex" alignItems="center">
+              <CalendarTodayIcon sx={{ m: 2 }} />
+              <Typography variant="body1">
+                <strong>Fecha de Entrega:</strong>{" "}
+                {new Date(datosSprint.fechaEntrega).toLocaleDateString()}
+              </Typography>
+          </Box>
+        </Box>
+        </Box>
         <Grid2 container className="datosSprint">
           <Paper className="entregables">
             <Typography variant="h6">Entregables</Typography>
@@ -263,7 +289,7 @@ function CalificarSprintU() {
                     }
                     sx={{ mx: 2 }}
                   >
-                    {entregable.archivoEntregable ? "Entregado" : "Pendiente"}
+                    {entregable.archivoEntregable ? "Entregado" : "No entregado"}
                   </Typography>
                 </FileInfo>
               </FileItem>

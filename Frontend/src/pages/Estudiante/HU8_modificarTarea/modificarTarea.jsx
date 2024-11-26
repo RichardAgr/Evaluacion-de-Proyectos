@@ -2,9 +2,6 @@
 import { Fragment, useEffect, useState } from 'react';
 import { useParams } from "react-router-dom";
 import { styled } from '@mui/material';
-
-import Loading from '../../../components/loading/loading.jsx'
-import Error from "../../../components/error/error.jsx";
 import BaseUI from '../../../components/baseUI/baseUI.jsx';
 import { getTareaData, updateTarea } from '../../../api/validarTareas/tareas.jsx';
 import DecisionButtons from '../../../components/Buttons/decisionButtons.jsx'
