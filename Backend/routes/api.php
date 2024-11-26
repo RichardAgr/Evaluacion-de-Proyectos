@@ -92,6 +92,8 @@ Route::get('/empresas/', [EmpresaController::class, 'getListaEmpresas']);
 Route::get('/planificacionesSinValidar', [PlanificacionController::class, 'planificacionesSinValidar']);
 // obtiene una lista de todas las empresas que no fueron publicadas
 Route::get('/planificacionesSinPublicar', [PlanificacionController::class, 'planificacionesSinPublicar']);
+// obtiene una lista de todas las empresas de las que se puede modificar su planificacion
+Route::get('/planificacionesParaModificar', [PlanificacionController::class, 'planificacionesParaModificar']);
 
 Route::get('/planificacion/notaComentario/{idPlanificacion}', [PlanificacionController::class, 'notaComentario']);
 Route::get('/planificacionAceptadas', [PlanificacionController::class, 'planificacionAceptadas']);
