@@ -11,12 +11,11 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import BaseUI from "../../../components/baseUI/baseUI";
-
 import DescriptionIcon from "@mui/icons-material/Description";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import PhotoIcon from "@mui/icons-material/Photo";
 import FolderZipIcon from "@mui/icons-material/FolderZip";
-
+import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import DecisionButtons from "../../../components/Buttons/decisionButtons";
 import InfoSnackbar from "../../../components/infoSnackbar/infoSnackbar";
 import CuadroDialogo from "../../../components/cuadroDialogo/cuadroDialogo";
@@ -40,6 +39,7 @@ function CalificarSprintU() {
   const idSprint = localStorage.getItem("idSprint")
 
   const [sprints, setSprints] = useState([]);
+  const [tieneNota, setTieneNota] = useState(false);
   const [datosSprint, setDatosSprint] = useState({
     idSprint: "2",
     numeroSprint: 2,
@@ -73,40 +73,41 @@ function CalificarSprintU() {
     errorMessage: "",
     errorDetails: "",
   });
-
+  const fetchSprints = async () => {
+    try {
+      const [sprintData] = await Promise.all([
+        getSprintsEntregables(idEmpresa),
+      ]);
+      console.log(sprintData.sprints);
+      const newSprints = sprintData.sprints;
+      setSprints(newSprints);
+      const newSprint = newSprints.filter((sprint) => {
+        const es = sprint.idSprint === Number(idSprint);
+        console.log(es);
+        return es;
+      });
+      console.log(...newSprint);
+      setDatosSprint(...newSprint);
+      const nota = newSprint[0].nota;
+      setTieneNota(nota!==null);
+      setNotaSprint(nota === null ? "" : nota);
+      const comentarioNew = newSprint[0].comentario
+        ? newSprint[0].comentario
+        : "";
+      setComentario(comentarioNew);
+    } catch (error) {
+      setError({
+        error: true,
+        errorMessage: "Ha ocurrido un error",
+        errorDetails: error.message,
+      });
+      console.error("Error al cargar la tarea:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
   useEffect(() => {
-    const fetchSprints = async () => {
-      try {
-        const [sprintData] = await Promise.all([
-          getSprintsEntregables(idEmpresa),
-        ]);
-        console.log(sprintData.sprints);
-        const newSprints = sprintData.sprints;
-        setSprints(newSprints);
-        const newSprint = newSprints.filter((sprint) => {
-          const es = sprint.idSprint === Number(idSprint);
-          console.log(es);
-          return es;
-        });
-        console.log(...newSprint);
-        setDatosSprint(...newSprint);
-        const nota = newSprint[0].nota;
-        setNotaSprint(nota === null ? "" : nota);
-        const comentarioNew = newSprint[0].comentario
-          ? newSprint[0].comentario
-          : "";
-        setComentario(comentarioNew);
-      } catch (error) {
-        setError({
-          error: true,
-          errorMessage: "Ha ocurrido un error",
-          errorDetails: error.message,
-        });
-        console.error("Error al cargar la tarea:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+    
     fetchSprints();
   }, []);
   const handleComentarioChange = (event) => {
@@ -152,6 +153,15 @@ function CalificarSprintU() {
           message: "Se subió correctamente todo",
           severity: "success",
           autoHide: 6000,
+        });
+        fetchSprints();
+
+        
+        setCuadroDialogo({
+          open: false,
+          onConfirm: () => {},
+          title: "",
+          description: "",
         });
       }
     } catch (error) {
@@ -211,9 +221,36 @@ function CalificarSprintU() {
       error={error}
     >
       <Container>
-        <Typography variant="h4" className="titulo">
-          SPRINT {datosSprint.numeroSprint}
-        </Typography>
+        <Box >
+          <div>
+            <Typography variant="h4" className="titulo">
+              SPRINT {datosSprint.numeroSprint} 
+            </Typography>
+          </div>
+          <Box display="flex">
+            <Box display="flex" alignItems="center" m={2}>
+              <CalendarTodayIcon sx={{ mr: 1 }} />
+              <Typography variant="body1">
+                <strong>Fecha de Inicio:</strong>{" "}
+                {new Date(datosSprint.fechaIni).toLocaleDateString()}
+              </Typography>
+            </Box>
+            <Box display="flex" alignItems="center" m={2}>
+              <CalendarTodayIcon sx={{ mr: 1 }} />
+              <Typography variant="body1">
+                <strong>Fecha de Fin:</strong>{" "}
+                {new Date(datosSprint.fechaFin).toLocaleDateString()}
+              </Typography>
+            </Box>
+            <Box display="flex" alignItems="center">
+              <CalendarTodayIcon sx={{ m: 2 }} />
+              <Typography variant="body1">
+                <strong>Fecha de Entrega:</strong>{" "}
+                {new Date(datosSprint.fechaEntrega).toLocaleDateString()}
+              </Typography>
+          </Box>
+        </Box>
+        </Box>
         <Grid2 container className="datosSprint">
           <Paper className="entregables">
             <Typography variant="h6">Entregables</Typography>
@@ -263,7 +300,7 @@ function CalificarSprintU() {
                     }
                     sx={{ mx: 2 }}
                   >
-                    {entregable.archivoEntregable ? "Entregado" : "Pendiente"}
+                    {entregable.archivoEntregable ? "Entregado" : "No entregado"}
                   </Typography>
                 </FileInfo>
               </FileItem>
@@ -286,6 +323,7 @@ function CalificarSprintU() {
                 inputProps={{ maxLength: 200 }}
                 className="inputComentario"
                 error={errorComentario}
+                disabled={tieneNota}
                 helperText={
                   errorComentario && "Debe tener un minimo de 20 caracteres"
                 }
@@ -303,15 +341,16 @@ function CalificarSprintU() {
                     type: "number",
                   }}
                   className="notaInput"
+                  disabled={tieneNota}
                 />
               </Box>
-              <DecisionButtons
+              {!tieneNota && <DecisionButtons
                 rejectButtonText="Descartar"
                 validateButtonText="Guardar"
                 onReject={handleCancel}
                 onValidate={handleSave}
                 disabledButton={0}
-              />
+              />}
             </FormControl>
           </form>
         </Paper>

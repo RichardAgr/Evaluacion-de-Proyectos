@@ -74,7 +74,46 @@ class PlanificacionController extends Controller
         // Retornar la respuesta JSON con los datos de empresas aceptadas
         return response()->json($data);
     }
-
+    public function planificacionesParaModificar(): JsonResponse
+    {
+        // Obtener todas las empresas, en el futuro deberá filtrar las empresas por docente
+        $empresas = Empresa::all();
+        $data = [];
+        foreach ($empresas as $empresa) {
+            // Obtener la planificación de la empresa
+            $planificacion = Planificacion::where('idEmpresa', $empresa->idEmpresa)
+                ->first();
+    
+            if ($planificacion) {
+                // Si la planificación existe y fue rechazada o no publicada, guarda sus datos
+                if ($planificacion->publicada === 0 && $planificacion->aceptada !== 1) {
+                    $data[] = [
+                        'id' => $empresa->idEmpresa,
+                        'nombreEmpresa' => $empresa->nombreEmpresa,
+                        'nombreLargo' => $empresa->nombreLargo,
+                        'idEmpresa' => $planificacion->idEmpresa,
+                        'aceptada' => $planificacion->aceptada,
+                        'numeroSprints' => $planificacion->sprints->count(),
+                        'tienePlanificacion' => true,
+                    ];
+                }
+            } else {
+                // Si la empresa no tiene planificación, también la incluimos
+                $data[] = [
+                    'id' => $empresa->idEmpresa,
+                    'nombreEmpresa' => $empresa->nombreEmpresa,
+                    'nombreLargo' => $empresa->nombreLargo,
+                    'idEmpresa' => $empresa->idEmpresa,
+                    'aceptada' => null,
+                    'numeroSprints' => 0,
+                    'tienePlanificacion' => false,
+                ];
+            }
+        }
+    
+        // Retornar la respuesta JSON con los datos de empresas
+        return response()->json($data);
+    }
     public function planificacionesSinPublicar(): JsonResponse
     {
         // Obtener todas las empresas, en el futuro debera filtrar las empresas por docente
@@ -127,8 +166,8 @@ class PlanificacionController extends Controller
                 'publicada' => null,
                 'comentariopublico' => null,
                 'sprints' => [
-                    ['idSprint' => null, 'fechaIni' => '2025-02-06', 'fechaFin' => '2025-02-12', 'cobro' => 13, 'fechaEntrega' => '2025-02-12', 'entregables' => 'esto es un ejemplo'],
-                ],  // Array de sprints con 1 filas vacías  
+                    ['idSprint' => null, 'fechaIni' => '2025-02-05', 'fechaFin' => '2025-02-12', 'cobro' => 100, 'fechaEntrega' => '2025-02-12', 'entregables' => [['descripcionEntregable' =>'entregable de ejemplo']]],
+                ],  // Array de sprints con 1 fila de ejemplo
             ], 200);  // Código 200 ya que la empresa existe
         }
 
@@ -287,18 +326,25 @@ class PlanificacionController extends Controller
         }
     }
 
-    public function modificarPlanificacion(Request $request): JsonResponse
+    public function guardarPlanificacion(Request $request): JsonResponse
     {
-        //validar datos
         $validator = Validator::make($request->all(), [
             'aceptada' => 'required|boolean',
             'comentarioDocente' => 'string',
             'idEmpresa' => 'required|integer|exists:empresa,idEmpresa',
+        ], [
+            'aceptada.required' => 'El campo aceptada es obligatorio.',
+            'aceptada.boolean' => 'El campo aceptada debe ser verdadero o falso.',
+            'comentarioDocente.string' => 'El comentario del docente debe ser una cadena de texto.',
+            'idEmpresa.required' => 'El ID de la empresa es obligatorio.',
+            'idEmpresa.integer' => 'El ID de la empresa debe ser un número entero.',
+            'idEmpresa.exists' => 'La empresa especificada no existe.',
         ]);
+    
         // si no valida, devuelve error
         if ($validator->fails()) {
             return response()->json([
-                'message' => 'Los datos proporcionados no son válidos.',
+                'message' => 'Los datos proporcionados no son válidos. Por favor, contacte a un administrador.',
                 'errors' => $validator->errors()
             ], 422);
         }

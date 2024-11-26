@@ -265,7 +265,7 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
       })),
     };
     const response = await fetch(
-      "http://localhost:8000/api/planificacion/guardar",
+      "http://localhost:8000/api/planificacion/guardarPlanificacion",
       {
         method: "POST",
         headers: {
@@ -295,6 +295,7 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
         }
       );
       const responseDataSprint = await responseSprint.json();
+      console.log(dataSprint);
       if (
         responseDataSprint.error !== undefined &&
         responseDataSprint.error !== null
@@ -544,7 +545,6 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
             Añadir fila
           </Button>
         )}
-+
         <DecisionButtons
           rejectButtonText="Descartar"
           validateButtonText="Guardar cambios"
