@@ -11,7 +11,6 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import BaseUI from "../../../components/baseUI/baseUI";
-
 import DescriptionIcon from "@mui/icons-material/Description";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import PhotoIcon from "@mui/icons-material/Photo";
@@ -38,7 +37,9 @@ const FileInfo = styled(Box)(({ theme }) => ({
 
 function CalificarSprintU() {
   const { idEmpresa, idSprint, idGrupo } = useParams();
+  // eslint-disable-next-line no-unused-vars
   const [sprints, setSprints] = useState([]);
+  const [tieneNota, setTieneNota] = useState(false);
   const [datosSprint, setDatosSprint] = useState({
     idSprint: "2",
     numeroSprint: 2,
@@ -72,40 +73,41 @@ function CalificarSprintU() {
     errorMessage: "",
     errorDetails: "",
   });
-
+  const fetchSprints = async () => {
+    try {
+      const [sprintData] = await Promise.all([
+        getSprintsEntregables(idEmpresa),
+      ]);
+      console.log(sprintData.sprints);
+      const newSprints = sprintData.sprints;
+      setSprints(newSprints);
+      const newSprint = newSprints.filter((sprint) => {
+        const es = sprint.idSprint === Number(idSprint);
+        console.log(es);
+        return es;
+      });
+      console.log(...newSprint);
+      setDatosSprint(...newSprint);
+      const nota = newSprint[0].nota;
+      setTieneNota(nota!==null);
+      setNotaSprint(nota === null ? "" : nota);
+      const comentarioNew = newSprint[0].comentario
+        ? newSprint[0].comentario
+        : "";
+      setComentario(comentarioNew);
+    } catch (error) {
+      setError({
+        error: true,
+        errorMessage: "Ha ocurrido un error",
+        errorDetails: error.message,
+      });
+      console.error("Error al cargar la tarea:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
   useEffect(() => {
-    const fetchSprints = async () => {
-      try {
-        const [sprintData] = await Promise.all([
-          getSprintsEntregables(idEmpresa),
-        ]);
-        console.log(sprintData.sprints);
-        const newSprints = sprintData.sprints;
-        setSprints(newSprints);
-        const newSprint = newSprints.filter((sprint) => {
-          const es = sprint.idSprint === Number(idSprint);
-          console.log(es);
-          return es;
-        });
-        console.log(...newSprint);
-        setDatosSprint(...newSprint);
-        const nota = newSprint[0].nota;
-        setNotaSprint(nota === null ? "" : nota);
-        const comentarioNew = newSprint[0].comentario
-          ? newSprint[0].comentario
-          : "";
-        setComentario(comentarioNew);
-      } catch (error) {
-        setError({
-          error: true,
-          errorMessage: "Ha ocurrido un error",
-          errorDetails: error.message,
-        });
-        console.error("Error al cargar la tarea:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+    
     fetchSprints();
   }, []);
   const handleComentarioChange = (event) => {
@@ -151,6 +153,15 @@ function CalificarSprintU() {
           message: "Se subió correctamente todo",
           severity: "success",
           autoHide: 6000,
+        });
+        fetchSprints();
+
+        
+        setCuadroDialogo({
+          open: false,
+          onConfirm: () => {},
+          title: "",
+          description: "",
         });
       }
     } catch (error) {
@@ -312,6 +323,7 @@ function CalificarSprintU() {
                 inputProps={{ maxLength: 200 }}
                 className="inputComentario"
                 error={errorComentario}
+                disabled={tieneNota}
                 helperText={
                   errorComentario && "Debe tener un minimo de 20 caracteres"
                 }
@@ -329,15 +341,16 @@ function CalificarSprintU() {
                     type: "number",
                   }}
                   className="notaInput"
+                  disabled={tieneNota}
                 />
               </Box>
-              <DecisionButtons
+              {!tieneNota && <DecisionButtons
                 rejectButtonText="Descartar"
                 validateButtonText="Guardar"
                 onReject={handleCancel}
                 onValidate={handleSave}
                 disabledButton={0}
-              />
+              />}
             </FormControl>
           </form>
         </Paper>

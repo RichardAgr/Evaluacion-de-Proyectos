@@ -1,6 +1,5 @@
 /* eslint-disable react/prop-types */
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 import {
   Table,
   TableBody,
@@ -17,7 +16,7 @@ import CuadroDialogo from "../cuadroDialogo/cuadroDialogo";
 import InfoSnackbar from "../infoSnackbar/infoSnackbar";
 
 const TablaEvaluacionSemanal = ({ sprint, comenta, showButtons = true, setSeSubio }) => {
-  const { idEmpresa} = useParams();
+
   const [comentarios, setComentarios] = useState([]);
   useEffect(() => {
     console.log(comenta)
@@ -112,6 +111,12 @@ const TablaEvaluacionSemanal = ({ sprint, comenta, showButtons = true, setSeSubi
             autoHide: 6000,
         });
         setSeSubio(true)
+        setCuadroDialogo({
+          open: false,
+          onConfirm: () => {},
+          title: "",
+          description: "",
+        });
       }
     } catch (error) {
     console.error("Error al actualizar la tarea:", error);
