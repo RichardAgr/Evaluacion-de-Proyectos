@@ -14,7 +14,6 @@ import {
   Link,
   Grid2,
   Divider,
-  
   Checkbox,
 } from "@mui/material";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
@@ -113,144 +112,134 @@ function VisualizarSprint() {
       error={error}
     >
       <Container>
-      {!sprint ? (
-        <Typography align="center">
-          No se encontró información para este sprint.
-        </Typography>
-      ) : (
-        <Paper elevation={3} sx={{ padding: 3, my: 3 }}>
-          <Typography variant="h4" gutterBottom sx={{ fontWeight: "bold" }}>
-            SPRINT {sprint.numeroSprint}
+        {!sprint ? (
+          <Typography align="center">
+            No se encontró información para este sprint.
           </Typography>
-          <Divider sx={{ my: 2 }} />
-          <Grid2 container spacing={2}>
-            <Grid2 item xs={12} sm={6}>
-              <Box
-                display="flex"
-                alignItems="center"
-                flexDirection={{ xs: "column", sm: "row" }}
-                justifyContent="space-between"
-              >
-                <Grid2 item xs={12} sm={4}>
-                  <Box display="flex" alignItems="center" m={2}>
-                    <CalendarTodayIcon sx={{ mr: 1 }} />
-                    <Typography variant="body1">
-                      <strong>Fecha de Inicio:</strong>{" "}
-                      {new Date(sprint.fechaIni).toLocaleDateString()}
-                    </Typography>
-                  </Box>
-                </Grid2>
-                <Grid2 item xs={12} sm={4}>
-                  <Box display="flex" alignItems="center" m={2}>
-                    <CalendarTodayIcon sx={{ mr: 1 }} />
-                    <Typography variant="body1">
-                      <strong>Fecha de Fin:</strong>{" "}
-                      {new Date(sprint.fechaFin).toLocaleDateString()}
-                    </Typography>
-                  </Box>
-                </Grid2>
-                <Grid2 item xs={12} sm={4}>
-                  <Box display="flex" alignItems="center">
-                    <CalendarTodayIcon sx={{ m: 2 }} />
-                    <Typography variant="body1">
-                      <strong>Fecha de Entrega:</strong>{" "}
-                      {new Date(sprint.fechaEntrega).toLocaleDateString()}
-                    </Typography>
-                  </Box>
-                </Grid2>
+        ) : (
+          <Paper elevation={3} sx={{ padding: 3, my: 3 }}>
+            <Typography variant="h4" gutterBottom sx={{ fontWeight: "bold" }}>
+              SPRINT {sprint.numeroSprint}
+            </Typography>
+            <Divider sx={{ my: 2 }} />
+            <Grid2 container spacing={2}>
+              <Grid2 item xs={12} sm={6}>
+                <Box
+                  display="flex"
+                  alignItems="center"
+                  flexDirection={{ xs: "column", sm: "row" }}
+                  justifyContent="space-between"
+                >
+                  <Grid2 item xs={12} sm={4}>
+                    <Box display="flex" alignItems="center" m={2}>
+                      <CalendarTodayIcon sx={{ mr: 1 }} />
+                      <Typography variant="body1">
+                        <strong>Fecha de Inicio:</strong>{" "}
+                        {new Date(sprint.fechaIni).toLocaleDateString()}
+                      </Typography>
+                    </Box>
+                  </Grid2>
+                  <Grid2 item xs={12} sm={4}>
+                    <Box display="flex" alignItems="center" m={2}>
+                      <CalendarTodayIcon sx={{ mr: 1 }} />
+                      <Typography variant="body1">
+                        <strong>Fecha de Fin:</strong>{" "}
+                        {new Date(sprint.fechaFin).toLocaleDateString()}
+                      </Typography>
+                    </Box>
+                  </Grid2>
+                  <Grid2 item xs={12} sm={4}>
+                    <Box display="flex" alignItems="center">
+                      <CalendarTodayIcon sx={{ m: 2 }} />
+                      <Typography variant="body1">
+                        <strong>Fecha de Entrega:</strong>{" "}
+                        {new Date(sprint.fechaEntrega).toLocaleDateString()}
+                      </Typography>
+                    </Box>
+                  </Grid2>
+                </Box>
+              </Grid2>
+            </Grid2>
+
+            <Grid2 item xs={12}>
+              <Box display="flex" alignItems="center">
+                <MonetizationOnIcon sx={{ m: 2 }} />
+                <Typography variant="body1">
+                  <strong>Cobro:</strong> {sprint.cobro}%
+                </Typography>
               </Box>
             </Grid2>
-          </Grid2>
+            <Divider sx={{ my: 2 }} />
 
-          <Grid2 item xs={12}>
-            <Box display="flex" alignItems="center">
-              <MonetizationOnIcon sx={{ m: 2 }} />
-              <Typography variant="body1">
-                <strong>Cobro:</strong> {sprint.cobro}%
-              </Typography>
-            </Box>
-          </Grid2>
-          <Divider sx={{ my: 2 }} />
-
-          <Grid2 container className="datosSprint">
-            <Paper className="entregables">
-              <Typography variant="h6">Entregables</Typography>
-              {sprint.entregables.map((entregable, index) => (
-                <Box key={index} className="entregableItem">
-                  <Checkbox
-                    sx={{
-                      "&:hover": {
-                        backgroundColor: "transparent", // Quita el fondo al hacer hover
-                      },
-                      transition: "none", // Desactiva la transición de animación
-                      cursor: "default",
-                    }}
-                    checked={entregable.archivoEntregable !== null}
-                  />
-                  <Typography>{entregable.descripcionEntregable}</Typography>
-                </Box>
-              ))}
-            </Paper>
-            <Paper className="archivos">
-              <Typography variant="h6" sx={{ mb: 2.3 }}>
-                Archivos
-              </Typography>
-              {sprint.entregables.map((entregable, index) => (
-                <FileItem key={index}>
-                  {selectIcon(entregable.nombreArchivo)}
-                  <FileInfo>
-                    {entregable.archivoEntregable ? (
+            <Grid2 container className="datosSprint">
+              <Paper className="entregables">
+                <Typography variant="h6">Entregables</Typography>
+                {sprint.entregables.map((entregable, index) => (
+                  <Box key={index} className="entregableItem">
+                    <Checkbox
+                      sx={{
+                        "&:hover": {
+                          backgroundColor: "transparent", // Quita el fondo al hacer hover
+                        },
+                        transition: "none", // Desactiva la transición de animación
+                        cursor: "default",
+                      }}
+                      checked={entregable.archivoEntregable !== null}
+                    />
+                    <Typography>{entregable.descripcionEntregable}</Typography>
+                  </Box>
+                ))}
+              </Paper>
+              <Paper className="archivos">
+                <Typography variant="h6" sx={{ mb: 2.3 }}>
+                  Archivos
+                </Typography>
+                {sprint.entregables.map((entregable, index) => (
+                  <FileItem key={index}>
+                    {selectIcon(entregable.nombreArchivo)}
+                    <FileInfo>
                       <Link
-                        href={entregable.archivoEntregable}
+                        href={`http://127.0.0.1:8000/storage/archivos/${entregable.nombreArchivo}`}
                         target="_blank"
                         underline="hover"
                       >
                         {entregable.nombreArchivo}
                       </Link>
-                    ) : (
-                      <Typography variant="body2" color="textSecondary">
-                        {entregable.descripcionEntregable}
+                      <Typography
+                        variant="caption"
+                        color={"success.main"}
+                        sx={{ mx: 2 }}
+                      >
+                        {entregable.nombreArchivo
+                          ? "Entregado"
+                          : "No entregado"}
                       </Typography>
-                    )}
-                    <Typography
-                      variant="caption"
-                      color={
-                        entregable.archivoEntregable
-                          ? "success.main"
-                          : "error.main"
-                      }
-                      sx={{ mx: 2 }}
-                    >
-                      {entregable.archivoEntregable
-                        ? "Entregado"
-                        : "No entregado"}
-                    </Typography>
-                  </FileInfo>
-                </FileItem>
-              ))}
-            </Paper>
-          </Grid2>
-          <Box sx={{ mt: 3, display: "flex", justifyContent: "left" }}>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleVerTareas}
-              sx={{
-                fontWeight: "bold",
-                px: 4,
-                py: 1,
-                borderRadius: 2,
-                boxShadow: 2,
-                "&:hover": {
-                  boxShadow: 4,
-                },
-              }}
-            >
-              Ver Tareas
-            </Button>
-          </Box>
-        </Paper>
-      )}
+                    </FileInfo>
+                  </FileItem>
+                ))}
+              </Paper>
+            </Grid2>
+            <Box sx={{ mt: 3, display: "flex", justifyContent: "left" }}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleVerTareas}
+                sx={{
+                  fontWeight: "bold",
+                  px: 4,
+                  py: 1,
+                  borderRadius: 2,
+                  boxShadow: 2,
+                  "&:hover": {
+                    boxShadow: 4,
+                  },
+                }}
+              >
+                Ver Tareas
+              </Button>
+            </Box>
+          </Paper>
+        )}
       </Container>
     </BaseUI>
   );
