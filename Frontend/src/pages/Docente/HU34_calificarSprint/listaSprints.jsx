@@ -32,6 +32,7 @@ const ListaSprints = () => {
                 const [sprintData] = await Promise.all([
                     getSprintsEntregables(idEmpresa),
                 ]);
+                console.log(sprintData.sprints)
                 setSprints(sprintData.sprints);
             } catch (error) {
                 setError({

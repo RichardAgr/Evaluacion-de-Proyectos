@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { getPlanificacionesAceptadas } from '../../../api/getPlanificacionesAceptadas';
 import ListaDefinitivaN from '../../../components/listaDefinitiva/listaDefinitivaN';
 import { useParams } from 'react-router-dom';
 import BaseUI from '../../../components/baseUI/baseUI';
@@ -30,9 +29,19 @@ function ListaEmpresaSprints() {
     useEffect(() => {
         const fetchData = async () => {
           try {
-            const [lista] = await Promise.all([getPlanificacionesAceptadas()]);
-            setListaEmpresas(lista);
-            console.log(lista);
+            const url = 'http://localhost:8000/api/empresasSinSprintCalificado'
+            const body = {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }
+            const response = await fetch(url, body)
+            if(response.ok){
+              const lista = await response.json()  
+              setListaEmpresas(lista);
+              console.log(lista);
+            }
           } catch (error) {
             console.error("Error en la solicitud:", error.message);
             setError({

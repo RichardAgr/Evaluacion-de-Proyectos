@@ -17,7 +17,110 @@ use App\Models\NotaTareasEstudiante;
 use App\Models\ComentarioTarea;
 
 class SprintController extends Controller
-{
+{   
+    public function empresasSinSprintCalificado(): JsonResponse
+    {
+        // Obtener todas las empresas
+        $empresas = Empresa::all();
+
+        // Inicializar un array para almacenar los datos de planificación
+        $data = [];
+
+        foreach ($empresas as $empresa) {
+            // Obtener la planificación de la empresa
+            $planificacion = Planificacion::with('sprints')
+                ->orderBy('fechaEntrega', 'desc')
+                ->where('idEmpresa', $empresa->idEmpresa)
+                ->first();
+
+            // Verificar si la planificación existe y está aceptada
+            if ($planificacion && $planificacion->aceptada) {
+                // Filtrar los sprints que cumplen las condiciones
+                $filteredSprints = $empresa->sprints->filter(function ($sprint) {
+                    $now = now();
+                    return $now >= $sprint->fechaFin && is_null($sprint->nota);
+                })->map(function ($sprint) {
+                    return [
+                        'idSprint' => $sprint->idSprint,
+                        'numeroSprint' => $sprint->numeroSprint,
+                        'fechaIni' => $sprint->fechaIni,
+                        'fechaFin' => $sprint->fechaFin,
+                        'fechaEntrega' => $sprint->fechaEntrega,
+                        'cobro' => $sprint->cobro,
+                        'comentario' => $sprint->comentario,
+                        'nota' => $sprint->nota,
+                    ];
+                });
+
+                // Agregar a los datos si hay sprints filtrados
+                if ($filteredSprints->isNotEmpty()) {
+                    $data[] = [
+                        'id' => $planificacion->idPlanificacion,
+                        'idEmpresa' => $planificacion->idEmpresa,            
+                        'nombreEmpresa' => $empresa->nombreEmpresa,
+                        'nombreLargo' => $empresa->nombreLargo,
+                        'idSprints' => $filteredSprints,
+                    ];
+                }
+            }
+        }
+
+        // Retornar la respuesta JSON con los datos de empresas aceptadas
+        return response()->json($data);
+    }
+
+
+    public function empresasSinSemanaCalificada(): JsonResponse
+    {
+        // Obtener todas las empresas
+        $empresas = Empresa::all();
+
+        // Inicializar un array para almacenar los datos de planificación
+        $data = [];
+
+        foreach ($empresas as $empresa) {
+            // Obtener la planificación de la empresa
+            $planificacion = Planificacion::with('sprints')
+                ->orderBy('fechaEntrega', 'desc')
+                ->where('idEmpresa', $empresa->idEmpresa)
+                ->first();
+
+            // Verificar si la planificación existe y está aceptada
+            if ($planificacion && $planificacion->aceptada) {
+                // Filtrar los sprints que cumplen las condiciones
+                $filteredSprints = $empresa->sprints->filter(function ($sprint) {
+                    $now = now();
+                    return $now >= $sprint->fechaFin && is_null($sprint->nota);
+                })->map(function ($sprint) {
+                    return [
+                        'idSprint' => $sprint->idSprint,
+                        'numeroSprint' => $sprint->numeroSprint,
+                        'fechaIni' => $sprint->fechaIni,
+                        'fechaFin' => $sprint->fechaFin,
+                        'fechaEntrega' => $sprint->fechaEntrega,
+                        'cobro' => $sprint->cobro,
+                        'comentario' => $sprint->comentario,
+                        'nota' => $sprint->nota,
+                    ];
+                });
+
+                // Agregar a los datos si hay sprints filtrados
+                if ($filteredSprints->isNotEmpty()) {
+                    $data[] = [
+                        'id' => $planificacion->idPlanificacion,
+                        'idEmpresa' => $planificacion->idEmpresa,            
+                        'nombreEmpresa' => $empresa->nombreEmpresa,
+                        'nombreLargo' => $empresa->nombreLargo,
+                        'idSprints' => $filteredSprints,
+                    ];
+                }
+            }
+        }
+
+        // Retornar la respuesta JSON con los datos de empresas aceptadas
+        return response()->json($data);
+    }
+
     public function modificarSprint(Request $request): JsonResponse
     {
         // * Validar todos los datos
