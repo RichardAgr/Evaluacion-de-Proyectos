@@ -92,7 +92,7 @@ const CrearGrupoEmpresa = () => {
           ) {
             setMensajeError("El estudiante ya pertenece a otra empresa.");
           } else {
-            setMensajeError("Error al crear el grupo.");
+            setMensajeError("Error al crear el grupo."); 
           }
           return;
         }
