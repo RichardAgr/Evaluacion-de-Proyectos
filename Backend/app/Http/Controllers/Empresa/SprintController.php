@@ -18,7 +18,61 @@ use App\Models\NotaTareasEstudiante;
 use App\Models\ComentarioTarea;
 
 class SprintController extends Controller
-{   
+{
+    public function sprintConEntregables ($idSprint):JsonResponse{
+        try {
+            $sprint = Sprint::with(['entregables'])
+                ->where('idSprint', $idSprint)
+                ->first();
+
+            if (!$sprint) {
+                return response()->json(['error' => 'sprint no encontrada'], 404);
+            }
+
+            // Retornar solo los sprints y sus entregables
+            $sprintResponse =[
+                    'idSprint' => $sprint->idSprint,
+                    'numeroSprint' => $sprint->numeroSprint,
+                    'fechaIni' => $sprint->fechaIni,
+                    'fechaFin' => $sprint->fechaFin,
+                    'fechaEntrega' => $sprint->fechaEntrega,
+                    'cobro' => $sprint->cobro,
+                    'comentario' => $sprint->comentario,
+                    'nota' => $sprint->nota,
+                    'entregables' => $sprint->entregables->map(function ($entregable) {
+                        if (is_null($entregable->archivoEntregable)) {
+                            return [
+                                'idEntregables' => $entregable->idEntregables,
+                                'descripcionEntregable' => $entregable->descripcionEntregable,
+                                'nombreArchivo' => $entregable->null,
+                                'aceptado' => $entregable->aceptado,
+                                'archivoEntregable' => null, // Retorna null si no hay archivo
+                            ];
+                        }
+                        // Decodificar el archivo Base64
+                        $contenidoArchivo = base64_decode($entregable->archivoEntregable);
+                        $nombreArchivo = $entregable->nombreArchivo;
+                        $rutaArchivo = 'public/archivos/' . $nombreArchivo;
+
+                        // Guardar el archivo decodificado en el almacenamiento
+                        Storage::put($rutaArchivo, $contenidoArchivo);
+
+                        // Generar la URL para el archivo
+                        return [
+                            'idEntregables' => $entregable->idEntregables,
+                            'descripcionEntregable' => $entregable->descripcionEntregable,
+                            'nombreArchivo' => $entregable->nombreArchivo,
+                            'aceptado' => $entregable->aceptado,
+                            'archivoEntregable' => url(Storage::url($rutaArchivo)), // URL completa al archivo
+                        ];
+                    }),
+                ];
+
+            return response()->json(['sprints' => $sprintResponse], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error al obtener los sprints y entregables: ' . $e->getMessage()], 500);
+        }
+    }   
     public function empresasSinSprintCalificado(): JsonResponse
     {
         // Obtener todas las empresas

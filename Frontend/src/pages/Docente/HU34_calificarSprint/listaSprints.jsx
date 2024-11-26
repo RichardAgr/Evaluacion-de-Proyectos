@@ -88,7 +88,7 @@ const ListaSprints = () => {
                     return (new Date() > new Date(sprint.fechaFin) ? (
                         <Box
                             key={index}
-                            onClick={() => clickBoton(index)}
+                            onClick={() => clickBoton(sprint.idSprint)}
                             sx={{
                                 width: '85%', height: 60,
                                 borderRadius: 0.6, margin: 0.7,

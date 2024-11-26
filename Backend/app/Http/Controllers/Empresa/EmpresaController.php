@@ -221,31 +221,6 @@ class EmpresaController extends Controller
                     'cobro' => $sprint->cobro,
                     'comentario' => $sprint->comentario,
                     'nota' => $sprint->nota,
-                    'entregables' => $sprint->entregables->map(function ($entregable) {
-                        if (is_null($entregable->archivoEntregable)) {
-                            return [
-                                'idEntregables' => $entregable->idEntregables,
-                                'descripcionEntregable' => $entregable->descripcionEntregable,
-                                'nombreArchivo' => $entregable->null,
-                                'archivoEntregable' => null, // Retorna null si no hay archivo
-                            ];
-                        }
-                        // Decodificar el archivo Base64
-                        $contenidoArchivo = base64_decode($entregable->archivoEntregable);
-                        $nombreArchivo = $entregable->nombreArchivo;
-                        $rutaArchivo = 'public/archivos/' . $nombreArchivo;
-
-                        // Guardar el archivo decodificado en el almacenamiento
-                        Storage::put($rutaArchivo, $contenidoArchivo);
-
-                        // Generar la URL para el archivo
-                        return [
-                            'idEntregables' => $entregable->idEntregables,
-                            'descripcionEntregable' => $entregable->descripcionEntregable,
-                            'nombreArchivo' => $entregable->nombreArchivo,
-                            'archivoEntregable' => url(Storage::url($rutaArchivo)), // URL completa al archivo
-                        ];
-                    }),
                 ];
             });
 

@@ -48,7 +48,7 @@ Route::get('/docente/listaEstudiantes', [GrupoController::class, 'obtenerEstudia
 //---Recibe las empresas del grupo del docente y del docente activo
 Route::get('/docente/obtenerEmpresasPorGrupoYDocente',[GrupoController::class, 'obtenerEmpresasPorGrupoYDocente']);
 //-- sprints con toda su informacion y los entragables
-Route::get('/empresa/{idEmpresa}/sprintsEntregables', [EmpresaController::class, 'getSprintsEntregables']);
+Route::get('/empresa/{idEmpresa}/sprintsEntregables', [EmpresaControll0er::class, 'getSprintsEntregables']);
 
 Route::get('/empresa/{idEmpresa}/sprintsSemanasTareas', [EmpresaController::class, 'getSprintsSemanasTareas']);
 
@@ -221,3 +221,4 @@ Route::get('/modificarTarea/{idEmpresa}/semanaActualTareas', [ComentarioTareaCon
 
 Route::get('/empresasSinSprintCalificado', [SprintController::class, 'empresasSinSprintCalificado']);
 Route::get('/empresasSinSemanaCalificada', [SprintController::class, 'empresasSinSemanaCalificada']);
+Route::get('/empresa/sprintConEntregables/{idSprint}', [SprintController::class, 'sprintConEntregables']);
