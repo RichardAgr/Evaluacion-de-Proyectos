@@ -289,7 +289,7 @@ function CalificarSprintU() {
                     }
                     sx={{ mx: 2 }}
                   >
-                    {entregable.archivoEntregable ? "Entregado" : "Pendiente"}
+                    {entregable.archivoEntregable ? "Entregado" : "No entregado"}
                   </Typography>
                 </FileInfo>
               </FileItem>

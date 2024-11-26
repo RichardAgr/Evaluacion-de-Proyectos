@@ -3,6 +3,7 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
 import { useParams } from 'react-router-dom';
 import BaseUI from '../../../components/baseUI/baseUI';
 import NombreEmpresa from '../../../components/infoEmpresa/nombreEmpresa';
+import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 const NotaSprintTable = () => {
   const { idEmpresa, idEstudiante, idGrupo } = useParams();
   const [notas, setNotas] = useState([]);
@@ -80,10 +81,12 @@ const NotaSprintTable = () => {
               return <TableCell key={sprint.idSprint} align='center' sx={{ width: 'calc(5vw + 2rem)'}}>
                 Sprint {sprint.numeroSprint}
                 <div>
-                  <div>
+                  <div style={{display:'flex', alignItems:'center'}}>
+                    <CalendarTodayIcon></CalendarTodayIcon>
                     INI: {formatoIni}
                   </div>
-                  <div>
+                  <div style={{display:'flex', alignItems:'center'}}>
+                    <CalendarTodayIcon></CalendarTodayIcon>
                     FIN: {formatoFin}  
                   </div>
                 </div>

@@ -121,7 +121,7 @@ function SeguimientoSemanalSprints () {
                 completoSemanas: verificacionSemanas
             }
             newVerificacion.push(a)
-        }
+        }   
         console.log(newVerificacion)
         setVerificacion(newVerificacion)
         setLoading(false)
