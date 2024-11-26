@@ -74,6 +74,8 @@ Route::get('/getListaSprintsPorIdEmpresa', [SprintController::class, 'getListaSp
 // ----añadir revision-----
 // cambia la revision como valida
 Route::put('/validar', [PlanificacionController::class, 'validar']);
+// cambia la revision como rechazada
+Route::put('/rechazar', [PlanificacionController::class, 'rechazar']);
 
 // ----publicar planificacion-----
 // publica una planificacion

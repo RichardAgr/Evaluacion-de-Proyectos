@@ -509,6 +509,8 @@ class SprintController extends Controller
                 return [
                     'idEntregables' => $entregable->idEntregables,
                     'descripcionEntregable' => $entregable->descripcionEntregable,
+                    'nombreArchivo' => $entregable->nombreArchivo,
+                    'archivoEntregable' => $entregable->archivoEntregable,
                 ];
             });
 
@@ -534,7 +536,7 @@ class SprintController extends Controller
     {
         // Simular una solicitud con datos de prueba
         $requestData = [
-            'idSprint' => 4, // Asegúrate de que este ID exista en tu base de datos
+            'idSprint' => 2, // Asegúrate de que este ID exista en tu base de datos
 
         ];
 
