@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Empresa;
 
 use Illuminate\Http\Request;
@@ -161,42 +162,67 @@ class SprintController extends Controller
                 'after_or_equal:sprints.*.fechaFin',
             ],
             'sprints.*.cobro' => 'required|numeric|between:0,100|regex:/^\d+(\.\d{1,2})?$/'
-
+        ], [
+            'idEmpresa.required' => 'El ID de la empresa es obligatorio.',
+            'idEmpresa.integer' => 'El ID de la empresa debe ser un número entero.',
+            'idEmpresa.exists' => 'La empresa especificada no existe.',
+            'sprints.required' => 'Debe proporcionar al menos un sprint.',
+            'sprints.array' => 'Los sprints deben ser proporcionados en forma de array.',
+            'sprints.min' => 'Debe proporcionar al menos un sprint.',
+            'sprints.*.fechaIni.required' => 'La fecha de inicio del sprint :sprint es obligatoria.',
+            'sprints.*.fechaIni.date' => 'La fecha de inicio del sprint :sprint debe ser una fecha válida.',
+            'sprints.*.fechaIni.after_or_equal' => 'La fecha de inicio del sprint :sprint debe ser igual o posterior a hoy.',
+            'sprints.*.fechaFin.required' => 'La fecha de fin del sprint :sprint es obligatoria.',
+            'sprints.*.fechaFin.date' => 'La fecha de fin del sprint :sprint debe ser una fecha válida.',
+            'sprints.*.fechaFin.after_or_equal' => 'La fecha de fin del sprint :sprint debe ser igual o posterior a la fecha de inicio.',
+            'sprints.*.fechaEntrega.required' => 'La fecha de entrega del sprint :sprint es obligatoria.',
+            'sprints.*.fechaEntrega.date' => 'La fecha de entrega del sprint :sprint debe ser una fecha válida.',
+            'sprints.*.fechaEntrega.after_or_equal' => 'La fecha de entrega del sprint :sprint debe ser igual o posterior a la fecha de fin.',
+            'sprints.*.cobro.required' => 'El cobro del sprint :sprint es obligatorio.',
+            'sprints.*.cobro.numeric' => 'El cobro del sprint :sprint debe ser un número.',
+            'sprints.*.cobro.between' => 'El cobro del sprint :sprint debe estar entre 0 y 100.',
+            'sprints.*.cobro.regex' => 'El cobro del sprint :sprint debe tener máximo dos decimales.',
         ]);
-
-        // * verificar que ninguno de los sprints tenga la
-        // * fecha de inicio anterior a la fecha fin del anterior sprint
+        
         $validator->after(function ($validator) use ($request) {
             $sprints = $request->input('sprints');
             $totalCobro = 0;
-
+        
             for ($i = 0; $i < count($sprints); $i++) {
                 $startDate = Carbon::parse($sprints[$i]['fechaIni']);
                 $endDate = Carbon::parse($sprints[$i]['fechaFin']);
-
+                $sprintNumber = $i + 1;
+        
                 // Verificar que la fecha de fin sea al menos 7 días después de la fecha de inicio
                 if ($endDate->diffInDays($startDate) < 7) {
-                    $validator->errors()->add("sprint.{$i}.fechaFin", 'La fecha de fin debe ser al menos 7 días después de la fecha de inicio.');
+                    $validator->errors()->add("sprint.{$i}.fechaFin", "La fecha de fin del sprint {$sprintNumber} debe ser al menos 7 días después de la fecha de inicio.");
                 }
-
+        
                 // Verificar que la fecha de inicio no sea anterior a la fecha fin del sprint anterior
                 if ($i > 0) {
                     $prevSprintEnd = Carbon::parse($sprints[$i - 1]['fechaFin']);
                     if ($startDate->lt($prevSprintEnd)) {
-                        $validator->errors()->add("sprints.{$i}.fechaIni", 'La fecha de inicio no puede ser anterior a la fecha de fin del sprint anterior.');
+                        $validator->errors()->add("sprints.{$i}.fechaIni", "La fecha de inicio del sprint {$sprintNumber} no puede ser anterior a la fecha de fin del sprint anterior.");
                     }
                 }
-
+        
                 // Sumar el cobro de cada sprint
                 $totalCobro += $sprints[$i]['cobro'];
             }
-
+        
             // Verificar que el total de cobro sea exactamente 100
             if ($totalCobro != 100) {
                 $validator->errors()->add('sprints', 'La suma total de los cobros de todos los sprints debe ser exactamente 100%.');
             }
         });
-
+        
+        // Reemplazar :sprint con el número real del sprint en los mensajes de error
+        $validator->setAttributeNames(array_reduce(range(0, count($request->sprints) - 1), function ($carry, $i) {
+            $sprintNumber = $i + 1;
+            $carry["sprints.{$i}"] = "Sprint {$sprintNumber}";
+            return $carry;
+        }, []));
+        
         // * devuelve todos los errores en un array error[]
         if ($validator->fails()) {
             return response()->json([
@@ -204,7 +230,6 @@ class SprintController extends Controller
                 'errors' => $validator->errors()
             ], 422);
         }
-
         // * si todo salio bien, recibe el ID de la planificacion que tenga la empresa
         $validatedData = $validator->validated();
         $requestPlani = new Request();
@@ -298,7 +323,7 @@ class SprintController extends Controller
         $request = new Request($requestData);
 
         // Llamar a la función modificarSprint
-        $response = $this->modificarSprint($request);
+        $response = $this->guardarSprints($request);
         return $response;
     }
 
@@ -313,7 +338,7 @@ class SprintController extends Controller
         }
 
         // Obtener los datos de las semanas asociadas al sprint
-        $semanas = Semana::where('idSprint', $idSprint)->get(['idSemana', 'numeroSemana','fechaIni', 'fechaFin']);
+        $semanas = Semana::where('idSprint', $idSprint)->get(['idSemana', 'numeroSemana', 'fechaIni', 'fechaFin']);
 
         // Preparar la respuesta
         $response = [
@@ -672,7 +697,7 @@ class SprintController extends Controller
         // Simular una solicitud con datos de prueba
         $requestData = [
             'idEmpresa' => 1, // Asegúrate de que este ID exista en tu base de datos
-           
+
         ];
 
         // Crear una nueva instancia de Request con los datos de prueba
@@ -706,11 +731,11 @@ class SprintController extends Controller
         // Validación básica para asegurar que se reciben los parámetros necesarios
         //$empresa = $request->input('idEmpresa');
         //$semana = $request->input('semana');
-    
+
         if (!$empresa || !$semana) {
             return response()->json(['error' => 'Los parámetros idEmpresa y semana son obligatorios'], 400);
         }
-    
+
         // Consulta principal
         $resultado = DB::table('tarea as t')
             ->join('semana as s', 's.idSemana', '=', 't.idSemana')
@@ -721,22 +746,22 @@ class SprintController extends Controller
             ->where('p.idEmpresa', $empresa)
             ->where('sp.numeroSprint', $semana)
             ->select(
-                't.nombreTarea', 
+                't.nombreTarea',
                 DB::raw("CONCAT(e.nombreEstudiante, ' ', e.primerApellido, ' ', e.segundoApellido) as nombre_completo"),
                 't.comentario',
                 'e.idEstudiante'
             )
             ->get();
-    
+
         // Agrupación de resultados por estudiante
-        $resultadoAgrupado = $resultado->groupBy('nombre_completo')->map(function($items) {
+        $resultadoAgrupado = $resultado->groupBy('nombre_completo')->map(function ($items) {
             return [
                 'tareas' => $items->pluck('nombreTarea')->toArray(),
                 'comentario' => $items->first()->comentario, // Comentario del primer registro
                 'id' => $items->first()->idEstudiante // ID del primer registro
             ];
         });
-    
+
         return response()->json($resultadoAgrupado);
     }
     public function crearOActualizarNotaTarea(Request $request)
@@ -747,7 +772,7 @@ class SprintController extends Controller
             '*.comentario' => 'required|string',
             '*.subido' => 'required|boolean'
         ]);
-    
+
         foreach ($request->all() as $comentarioData) {
             ComentarioTarea::create([
                 'idEstudiante' => $comentarioData['idEstudiante'],
@@ -755,13 +780,13 @@ class SprintController extends Controller
                 'comentario' => $comentarioData['comentario'],
             ]);
         }
-    
+
         return response()->json(['message' => 'Comentarios guardados exitosamente'], 201);
     }
-    
+
     public function getNotasTareasEstudiantes($empresa)
     {
-    
+
         $result = DB::table('comentariotarea as nte')
             ->join('estudiante as e', 'e.idEstudiante', '=', 'nte.idEstudiante')
             ->join('sprint as sp', 'sp.idSprint', '=', 'nte.sprint_idSprint')
@@ -819,5 +844,4 @@ class SprintController extends Controller
 
         return response()->json(['message' => 'Comentarios guardados exitosamente'], 200);
     }
-    
 }

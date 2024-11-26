@@ -1,7 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from "react";
 import ListaDefinitivaN from '../../../components/listaDefinitiva/listaDefinitivaN'
-import { getPlanificacionesAceptadas } from "../../../api/getPlanificacionesAceptadas";
 
 const columns = [
     {

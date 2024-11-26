@@ -92,6 +92,8 @@ Route::get('/empresas/', [EmpresaController::class, 'getListaEmpresas']);
 Route::get('/planificacionesSinValidar', [PlanificacionController::class, 'planificacionesSinValidar']);
 // obtiene una lista de todas las empresas que no fueron publicadas
 Route::get('/planificacionesSinPublicar', [PlanificacionController::class, 'planificacionesSinPublicar']);
+// obtiene una lista de todas las empresas de las que se puede modificar su planificacion
+Route::get('/planificacionesParaModificar', [PlanificacionController::class, 'planificacionesParaModificar']);
 
 Route::get('/planificacion/notaComentario/{idPlanificacion}', [PlanificacionController::class, 'notaComentario']);
 Route::get('/planificacionAceptadas', [PlanificacionController::class, 'planificacionAceptadas']);
@@ -132,10 +134,11 @@ Route::post('/estudiante/crearEmpresa', [EstudiantesEmpresasController::class, '
 
 // ===================================   POST EMPRESA       =======================================
 
-// ---Para crear la planificacion o modificarla
-Route::post('/planificacion/guardar2', [PlanificacionController::class, 'crearPlanificacion']);
-Route::post('/planificacion/guardar', [PlanificacionController::class, 'modificarPlanificacion']);
-Route::post('/planificacion/guardarSprints', [SprintController::class, 'modificarSprint']);
+// * Para Crear y modificar una Planificacion
+Route::post('/planificacion/guardarPlanificacion', [PlanificacionController::class, 'guardarPlanificacion']);
+// * Para Crear y modificar los Sprints
+Route::post('/planificacion/guardarSprints', [SprintController::class, 'guardarSprints']);
+// * Para Crear y modificar los Entregables
 Route::post('/planificacion/guardarEntregables', [EntregablesController::class, 'guardarEntregables']);
 
 // ===================================   POST DOCENTE       =======================================
