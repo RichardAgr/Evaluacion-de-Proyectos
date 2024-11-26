@@ -132,10 +132,11 @@ Route::post('/estudiante/crearEmpresa', [EstudiantesEmpresasController::class, '
 
 // ===================================   POST EMPRESA       =======================================
 
-// ---Para crear la planificacion o modificarla
-Route::post('/planificacion/guardar2', [PlanificacionController::class, 'crearPlanificacion']);
-Route::post('/planificacion/guardar', [PlanificacionController::class, 'modificarPlanificacion']);
-Route::post('/planificacion/guardarSprints', [SprintController::class, 'modificarSprint']);
+// * Para Crear y modificar una Planificacion
+Route::post('/planificacion/guardarPlanificacion', [PlanificacionController::class, 'guardarPlanificacion']);
+// * Para Crear y modificar los Sprints
+Route::post('/planificacion/guardarSprints', [SprintController::class, 'guardarSprints']);
+// * Para Crear y modificar los Entregables
 Route::post('/planificacion/guardarEntregables', [EntregablesController::class, 'guardarEntregables']);
 
 // ===================================   POST DOCENTE       =======================================
