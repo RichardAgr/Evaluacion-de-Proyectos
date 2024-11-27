@@ -272,6 +272,7 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(dataPlanificacion),
+        credentials: 'include'
       }
     );
     const responseData = await response.json();
@@ -292,6 +293,7 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
             "Content-Type": "application/json",
           },
           body: JSON.stringify(dataSprint),
+          credentials: 'include'
         }
       );
       const responseDataSprint = await responseSprint.json();
@@ -355,6 +357,7 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
                 "Content-Type": "application/json",
               },
               body: JSON.stringify({ entregables: entregablesData }),
+              credentials: 'include'
             }
           );
 

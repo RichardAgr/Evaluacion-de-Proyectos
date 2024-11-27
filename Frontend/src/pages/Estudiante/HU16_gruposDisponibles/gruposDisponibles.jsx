@@ -11,6 +11,7 @@ const getGruposDocentes = async () => {
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: 'include'
     });
 
     if (response.status === 200) {
@@ -35,6 +36,7 @@ const estaMatriculado = async (idEstudiante) => {
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: 'include'
     });
 
     const data = await response.json();

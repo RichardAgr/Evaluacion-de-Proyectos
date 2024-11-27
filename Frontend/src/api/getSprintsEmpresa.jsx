@@ -5,6 +5,7 @@ export const getSprintsEmpresa = async (idEmpresa, idDocente) => {
             headers: {
                 'Content-Type': 'application/json',
             },
+            credentials: 'include'
         });
 
         if (!response.ok) {
@@ -29,6 +30,7 @@ export const getSprintEstudiantes = async (idEmpresa, idSprint) => {
             headers: {
                 'Content-Type': 'application/json',
             },
+            credentials: 'include'
         });
 
         if (!response.ok) {
@@ -51,6 +53,7 @@ export const updateSprintEvaluar = async (idEmpresa, idSprint, estudiantes) => {
             headers: {
                 'Content-Type': 'application/json',
             },
+            credentials: 'include',
             body: JSON.stringify({ estudiantes }),
             
            

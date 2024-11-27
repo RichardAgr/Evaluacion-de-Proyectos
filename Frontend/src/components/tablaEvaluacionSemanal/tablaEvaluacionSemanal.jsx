@@ -91,6 +91,7 @@ const TablaEvaluacionSemanal = ({ semana, comentariosN, showButtons = true, setS
             "Content-Type": "application/json",
           },
           body: JSON.stringify(comentariosNoSubidos),
+          credentials: 'include'
         }
       );
       if(response.ok){

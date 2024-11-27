@@ -5,6 +5,7 @@ export const getPlanificacion = async (idEmpresa) => {
       headers: {
         'Content-Type': 'application/json',
       },
+      credentials: 'include'
     });
     if (response.status === 200) {
       const data = await response.json();

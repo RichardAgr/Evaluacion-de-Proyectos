@@ -5,6 +5,7 @@ export const getTodosLosGrupos = async () => {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include'
       });
   
       if (response.status === 200) {

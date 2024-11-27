@@ -12,6 +12,7 @@ export async function getPlanificacionesSinPublicar() {
       headers: {
         'Content-Type': 'application/json',
       },
+      credentials: 'include'
     });
 
     if (!response.ok) {
@@ -40,6 +41,7 @@ export async function getPlanificacionesParaModificar() {
       headers: {
         'Content-Type': 'application/json',
       },
+      credentials: 'include'
     });
 
     if (!response.ok) {
@@ -68,6 +70,7 @@ export async function getListaSprintsPorIdEmpresa(idEmpresa) {
       headers: {
         'Content-Type': 'application/json',
       },
+      credentials: 'include'
     });
 
     if (!response.ok) {

@@ -59,6 +59,7 @@ const SeguimientoSemanal = () => {
             headers: {
                 'Content-Type': 'application/json',
             },
+            credentials: 'include'
         });
 
         if (!response.ok) throw new Error('Error al obtener los datos de la empresa');

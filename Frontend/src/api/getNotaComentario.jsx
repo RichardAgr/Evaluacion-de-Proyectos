@@ -6,6 +6,7 @@ export const getNotaComentario = async (idPlanificacion) => {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include'
       });
   
       if (!response.ok) {

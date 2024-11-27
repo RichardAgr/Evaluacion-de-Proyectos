@@ -7,6 +7,7 @@ export const getEmpresaData = async (idEmpresa) => {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: 'include'
       }
     );
 
@@ -31,6 +32,7 @@ export const getEmpresaCalificaciones = async (idEmpresa) => {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: 'include'
       }
     );
 
@@ -55,6 +57,7 @@ export const getSprintsEntregables = async (idEmpresa) => {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: 'include'
       }
     );
 
@@ -79,6 +82,7 @@ export const getSprintConEntregables = async (idSprint) => {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: 'include'
       }
     );
 
@@ -103,7 +107,7 @@ export const getSemanasTareas = async (idEmpresa) => {
         headers: {
           "Content-Type": "application/json",
         },
-        credentials:'include'
+        credentials: 'include'
       }
     );
 
@@ -130,6 +134,7 @@ export const getSemanaActualTareas= async (idEmpresa) => {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: 'include'
       }
     );
 
@@ -156,6 +161,7 @@ export const getEmpresasPorGrupo = async (idGrupo) => {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: 'include'
       }
     );
 
@@ -180,6 +186,7 @@ export const getSprintsYEstudiantesPorEmpresa = async (idEmpresa) => {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: 'include'
       }
     );
 

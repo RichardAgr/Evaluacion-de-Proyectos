@@ -5,6 +5,7 @@ export const getSeguimiento = async (idPlanificacion) => {
             headers: {
                 'Content-Type': 'application/json',
             },
+            credentials: 'include'
         });
 
         if (!response.ok) {
@@ -26,6 +27,7 @@ export const getSemanaSeguimiento = async (idEmpresa, idSemana) => {
             headers: {
                 'Content-Type': 'application/json',
             },
+            credentials: 'include'
         });
 
         if (!response.ok) {

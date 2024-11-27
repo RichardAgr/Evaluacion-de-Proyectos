@@ -26,7 +26,7 @@ const NotaSprintTable = () => {
   const fetchNotas = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`http://localhost:8000/api/empresa/${idEmpresa}/sprints-estudiantes`);
+      const response = await fetch(`http://localhost:8000/api/empresa/${idEmpresa}/sprints-estudiantes`,{credentials: 'include'});
       if (!response.ok) {
         throw new Error('Error al obtener los datos.');
       }
@@ -42,7 +42,7 @@ const NotaSprintTable = () => {
   const getNombreEmpresa = async (idEmpresa) => {
     setLoading(true);
     try {
-      const response = await fetch(`http://127.0.0.1:8000/api/nombreEmpresa/${idEmpresa}`);
+      const response = await fetch(`http://127.0.0.1:8000/api/nombreEmpresa/${idEmpresa}`,{credentials: 'include'});
       if (!response.ok) {
         throw new Error('Error al obtener los datos de la empresa');
       }

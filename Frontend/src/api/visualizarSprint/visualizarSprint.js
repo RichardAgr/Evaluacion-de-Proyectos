@@ -13,6 +13,7 @@ export async function getSprintPorId(idSprint) {
       headers: {
         'Content-Type': 'application/json',
       },
+      credentials: 'include'
     });
 
     if (!response.ok) {
@@ -40,6 +41,7 @@ export async function getListaSprintsPorIdEmpresa(idEmpresa) {
       headers: {
         'Content-Type': 'application/json',
       },
+      credentials: 'include'
     });
 
     if (!response.ok) {

@@ -28,7 +28,7 @@ function ListaCali() {
         const fetchData = async () => {
             setLoading(true);
             try {
-                const responseData = await Promise.all([getPlanificacionesAceptadas()]);
+                const responseData = await getPlanificacionesAceptadas();
                 
               if (responseData.error !== undefined && responseData.error !== null) {
                     setError({

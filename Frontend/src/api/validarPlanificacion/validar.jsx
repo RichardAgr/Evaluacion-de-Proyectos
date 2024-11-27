@@ -5,6 +5,7 @@ export const validar = async (idEmpresa) => {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({ idEmpresa }),
+    credentials: 'include'
   });
 
   const data = await validarResponse.json();

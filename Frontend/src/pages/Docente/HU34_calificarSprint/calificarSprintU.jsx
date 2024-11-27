@@ -73,9 +73,7 @@ function CalificarSprintU() {
   const [aceptados, setAceptados] = useState([]);
   const fetchSprints = async () => {
     try {
-      const [sprintData] = await Promise.all([
-        getSprintConEntregables(idSprint),
-      ]);
+      const [sprintData] = await getSprintConEntregables(idSprint)
       const newSprint = sprintData.sprints
       setDatosSprint(newSprint);
       const nota = newSprint.nota;

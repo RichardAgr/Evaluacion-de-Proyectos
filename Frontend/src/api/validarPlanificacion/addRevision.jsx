@@ -9,6 +9,7 @@ export const addRevision = async (idEmpresa, comentariopublico) => {
       idEmpresa: idEmpresa,
       comentariopublico: comentariopublico,
     }),
+    credentials: 'include'
   });
 
   const data = await response.json();
