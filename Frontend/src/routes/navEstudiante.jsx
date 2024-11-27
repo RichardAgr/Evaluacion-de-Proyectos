@@ -11,6 +11,14 @@ import CrearGrupoEmpresa from "../pages/Estudiante/HU3_HU71_HU69_grupoEmpresa/cr
 import PublicarGrupoEmpresa from "../pages/Estudiante/HU3_HU71_HU69_grupoEmpresa/publicarGrupoEmpresa.jsx";
 import SprintTareas2 from "../pages/Docente/HU38_tareaEstudiante/visualizarSprint.jsx";
 import RedirigirHome from '../pages/Estudiante/homeGrupoEstudiante/redirigirHomeEstu.jsx';
+
+//traido desde docnete
+import ListaSprintsVerTareas from '../pages/Docente/HU38_tareaEstudiante/visualizarSprint.jsx'
+import VerTarea from '../pages/Docente/HU38_tareaEstudiante/viualizarTarea.jsx'
+
+import ListaSprintsVerSeguimiento from '../pages/Docente/HU7_evaluacionSemanal/EvaluacionSemanalSprints.jsx'
+import VerSeguimientoSemanal from '../pages/Estudiante/HU77_SegumientosSemanales/evaluacionSemanal.jsx'
+
 function Nav() {
     return (
       <Routes>
@@ -39,6 +47,22 @@ function Nav() {
         {/** ROUTES JHON*/}
         
         {/** ROUTES JOAQUIN*/}
+        <Route
+          path="/homeEstu/listaSprintsSemanasTareas"
+          element={<ListaSprintsVerTareas />}
+        />
+        <Route
+          path="/homeEstu/listaSprintsSemanasTareas/verTarea"
+          element={<VerTarea />}
+        />
+        <Route
+          path="/homeEstu/listaSprintsVerSeguimiento"
+          element={<ListaSprintsVerSeguimiento />}
+        />
+        <Route
+          path="/homeEstu/listaSprintsVerSeguimiento/verSeguimientoSemanal"
+          element={<VerSeguimientoSemanal />}
+        />
         <Route
           path="/prueba123/:idEmpresa"
           element={<SprintTareas2 />}

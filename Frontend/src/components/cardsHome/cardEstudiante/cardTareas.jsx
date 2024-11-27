@@ -17,9 +17,10 @@ function CardResumen() {
         <Button 
           variant="outlined" 
           color="primary" 
-          fullWidth 
+          fullWidth
+          onClick={()=>navigate("/homeEstu/listaSprintsSemanasTareas")} 
         >
-            VISUALIZAR TAREAS
+            38_VISUALIZAR TAREAS
         </Button>
         <Button variant="contained" color="primary" fullWidth
           onClick={()=>navigate("/homeEstu/listaTareas")}

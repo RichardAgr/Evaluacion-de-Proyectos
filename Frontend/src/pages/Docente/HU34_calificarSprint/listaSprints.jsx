@@ -28,6 +28,7 @@ const ListaSprints = () => {
     });
 
     useEffect(() => {
+        setLoading(true)
         const fetchSprints = async () => {
             try {
                 const [sprintData] = await Promise.all([
@@ -35,6 +36,7 @@ const ListaSprints = () => {
                 ]);
                 console.log(sprintData.sprints)
                 setSprints(sprintData.sprints);
+                setLoading(false);
             } catch (error) {
                 setError({
                     error: true,
@@ -42,8 +44,6 @@ const ListaSprints = () => {
                     errorDetails: error.message,
                 });
                 console.error("Error al cargar la tarea:", error);
-            } finally {
-                setLoading(false);
             }
         };
         fetchSprints();

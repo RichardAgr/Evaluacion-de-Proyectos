@@ -95,15 +95,15 @@ function Nav() {
       />
       {/** ROUTES JOAQUIN*/}
       <Route
-          path="/homeGrupo/:idGrupo/empresasVerTareas"
+          path="/homeDocente/listaEmpresasVerTareas"
           element={<EmpresasParaTareas />}
       />
       <Route
-          path="/homeGrupo/:idGrupo/empresasVerTareas/:idEmpresa"
+          path="/homeDocente/listaEmpresasVerTareas/sprints"
           element={<VisualizarSprintEst />}
       />
       <Route
-          path="/homeGrupo/:idGrupo/empresaVerTareas/:idEmpresa/SprintSemanatarea/:idTarea"
+          path="/homeDocente/listaEmpresasVerTareas/sprints/tarea"
           element={<VisualizarTarea />}
       />
 
