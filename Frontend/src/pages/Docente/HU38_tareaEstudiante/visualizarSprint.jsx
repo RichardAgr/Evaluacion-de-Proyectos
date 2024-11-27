@@ -29,7 +29,7 @@ const VisualizarSprintEst = () => {
             titulo={'SELECCIONE UNA TAREA PARA VISUALIZAR'}
             ocultarAtras={false}
             confirmarAtras={false}
-            dirBack={'/'}
+            dirBack={`/homeGrupo/${idGrupo}/empresasVerTareas`}
             loading={loading}
             error={error}
         >        

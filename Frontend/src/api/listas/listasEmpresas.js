@@ -28,6 +28,34 @@ export async function getPlanificacionesSinPublicar() {
   }
 }
 
+
+/**
+ * Obtiene las planificaciones que se pueden modificar
+ * @returns {Promise<Object>} Las planificaciones con su ID
+ */
+export async function getPlanificacionesParaModificar() {
+  try {
+    const response = await fetch(`${BASE_URL}/planificacionesParaModificar`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Error al obtener los datos del sprint');
+    }
+
+    const data = await response.json();
+    console.log(data);
+    return data; 
+  } catch (error) {
+    console.error('Error al obtener las planificaciones para modificar:', error);
+    throw error;
+  }
+}
+
 /**
  * Obtiene una lista de sprints para una empresa específica
  * @param {number} idEmpresa El ID de la empresa

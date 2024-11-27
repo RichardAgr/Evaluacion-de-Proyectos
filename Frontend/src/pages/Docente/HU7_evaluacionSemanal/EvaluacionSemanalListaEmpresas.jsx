@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import ListaDefinitivaN from '../../../components/listaDefinitiva/listaDefinitivaN'
-import { getPlanificacionesAceptadas } from "../../../api/getPlanificacionesAceptadas";
 
 const columns = [
     {
@@ -28,17 +27,18 @@ function ListaEmpresasEvaluacionSemanal() {
     setLoading(true);
     const fetchEmpresas = async () => {
       try {
-        const responseData = await Promise.all([getPlanificacionesAceptadas()]);//mandaraqui id grupo
-        
-      if (responseData.error !== undefined && responseData.error !== null) {
-            setError({
-            errorMessage: "Ha ocurrido un error",
-            errorDetails: error.message,
-            });
-        } else{
-            const [lista] = await responseData
-            setListaEmpresas(lista);
-            console.log(lista);
+        const url = 'http://localhost:8000/api/empresasSinSemanaCalificada'
+        const body = {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+        const response = await fetch(url, body)
+        if(response.ok){
+          const lista = await response.json()  
+          setListaEmpresas(lista);
+          console.log(lista);
         }
         
         setLoading(false);

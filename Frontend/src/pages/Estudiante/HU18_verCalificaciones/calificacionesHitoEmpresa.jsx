@@ -4,6 +4,7 @@ import BaseUI from '../../../components/baseUI/baseUI';
 import NombreEmpresa from '../../../components/infoEmpresa/nombreEmpresa';
 import {decrypt} from '../../../api/decrypt'
 import Cookies from 'js-cookie';
+import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 const NotaSprintTable = () => {
   const userRole = Cookies.get('random');
   const [role, setRole] = useState('docente')
@@ -30,6 +31,7 @@ const NotaSprintTable = () => {
         throw new Error('Error al obtener los datos.');
       }
       const data = await response.json();
+      console.log(data)
       setNotas(data);
     } catch (err) {
       setError(err.message);
@@ -74,10 +76,30 @@ const NotaSprintTable = () => {
       <Table sx={{ borderCollapse: 'separate', borderSpacing: '1rem' }}>
         <TableHead>
           <TableRow>
-            <TableCell>Nombre Integrante</TableCell>
-            {sprints.map((sprint) => (
-              <TableCell key={sprint.idSprint}>Sprint {sprint.numeroSprint}</TableCell>
-            ))}
+            <TableCell sx={{ width: 'calc(10vw + 5rem)'}}>Nombre Integrante</TableCell>
+            {sprints.map((sprint) => {
+              const array = ((new Date()).toLocaleDateString()).split('/')
+              const formatoDate =  ""+array[2]+"-"+array[1]+"-"+array[0]
+              const splitIni = (sprint.fechaIni).split('-')
+              const splitFin = (sprint.fechaFin).split('-')
+              const formatoIni = ""+splitIni[1]+"/"+splitIni[2]
+              const formatoFin = ""+splitFin[1]+"/"+splitFin[2]
+              if(sprint.fechaFin <= formatoDate)
+              return <TableCell key={sprint.idSprint} align='center' sx={{ width: 'calc(5vw + 2rem)'}}>
+                Sprint {sprint.numeroSprint}
+                <div>
+                  <div style={{display:'flex', alignItems:'center'}}>
+                    <CalendarTodayIcon></CalendarTodayIcon>
+                    INI: {formatoIni}
+                  </div>
+                  <div style={{display:'flex', alignItems:'center'}}>
+                    <CalendarTodayIcon></CalendarTodayIcon>
+                    FIN: {formatoFin}  
+                  </div>
+                </div>
+              </TableCell>
+            })}
+            <TableCell></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -88,15 +110,19 @@ const NotaSprintTable = () => {
                 const nota = sprint.nota;
                 const notaText = nota === null ? 'N/A' : nota;
                 const notaColor = nota === null || nota >= 51 ? 'inherit' : 'red'; // Rojo si es menor a 51
-
+                const array = ((new Date()).toLocaleDateString()).split('/')
+                const formatoDate =  ""+array[2]+"-"+array[1]+"-"+array[0]
+                if(sprint.fechaFin <= formatoDate)
                 return (
                   <TableCell 
                     key={sprint.idSprint} 
-                    sx={{ color: notaColor }}>
+                    sx={{ color: notaColor }}
+                    align='center'>
                     {notaText}
                   </TableCell>
                 );
               })}
+              <TableCell></TableCell>
             </TableRow>
           ))}
         </TableBody>

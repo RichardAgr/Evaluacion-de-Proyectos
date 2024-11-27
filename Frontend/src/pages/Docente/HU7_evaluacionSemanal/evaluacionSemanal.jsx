@@ -4,6 +4,8 @@ import TablaEvaluacionSemanal from "../../../components/tablaEvaluacionSemanal/t
 import NombreEmpresa from "../../../components/infoEmpresa/nombreEmpresa.jsx";
 import { getSeguimiento } from "../../../api/seguimientoSemanal.jsx";
 import InfoSnackbar from "../../../components/infoSnackbar/infoSnackbar.jsx";
+import { Box, Typography } from "@mui/material";
+import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 const SeguimientoSemanal = () => {
   const idEmpresa = localStorage.getItem("idEmpresa")
   const idSprint = localStorage.getItem("idSprint")
@@ -137,13 +139,31 @@ const SeguimientoSemanal = () => {
         loading={loading}
         error={{error:error}}
       >
-        
             <NombreEmpresa
               nombreCorto={empresa.nombreCorto}
               nombreLargo={empresa.nombreLargo}
             />
-
-            <h2>SPRINT {data2.numSprint} - SEMANA {data2.semana?.numSemana}</h2>
+            <Box>
+              <div>
+                <h2>SPRINT {data2.numSprint} - SEMANA {data2.semana?.numSemana}</h2>
+              </div>
+              <Box display="flex">
+                <Box display="flex" alignItems="center" m={2}>
+                  <CalendarTodayIcon sx={{ mr: 1 }} />
+                  <Typography variant="body1">
+                    <strong>Fecha de Inicio Semana:</strong>{" "}
+                    {new Date(data2.semana?.fechaIni).toLocaleDateString()}
+                  </Typography>
+                </Box>
+                <Box display="flex" alignItems="center" m={2}>
+                  <CalendarTodayIcon sx={{ mr: 1 }} />
+                  <Typography variant="body1">
+                    <strong>Fecha de Fin Semana:</strong>{" "}
+                    {new Date(data2.semana?.fechaFin).toLocaleDateString()}
+                  </Typography>
+                </Box>
+              </Box>
+            </Box>
             {data2 !== undefined && comentarios !== undefined && 
               <TablaEvaluacionSemanal 
                 sprint={sprints !== null? sprints:[]} 

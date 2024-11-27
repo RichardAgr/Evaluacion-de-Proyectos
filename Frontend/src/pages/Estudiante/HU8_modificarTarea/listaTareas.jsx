@@ -12,16 +12,18 @@ function ListaTareas() {
         try {
           const data = await getSprintSemanasTareas(idEmpresa);
           const dateNow = new Date()
-          console.log(data);
+          console.log(data)
           const sprintActual = data.filter((sprint) => 
-            sprint.fechaIni <= normalizeDate(dateNow) && normalizeDate(dateNow) <= sprint.fechaFin
+            new Date(sprint.fechaIni) <= new Date(normalizeDate(dateNow)) && new Date(normalizeDate(dateNow)) <= new Date(sprint.fechaFin)
           );
-          const semanaActual = sprintActual[0]?.semanas.filter((semana) => 
-              semana.fechaIni <= normalizeDate(dateNow) && normalizeDate(dateNow) <= semana.fechaFin
+          console.log(sprintActual)
+          const semanaActual = sprintActual[0]?.semanas.filter((semana) => {
+              const a = new Date(semana.fechaIni) <= new Date(normalizeDate(dateNow)) && new Date(normalizeDate(dateNow)) <= new Date(semana.fechaFin);
+              console.log(new Date(semana.fechaIni) +"<="+ new Date(normalizeDate(dateNow)) +""+ new Date(normalizeDate(dateNow)) +"<="+ new Date(semana.fechaFin))
+            return a}
           ) || [];
           console.log(semanaActual);
           const sprintNew = [{...sprintActual[0], semanas: semanaActual }];
-          console.log(sprintNew)
           setSprints(sprintNew);  
         } catch (error) {
           setError({error:true})

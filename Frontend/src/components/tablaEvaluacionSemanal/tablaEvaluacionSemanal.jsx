@@ -111,6 +111,12 @@ const TablaEvaluacionSemanal = ({ sprint, comenta, showButtons = true, setSeSubi
             autoHide: 6000,
         });
         setSeSubio(true)
+        setCuadroDialogo({
+          open: false,
+          onConfirm: () => {},
+          title: "",
+          description: "",
+        });
       }
     } catch (error) {
     console.error("Error al actualizar la tarea:", error);
