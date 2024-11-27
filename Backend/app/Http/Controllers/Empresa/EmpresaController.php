@@ -230,20 +230,25 @@ class EmpresaController extends Controller
         }
     }
 
-    public function getSprintsSemanasTareas($idEmpresa)
+    public function getSemanasTareas($idEmpresa)
     {
         try {
+            // Encontrar la empresa
             $empresa = Empresa::findOrFail($idEmpresa);
 
-            $sprints = $empresa->sprints()->with(['semanas' => function ($query) {
-                $query->with(['tareas:idSemana,idTarea,nombreTarea']);
+            // Obtener la planificación asociada a la empresa
+            $planificacion = $empresa->planificaciones()->with(['semanas' => function ($query) {
+                $query->with(['tareas' => function ($query) {
+                    $query->select('idSemana', 'idTarea', 'nombreTarea'); // Seleccionar solo los campos necesarios de las tareas
+                }]);
             }])->get();
 
-            return response()->json($sprints, 200);
+            return response()->json($planificacion, 200);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error al obtener los datos: ' . $e->getMessage()], 500);
         }
     }
+
     public function obtenerSprintsYEstudiantes($idEmpresa)
     {
         try {

@@ -94,10 +94,10 @@ export const getSprintConEntregables = async (idSprint) => {
   }
 };
 
-export const getSprintSemanasTareas = async (idEmpresa) => {
+export const getSemanasTareas = async (idEmpresa) => {
   try {
     const response = await fetch(
-      `http://127.0.0.1:8000/api/empresa/${idEmpresa}/sprintsSemanasTareas`,
+      `http://127.0.0.1:8000/api/empresa/${idEmpresa}/semanasTareas`,
       {
         method: "GET",
         headers: {
