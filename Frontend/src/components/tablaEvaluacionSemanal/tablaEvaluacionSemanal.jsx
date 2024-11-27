@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Table,
   TableBody,
@@ -15,38 +15,8 @@ import DecisionButtons from "../Buttons/decisionButtons";
 import CuadroDialogo from "../cuadroDialogo/cuadroDialogo";
 import InfoSnackbar from "../infoSnackbar/infoSnackbar";
 
-const TablaEvaluacionSemanal = ({ sprint, comenta, showButtons = true, setSeSubio }) => {
-  const idEmpresa = localStorage.getItem("idEmpresa")
-  const [comentarios, setComentarios] = useState([]);
-  useEffect(() => {
-    console.log(comenta)
-    const iniciarComentarios = (
-      sprint?.semana?.tareasEstudiante && Array.isArray(sprint.semana.tareasEstudiante)
-        ? sprint.semana.tareasEstudiante.map((estudiante) => ({
-            idSemana: sprint.semana.idSemana,
-            idEstudiante: estudiante.idEstudiante,
-            comentario: '',
-            subido: false
-          }))
-        : []
-    );
-    const newComentarios = iniciarComentarios.map((comentario) => {
-      // Busca si el estudiante tiene un comentario en "comenta"
-      const indice = comenta.findIndex(
-        (estudiante) => estudiante.idEstudiante === comentario.idEstudiante
-      );
-      
-      // Si se encuentra, actualiza el comentario; si no, mantiene el comentario vacío
-      return indice === -1 
-        ? comentario  // Si no se encuentra, deja el comentario vacío
-        : { ...comentario, comentario: comenta[indice].comentario, subido: true }; // Si se encuentra, actualiza el comentario
-    });  
-    //console.log(newComentarios);
-    setComentarios(newComentarios);
-  }, [comenta]); // Asegúrate de que sprint también esté en las dependencias
-  
-
-
+const TablaEvaluacionSemanal = ({ semana, comentariosN, showButtons = true, setSeSubio }) => {
+  const [comentarios, setComentarios] = useState(comentariosN)
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",
@@ -138,7 +108,7 @@ const TablaEvaluacionSemanal = ({ sprint, comenta, showButtons = true, setSeSubi
 
   return (
     <>
-      {sprint.semana?.tareasEstudiante?.length > 0&&<TableContainer component={Paper}>
+      <TableContainer component={Paper}>
         <Table aria-label="team evaluation table">
           <TableHead>
             <TableRow>
@@ -148,16 +118,17 @@ const TablaEvaluacionSemanal = ({ sprint, comenta, showButtons = true, setSeSubi
             </TableRow>
           </TableHead>
           <TableBody>
-            {sprint.semana?.tareasEstudiante?.map((estudiante, index) => (
+            {semana?.estudiantes?.map((estudiante, index) => (
               <TableRow key={index}>
                 <TableCell>{estudiante.nombre} {estudiante.apellido}</TableCell>
                 <TableCell>
                   <ul>
-                    {estudiante?.tareas.map((tarea, idx) => (
-                      <li key={idx}>{tarea.nombreTarea}</li>
-                    ))}
-                    {
-                      estudiante?.tareas?.length === 0 && <li style={{color:'red'}}>Sin tareas asignadas</li>
+                    {estudiante?.tareas.length > 0 ?
+                      estudiante?.tareas.map((tarea, idx) => (
+                        <li key={idx}>{tarea.nombreTarea}</li>
+                      ))
+                      :
+                      <li style={{color:'red'}}>Sin tareas asignadas</li>
                     }
                   </ul>
                 </TableCell>
@@ -193,15 +164,13 @@ const TablaEvaluacionSemanal = ({ sprint, comenta, showButtons = true, setSeSubi
           </TableBody>
         </Table>
       </TableContainer>
-      }
-      {sprint.semana?.tareasEstudiante?.length < 1 &&<h2 style={{color:'red'}}>No Asignaron tareas a los estudiantes en este semana</h2>}
-      {sprint.semana?.tareasEstudiante?.length > 0 && 
+      {
         showButtons && <DecisionButtons
-        rejectButtonText="Descartar"
-        validateButtonText="Guardar Evaluación"
-        onReject={handleCancel}
-        onValidate={handleSave}
-        disabledButton={0}
+          rejectButtonText="Descartar"
+          validateButtonText="Guardar Evaluación"
+          onReject={handleCancel}
+          onValidate={handleSave}
+          disabledButton={0}
         />
       }
 
