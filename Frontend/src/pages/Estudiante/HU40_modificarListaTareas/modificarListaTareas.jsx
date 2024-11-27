@@ -17,6 +17,7 @@ import InfoSnackbar from "../../../components/infoSnackbar/infoSnackbar.jsx";
 import {
   getTareasSemana,
 } from "../../../api/validarTareas/tareas.jsx";
+import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 
 export default function ModificarListaTareas() {
   const idEmpresa = localStorage.getItem("idEmpresa")
@@ -25,8 +26,8 @@ export default function ModificarListaTareas() {
   const [tasks, setTasks] = useState([]);
   const [tasksEliminadas, setTasksEliminadas] = useState([]);
   const [numSemana, setNumSemana] = useState(0);
-  const [numSprint, setNumSprint] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [fechas, setFechas] = useState({});
   const [error, setError] = useState(false);
   const [errorTexto, setErrorTexto] = useState([]);
   const [snackbar, setSnackbar] = useState({
@@ -43,11 +44,12 @@ export default function ModificarListaTareas() {
 
   const fetchTasks = async () => {
     try {
-      const tareas = await getTareasSemana(idEmpresa, idSprint, idSemana);
+      const tareas = await getTareasSemana(idEmpresa, idSemana);
       setNumSemana(tareas.numeroSemana);
-      setNumSprint(tareas.numeroSprint);
       setTasks(tareas.tareas);
       console.log(tareas)
+      const fechasNuevas = {fechaIni: tareas.fechaIni, fechaFin: tareas.fechaFin}
+      setFechas(fechasNuevas)
       const tareasV = tareas.tareas
       const newTextos = tareasV.map(()=>false)
       setErrorTexto(newTextos)
@@ -157,10 +159,10 @@ export default function ModificarListaTareas() {
           },
           body: JSON.stringify({
             numeroSemana: Number(idSemana),
-            numeroSprint:Number(idSprint),
             empresaID:Number(idEmpresa),
             tareas: tasks
           }),
+          credentials:'include'
         }
       );
   
@@ -227,17 +229,24 @@ export default function ModificarListaTareas() {
             align="center"
             sx={{ fontWeight: "bold" }}
           >
-            SPRINT {numSprint}
-          </Typography>
-          <Typography
-            variant="h5"
-            component="h2"
-            gutterBottom
-            align="center"
-            sx={{ mb: 3 }}
-          >
             SEMANA {numSemana}
           </Typography>
+          <Box display="flex" justifyContent="center">
+              <Box display="flex" alignItems="center" m={2}>
+                <CalendarTodayIcon sx={{ mr: 1 }} />
+                <Typography variant="body1">
+                  <strong>Fecha de Inicio:</strong>{" "}
+                  {new Date(fechas?.fechaIni).toLocaleDateString()}
+                </Typography>
+              </Box>
+              <Box display="flex" alignItems="center" m={2}>
+                <CalendarTodayIcon sx={{ mr: 1 }} />
+                <Typography variant="body1">
+                  <strong>Fecha de Fin:</strong>{" "}
+                  {new Date(fechas?.fechaFin).toLocaleDateString()}
+                </Typography>
+              </Box>
+          </Box>
           {tasks.length === 0 ? (
             <Typography variant="h4" align="center" sx={{ mb: 5.4, mt: 6 }}>
               No hay tareas aún

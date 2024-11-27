@@ -82,10 +82,10 @@ export const updateTarea = async (idTarea, formData) => {
   }
 };
 
-export const getTareasSemana = async (idEmpresa, idSprint, idSemana) => {
+export const getTareasSemana = async (idEmpresa, idSemana) => {
   try {
     const response = await fetch(
-      `http://127.0.0.1:8000/api/empresa/${idEmpresa}/sprint/${idSprint}/semana/${idSemana}/tareas`,
+      `http://127.0.0.1:8000/api/empresa/${idEmpresa}/semana/${idSemana}/tareas`,
       {
         method: "GET",
         headers: {

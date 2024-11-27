@@ -162,112 +162,86 @@ class TareaController extends Controller
         // ->join('semana as s','s.idSemana',)
     }
 
-    public function getTareasSemana($idEmpresa, $idSprint, $idSemana)
+    public function getTareasSemana($idEmpresa, $idSemana)
     {
         try {
-            // Realizar una única consulta uniendo las tablas necesarias
+            // Realizar una consulta uniendo las tablas necesarias para obtener las tareas
             $tareas = Tarea::join('semana as s', 'tarea.idSemana', '=', 's.idSemana')
-                ->join('sprint as sp', 's.idSprint', '=', 'sp.idSprint')
-                ->join('planificacion as p', 'sp.idPlanificacion', '=', 'p.idPlanificacion')
+                ->join('planificacion as p', 's.idPlanificacion', '=', 'p.idPlanificacion')
                 ->join('empresa as emp', 'emp.idEmpresa', '=', 'p.idEmpresa')
-                ->where('emp.idEmpresa', $idEmpresa)
-                ->where('sp.idSprint', $idSprint)
-                ->where('s.idSemana', $idSemana)
-                ->select('tarea.*', 's.numeroSemana', 'sp.numeroSprint')
+                ->where('emp.idEmpresa', $idEmpresa)  // Filtrar por idEmpresa
+                ->where('s.idSemana', $idSemana)  // Filtrar por idSemana
+                ->select('tarea.*', 's.numeroSemana', 's.fechaIni', 's.fechaFin')
                 ->get();
-    
-            // Obtener el número de semana y número de sprint directamente de la consulta
-    
+
+            // Retornar la respuesta con las tareas encontradas
             return response()->json([
-                'idSprint' => $idSprint,
                 'idSemana' => $idSemana,
                 'numeroSemana' => $tareas->isNotEmpty() ? $tareas->first()->numeroSemana : -1,
-                'numeroSprint' => $tareas->isNotEmpty() ? $tareas->first()->numeroSprint : -1,
+                'fechaIni' => $tareas->isNotEmpty() ? $tareas->first()->fechaIni : null,
+                'fechaFin' => $tareas->isNotEmpty() ? $tareas->first()->fechaFin : null,
                 'tareas' => $tareas,
             ], 200);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error al obtener las tareas: ' . $e->getMessage()], 500);
         }
     }
+
     
 
     // Actualizar las tareas de una semana específica
     public function createOrUpdateTareas(Request $request)
-{
-    // Validar la solicitud
-    $validated = $request->validate([
-        'numeroSemana' => 'required|integer',
-        'numeroSprint' => 'required|integer',
-        'empresaID' => 'required|integer',
-        'tareas' => 'required|array',
-        'tareas.*.idTarea' => 'nullable|integer', // Permitir nulo para nuevas tareas
-        'tareas.*.nombreTarea' => 'required|string',
-        'tareas.*.textoTarea' => 'nullable|string',
-        'tareas.*.fechaEntrega' => 'nullable|date',
-    ]);
+    {
+        // Validar la solicitud
+        $validated = $request->validate([
+            'numeroSemana' => 'required|integer',
+            'empresaID' => 'required|integer',
+            'tareas' => 'required|array',
+            'tareas.*.idTarea' => 'nullable|integer', // Permitir nulo para nuevas tareas
+            'tareas.*.nombreTarea' => 'required|string',
+            'tareas.*.textoTarea' => 'nullable|string',
+            'tareas.*.fechaEntrega' => 'nullable|date',
+        ]);
 
-    DB::beginTransaction();
+        DB::beginTransaction();
 
-    try {
-        // Verificar si la empresa existe
-        $empresa = Empresa::find($validated['empresaID']);
-        if (!$empresa) {
-            throw new \Exception('Empresa no encontrada.');
-        }
+        try {
+            // Verificar si la empresa existe
+            $empresa = Empresa::find($validated['empresaID']);
+            if (!$empresa) {
+                throw new \Exception('Empresa no encontrada.');
+            }
 
-        // Insertar o actualizar en la tabla 'planificacion'
-        $planificacion = Planificacion::updateOrCreate(
-            ['idEmpresa' => $empresa->idEmpresa],
-            [
-                'idEmpresa' => $empresa->idEmpresa,
-                'aceptada' => 0, // Valor por defecto
-                'publicada' => 0, // Valor por defecto
-            ]
-        );
-
-        // Insertar o actualizar en la tabla 'sprint'
-        $sprint = Sprint::updateOrCreate(
-            ['numeroSprint' => $validated['numeroSprint'], 'idPlanificacion' => $planificacion->idPlanificacion],
-            [
-                'numeroSprint' => $validated['numeroSprint'],
-                'fechaInicio' => now(), // Asignar fecha actual como ejemplo
-                'fechaFin' => now()->addWeeks(2), // Ejemplo: 2 semanas después
-            ]
-        );
-
-        // Insertar o actualizar en la tabla 'semana'
-        $semana = Semana::updateOrCreate(
-            ['numeroSemana' => $validated['numeroSemana'], 'idSprint' => $sprint->idSprint],
-            [
-                'numeroSemana' => $validated['numeroSemana'],
-                'fechaInicio' => now()->startOfWeek(),
-                'fechaFin' => now()->endOfWeek(),
-            ]
-        );
-
-        // Insertar o actualizar en la tabla 'tarea'
-        foreach ($validated['tareas'] as $tareaData) {
-            Tarea::updateOrCreate(
+            // Insertar o actualizar en la tabla 'planificacion'
+            $planificacion = Planificacion::updateOrCreate(
+                ['idEmpresa' => $empresa->idEmpresa],
                 [
-                    'idTarea' => $tareaData['idTarea'] ?? null, // Permitir creación de nuevas tareas
-                    'idSemana' => $semana->idSemana,
-                ],
-                [
-                    'nombreTarea' => $tareaData['nombreTarea'],
-                    'textoTarea' => $tareaData['textoTarea'] ?? null,
-                    'fechaEntrega' => $tareaData['fechaEntrega'] ?? null,
+                    'idEmpresa' => $empresa->idEmpresa
                 ]
             );
+            // Insertar o actualizar en la tabla 'tarea'
+            foreach ($validated['tareas'] as $tareaData) {
+                Tarea::updateOrCreate(
+                    [
+                        'idTarea' => $tareaData['idTarea'] ?? null, // Permitir creación de nuevas tareas
+                        'idSemana' => $semana->idSemana,
+                    ],
+                    [
+                        'nombreTarea' => $tareaData['nombreTarea'],
+                        'textoTarea' => $tareaData['textoTarea'] ?? null,
+                        'fechaEntrega' => $tareaData['fechaEntrega'] ?? null,
+                    ]
+                );
+            }
+
+            DB::commit();
+
+            return response()->json(['message' => 'Datos insertados o actualizados exitosamente'], 201);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['error' => $e->getMessage()], 400);
         }
-
-        DB::commit();
-
-        return response()->json(['message' => 'Datos insertados o actualizados exitosamente'], 201);
-    } catch (\Exception $e) {
-        DB::rollBack();
-        return response()->json(['error' => $e->getMessage()], 400);
     }
-}
 
 public function deleteTareas(Request $request)
 {

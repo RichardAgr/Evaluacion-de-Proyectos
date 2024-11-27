@@ -231,28 +231,28 @@ function CalificarSprintU() {
             </Typography>
           </div>
           <Box display="flex">
-            <Box display="flex" alignItems="center" m={2}>
-              <CalendarTodayIcon sx={{ mr: 1 }} />
-              <Typography variant="body1">
-                <strong>Fecha de Inicio:</strong>{" "}
-                {new Date(datosSprint?.fechaIni).toLocaleDateString()}
-              </Typography>
+              <Box display="flex" alignItems="center" m={2}>
+                <CalendarTodayIcon sx={{ mr: 1 }} />
+                <Typography variant="body1">
+                  <strong>Fecha de Inicio:</strong>{" "}
+                  {new Date(datosSprint?.fechaIni).toLocaleDateString()}
+                </Typography>
+              </Box>
+              <Box display="flex" alignItems="center" m={2}>
+                <CalendarTodayIcon sx={{ mr: 1 }} />
+                <Typography variant="body1">
+                  <strong>Fecha de Fin:</strong>{" "}
+                  {new Date(datosSprint?.fechaFin).toLocaleDateString()}
+                </Typography>
+              </Box>
+              <Box display="flex" alignItems="center">
+                <CalendarTodayIcon sx={{ m: 2 }} />
+                <Typography variant="body1">
+                  <strong>Fecha de Entrega:</strong>{" "}
+                  {new Date(datosSprint?.fechaEntrega).toLocaleDateString()}
+                </Typography>
             </Box>
-            <Box display="flex" alignItems="center" m={2}>
-              <CalendarTodayIcon sx={{ mr: 1 }} />
-              <Typography variant="body1">
-                <strong>Fecha de Fin:</strong>{" "}
-                {new Date(datosSprint?.fechaFin).toLocaleDateString()}
-              </Typography>
-            </Box>
-            <Box display="flex" alignItems="center">
-              <CalendarTodayIcon sx={{ m: 2 }} />
-              <Typography variant="body1">
-                <strong>Fecha de Entrega:</strong>{" "}
-                {new Date(datosSprint?.fechaEntrega).toLocaleDateString()}
-              </Typography>
           </Box>
-        </Box>
         </Box>
         <Grid2 container className="datosSprint">
           <Paper className="entregables">

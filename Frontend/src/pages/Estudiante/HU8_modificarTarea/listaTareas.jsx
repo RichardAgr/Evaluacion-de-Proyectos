@@ -1,30 +1,26 @@
-import { getSprintSemanasTareas } from "../../../api/getEmpresa";
+import { getSemanasTareas } from "../../../api/getEmpresa";
 import BaseUI from '../../../components/baseUI/baseUI';
 import { useState, useEffect } from 'react';
-import Acordeon from '../../../components/acordeon/acordeon'
+import SprintSemanas from "../../../components/SprintTareas/sprintSemanas";
 function ListaTareas() {
     const idEmpresa = localStorage.getItem("idEmpresa")
-    const [sprints, setSprints] = useState([]);
     const [error, setError] = useState({error:false});
     const [loading, setLoading] = useState(true); 
+    const [semana, setSemana] = useState([]);
     useEffect(() => {
       const fetchSprints = async () => {
         try {
-          const data = await getSprintSemanasTareas(idEmpresa);
+          const data = await getSemanasTareas(idEmpresa);
           const dateNow = new Date()
-          console.log(data)
-          const sprintActual = data.filter((sprint) => 
-            new Date(sprint.fechaIni) <= new Date(normalizeDate(dateNow)) && new Date(normalizeDate(dateNow)) <= new Date(sprint.fechaFin)
-          );
-          console.log(sprintActual)
-          const semanaActual = sprintActual[0]?.semanas.filter((semana) => {
+          const newData = data[0]
+          console.log(newData)
+          const semanaActual = newData?.semanas.filter((semana) => {
               const a = new Date(semana.fechaIni) <= new Date(normalizeDate(dateNow)) && new Date(normalizeDate(dateNow)) <= new Date(semana.fechaFin);
-              console.log(new Date(semana.fechaIni) +"<="+ new Date(normalizeDate(dateNow)) +""+ new Date(normalizeDate(dateNow)) +"<="+ new Date(semana.fechaFin))
             return a}
           ) || [];
           console.log(semanaActual);
-          const sprintNew = [{...sprintActual[0], semanas: semanaActual }];
-          setSprints(sprintNew);  
+          const semanaActualV = semanaActual[0]
+          setSemana(semanaActualV)
         } catch (error) {
           setError({error:true})
           console.error("Error al obtener los datos:", error);
@@ -48,12 +44,16 @@ function ListaTareas() {
         loading={loading}
         error={error}
     >
-      <Acordeon
-        navigateLink={`/homeEstu/listaTareas/modificarTarea`}
-        bloquearFechas={false}
-        verSprints={false}
-        sprints={sprints}        
-      ></Acordeon>
+      <SprintSemanas 
+          key={1} 
+          title={`Semana ${semana.numeroSemana}`} 
+          semana={semana} 
+          idSprint={1} 
+          navigateLink={`/homeEstu/listaTareas/modificarTarea`}
+          semanaTexto = {true}
+          isOpenSprint = {false}
+      >
+      </SprintSemanas>
     </BaseUI>
   );
 }
