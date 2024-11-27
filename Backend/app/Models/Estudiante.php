@@ -20,7 +20,8 @@ class Estudiante extends Model implements Authenticatable
         'primerApellido',
         'segundoApellido',
         'contrasena',
-        'numerodefaltasest'
+        'numerodefaltasest',
+        'email'
     ];
 
     public function grupos()

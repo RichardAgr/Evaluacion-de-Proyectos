@@ -57,6 +57,7 @@ class EstudianteSeeder extends Seeder
                 'segundoApellido' => $estudiante[3],
                 'contrasena' => Hash::make($estudiante[4]),
                 'numerodefaltasest' => $estudiante[5],
+                'email' => strtolower($estudiante[1] . '.' . $estudiante[2] . $index . '@gmail.com')
             ]);
         }
     }

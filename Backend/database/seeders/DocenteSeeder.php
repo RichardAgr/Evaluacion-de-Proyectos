@@ -20,16 +20,28 @@ class DocenteSeeder extends Seeder
                 'nombreDocente' => 'Leticia',
                 'primerApellido' => 'Blanco',
                 'segundoApellido' => 'Coca',
-                'contrasena' => Hash::make('password1'),
+                'contrasena' => Hash::make('Password1'),
+                'email' => 'leticiaBlanco@gmail.com'
             ],
             [
                 'idDocente' => 2,
                 'nombreCuenta' => 'corina123',
-                'nombreDocente' => 'Carlos',
+                'nombreDocente' => 'Corina',
                 'primerApellido' => 'Flores',
                 'segundoApellido' => 'Villaroel',
-                'contrasena' => Hash::make('password2'),
+                'contrasena' => Hash::make('Password2'),
+                'email' => 'carlosfloresvilla@gmail.com'
             ],
+            
+            [
+                'idDocente' => 3,
+                'nombreCuenta' => 'griego123',
+                'nombreDocente' => 'Esteban',
+                'primerApellido' => 'Griego',
+                'segundoApellido' => 'Vazquez',
+                'contrasena' => Hash::make('Password3'),
+                'email' => 'griegoEsteban_30@gmail.com'
+            ]
         ]);
     }
 }

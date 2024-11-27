@@ -16,6 +16,7 @@ class Docente extends Model
         'primerApellido',
         'segundoApellido',
         'contrasena',
+        'email'
     ];
 
     public function grupos()
