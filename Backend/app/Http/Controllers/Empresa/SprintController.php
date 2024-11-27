@@ -125,17 +125,21 @@ class SprintController extends Controller
 
     public function empresasSinSemanaCalificada(): JsonResponse
     {
-        // Obtener todas las empresas
-        $empresas = Empresa::all();
+        // Obtener todas las empresas usando el método del GrupoController
+        $grupoController = new Grupo();
+        $response = $grupoController->obtenerEmpresasPorGrupoYDocente();
+        $empresas = $response->getData(true); // Convertir la respuesta JSON a un arreglo asociativo
 
         $data = [];
 
         foreach ($empresas as $empresa) {
             // Obtener el número de estudiantes de la empresa
-            $numEstudiantes = $empresa->estudiantes()->count();
+            $numEstudiantes = DB::table('estudiantesempresas')
+                ->where('idEmpresa', $empresa['idEmpresa']) // Usar idEmpresa del JSON
+                ->count();
 
             // Obtener la planificación aceptada más reciente
-            $planificacion = $empresa->planificaciones()
+            $planificacion = Planificacion::where('idEmpresa', $empresa['idEmpresa'])
                 ->where('aceptada', true)
                 ->orderBy('fechaEntrega', 'desc')
                 ->first();
@@ -150,6 +154,7 @@ class SprintController extends Controller
                 $empresaValida = false; // Marca para incluir la empresa si alguna semana no cumple la condición
 
                 foreach ($sprints as $sprint) {
+                    // Obtener las semanas dentro del sprint que cumplen las condiciones de fecha
                     $semanas = $sprint->semanas()
                         ->where('fechaIni', '<=', now())
                         ->where('fechaFin', '>=', now())
@@ -164,9 +169,9 @@ class SprintController extends Controller
                             $empresaValida = true; // La empresa tiene al menos una semana que no cumple la condición
                             $data[] = [
                                 'id' => $planificacion->idPlanificacion,
-                                'idEmpresa' => $empresa->idEmpresa,
-                                'nombreEmpresa' => $empresa->nombreEmpresa,
-                                'nombreLargo' => $empresa->nombreLargo,
+                                'idEmpresa' => $empresa['idEmpresa'], // Usar idEmpresa del JSON
+                                'nombreEmpresa' => $empresa['nombreEmpresa'],
+                                'nombreLargo' => $empresa['nombreLargo'],
                                 'numEstudiantes' => $numEstudiantes,
                                 'idPlanificacion' => $planificacion->idPlanificacion,
                                 'idSprint' => $sprint->idSprint,
@@ -189,6 +194,7 @@ class SprintController extends Controller
 
         return response()->json($data);
     }
+
 
 
     public function modificarSprint(Request $request): JsonResponse
