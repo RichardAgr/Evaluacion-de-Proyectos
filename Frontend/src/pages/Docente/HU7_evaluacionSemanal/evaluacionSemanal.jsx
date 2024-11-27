@@ -6,6 +6,7 @@ import { getSeguimiento } from "../../../api/seguimientoSemanal.jsx";
 import InfoSnackbar from "../../../components/infoSnackbar/infoSnackbar.jsx";
 import { Box, Typography } from "@mui/material";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
+import Error from "../../../components/error/error.jsx";
 const SeguimientoSemanal = () => {
   const idEmpresa = localStorage.getItem("idEmpresa")
   const idSprint = localStorage.getItem("idSprint")
@@ -24,9 +25,11 @@ const SeguimientoSemanal = () => {
   });
   const [sprints, setSprints] = useState(null)
   useEffect(() => {
+    setLoading(true)
     getComentarios();
     getNombreEmpresa();
     fetchData();
+    setLoading(false)
   }, [seSubio]);
   
   const fetchData = async () => {
@@ -48,8 +51,6 @@ const SeguimientoSemanal = () => {
         message: error.message || "Error al obtener los datos del sprint",
         severity: "error",
       });
-    } finally {
-      setLoading(false);
     }
 
   };
@@ -71,8 +72,6 @@ const SeguimientoSemanal = () => {
     } catch (error) {
         console.error('Error en la solicitud:', error);
         setError(true);
-    }finally{
-      setLoading(false)
     }
   };
   const getComentarios = async () => {
@@ -89,11 +88,10 @@ const SeguimientoSemanal = () => {
     } catch (error) {
         console.error('Error en la solicitud:', error);
         setError(true);
-    }finally{
-      setLoading(false)
     }
   };
   useEffect(() => {
+    setLoading(true)
     if (!data2 || !data2.semana || !empresa || !empresa.integrantes) return;
     const resSemana = data2.semana;
     if (!resSemana.tareasEstudiante) return;
@@ -127,8 +125,8 @@ const SeguimientoSemanal = () => {
     console.log(mostrar)
     setMostrarBotones(mostrar)
     setSprints(dataBuena)
+    setLoading(false)
   }, [comentarios, data2, empresa]);
-  
   return (
     <Fragment>
       <BaseUI

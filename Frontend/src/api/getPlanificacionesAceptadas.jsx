@@ -7,6 +7,7 @@ export const getPlanificacionesAceptadas   = async () => {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include'
       });
   
       if (!response.ok) {

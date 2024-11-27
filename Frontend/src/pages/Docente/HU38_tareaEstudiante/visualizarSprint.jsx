@@ -1,17 +1,17 @@
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
 import BaseUI from '../../../components/baseUI/baseUI.jsx';
 import { getSprintSemanas } from '../../../api/sprintApi.jsx'; 
 import Acordeon from '../../../components/acordeon/acordeon.jsx'
 const VisualizarSprintEst = () => {
-    const { idSprint, idEmpresa, idGrupo } = useParams(); 
+    const idEmpresa = localStorage.getItem("idEmpresa")
+    const idEstudiante = localStorage.getItem("idEstudiante")
     const [sprints, setSprints] = useState([]);
     const [error, setError] = useState(false);
     const [loading, setLoading] = useState(true); 
     useEffect(() => {
         const fetchSprintData = async () => {
             try {
-                const data = await getSprintSemanas(idEmpresa===undefined? idSprint : idEmpresa); 
+                const data = await getSprintSemanas(idEmpresa); 
                 console.log([data])
                 setSprints([data]);
             } catch (err) {
@@ -21,7 +21,6 @@ const VisualizarSprintEst = () => {
                 setLoading(false); 
             }
         };
-        
         fetchSprintData();
     }, []); 
     return (
@@ -29,12 +28,12 @@ const VisualizarSprintEst = () => {
             titulo={'SELECCIONE UNA TAREA PARA VISUALIZAR'}
             ocultarAtras={false}
             confirmarAtras={false}
-            dirBack={`/homeGrupo/${idGrupo}/empresasVerTareas`}
+            dirBack={idEstudiante===null?`/homeDocente/listaEmpresasVerTareas`:'/homeEstu'}
             loading={loading}
             error={error}
         >        
             <Acordeon
-                navigateLink={`/homeGrupo/${idGrupo}/empresaVerTareas/${idEmpresa}/SprintSemanatarea/`}
+                navigateLink={idEstudiante===null?`/homeDocente/listaEmpresasVerTareas/sprints/tarea`:'/homeEstu/listaSprintsSemanasTareas/verTarea'}
                 bloquearFechas={false}
                 verSprints={true}
                 sprints={sprints}        
