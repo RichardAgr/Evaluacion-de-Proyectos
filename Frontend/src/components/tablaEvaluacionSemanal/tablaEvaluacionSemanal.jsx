@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Table,
   TableBody,
@@ -16,7 +16,7 @@ import CuadroDialogo from "../cuadroDialogo/cuadroDialogo";
 import InfoSnackbar from "../infoSnackbar/infoSnackbar";
 
 const TablaEvaluacionSemanal = ({ semana, comentariosN, showButtons = true, setSeSubio }) => {
-  const [comentarios, setComentarios] = useState(comentariosN)
+  const [comentarios, setComentarios] = useState([])
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",
@@ -29,6 +29,28 @@ const TablaEvaluacionSemanal = ({ semana, comentariosN, showButtons = true, setS
     title: "",
     description: "",
   });
+  
+  useEffect(() => {
+    const iniciarComentarios = (
+      semana?.estudiantes && Array.isArray(semana.estudiantes)
+        ? semana.estudiantes.map((estudiante) => ({
+            idSemana: semana.idSemana,
+            idEstudiante: estudiante.idEstudiante,
+            comentario: '',
+            subido: false
+          }))
+        : []
+    );
+    const newComentarios = iniciarComentarios.map((comentario) => {
+      const indice = comentariosN.findIndex(
+        (estudiante) => estudiante.idEstudiante === comentario.idEstudiante
+      );
+      return indice === -1 
+        ? comentario  // Si no se encuentra, deja el comentario vacío
+        : { ...comentario, comentario: comentariosN[indice].comentario, subido: true }; // Si se encuentra, actualiza el comentario
+    });  
+    setComentarios(newComentarios);
+  }, [comentariosN]);
 
   const handleComentarioChange = (index, value) => {
     const newComentarios = [...comentarios];
@@ -60,7 +82,6 @@ const TablaEvaluacionSemanal = ({ semana, comentariosN, showButtons = true, setS
 
   const handleSubmit = async () => {
     const comentariosNoSubidos = comentarios.filter((comentario)=> comentario.subido === false && comentario.comentario !== '')
-    console.log(comentariosNoSubidos)
     try {  
       const response = await fetch(
         `http://localhost:8000/api/docente/evaluacion`,
@@ -118,8 +139,9 @@ const TablaEvaluacionSemanal = ({ semana, comentariosN, showButtons = true, setS
             </TableRow>
           </TableHead>
           <TableBody>
-            {semana?.estudiantes?.map((estudiante, index) => (
-              <TableRow key={index}>
+            {semana?.estudiantes?.map((estudiante, index) => {
+              console.log(comentarios)
+              return <TableRow key={index}>
                 <TableCell>{estudiante.nombre} {estudiante.apellido}</TableCell>
                 <TableCell>
                   <ul>
@@ -159,7 +181,7 @@ const TablaEvaluacionSemanal = ({ semana, comentariosN, showButtons = true, setS
                   }
                 </TableCell>
               </TableRow>
-            ))}
+            })}
             
           </TableBody>
         </Table>
