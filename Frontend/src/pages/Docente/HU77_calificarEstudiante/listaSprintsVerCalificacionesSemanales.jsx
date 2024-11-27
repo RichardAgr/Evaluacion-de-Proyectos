@@ -9,6 +9,7 @@ import InfoSnackbar from '../../../components/infoSnackbar/infoSnackbar';
 function SeguimientoSemanalSprints () {
     const navigate = useNavigate();
     const idEmpresa = localStorage.getItem("idEmpresa")
+    const idEstudiante = localStorage.getItem("idEstudiante")
     const [semanas, setSemanas] = useState([]);
     const [error, setError] = useState(false);
     const [loading, setLoading] = useState(true); 
@@ -36,7 +37,11 @@ function SeguimientoSemanalSprints () {
     }, []); 
     const navigateSemana=(idSemana)=>{
         localStorage.setItem("idSemana", idSemana)
-        navigate(`/homeDocente/listaEmpresaVerCalificacionesSemanal/empresaSprints/semana`)
+        navigate(idEstudiante===undefined?
+                    `/homeDocente/listaEmpresaVerCalificacionesSemanal/empresaSprints/semana`
+                    :
+                    `/homeEstu/listaSprintsVerSeguimiento/verSeguimientoSemanal`
+                )
     }
 
     if(semanas?.length === 0) return (
@@ -44,7 +49,7 @@ function SeguimientoSemanalSprints () {
                 titulo={'SELECCIONE UNA SEMANA PARA RECUPERAR RESULTADOS DE EL SEGUIMIENTO SEMANAL'}
                 ocultarAtras={false}
                 confirmarAtras={false}
-                dirBack={`/homeDocente/listaEmpresaVerCalificacionesSemanal`}
+                dirBack={idEstudiante===undefined?`/homeDocente/listaEmpresaVerCalificacionesSemanal`:'/homeEstu'}
                 loading={loading}
                 error={error}
         >
@@ -60,7 +65,7 @@ function SeguimientoSemanalSprints () {
                 titulo={'SELECCIONE UNA SEMANA PARA RECUPERAR RESULTADOS DE EL SEGUIMIENTO SEMANAL'}
                 ocultarAtras={false}
                 confirmarAtras={false}
-                dirBack={`/homeDocente/listaEmpresaVerCalificacionesSemanal`}
+                dirBack={idEstudiante===undefined?`/homeDocente/listaEmpresaVerCalificacionesSemanal`:'/homeEstu'}
                 loading={loading}
                 error={error}
             >

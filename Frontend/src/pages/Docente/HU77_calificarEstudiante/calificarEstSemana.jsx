@@ -10,6 +10,7 @@ import Error from "../../../components/error/error.jsx";
 const SeguimientoSemanal = () => {
   const idEmpresa = localStorage.getItem("idEmpresa")
   const idSemana = localStorage.getItem("idSemana")
+  const idEstudiante = localStorage.getItem("idEstudiante")
   const [data2, setData] = useState([]);
   const [empresa, setNombreEmpresa] = useState({});
   const [loading, setLoading] = useState(true);
@@ -74,7 +75,7 @@ const SeguimientoSemanal = () => {
         titulo="RECUPERAR RESULTADOS DE SEGUIMIENTO SEMANAL PREVIO"
         ocultarAtras={false}
         confirmarAtras={false}
-        dirBack={`/homeDocente/listaEmpresaVerCalificacionesSemanal/empresaSprints`}
+        dirBack={idEstudiante===undefined?`/homeDocente/listaEmpresaVerCalificacionesSemanal/empresaSprints`:`/homeEstu/listaSprintsVerSeguimiento`}
         loading={loading}
         error={{error:error}}
       >
