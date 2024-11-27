@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers\Empresa;
-
 use Illuminate\Http\Request;
 use App\Models\Planificacion;
 use App\Models\Sprint;
@@ -16,6 +15,7 @@ use App\Models\NotaSprint;
 use App\Http\Controllers\Controller;
 use App\Models\NotaTareasEstudiante;
 use App\Models\ComentarioTarea;
+use App\Http\Controllers\Docente\GrupoController as Grupo;
 
 class SprintController extends Controller
 {
@@ -75,52 +75,50 @@ class SprintController extends Controller
     }   
     public function empresasSinSprintCalificado(): JsonResponse
     {
-        // Obtener todas las empresas
-        $empresas = Empresa::all();
-
-        // Inicializar un array para almacenar los datos de planificación
+        $grupoController = new Grupo();
+        $response = $grupoController->obtenerEmpresasPorGrupoYDocente();
+        $empresas = $response->getData(true);
         $data = [];
-
         foreach ($empresas as $empresa) {
-            // Obtener la planificación de la empresa
-            $planificacion = Planificacion::with('sprints')
-                ->orderBy('fechaEntrega', 'desc')
-                ->where('idEmpresa', $empresa->idEmpresa)
-                ->first();
+                // Buscar la planificación asociada a cada empresa usando el idEmpresa del JSON
+                $planificacion = Planificacion::with('sprints')
+                    ->orderBy('fechaEntrega', 'desc')
+                    ->where('idEmpresa', $empresa['idEmpresa']) // Acceder al ID de empresa directamente
+                    ->first();
 
-            // Verificar si la planificación existe y está aceptada
-            if ($planificacion && $planificacion->aceptada) {
-                // Filtrar los sprints que cumplen las condiciones
-                $filteredSprints = $empresa->sprints->filter(function ($sprint) {
-                    $now = now();
-                    return $now >= $sprint->fechaFin && is_null($sprint->nota);
-                })->map(function ($sprint) {
-                    return [
-                        'idSprint' => $sprint->idSprint,
-                        'numeroSprint' => $sprint->numeroSprint,
-                        'fechaIni' => $sprint->fechaIni,
-                        'fechaFin' => $sprint->fechaFin,
-                        'fechaEntrega' => $sprint->fechaEntrega,
-                        'cobro' => $sprint->cobro,
-                        'comentario' => $sprint->comentario,
-                        'nota' => $sprint->nota,
-                    ];
-                });
+                // Verificar si la planificación existe y está aceptada
+                if ($planificacion && $planificacion->aceptada) {
+                    // Filtrar los sprints que cumplen las condiciones
+                    $filteredSprints = $planificacion->sprints->filter(function ($sprint) {
+                        $now = now();
+                        return $now >= $sprint->fechaFin && is_null($sprint->nota);
+                    })->map(function ($sprint) {
+                        return [
+                            'idSprint' => $sprint->idSprint,
+                            'numeroSprint' => $sprint->numeroSprint,
+                            'fechaIni' => $sprint->fechaIni,
+                            'fechaFin' => $sprint->fechaFin,
+                            'fechaEntrega' => $sprint->fechaEntrega,
+                            'cobro' => $sprint->cobro,
+                            'comentario' => $sprint->comentario,
+                            'nota' => $sprint->nota,
+                        ];
+                    });
 
-                // Agregar a los datos si hay sprints filtrados
-                if ($filteredSprints->isNotEmpty()) {
-                    $data[] = [
-                        'id' => $planificacion->idPlanificacion,
-                        'idEmpresa' => $planificacion->idEmpresa,            
-                        'nombreEmpresa' => $empresa->nombreEmpresa,
-                        'nombreLargo' => $empresa->nombreLargo,
-                        'idSprints' => $filteredSprints,
-                    ];
+                    // Agregar a los datos si hay sprints filtrados
+                    if ($filteredSprints->isNotEmpty()) {
+                        $data[] = [
+                            'id' => $planificacion->idPlanificacion,
+                            'idEmpresa' => $planificacion->idEmpresa,
+                            'nombreEmpresa' => $empresa['nombreEmpresa'], // Acceder a nombre de empresa desde el JSON
+                            'nombreLargo' => $empresa['nombreLargo'], // Acceder a nombre largo desde el JSON
+                            'idSprints' => $filteredSprints,
+                        ];
+                    }
                 }
             }
-        }
 
-        // Retornar la respuesta JSON con los datos de empresas aceptadas
+            // Retornar la respuesta JSON con los datos de empresas aceptadas
         return response()->json($data);
     }
 
