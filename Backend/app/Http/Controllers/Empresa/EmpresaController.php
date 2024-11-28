@@ -233,19 +233,19 @@ class EmpresaController extends Controller
     public function getSemanasTareas($idEmpresa)
     {
         try {
-            // Encontrar la empresa
-            $empresa = Empresa::findOrFail($idEmpresa);
+            // Cargar planificaciones con semanas y tareas asociadas
+            $planificaciones = Empresa::findOrFail($idEmpresa)
+                ->planificaciones()
+                ->with(['semanas' => function ($query) {
+                    $query->with(['tareas']);
+                }])
+                ->get();
 
-            // Obtener la planificación asociada a la empresa
-            $planificacion = $empresa->planificaciones()->with(['semanas' => function ($query) {
-                $query->with(['tareas' => function ($query) {
-                    $query->select('idSemana', 'idTarea', 'nombreTarea'); // Seleccionar solo los campos necesarios de las tareas
-                }]);
-            }])->get();
-
-            return response()->json($planificacion, 200);
+            return response()->json($planificaciones, 200);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Error al obtener los datos: ' . $e->getMessage()], 500);
+            return response()->json([
+                'error' => 'Error al obtener los datos: ' . $e->getMessage(),
+            ], 500);
         }
     }
 

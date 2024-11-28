@@ -161,31 +161,41 @@ class TareaController extends Controller
         $resultado = DB::table('tarea as t');
         // ->join('semana as s','s.idSemana',)
     }
-
     public function getTareasSemana($idEmpresa, $idSemana)
     {
         try {
-            // Realizar una consulta uniendo las tablas necesarias para obtener las tareas
-            $tareas = Tarea::join('semana as s', 'tarea.idSemana', '=', 's.idSemana')
-                ->join('planificacion as p', 's.idPlanificacion', '=', 'p.idPlanificacion')
-                ->join('empresa as emp', 'emp.idEmpresa', '=', 'p.idEmpresa')
-                ->where('emp.idEmpresa', $idEmpresa)  // Filtrar por idEmpresa
-                ->where('s.idSemana', $idSemana)  // Filtrar por idSemana
-                ->select('tarea.*', 's.numeroSemana', 's.fechaIni', 's.fechaFin')
+            // Obtener los datos de la semana directamente
+            $semana = Semana::where('idSemana', $idSemana)->first();
+    
+            if (!$semana) {
+                return response()->json([
+                    'error' => 'Semana no encontrada.',
+                ], 404);
+            }
+    
+            // Obtener tareas asociadas a la semana
+            $tareas = Tarea::where('idSemana', $idSemana)
+                ->select('idTarea', 'nombreTarea', 'textoTarea', 'fechaEntrega')
                 ->get();
-
-            // Retornar la respuesta con las tareas encontradas
+    
+            // Respuesta final
             return response()->json([
-                'idSemana' => $idSemana,
-                'numeroSemana' => $tareas->isNotEmpty() ? $tareas->first()->numeroSemana : -1,
-                'fechaIni' => $tareas->isNotEmpty() ? $tareas->first()->fechaIni : null,
-                'fechaFin' => $tareas->isNotEmpty() ? $tareas->first()->fechaFin : null,
+                'idSemana' => $semana->idSemana,
+                'numeroSemana' => $semana->numeroSemana,
+                'fechaIni' => $semana->fechaIni,
+                'fechaFin' => $semana->fechaFin,
                 'tareas' => $tareas,
             ], 200);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Error al obtener las tareas: ' . $e->getMessage()], 500);
+    
+        } catch (\Throwable $e) {
+            // Manejo de errores
+            return response()->json([
+                'error' => 'Error al obtener los datos: ' . $e->getMessage(),
+            ], 500);
         }
     }
+    
+
 
     
 

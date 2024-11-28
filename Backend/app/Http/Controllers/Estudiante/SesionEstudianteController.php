@@ -54,7 +54,8 @@ class SesionEstudianteController extends Controller
     
         // Validar semana
         $idSemana = -1;
-        $semana = Semana::whereDate('fechaIni', '<=', $now)
+        $semana = Semana::where('idPlanificacion', $idPlanificacion)
+                        ->whereDate('fechaIni', '<=', $now)
                         ->whereDate('fechaFin', '>=', $now)
                         ->where('idPlanificacion', $idPlanificacion)
                         ->first();
