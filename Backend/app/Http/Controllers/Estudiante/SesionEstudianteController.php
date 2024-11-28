@@ -56,6 +56,7 @@ class SesionEstudianteController extends Controller
         $idSemana = -1;
         $semana = Semana::whereDate('fechaIni', '<=', $now)
                         ->whereDate('fechaFin', '>=', $now)
+                        ->where('idPlanificacion', $idPlanificacion)
                         ->first();
         if ($semana) {
             $idSemana = $semana->idSemana;
