@@ -52,6 +52,7 @@ const EvaluarHito = () => {
               headers: {
                   'Content-Type': 'application/json',
               },
+              credentials: 'include'
           });
 
           if (!response.ok) throw new Error('Error al obtener los datos de la empresa');
@@ -73,6 +74,7 @@ const EvaluarHito = () => {
               headers: {
                   'Content-Type': 'application/json',
               },
+              credentials: 'include'
           });
           const responseData = await response.json();
           setComentarios(responseData)

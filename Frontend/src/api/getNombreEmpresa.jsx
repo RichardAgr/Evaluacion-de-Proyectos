@@ -7,6 +7,7 @@ export const getNombreEmpresa = async (idEmpresa) => {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include'
       });
   
       if (!response.ok) {

@@ -64,11 +64,9 @@ class GrupoController extends Controller
 }
 
 
-    public function obtenerEmpresasPorGrupoYDocente(Request $request)
+public function obtenerEmpresasPorGrupoYDocente()
     {
-        // Validar los parámetros de entrada
-        $idGrupo = $request->input('idGrupo');
-
+        // $idDocente = session()->get('docente.id');
         // Ejecutar la consulta
         $resultados = DB::table('estudiantesgrupos AS eg')
             ->join('grupo AS g', 'eg.idGrupo', '=', 'g.idGrupo')
@@ -76,8 +74,12 @@ class GrupoController extends Controller
             ->join('estudiantesempresas AS ee', 'eg.idEstudiante', '=', 'ee.idEstudiante')
             ->join('empresa AS emp', 'ee.idEmpresa', '=', 'emp.idEmpresa')
             ->join('estudiante AS e', 'eg.idEstudiante', '=', 'e.idEstudiante')
-            ->select('emp.nombreEmpresa', 'emp.nombreLargo', 'emp.idEmpresa as id', 'g.gestionGrupo', DB::raw('count(eg.idEstudiante) as totalEstudiantes'), 'g.numGrupo')
-            ->where('g.idGrupo',"=",   $idGrupo)
+            ->select('emp.idEmpresa','emp.nombreEmpresa', 'emp.nombreLargo', 'emp.idEmpresa as id', 'g.gestionGrupo', DB::raw('count(eg.idEstudiante) as totalEstudiantes'), 'g.numGrupo')
+            ->where('d.idDocente', session('docente.id'))
+            // ->where('g.idGrupo', $request->idGrupo)
+            //->where('g.gestionGrupo', $request->gestionGrupo)
+            ->whereRaw('CURDATE() >= g.fechaIniGestion') // Usamos whereRaw para CURDATE()
+            ->whereRaw('CURDATE() <= g.fechaFinGestion')
             ->groupBy('emp.nombreEmpresa', 'emp.nombreLargo', 'emp.idEmpresa', 'g.gestionGrupo', 'g.numGrupo')
             ->orderByDesc('g.gestionGrupo')
             ->orderBy('emp.nombreEmpresa')
@@ -92,8 +94,9 @@ class GrupoController extends Controller
         }
 
         // Si hay resultados, retornarlos
-        return response()->json($resultados);
+        return response()->json($resultados,200);
     }
+
     public function getDescripcion($id)
     {
         // Recupera la descripción del curso basado en el ID

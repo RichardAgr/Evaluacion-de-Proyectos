@@ -34,7 +34,7 @@ const ModificarGrupoEmpresa = () => {
     useEffect(() => {
         const fetchInformacion = async () => {
             try {
-                const response = await fetch(`http://localhost:8000/api/estudiante/getDatosEstEmpresa/${idEstudiante}`);
+                const response = await fetch(`http://localhost:8000/api/estudiante/getDatosEstEmpresa/${idEstudiante}`,{credentials: 'include'});
                 if (!response.ok) {
                     if (response.status === 404) {
                       setMensajeError("El estudiante no tiene empresa y no tiene registrada ninguna");
@@ -68,7 +68,7 @@ const ModificarGrupoEmpresa = () => {
 
         const fetchNuevosEstudiantes = async () => {
             try {
-                const response = await fetch(`http://localhost:8000/api/estudiante/getDisponibles/${idEstudiante}`);
+                const response = await fetch(`http://localhost:8000/api/estudiante/getDisponibles/${idEstudiante}`,{credentials: 'include'});
                 if (!response.ok) throw new Error('Error al recuperar datos');
     
                 const data = await response.json();

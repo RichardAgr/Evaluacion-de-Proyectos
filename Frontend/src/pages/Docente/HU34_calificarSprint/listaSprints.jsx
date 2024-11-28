@@ -31,9 +31,7 @@ const ListaSprints = () => {
         setLoading(true)
         const fetchSprints = async () => {
             try {
-                const [sprintData] = await Promise.all([
-                    getSprintsEntregables(idEmpresa),
-                ]);
+                const sprintData = await getSprintsEntregables(idEmpresa);
                 console.log(sprintData.sprints)
                 setSprints(sprintData.sprints);
                 setLoading(false);

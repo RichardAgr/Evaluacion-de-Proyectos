@@ -5,6 +5,7 @@ export const getSprintSemanasTareas = async (idSprint) => {
             headers: {
                 'Content-Type': 'application/json',
             },
+            credentials: 'include'
         });
 
         if (!response.ok) {

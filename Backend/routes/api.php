@@ -50,7 +50,7 @@ Route::get('/docente/obtenerEmpresasPorGrupoYDocente',[GrupoController::class, '
 //-- sprints con toda su informacion y los entragables
 Route::get('/empresa/{idEmpresa}/sprintsEntregables', [EmpresaControll0er::class, 'getSprintsEntregables']);
 
-Route::get('/empresa/{idEmpresa}/sprintsSemanasTareas', [EmpresaController::class, 'getSprintsSemanasTareas']);
+Route::get('/empresa/{idEmpresa}/semanasTareas', [EmpresaController::class, 'getSemanasTareas']);
 
 //-- empresas de un grupo
 Route::get('/grupo/{idGrupo}/empresas', [GrupoController::class, 'getEmpresasPorGrupo']);
@@ -156,7 +156,7 @@ Route::get('/docente/notasTarea/{idEmpresa}', [SprintController::class, 'getNota
 
 
 Route::get('/empresa/{idEmpresa}/sprint/{idSprint}/tareas', [SprintController::class, 'getSprintEvaluar']);
-Route::get('/empresa/{idEmpresa}/sprint/{idSprint}/semana/{idSemana}/tareas', [TareaController::class, 'getTareasSemana']);
+Route::get('/empresa/{idEmpresa}/semana/{idSemana}/tareas', [TareaController::class, 'getTareasSemana']);
 Route::get('/empresa/{idEmpresa}/sprintsEntregables', [EmpresaController::class, 'getSprintsEntregables']);
 
 
@@ -213,12 +213,14 @@ Route::post('/estudiante/eliminarTareas',[TareaController::class, 'deleteTareas'
 
 
 // ============================  Funciones ComentarioTareaController  ====================================
-Route::get('/seguimientoSemanal/{idEmpresa}/SprintHastaSemanalActual', [ComentarioTareaController::class, 'seguimientoSemanalEmpresaHastaSemanaActual']);
+Route::get('/seguimientoSemanal/{idPlanificacion}/SprintHastaSemanalActual', [ComentarioTareaController::class, 'seguimientoSemanalEmpresaHastaSemanaActual']);//utilizado
+Route::get('/empresa/{idEmpresa}/seguimientoSemanal/semana/{idSemana}', [ComentarioTareaController::class, 'getSemanaSeguimiento']);//utilizado
+
 Route::get('/seguimientoSemanalComentarios/semanaElegida/{idSemana}', [ComentarioTareaController::class, 'seguimientoSemanaElegidaComentarios']);
 Route::post('/seguimientoSemanal/actualizarComentarios',[ComentarioTareaController::class, 'agregarComentarios']);
 Route::get('/seguimientoSemanal/{idEmpresa}/SprintHastaSemanalActualComentarios',[ComentarioTareaController::class, 'seguimientoSemanalHastaSemanaActualcomentarios']);
 Route::get('/modificarTarea/{idEmpresa}/semanaActualTareas', [ComentarioTareaController::class, 'getSemanaActualTareas']);
 
-Route::get('/empresasSinSprintCalificado', [SprintController::class, 'empresasSinSprintCalificado']);
-Route::get('/empresasSinSemanaCalificada', [SprintController::class, 'empresasSinSemanaCalificada']);
-Route::get('/empresa/sprintConEntregables/{idSprint}', [SprintController::class, 'sprintConEntregables']);
+Route::get('/empresasSinSprintCalificado', [SprintController::class, 'empresasSinSprintCalificado']);//utilizado
+Route::get('/empresasSinSemanaCalificada', [SprintController::class, 'empresasSinSemanaCalificada']);//utilizado
+Route::get('/empresa/sprintConEntregables/{idSprint}', [SprintController::class, 'sprintConEntregables']);//utilizado

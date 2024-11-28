@@ -28,18 +28,17 @@ function ListaCali() {
         const fetchData = async () => {
             setLoading(true);
             try {
-                const responseData = await Promise.all([getPlanificacionesAceptadas()]);
-                
-              if (responseData.error !== undefined && responseData.error !== null) {
+                const responseData = await getPlanificacionesAceptadas();
+                console.log(responseData)
+                if (responseData.error !== undefined && responseData.error !== null) {
                     setError({
                         error:true,
                         errorMessage: "Ha ocurrido un error",
                         errorDetails: error.message,
                     });
                 } else{
-                    const [lista] = await responseData
-                    setListaEmpresas(lista);
-                    console.log(lista);
+                    setListaEmpresas(responseData);
+                    console.log(responseData);
                 }
                 
                 setLoading(false);

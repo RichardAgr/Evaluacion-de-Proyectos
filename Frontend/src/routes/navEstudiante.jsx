@@ -9,15 +9,15 @@ import ListaTareas from "../pages/Estudiante/HU8_modificarTarea/listaTareas.jsx"
 import CalificacionesHitoEmpresa from "../pages/Estudiante/HU18_verCalificaciones/calificacionesHitoEmpresa.jsx";
 import CrearGrupoEmpresa from "../pages/Estudiante/HU3_HU71_HU69_grupoEmpresa/crearGrupoEmpresa.jsx";
 import PublicarGrupoEmpresa from "../pages/Estudiante/HU3_HU71_HU69_grupoEmpresa/publicarGrupoEmpresa.jsx";
-import SprintTareas2 from "../pages/Docente/HU38_tareaEstudiante/visualizarSprint.jsx";
 import RedirigirHome from '../pages/Estudiante/homeGrupoEstudiante/redirigirHomeEstu.jsx';
 
 //traido desde docnete
 import ListaSprintsVerTareas from '../pages/Docente/HU38_tareaEstudiante/visualizarSprint.jsx'
 import VerTarea from '../pages/Docente/HU38_tareaEstudiante/viualizarTarea.jsx'
-
-import ListaSprintsVerSeguimiento from '../pages/Docente/HU7_evaluacionSemanal/EvaluacionSemanalSprints.jsx'
-import VerSeguimientoSemanal from '../pages/Estudiante/HU77_SegumientosSemanales/evaluacionSemanal.jsx'
+import ListaEstudiantes from '../pages/Docente/HU32_listaEstudiantes/listaEstudiantes.jsx'
+import ListaEmpresas from '../pages/Docente/HU31_listaEmpresas/listaEmpresaPorDocente.jsx'
+import ListaSprintsVerSeguimiento from '../pages/Docente/HU77_calificarEstudiante/listaSprintsVerCalificacionesSemanales.jsx'
+import VerSeguimientoSemanal from '../pages/Docente/HU77_calificarEstudiante/calificarEstSemana.jsx'
 
 function Nav() {
     return (
@@ -44,6 +44,14 @@ function Nav() {
           path="/homeEstu/VerCalificacionesSprints"
           element={<CalificacionesHitoEmpresa />}
         />
+        <Route
+          path="/homeEstu/listaEmpresasGrupo"
+          element={<ListaEmpresas/>}
+        />
+        <Route
+          path="/homeEstu/listaEstudiantesGrupo"
+          element={<ListaEstudiantes />}
+        />
         {/** ROUTES JHON*/}
         
         {/** ROUTES JOAQUIN*/}
@@ -62,10 +70,6 @@ function Nav() {
         <Route
           path="/homeEstu/listaSprintsVerSeguimiento/verSeguimientoSemanal"
           element={<VerSeguimientoSemanal />}
-        />
-        <Route
-          path="/prueba123/:idEmpresa"
-          element={<SprintTareas2 />}
         />
         {/** ROUTES JHAIR /homeEstudiante/homeGrupoEstudiante/sprint/:idSprint"*/}
         

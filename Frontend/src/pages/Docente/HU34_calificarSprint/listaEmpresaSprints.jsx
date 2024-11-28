@@ -33,6 +33,7 @@ function ListaEmpresaSprints() {
               headers: {
                 'Content-Type': 'application/json',
               },
+              credentials: 'include'
             }
             const response = await fetch(url, body)
             if(response.ok){

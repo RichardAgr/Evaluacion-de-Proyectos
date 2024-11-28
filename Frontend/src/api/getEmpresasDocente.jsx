@@ -5,6 +5,7 @@ export const getEmpresasDocente = async (idDocente) => {
             headers: {
                 'Content-Type': 'application/json',
             },
+            credentials: 'include'
         });
 
         if (!response.ok) {

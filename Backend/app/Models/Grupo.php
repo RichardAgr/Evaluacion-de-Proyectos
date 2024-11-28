@@ -18,7 +18,10 @@ class Grupo extends Model
         'codigoAcceso',
         'descripcion',
         'fechaIniGestion',
-        'fechaFinGestion'
+        'fechaFinGestion',
+        'fechaLimiteEntregaEmpresa',
+        'fechaLimiteEntregaPlanificacion',
+        'fechaFinPlanificacion'
     ];
 
     public function estudiantesGrupos()

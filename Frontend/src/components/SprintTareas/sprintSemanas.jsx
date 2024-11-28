@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import { Typography } from '@mui/material';
+import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 
 /* eslint-disable react/prop-types */
 
@@ -49,7 +50,25 @@ const SprintSemanas = ({ title, semana, idSprint, navigateLink, semanaTexto, isO
                     {title}
                 </Box>
                 :
-                <Typography variant='h5' sx={{marginLeft: 'calc(2vw + 0.5rem)', }}>{title}</Typography>
+                <>
+                    <Typography variant='h4' sx={{marginLeft: 'calc(2vw + 0.5rem)', fontWeight:'600'}}>{title}</Typography> 
+                    <Box display="flex" sx={{marginLeft: 'calc(2vw + 0.5rem)'}}>
+                        <Box display="flex" alignItems="center" m={2}>
+                            <CalendarTodayIcon sx={{ mr: 1 }} />
+                            <Typography variant="body1">
+                            <strong>Fecha de Inicio:</strong>{" "}
+                            {new Date(semana?.fechaIni).toLocaleDateString()}
+                            </Typography>
+                        </Box>
+                        <Box display="flex" alignItems="center" m={2}>
+                            <CalendarTodayIcon sx={{ mr: 1 }} />
+                            <Typography variant="body1">
+                            <strong>Fecha de Fin:</strong>{" "}
+                            {new Date(semana?.fechaFin).toLocaleDateString()}
+                            </Typography>
+                        </Box>
+                    </Box>
+                </>
             }
 
             {(semanaTexto === true || isOpen) && (

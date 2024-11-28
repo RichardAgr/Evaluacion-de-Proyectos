@@ -28,7 +28,7 @@ function ListaEmpresasEvaluacionSemanal() {
     setLoading(true);
     const fetchEmpresas = async () => {
       try {
-        const responseData = await Promise.all([getPlanificacionesAceptadas()]);
+        const responseData = await getPlanificacionesAceptadas()
         
       if (responseData.error !== undefined && responseData.error !== null) {
             setError({
@@ -36,9 +36,7 @@ function ListaEmpresasEvaluacionSemanal() {
             errorDetails: error.message,
             });
         } else{
-            const [lista] = await responseData
-            setListaEmpresas(lista);
-            console.log(lista);
+            setListaEmpresas(responseData);
         }
         
         setLoading(false);

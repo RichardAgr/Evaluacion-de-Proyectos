@@ -26,7 +26,7 @@ function SeleccionarEmpresaModificar() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const responseData = await Promise.all([getPlanificacionesParaModificar()]);
+      const responseData = await getPlanificacionesParaModificar();
         console.log(responseData);
       if (responseData.error !== undefined && responseData.error !== null) {
         setError({
