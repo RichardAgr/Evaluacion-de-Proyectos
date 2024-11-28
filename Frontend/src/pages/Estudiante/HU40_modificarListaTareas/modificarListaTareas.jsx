@@ -158,8 +158,7 @@ export default function ModificarListaTareas() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            numeroSemana: Number(idSemana),
-            empresaID:Number(idEmpresa),
+            idSemana: Number(idSemana),
             tareas: tasks
           }),
           credentials:'include'
@@ -179,6 +178,7 @@ export default function ModificarListaTareas() {
       });
     }
     if(tasksEliminadas.length > 0){
+      console.log(tasksEliminadas)
       try {
         const response = await fetch(
           `http://localhost:8000/api/estudiante/eliminarTareas`,
@@ -188,9 +188,6 @@ export default function ModificarListaTareas() {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              numeroSemana: Number(idSemana),
-              numeroSprint:Number(idSprint),
-              idEmpresa:Number(idEmpresa),
               tareas: tasksEliminadas
             }),
             credentials:'include'

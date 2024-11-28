@@ -45,7 +45,7 @@ function ModificarTarea() {
   useEffect(() => {
     const fetchTareaData = async () => {
       try {
-        const [data] = await getTareaData(idTarea)
+        const data = await getTareaData(idTarea)
         setTitulo(data.nombreTarea)
         setDescripcion(data.textotarea);
         setResponsables(data.estudiantes);
