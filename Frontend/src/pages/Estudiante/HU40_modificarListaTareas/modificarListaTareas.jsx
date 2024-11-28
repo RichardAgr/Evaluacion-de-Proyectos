@@ -21,7 +21,6 @@ import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 
 export default function ModificarListaTareas() {
   const idEmpresa = localStorage.getItem("idEmpresa")
-  const idSprint = localStorage.getItem("idSprint")
   const idSemana = localStorage.getItem("idSemana")
   const [tasks, setTasks] = useState([]);
   const [tasksEliminadas, setTasksEliminadas] = useState([]);
@@ -45,9 +44,9 @@ export default function ModificarListaTareas() {
   const fetchTasks = async () => {
     try {
       const tareas = await getTareasSemana(idEmpresa, idSemana);
+      console.log(tareas)
       setNumSemana(tareas.numeroSemana);
       setTasks(tareas.tareas);
-      console.log(tareas)
       const fechasNuevas = {fechaIni: tareas.fechaIni, fechaFin: tareas.fechaFin}
       setFechas(fechasNuevas)
       const tareasV = tareas.tareas
