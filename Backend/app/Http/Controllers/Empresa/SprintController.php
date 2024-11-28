@@ -75,8 +75,9 @@ class SprintController extends Controller
     }   
     public function empresasSinSprintCalificado(): JsonResponse
     {
-        $empresas = Empresa::all();
-
+        $grupoController = new Grupo();
+        $response = $grupoController->obtenerEmpresasPorGrupoYDocente();
+        $empresas = $response->getData(true);
         $data = [];
         foreach ($empresas as $empresa) {
                 // Buscar la planificación asociada a cada empresa usando el idEmpresa del JSON
@@ -124,10 +125,13 @@ class SprintController extends Controller
 
     public function empresasSinSemanaCalificada(): JsonResponse
     {
-        $empresas = Empresa::all();
-
+        // Obtener todas las empresas usando el método del GrupoController
+        $grupoController = new Grupo();
+        $response = $grupoController->obtenerEmpresasPorGrupoYDocente();
+        $empresas = $response->getData(true); // Convertir la respuesta JSON a un arreglo asociativo
 
         $data = [];
+
         foreach ($empresas as $empresa) {
             // Obtener el número de estudiantes de la empresa
             $numEstudiantes = DB::table('estudiantesempresas')
@@ -139,9 +143,19 @@ class SprintController extends Controller
                 ->where('aceptada', true)
                 ->orderBy('fechaEntrega', 'desc')
                 ->first();
-            $empresaValida = false; // Marca para incluir la empresa si alguna semana no cumple la condición
+
             if ($planificacion) {
-                    $semanas = $planificacion->semanas()
+                // Obtener los sprints entre las fechas actuales
+                $sprints = $planificacion->sprints()
+                    ->where('fechaIni', '<=', now())
+                    ->where('fechaFin', '>=', now())
+                    ->get();
+
+                $empresaValida = false; // Marca para incluir la empresa si alguna semana no cumple la condición
+
+                foreach ($sprints as $sprint) {
+                    // Obtener las semanas dentro del sprint que cumplen las condiciones de fecha
+                    $semanas = $sprint->semanas()
                         ->where('fechaIni', '<=', now())
                         ->where('fechaFin', '>=', now())
                         ->get();
@@ -158,10 +172,17 @@ class SprintController extends Controller
                                 'idEmpresa' => $empresa['idEmpresa'], // Usar idEmpresa del JSON
                                 'nombreEmpresa' => $empresa['nombreEmpresa'],
                                 'nombreLargo' => $empresa['nombreLargo'],
+                                'numEstudiantes' => $numEstudiantes,
+                                'idPlanificacion' => $planificacion->idPlanificacion,
+                                'idSprint' => $sprint->idSprint,
+                                'numeroSprint' => $sprint->numeroSprint,
+                                'idSemana' => $semana->idSemana,
+                                'numeroSemana' => $semana->numeroSemana,
+                                'comentariosTareas' => $comentariosTareas,
                             ];
                             break 2; // Salir del loop de semanas y sprints
                         }
-                    
+                    }
                 }
 
                 // Si todas las semanas cumplen la condición, no agregar la empresa

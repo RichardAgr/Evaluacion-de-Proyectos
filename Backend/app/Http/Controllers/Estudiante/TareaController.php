@@ -195,6 +195,7 @@ class TareaController extends Controller
         // Validar la solicitud
         $validated = $request->validate([
             'numeroSemana' => 'required|integer',
+            'numeroSprint' => 'required|integer',
             'empresaID' => 'required|integer',
             'tareas' => 'required|array',
             'tareas.*.idTarea' => 'nullable|integer', // Permitir nulo para nuevas tareas
@@ -202,23 +203,39 @@ class TareaController extends Controller
             'tareas.*.textoTarea' => 'nullable|string',
             'tareas.*.fechaEntrega' => 'nullable|date',
         ]);
-
+    
         DB::beginTransaction();
-
+    
         try {
             // Verificar si la empresa existe
             $empresa = Empresa::find($validated['empresaID']);
             if (!$empresa) {
                 throw new \Exception('Empresa no encontrada.');
             }
-
+    
             // Insertar o actualizar en la tabla 'planificacion'
-            $planificacion = Planificacion::updateOrCreate(
-                ['idEmpresa' => $empresa->idEmpresa],
+            $planificacion = Planificacion::find($validated['empresaID']);
+    
+            // Insertar o actualizar en la tabla 'sprint'
+            $sprint = Sprint::updateOrCreate(
+                ['numeroSprint' => $validated['numeroSprint'], 'idPlanificacion' => $planificacion->idPlanificacion],
                 [
-                    'idEmpresa' => $empresa->idEmpresa
+                    'numeroSprint' => $validated['numeroSprint'],
+                    'fechaInicio' => now(), // Asignar fecha actual como ejemplo
+                    'fechaFin' => now()->addWeeks(2), // Ejemplo: 2 semanas después
                 ]
             );
+    
+            // Insertar o actualizar en la tabla 'semana'
+            $semana = Semana::updateOrCreate(
+                ['numeroSemana' => $validated['numeroSemana'], 'idPlanificacion' => $planificacion->idPlanificacion],
+                [
+                    'numeroSemana' => $validated['numeroSemana'],
+                    'fechaInicio' => now()->startOfWeek(),
+                    'fechaFin' => now()->endOfWeek(),
+                ]
+            );
+    
             // Insertar o actualizar en la tabla 'tarea'
             foreach ($validated['tareas'] as $tareaData) {
                 Tarea::updateOrCreate(
@@ -233,9 +250,9 @@ class TareaController extends Controller
                     ]
                 );
             }
-
+    
             DB::commit();
-
+    
             return response()->json(['message' => 'Datos insertados o actualizados exitosamente'], 201);
         } catch (\Exception $e) {
             DB::rollBack();
