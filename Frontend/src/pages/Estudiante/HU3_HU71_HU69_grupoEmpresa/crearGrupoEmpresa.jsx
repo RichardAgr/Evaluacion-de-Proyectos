@@ -27,7 +27,7 @@ const CrearGrupoEmpresa = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchEstudiante = async (idEstudiante) => {
+    const fetchEstudiante = async () => {
       try {
         const response = await fetch(
           `http://localhost:8000/api/estudiante/getDatosEst`,{
