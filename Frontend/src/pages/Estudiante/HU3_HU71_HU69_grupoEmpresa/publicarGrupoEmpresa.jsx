@@ -21,7 +21,7 @@ const PublicarGrupoEmpresa = () => {
     useEffect(() => {
         const fetchInformacion = async () => {
             try {
-                const response = await fetch(`http://localhost:8000/api/estudiante/getDatosEstEmpresa/${idEstudiante}`);
+                const response = await fetch(`http://localhost:8000/api/estudiante/getDatosEstEmpresa/${idEstudiante}`,{credentials: 'include'});
                 if (!response.ok) {
                     if (response.status === 404) {
                         setSnackbar({
@@ -91,6 +91,7 @@ const PublicarGrupoEmpresa = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                credentials: 'include'
             });
     
             if (!response.ok) {

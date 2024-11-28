@@ -7,6 +7,7 @@ export const getSprintSemanas = async (idSprint) => {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: 'include'
       }
     );
 
@@ -35,6 +36,7 @@ export const actualizarSprint = async (idSprint, comentario, nota) => {
           comentario,
           nota,
         }),
+        credentials: 'include'
       }
     );
 
@@ -59,6 +61,7 @@ export const getSprintSemanasTareas = async (idEmpresa) => {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: 'include'
       }
     );
 

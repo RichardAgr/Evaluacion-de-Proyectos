@@ -12,14 +12,14 @@ function CardResumen() {
         <Button variant="contained" color="primary" fullWidth onClick={() => navigate("/homeEstu/VerCalificacionesSprints")} >
             18_ VISUALIZAR NOTAS SPRINT
         </Button>
-        <Button variant="outlined" color="primary" fullWidth onClick={() => navigate("")} >
-            VISUALIZAR COMENTARIOS TAREAS SEMANA
+        <Button variant="outlined" color="primary" fullWidth onClick={() => navigate("/homeEstu/listaSprintsVerSeguimiento")} >
+            77_VISUALIZAR COMENTARIOS TAREAS SEMANA
         </Button>
-        <Button variant="contained" color="primary" fullWidth onClick={() => navigate("")} >
-            LISTA DE ESTUDIANTES
+        <Button variant="contained" color="primary" fullWidth onClick={() => navigate("/homeEstu/listaEstudiantesGrupo")} >
+           32_LISTA DE ESTUDIANTES
         </Button>
-        <Button variant="contained" color="primary" fullWidth onClick={() => navigate("")} >
-            LISTA DE GRUPO EMPRESAS
+        <Button variant="contained" color="primary" fullWidth onClick={() => navigate("/homeEstu/listaEmpresasGrupo")} >
+            31_LISTA DE GRUPO EMPRESAS
         </Button>
         </>}
     />

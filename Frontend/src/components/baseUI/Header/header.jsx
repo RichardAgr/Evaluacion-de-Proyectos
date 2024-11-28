@@ -22,6 +22,7 @@ function Header() {
               headers: {
                   'Authorization': true,
               },
+              credentials: 'include'
           });
           Cookies.remove('random', { path: '/' });
           Cookies.remove('laravel_sesion', { path: '/' });

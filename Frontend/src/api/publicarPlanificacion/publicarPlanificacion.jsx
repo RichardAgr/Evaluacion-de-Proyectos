@@ -8,6 +8,7 @@ export const publicarPlanificacion = async (idEmpresa) => {
       body: JSON.stringify({
         idEmpresa: idEmpresa,
       }),
+      credentials: 'include'
     });
   
     const data = await response.json();

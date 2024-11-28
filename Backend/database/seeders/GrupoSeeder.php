@@ -24,7 +24,7 @@ class GrupoSeeder extends Seeder
                 'fechaLimiteEntregaEmpresa' => '2024-08-05',
                 'fechaLimiteEntregaPlanificacion' => '2024-08-12',
                 'fechaFinPlanificacion' => '2024-12-20',
-                'fechaIniGestion' => '2024-12-30'
+                'fechaFinGestion' => '2024-12-30'
             ],
             [
                 'idGrupo' => 2,
@@ -37,7 +37,7 @@ class GrupoSeeder extends Seeder
                 'fechaLimiteEntregaEmpresa' => '2024-10-05',
                 'fechaLimiteEntregaPlanificacion' => '2024-10-12',
                 'fechaFinPlanificacion' => '2025-02-02',
-                'fechaIniGestion' => '2025-02-20',
+                'fechaFinGestion' => '2025-02-20',
             ],
             [
                 'idGrupo' => 3,
@@ -50,7 +50,7 @@ class GrupoSeeder extends Seeder
                 'fechaLimiteEntregaEmpresa' => '2024-12-05',
                 'fechaLimiteEntregaPlanificacion' => '2024-12-12',
                 'fechaFinPlanificacion' => '2025-03-02',
-                'fechaIniGestion' => '2025-03-20',
+                'fechaFinGestion' => '2025-03-20',
             ],
         ]);
     }

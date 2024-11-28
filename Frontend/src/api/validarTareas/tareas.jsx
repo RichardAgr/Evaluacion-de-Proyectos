@@ -5,6 +5,7 @@ export const getTareaData = async (idTarea) => {
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: 'include'
     });
 
     if (!response.ok) {
@@ -32,6 +33,7 @@ export const calificarTarea = async (idTarea, nota, comentario_docente) => {
           nota,
           comentario_docente,
         }),
+        credentials: 'include'
       }
     );
 
@@ -68,6 +70,7 @@ export const updateTarea = async (idTarea, formData) => {
       {
         method: "POST",
         body: data,
+        credentials: 'include'
       }
     );
 
@@ -91,6 +94,7 @@ export const getTareasSemana = async (idEmpresa, idSemana) => {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: 'include'
       }
     );
 
@@ -128,6 +132,7 @@ export const updateTareasSemana = async (
             fechaEntrega: task.fechaEntrega ?? null,
             deleted: task.deleted ?? false,
           })),
+          credentials: 'include'
         }),
       }
     );
