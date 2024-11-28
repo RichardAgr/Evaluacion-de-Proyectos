@@ -51,9 +51,7 @@ const CrearGrupoEmpresa = () => {
         setMensajeError("Error al cargar el estudiante.");
       }
     };
-    if (idEstudiante) {
-      fetchEstudiante(idEstudiante);
-    }
+    
   }, [idEstudiante]);
 
   const manejarSubmit = async () => {
