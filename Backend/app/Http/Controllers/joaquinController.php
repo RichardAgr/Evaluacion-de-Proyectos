@@ -311,12 +311,8 @@ class joaquinController extends Controller{
         
 
 
-    public function estaMatriculado(){
+    public function estaMatriculado($idEstudiante){
 
-        $idEstudiante = session('estudiante.id');
-        if (!$idEstudiante) {
-            return response()->json(['message' => 'No se ha encontrado al estudiante en la sesión.'], 400);
-        }
         $existeRelacion = EstudiantesGrupos::where('idEstudiante', $idEstudiante)->exists();
         return response()->json([
             'enGrupo' => $existeRelacion ? 1 : 0,
