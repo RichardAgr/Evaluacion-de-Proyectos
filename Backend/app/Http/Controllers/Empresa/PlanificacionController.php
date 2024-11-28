@@ -17,8 +17,16 @@ class PlanificacionController extends Controller
 {
     public function planificacionAceptadas(): JsonResponse
     {
+        $idDocente = session('docente.id');
         // Obtener todas las empresas
-        $empresas = Empresa::all();
+        $empresas = DB::table('empresa as emp')
+        ->join('estudiantesempresas as ee','ee.idEmpresa','emp.idEmpresa')
+        ->join('estudiante as e', 'e.idEstudiante','ee.idEstudiante')
+        ->join('estudiantesgrupos as eg','eg.idEstudiante', 'e.idEstudiante')
+        ->join('grupo as g', 'g.idGrupo','eg.idGrupo')
+        ->where('g.idDocente',$idDocente)
+        ->groupBy('emp.idEmpresa')
+        ->get();
 
         // Inicializar un array para almacenar los datos de planificación
         $data = [];

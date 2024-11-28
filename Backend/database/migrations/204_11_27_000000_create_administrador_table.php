@@ -16,11 +16,7 @@ class CreateAdministradorTable extends Migration
         Schema::create('administrador', function (Blueprint $table) {
             $table->id('idAdministrador');
             $table->string('nombreCuenta', 20)->unique()->nullable();
-            $table->string('nombreAdministrador', 20)->nullable();
-            $table->string('primeAdministrador', 20)->nullable();
-            $table->string('segundoAdministrador', 20)->nullable();
             $table->string('contrasena', 60)->nullable();
-            $table->tinyInteger('numerodefaltasest')->nullable();
             $table->string ('email',40)->nullable();
 
 
@@ -37,7 +33,7 @@ class CreateAdministradorTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('estudiante');
+        Schema::dropIfExists('administrador');
     }
 }
 
