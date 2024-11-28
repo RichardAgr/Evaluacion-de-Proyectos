@@ -121,6 +121,10 @@ Route::put('/planificacion/publicarPlanificacion', [PlanificacionController::cla
 // ---añade los comentarios y la nota
 Route::post('/planificacion/addRevision', [PlanificacionController::class, 'addRevision']);
 
+Route::post('/aceptarEntregables', [EntregablesController::class, 'aceptarEntregables']);
+
+
+
 
 // ==================================   POST ESTUDIANTE     =====================================
 // ---Ruta para crear una tarea
@@ -193,14 +197,14 @@ Route::get('/logout', [AuthController::class, 'logout']);
 
 // ============================  Funciones Joaquin  ====================================
 
-Route::get('estudiante/getDatosEst/{id}', [joaquinController::class, 'obtenerDatoEst']);
-Route::get('estudiante/getDatosEstEmpresa/{idEstudiante}', [joaquinController::class, 'obtenerIntegrantesPorEstudiante']);
-Route::get('estudiante/getDisponibles/{idEstudiante}',[joaquinController::class, 'obtenerEstudiantesSinEmpresa']);
+Route::get('estudiante/getDatosEst', [joaquinController::class, 'obtenerDatoEst']);
+Route::get('estudiante/getDatosEstEmpresa', [joaquinController::class, 'obtenerIntegrantesPorEstudiante']);
+Route::get('estudiante/getDisponibles',[joaquinController::class, 'obtenerEstudiantesSinEmpresa']);
 Route::post('/crearGrupoEmpresa/paso1',[joaquinController::class, 'crearEmpresa']);
 Route::put('/crearGrupoEmpresa/paso2/{idEmpresa}',[joaquinController::class, 'actualizarIntegrantes']);
 Route::post('/crearGrupoEmpresa/paso3/{idEstudiante}',[joaquinController::class, 'publicarEmpresaPorEstudiante']);
 
-Route::get('/estaMatriculado/{idEstudiante}',[joaquinController::class, 'estaMatriculado']);
+Route::get('/estaMatriculado',[joaquinController::class, 'estaMatriculado']);
 
 Route::get('prueba/notaSprintV2/{idEmpresa}/{semana}', [joaquinController::class, 'notaSprintV2']);
 

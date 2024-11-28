@@ -97,4 +97,31 @@ class EntregablesController extends Controller
         $response = $this->guardarEntregables($request);
         return $response;
     }
+
+    public function aceptarEntregables(Request $request)
+    {
+        $validated = $request->validate([
+            'entregables' => 'required|array',
+            'entregables.*.idEntregable' => 'required|integer', // Aseguramos que el ID sea obligatorio y entero
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            foreach ($validated['entregables'] as $entregable) {
+                Entregables::where('idEntregables', $entregable['idEntregable'])
+                    ->update(['aceptado' => true]); // Cambia 'aceptado' a true
+            }
+
+            DB::commit();
+            return response()->json(['message' => 'Entregables aceptados correctamente.'], 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'message' => 'Ocurrió un error al aceptar los entregables.',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
 }

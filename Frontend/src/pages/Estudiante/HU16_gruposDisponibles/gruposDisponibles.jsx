@@ -31,7 +31,7 @@ const getGruposDocentes = async () => {
 
 const estaMatriculado = async (idEstudiante) => {
   try {
-    const response = await fetch(`http://127.0.0.1:8000/api/estaMatriculado/${idEstudiante}`, {
+    const response = await fetch(`http://127.0.0.1:8000/api/estaMatriculado`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
