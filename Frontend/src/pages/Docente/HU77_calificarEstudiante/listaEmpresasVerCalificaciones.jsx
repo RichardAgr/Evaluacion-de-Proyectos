@@ -36,9 +36,7 @@ function ListaEmpresasEvaluacionSemanal() {
             errorDetails: error.message,
             });
         } else{
-            const [lista] = await responseData
-            setListaEmpresas(lista);
-            console.log(lista);
+            setListaEmpresas(responseData);
         }
         
         setLoading(false);

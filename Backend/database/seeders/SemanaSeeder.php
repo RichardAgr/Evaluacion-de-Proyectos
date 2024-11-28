@@ -11,7 +11,9 @@ class SemanaSeeder extends Seeder
 {
     public function run()
     {
-        $planificaciones = DB::table('planificacion')->get(); // Consulta correctamente con DB
+        $planificaciones = DB::table('planificacion')
+            ->whereIn('idPlanificacion', [1, 2, 3])
+            ->get();
 
         foreach ($planificaciones as $planificacion) {
             // Definir las fechas de inicio y fin
