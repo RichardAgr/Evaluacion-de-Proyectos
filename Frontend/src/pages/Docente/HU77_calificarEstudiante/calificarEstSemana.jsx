@@ -76,7 +76,7 @@ const SeguimientoSemanal = () => {
         titulo="RECUPERAR RESULTADOS DE SEGUIMIENTO SEMANAL PREVIO"
         ocultarAtras={false}
         confirmarAtras={false}
-        dirBack={idEstudiante===undefined?`/homeDocente/listaEmpresaVerCalificacionesSemanal/empresaSprints`:`/homeEstu/listaSprintsVerSeguimiento`}
+        dirBack={idEstudiante===null?`/homeDocente/listaEmpresaVerCalificacionesSemanal/empresaSprints`:`/homeEstu/listaSprintsVerSeguimiento`}
         loading={loading}
         error={{error:error}}
       >

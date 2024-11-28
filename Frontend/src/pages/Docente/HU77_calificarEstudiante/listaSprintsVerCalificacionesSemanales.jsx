@@ -20,6 +20,7 @@ function SeguimientoSemanalSprints () {
         autoHide: 6000,
     });
     useEffect(() => {
+        console.log(idEstudiante)
         const fetchSprintsData = async () => {
             setLoading(true)
           try {
@@ -37,11 +38,11 @@ function SeguimientoSemanalSprints () {
     }, []); 
     const navigateSemana=(idSemana)=>{
         localStorage.setItem("idSemana", idSemana)
-        navigate(idEstudiante===undefined?
-                    `/homeDocente/listaEmpresaVerCalificacionesSemanal/empresaSprints/semana`
-                    :
-                    `/homeEstu/listaSprintsVerSeguimiento/verSeguimientoSemanal`
-                )
+        if(idEstudiante===null){
+            navigate(`/homeDocente/listaEmpresaVerCalificacionesSemanal/empresaSprints/semana`)
+        }else{
+            navigate(`/homeEstu/listaSprintsVerSeguimiento/verSeguimientoSemanal`)
+        }
     }
 
     if(semanas?.length === 0) return (
@@ -49,7 +50,7 @@ function SeguimientoSemanalSprints () {
                 titulo={'SELECCIONE UNA SEMANA PARA RECUPERAR RESULTADOS DE EL SEGUIMIENTO SEMANAL'}
                 ocultarAtras={false}
                 confirmarAtras={false}
-                dirBack={idEstudiante===undefined?`/homeDocente/listaEmpresaVerCalificacionesSemanal`:'/homeEstu'}
+                dirBack={idEstudiante===null?`/homeDocente/listaEmpresaVerCalificacionesSemanal`:'/homeEstu'}
                 loading={loading}
                 error={error}
         >
@@ -65,7 +66,7 @@ function SeguimientoSemanalSprints () {
                 titulo={'SELECCIONE UNA SEMANA PARA RECUPERAR RESULTADOS DE EL SEGUIMIENTO SEMANAL'}
                 ocultarAtras={false}
                 confirmarAtras={false}
-                dirBack={idEstudiante===undefined?`/homeDocente/listaEmpresaVerCalificacionesSemanal`:'/homeEstu'}
+                dirBack={idEstudiante===null?`/homeDocente/listaEmpresaVerCalificacionesSemanal`:'/homeEstu'}
                 loading={loading}
                 error={error}
             >
