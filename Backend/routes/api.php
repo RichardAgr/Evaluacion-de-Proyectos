@@ -2,7 +2,6 @@
 /*
 esto es un prueba de subir al git 2
 */
-
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Estudiante\TareaController;
 use App\Http\Controllers\Docente\GrupoController;
@@ -19,6 +18,7 @@ use App\Http\Controllers\ComentarioTareaController;
 use App\Http\Controllers\joaquinController;
 use App\Http\Controllers\Estudiante\SesionEstudianteController;
 use App\Http\Controllers\Docente\SesionDocenteController;
+use App\Http\Controllers\Administrador\AdministradorController;
 
 //============================= GET EMPRESA ================================
 
@@ -175,14 +175,11 @@ Route::post('/sprint/{idSprint}/actualizar', [SprintController::class, 'actualiz
 // ============================      SESIONES DOCENTE     ======================================
 
 Route::get('/session/active/docente', [AuthController::class, 'isSessionActiveDocente']);
-Route::get('/session/logeado/docente/{idDoc}', [AuthController::class, 'loginConIdDocente']);
-Route::get('/session/logout/docente/{idDoc}', [AuthController::class, 'logoutDocente']);
 Route::get('/docente/getGrupo', [SesionDocenteController::class, 'getGrupoSesion']);
 
 // ============================      SESIONES ESTUDIANTE  ====================================
 
 Route::get('/session/active/estudiante', [AuthController::class, 'isSessionActiveEstudiante']);
-Route::post('/session/logout/estudiante', [AuthController::class, 'logoutEstudiante']);
 Route::get('/estudiante/getEmpresa', [SesionEstudianteController::class, 'getEmpresaSesion']);
 Route::get('/estudiante/getDataEstudiante', [SesionEstudianteController::class, 'getDataEstudiante']);
 Route::get('/estudiante/getGrupo', [SesionEstudianteController::class, 'getGrupoSesion']);
@@ -192,6 +189,9 @@ Route::get('/estudiante/getGrupo', [SesionEstudianteController::class, 'getGrupo
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/logout', [AuthController::class, 'logout']);
 
+Route::get('/session/active/admin', [AuthController::class, 'isSessionActiveAdmin']);
+Route::post('/crearCuentaEstudiante', [AdministradorController::class, 'crearEstudiante']);
+Route::post('/crearCuentaDocente', [AdministradorController::class, 'crearDocente']);
 
 
 

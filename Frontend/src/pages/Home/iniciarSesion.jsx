@@ -1,172 +1,222 @@
 import {
-    Container,
-    Box,
-    Typography,
-    TextField,
-    Button,
-    Paper,
-    Divider,
-  } from "@mui/material";
-  import { Formik, Field, Form } from "formik";
-  import * as Yup from "yup";
-  import myImage from '../../assets/img/inicio.jpg';
-  import CryptoJS from 'crypto-js';
-  import Cookies from 'js-cookie';
-  
-  function IniciarSesion() {
+  Container,
+  Box,
+  Typography,
+  TextField,
+  Button,
+  Paper,
+  Divider,
+  Snackbar,
+  Alert,
+} from "@mui/material";
+import { Formik, Field, Form } from "formik";
+import * as Yup from "yup";
+import myImage from "../../assets/img/inicio.jpg";
+import CryptoJS from "crypto-js";
+import Cookies from "js-cookie";
+import React, { useState } from "react";
 
-    const login = async (nombreCuenta, contrasena) => {
-        console.log(nombreCuenta)
-        console.log(contrasena)
-      try {
-        const response = await fetch('http://localhost:8000/api/login', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-             nombreCuenta: nombreCuenta,
-             contrasena: contrasena
-            }
-            ),
-            credentials: 'include',
-        });
-  
-        if (!response.ok) {
-          throw new Error('Error en el inicio de sesión');
-        }
-  
-        const data = await response.json();
-        const sessionCookie = Cookies.get('laravel_session');
-        console.log(sessionCookie)
-        const ENCRYPTION_KEY = 'mi_clave_super_segura';
-        const encryp = CryptoJS.AES.encrypt(data.role, ENCRYPTION_KEY).toString();
-        Cookies.set('random', encryp, {
-          path: '/',
-          secure: true,
-          sameSite: 'strict'
-        });
-        window.location.reload();
-      } catch (error) {
-        console.error('Error en el inicio de sesión:', error);
+function IniciarSesion() {
+  // Estado para manejar el Snackbar
+  const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "error" });
+
+  // Manejar cierre del Snackbar
+  const handleCloseSnackbar = () => {
+    setSnackbar({ ...snackbar, open: false });
+  };
+
+  const login = async (nombreCuenta, contrasena) => {
+    try {
+      const response = await fetch("http://localhost:8000/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          nombreCuenta: nombreCuenta,
+          contrasena: contrasena,
+        }),
+        credentials: "include",
+      });
+
+      if (!response.ok) {
+        throw new Error("Error en el inicio de sesión");
       }
-    };
-  
-    const validationSchema = Yup.object({
-      nombreCuenta: Yup.string().required('El nombre de la cuenta es obligatorio'),
-      contrasena: Yup.string().required('La contraseña es obligatoria'),
-    });
 
-  
-    return (
-      <Container
+      const data = await response.json();
+      const sessionCookie = Cookies.get("laravel_session");
+      const ENCRYPTION_KEY = "mi_clave_super_segura";
+      const encryp = CryptoJS.AES.encrypt(data.role, ENCRYPTION_KEY).toString();
+
+      Cookies.set("random", encryp, {
+        path: "/",
+        secure: true,
+        sameSite: "strict",
+      });
+      window.location.reload();
+    } catch (error) {
+      // Muestra el Snackbar con el mensaje de error
+      setSnackbar({
+        open: true,
+        message: "Error al iniciar sesión. Verifica tus credenciales.",
+        severity: "error",
+      });
+      console.error("Error en el inicio de sesión:", error);
+    }
+  };
+
+  const validationSchema = Yup.object({
+    nombreCuenta: Yup.string().required("El nombre de la cuenta es obligatorio"),
+    contrasena: Yup.string().required("La contraseña es obligatoria"),
+  });
+
+  return (
+    <Container
+      sx={{
+        margin: "0",
+        display: "flex",
+        minHeight: "100vh",
+        minWidth: "100VW",
+        alignItems: "center",
+        justifyContent: "center",
+        background: "#114093;",
+      }}
+    >
+      <Paper
+        elevation={3}
         sx={{
-          margin: '0',
           display: "flex",
-          minHeight: "100vh",
-          minWidth: '100VW',
-          alignItems: "center",
-          justifyContent: "center",
-          background: '#114093;'
+          width: "calc(50vw + 10rem)",
+          maxWidth: "100vw",
+          borderRadius: "12px",
+          overflow: "hidden",
+          minHeight: "60vh",
+          flexWrap: "wrap",
         }}
       >
-        <Paper
-          elevation={3}
+        <Box
           sx={{
+            flex: 1,
+            backgroundImage: `url(${myImage})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+            color: "#fff",
+            padding: "40px",
             display: "flex",
-            width: "calc(50vw + 10rem)",
-            maxWidth: "100vw",
-            borderRadius: "12px",
-            overflow: "hidden",
-            minHeight: "60vh",
-            flexWrap: 'wrap'
+            flexDirection: "column",
+            alignItems: "center",
+            border: "solid white 1rem",
+            borderRadius: "1.5rem",
           }}
         >
-          <Box
+          <Typography variant="h3" sx={{ fontWeight: "bold" }}>
+            WEB TIS
+          </Typography>
+        </Box>
+
+        {/* Sección del Formulario */}
+        <Box
+          sx={{
+            flex: 1,
+            padding: "2.8rem",
+            paddingTop: { xs: "0", sm: "1rem", md: "2.8rem" },
+          }}
+        >
+          <Typography
+            variant="h4"
+            gutterBottom
             sx={{
-              flex: 1,
-              backgroundImage: `url(${myImage})`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-              backgroundRepeat: "no-repeat",
-              color: "#fff",
-              padding: "40px",
-              display: "flex",
-              flexDirection: "column",
-              alignItems:'center',
-              border: 'solid white 1rem',
-              borderRadius: '1.5rem',
+              marginTop: { xs: "0", sm: "1rem", md: "2rem" },
+              marginBottom: { xs: "0", sm: "1rem", md: "2.rem" },
+              fontWeight: "bold",
             }}
           >
-            <Typography variant="h3" sx={{ fontWeight: "bold"}}>
-              WEB TIS
-            </Typography>
-          </Box>
-  
-          {/* Sección del Formulario */}
-          <Box sx={{ flex: 1, padding: "2.8rem", paddingTop:{xs:'0',sm: '1rem' ,md:'2.8rem'} }}>
-            <Typography variant="h4" gutterBottom sx={{ marginTop:{xs:'0',sm: '1rem', md:'2rem'}, marginBottom:{xs:'0', sm: '1rem',md:'2.rem'}, fontWeight: 'bold' }}>
-              BIENVENIDO
-            </Typography>
-            <Divider sx={{ marginBottom: "20px" }} />
-  
-            <Formik
-              initialValues={{ nombreCuenta: "", contrasena: "" }}
-              validationSchema={validationSchema}
-              onSubmit={(values) => login(values.nombreCuenta, values.contrasena)}
-            >
-              {({ touched, errors, handleChange, handleBlur, values }) => (
-                <Form>
-                  <Typography sx={{ fontWeight: 'medium' }}>Nombre de la cuenta</Typography>
-                  <Field
-                    name="nombreCuenta"
-                    placeholder="Nombre de la cuenta"
-                    variant="outlined"
-                    fullWidth
-                    as={TextField}
-                    sx={{ marginBottom: "20px" }}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={values.nombreCuenta}
-                    error={touched.nombreCuenta && Boolean(errors.nombreCuenta)}
-                    helperText={touched.nombreCuenta && errors.nombreCuenta ? errors.nombreCuenta : " "} // Espacio en blanco para evitar cambios de tamaño
-                  />
-  
-                  <Typography sx={{ fontWeight: 'medium' }}>Contraseña</Typography>
-                  <Field
-                    name="contrasena"
-                    placeholder="Contraseña"
-                    type="password"
-                    variant="outlined"
-                    fullWidth
-                    as={TextField}
-                    sx={{ marginBottom: "20px" }}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={values.contrasena}
-                    error={touched.contrasena && Boolean(errors.contrasena)}
-                    helperText={touched.contrasena && errors.contrasena ? errors.contrasena : " "} // Espacio en blanco para evitar cambios de tamaño
-                  />
-  
-                  <Typography variant="body2" color="primary" sx={{ cursor: "pointer", marginBottom: "20px" }}>
-                    olvidaste tu contraseña?
-                  </Typography>
-  
-                  <Button type="submit" variant="contained" color="primary" fullWidth>
-                    Iniciar Sesion
-                  </Button>
-                </Form>
-              )}
-            </Formik>
-  
-            <Typography variant="body2" align="center" sx={{ marginTop: "20px" }}>
-              No tienes cuenta? <span style={{ color: "blue", cursor: "pointer" }}>Crear Cuenta</span>
-            </Typography>
-          </Box>
-        </Paper>
-      </Container>
-    );
-  }
-  
-  export default IniciarSesion;
-  
+            BIENVENIDO
+          </Typography>
+          <Divider sx={{ marginBottom: "20px" }} />
+
+          <Formik
+            initialValues={{ nombreCuenta: "", contrasena: "" }}
+            validationSchema={validationSchema}
+            onSubmit={(values) => login(values.nombreCuenta, values.contrasena)}
+          >
+            {({ touched, errors, handleChange, handleBlur, values }) => (
+              <Form>
+                <Typography sx={{ fontWeight: "medium" }}>Nombre de la cuenta</Typography>
+                <Field
+                  name="nombreCuenta"
+                  placeholder="Nombre de la cuenta"
+                  variant="outlined"
+                  fullWidth
+                  as={TextField}
+                  sx={{ marginBottom: "20px" }}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.nombreCuenta}
+                  error={touched.nombreCuenta && Boolean(errors.nombreCuenta)}
+                  helperText={
+                    touched.nombreCuenta && errors.nombreCuenta
+                      ? errors.nombreCuenta
+                      : " "
+                  }
+                />
+
+                <Typography sx={{ fontWeight: "medium" }}>Contraseña</Typography>
+                <Field
+                  name="contrasena"
+                  placeholder="Contraseña"
+                  type="password"
+                  variant="outlined"
+                  fullWidth
+                  as={TextField}
+                  sx={{ marginBottom: "20px" }}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.contrasena}
+                  error={touched.contrasena && Boolean(errors.contrasena)}
+                  helperText={
+                    touched.contrasena && errors.contrasena
+                      ? errors.contrasena
+                      : " "
+                  }
+                />
+
+                <Typography
+                  variant="body2"
+                  color="primary"
+                  sx={{ cursor: "pointer", marginBottom: "20px" }}
+                >
+                  olvidaste tu contraseña?
+                </Typography>
+
+                <Button type="submit" variant="contained" color="primary" fullWidth>
+                  Iniciar Sesion
+                </Button>
+              </Form>
+            )}
+          </Formik>
+
+          <Typography variant="body2" align="center" sx={{ marginTop: "20px" }}>
+            No tienes cuenta?{" "}
+            <span style={{ color: "blue", cursor: "pointer" }}>Crear Cuenta</span>
+          </Typography>
+        </Box>
+      </Paper>
+
+      {/* Snackbar para mostrar mensajes */}
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert onClose={handleCloseSnackbar} severity={snackbar.severity}>
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
+    </Container>
+  );
+}
+
+export default IniciarSesion;

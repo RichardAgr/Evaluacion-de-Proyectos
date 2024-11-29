@@ -7,26 +7,18 @@ use App\Models\Docente;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Administrador;
 
 class AuthController extends Controller
 {
     public function login(Request $request)
     {
         $credentials = $request->only('nombreCuenta', 'contrasena');
-
-        // Primero, intentamos encontrar al usuario como estudiante
         $userE = Estudiante::where('nombreCuenta', $credentials['nombreCuenta'])->first();
-
-        // También comprobamos si es un docente
         $userD = Docente::where('nombreCuenta', $credentials['nombreCuenta'])->first();
-
-        // Si encontramos un estudiante
+        $userA = Administrador::where('nombreCuenta', $credentials['nombreCuenta'])->first();
         if ($userE) {
-            // Verificamos la contraseña del estudiante
             if (Hash::check($credentials['contrasena'], $userE->contrasena)) {
-                // Autenticación exitosa
-                // Aquí no necesitamos llamar a session()->start() explícitamente, Laravel lo maneja automáticamente
-                
                 // Almacenamos los datos del estudiante en la sesión manualmente
                 session()->put('estudiante', [
                     'id' => $userE->idEstudiante,
@@ -35,19 +27,15 @@ class AuthController extends Controller
                     'segundoApellido' => $userE->segundoApellido,
                     'role' => 'estudiante'
                 ]);
-                
-                // Aquí simplemente retornamos la respuesta con el usuario en la sesión
                 return response()->json([
                     'mensaje' => 'Login exitoso',
                     'usuario' => session('estudiante'), // Esto accede a los datos almacenados en la sesión
                     'role' => 'estudiante'
                 ]);
             } else {
-                // Contraseña incorrecta
-                return response()->json(['error' => 'Credenciales incorrectas'], 401);
+                return response()->json(['error' => 'Credenciales incorrectas E'], 401);
             }
         } elseif ($userD) {
-            // Si es un docente, verificamos la contraseña de la misma manera
             if (Hash::check($credentials['contrasena'], $userD->contrasena)) {
                 // Autenticación exitosa para docente
                 session()->put('docente', [
@@ -63,27 +51,31 @@ class AuthController extends Controller
                     'usuario' => session('docente'),
                     'role' => 'docente'
                 ]);
-            } else {
-                // Contraseña incorrecta
-                return response()->json(['error' => 'Credenciales incorrectas'], 401);
+            }else{
+                return response()->json(['error' => 'Credenciales incorrectas D'], 401);
             }
-        } else {
-            // Usuario no encontrado
-            return response()->json(['error' => 'Usuario no encontrado'], 404);
-        }
+        
+        } elseif($userA) {
+                if (Hash::check($credentials['contrasena'], $userA->contrasena)) {
+                    session()->put('administrador', [
+                        'id' => $userA->idAdministrador,
+                        'role' => 'administrador'
+                    ]);
+    
+                    return response()->json([
+                        'mensaje' => 'Login exitoso',
+                        'usuario' => session('administrador'),
+                        'role' => 'administrador'
+                    ]);
+            }else{
+                return response()->json(['error' => 'Credenciales incorrectas A'], 401);
+            }
+        
+        }else{
+                return response()->json(['error' => 'Usuario no encontrado'], 401);
+            }
 
     }   
-    public function logoutEstudiante()
-    {   
-        session()->forget('estudiante');
-        // Eliminar la sesión
-        if(!session()->has('estudiante')){
-            return response()->json(['mensaje' => 'Sesión cerrada'], 200);
-    }else{
-        return response()->json(['mensaje' => 'Error cerrada'],404);
-    }
-        }
-
     public function isSessionActiveEstudiante()
     {
         if (session()->has('estudiante')) {
@@ -93,16 +85,6 @@ class AuthController extends Controller
         }
         
     }
-    public function logoutDocente($idDoc)
-    {   
-        session()->forget('docente');
-        // Eliminar la sesión
-        if(!session()->has('docente')){
-            return response()->json(['mensaje' => 'Sesión cerrada'], 200);
-    }else{
-        return response()->json(['mensaje' => 'Error cerrada'],404);
-    }
-        }
 
     public function isSessionActiveDocente()
     {
@@ -111,7 +93,16 @@ class AuthController extends Controller
         } else {
             return response()->json(['mensaje' => 'No hay sesión activa'], 401);
         }
-    }   
+    }  
+    
+    public function isSessionActiveAdmin()
+    {
+        if (session()->has('administrador')) {
+            return response()->json(['mensaje' => 'Sesión activa' , 'admin' => session('administrador')], 200);
+        } else {
+            return response()->json(['mensaje' => 'No hay sesión activa'], 401);
+        }
+    }  
 
     public function logout(){
         if(session()->has('estudiante')){
@@ -120,6 +111,9 @@ class AuthController extends Controller
         }else if(session()->has('docente')){
             session()->forget('docente');
             return response()->json(['mensaje' => 'Sesión Docente cerrada'], 200);
+        }else if(session()->has('administrador')){
+            session()->forget('administrador');
+            return response()->json(['mensaje' => 'Sesión administrador cerrada'], 200);
         }
     }
 }
