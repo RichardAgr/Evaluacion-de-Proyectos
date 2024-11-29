@@ -10,10 +10,15 @@ import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import Cookies from 'js-cookie';
+import HamburgesaDocente from '../../Hamburgesa/hamburgesaDocente';
 function Header() {
   const [auth] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [grupo] = React.useState(true);
+  const [open, setOpen] = React.useState(false);
+  const toggleDrawer = (open) => {
+    setOpen(open);
+  };
   
   const logout = async () => {
       try {
@@ -50,6 +55,7 @@ function Header() {
               edge="start"
               color="inherit"
               aria-label="menu"
+              onClick={() => toggleDrawer(true)}
               sx={{ mr: 2 }}
             >
               <MenuIcon />
@@ -99,6 +105,7 @@ function Header() {
           ) : null}
         </Toolbar>
       </AppBar>
+      <HamburgesaDocente open={open} toggleDrawer={toggleDrawer} />
     </Box>
   );
 }
