@@ -1,13 +1,12 @@
-import Nav from './routes/nav';
-import NavDocente from './routes/navDocente';
-import NavEstudiante from './routes/navEstudiante';
+import Nav from './routes/nav'
+import NavDocente from './routes/navDocente'
+import NavEstudiante from './routes/navEstudiante'
 import CryptoJS from 'crypto-js';
 import Cookies from 'js-cookie';
-import './App.css';
+import './App.css'
 
 function App() {
   const userRole = Cookies.get('random');
-
   function decrypt(encryptedValue) {
     const ENCRYPTION_KEY = 'mi_clave_super_segura';
     try {
@@ -22,8 +21,6 @@ function App() {
 
   if (userRole) {
     const decryptedRole = decrypt(userRole);
-
-    // Validar el rol del usuario
     if (decryptedRole === 'docente') {
       return <NavDocente />;
     }
@@ -31,8 +28,6 @@ function App() {
       return <NavEstudiante />;
     }
   }
-
-  // Redirigir a la pantalla de inicio de sesión si no hay rol válido
   return <Nav />;
 }
 
