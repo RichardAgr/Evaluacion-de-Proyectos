@@ -1,7 +1,7 @@
 import Nav from './routes/nav';
 import NavDocente from './routes/navDocente';
 import NavEstudiante from './routes/navEstudiante';
-import NavAdministrador from './routes/navAdministrador'; // Nuevo componente para administrador
+//import NavAdministrador from './routes/navAdministrador'; // Nuevo componente para administrador
 import CryptoJS from 'crypto-js';
 import Cookies from 'js-cookie';
 import './App.css';
