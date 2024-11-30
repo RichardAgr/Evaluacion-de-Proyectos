@@ -31,7 +31,7 @@ class SesionEstudianteController extends Controller
         // Obtener la empresa asociada al estudiante
         $empresa = $estudiante->empresas()->first();  // Usamos la relación de Estudiante con Empresas
         $idEmpresa = $empresa ? $empresa->idEmpresa : -1;
-        $empresaPublicada = $empresa ? $empresa->publicada : -1;
+        $empresaPublicada = $empresa ? $empresa->publicada : 0;
     
         // Obtener el grupo asociado al estudiante
         $grupo = $estudiante->grupos()->first();  // Usamos la relación de Estudiante con Grupos
@@ -41,13 +41,13 @@ class SesionEstudianteController extends Controller
         $fechaLimiteEntregaPlanificacion = $grupo ? $grupo->fechaLimiteEntregaPlanificacion : '1';
         $fechaFinPlanificacion = $grupo ? $grupo->fechaFinPlanificacion : '1';
         $fechaFinGestion = $grupo ? $grupo->fechaFinGestion : '1';
-        $gestion = $grupo? trim("Gestion: {$grupo->gestionGrupo}, Grupo:{$grupo->numGrupo}"): '';
+        $gestion = $grupo? trim("Gestion: {$grupo->gestionGrupo}, Grupo:{$grupo->numGrupo}"): 'No Tiene grupo';
 
         // Obtener la planificación aceptada y publicada a través de la empresa asociada
         $planificacion = Planificacion::where('idEmpresa', $idEmpresa)->first();
         $idPlanificacion = $planificacion ? $planificacion->idPlanificacion : -1;
-        $aceptada = $planificacion ? $planificacion->aceptada : -1;
-        $publicada = $planificacion ? $planificacion->publicada : -1;
+        $aceptada = $planificacion ? $planificacion->aceptada : 0;
+        $publicada = $planificacion ? $planificacion->publicada : 0;
     
         // Validar sprint si hay planificación aceptada
         $idSprint = -1;

@@ -62,9 +62,7 @@ function HomeEstudiante() {
     }
     getOrigin()
   },[])
-  const nombreCompleto = localStorage.getItem("nombreCompleto")
-  const aceptada =localStorage.getItem("aceptada");
-  const empresaPublicada = localStorage.getItem("empresaPublicada")
+
   if (!isLoaded) {
     return (
       <>
@@ -74,16 +72,19 @@ function HomeEstudiante() {
       </>
     )
   }
+  const nombreCompleto = localStorage.getItem("nombreCompleto")
+  const aceptada = Number(localStorage.getItem("aceptada"));
+  const empresaPublicada = Number(localStorage.getItem("empresaPublicada"));
   return (
     <Fragment>
       <Header />
       <Title variant="h5" sx={{marginTop:'5rem', textAlign:'center'}}>Bienvenid@, {nombreCompleto}</Title>
       <Title variant="h6" sx={{textAlign:'center'}}>{localStorage.getItem('gestion')}</Title>
       <Container>
-        {aceptada&&<CardProgreso></CardProgreso>}
+        {(aceptada!==0)&&<CardProgreso></CardProgreso>} 
         <CardGrupoEmpresa></CardGrupoEmpresa>        
         {empresaPublicada&&<CardPlanificacion></CardPlanificacion>}
-        {aceptada&&<CardTareas></CardTareas>}
+        {(aceptada!==0)&&<CardTareas></CardTareas>}
         <CardEvaluacion></CardEvaluacion>
         <CardListas></CardListas>
       </Container>

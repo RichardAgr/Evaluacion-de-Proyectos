@@ -11,11 +11,11 @@ function CardResumen() {
         info = {<>
         </>}
         buttons={<> 
-        {!paso && <Button variant="contained" color="primary" fullWidth
+        {!paso?<Button variant="contained" color="primary" fullWidth
           onClick={()=>navigate("/homeEstu/modificarListaTareas")}
         >
             40_MODIFICAR LISTA SEMANAL DE TAREAS
-        </Button>}
+        </Button>:<></>}
         <Button 
           variant="outlined" 
           color="primary" 
@@ -24,11 +24,11 @@ function CardResumen() {
         >
             38_VISUALIZAR TAREAS
         </Button>
-        {!paso&&<Button variant="contained" color="primary" fullWidth
+        {!paso?<Button variant="contained" color="primary" fullWidth
           onClick={()=>navigate("/homeEstu/listaTareas")}
         >
             08_MODIFICAR TAREAS
-        </Button>}
+        </Button>:<></>}
         <Button variant="outlined" color="primary" fullWidth onClick={() => navigate("/homeEstu/listaSprintsVerSeguimiento")} >
             77_VISUALIZAR COMENTARIOS TAREAS SEMANA
         </Button>

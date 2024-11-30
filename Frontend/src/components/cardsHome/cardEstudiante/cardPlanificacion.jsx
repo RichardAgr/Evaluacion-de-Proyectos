@@ -1,7 +1,7 @@
 import { Button} from "@mui/material";
 import CardGeneral from '../cardGeneral'
 function CardResumen() {
-  const aceptada =localStorage.getItem("aceptada");
+  const aceptada =Number(localStorage.getItem("aceptada"));
   const fechaLimiteEntregaPlani = new Date(localStorage.getItem("fechaLimiteEntregaPlanificacion"))
   const paso = fechaLimiteEntregaPlani > new Date()
   return (
@@ -9,15 +9,15 @@ function CardResumen() {
         titulo = "Planificacion"
         info = {<></>}
         buttons={<> 
-        {!aceptada&&paso&&<Button variant="contained" color="primary" fullWidth>
+        {(!aceptada&&paso)?<Button variant="contained" color="primary" fullWidth>
           CREAR PLANIFICACION
-        </Button>}
+        </Button>:<></>}
         <Button variant="outlined" color="primary" fullWidth>
           VIZUALIZAR PLANIFICACIONES
         </Button>
-        {!aceptada&&paso&&<Button variant="contained" color="primary" fullWidth>
+        {(!aceptada&&paso)?<Button variant="contained" color="primary" fullWidth>
             PUBLICAR PLANIFICACION
-        </Button>}
+        </Button>:<></>}
         </>}
     />
   );
