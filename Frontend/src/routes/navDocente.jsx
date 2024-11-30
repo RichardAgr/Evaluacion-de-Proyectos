@@ -25,7 +25,7 @@ import VisualizarSprintEst from "../pages/Docente/HU38_tareaEstudiante/visualiza
 import VerEvaluacionSemanalSprints from '../pages/Docente/HU77_calificarEstudiante/listaSprintsVerCalificacionesSemanales.jsx'
 import VerEvaluacionSemanalListaEmpresas from '../pages/Docente/HU77_calificarEstudiante/listaEmpresasVerCalificaciones.jsx'
 import RedirigirHome from '../pages/Docente/homeGrupoDocente/redirigirHome.jsx';
-function Nav() {
+function NavDocente() {
   return (
     <Routes>
 
@@ -155,4 +155,4 @@ function Nav() {
   );
 }
 
-export default Nav;
+export default NavDocente;

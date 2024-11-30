@@ -1,6 +1,7 @@
 import Nav from './routes/nav'
 import NavDocente from './routes/navDocente'
 import NavEstudiante from './routes/navEstudiante'
+import NavAdmin from './routes/navAdmin'
 import CryptoJS from 'crypto-js';
 import Cookies from 'js-cookie';
 import './App.css'
@@ -26,6 +27,9 @@ function App() {
     }
     if (decryptedRole === 'estudiante') {
       return <NavEstudiante />;
+    }
+    if (decryptedRole === 'administrador') {
+      return <NavAdmin />;
     }
   }
   return <Nav />;
