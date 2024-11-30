@@ -19,7 +19,7 @@ import ListaEmpresas from '../pages/Docente/HU31_listaEmpresas/listaEmpresaPorDo
 import ListaSprintsVerSeguimiento from '../pages/Docente/HU77_calificarEstudiante/listaSprintsVerCalificacionesSemanales.jsx'
 import VerSeguimientoSemanal from '../pages/Docente/HU77_calificarEstudiante/calificarEstSemana.jsx'
 
-function Nav() {
+function NavEstudiante() {
     return (
       <Routes>
         <Route
@@ -100,4 +100,4 @@ function Nav() {
     );
   }
   
-  export default Nav;
+  export default NavEstudiante;
