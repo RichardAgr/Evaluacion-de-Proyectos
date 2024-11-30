@@ -202,16 +202,33 @@ class joaquinController extends Controller{
     
     public function obtenerEstudiantesSinEmpresa($idEstudiante)
     {
-        // Obtener estudiantes que no están asociados a ninguna empresa, excluyendo al estudiante con el ID proporcionado
-        $resultado = Estudiante::select('estudiante.idEstudiante', 'nombreEstudiante', 'primerApellido', 'segundoApellido')
-            ->leftJoin('estudiantesempresas AS ee', 'ee.idEstudiante', '=', 'estudiante.idEstudiante')
-            ->whereNull('ee.idEmpresa') // Asegura que no haya una relación con ninguna empresa
-            ->where('estudiante.idEstudiante', '<>', $idEstudiante) // Excluye al estudiante con el id proporcionado
+        // Obtener el grupo al que pertenece el estudiante proporcionado
+        $grupo = EstudiantesGrupos::where('idEstudiante', $idEstudiante)
+            ->select('idGrupo')
+            ->first();
+    
+        if (!$grupo) {
+            return response()->json(['error' => 'El estudiante no pertenece a ningún grupo.'], 404);
+        }
+    
+        // Obtener estudiantes que no están asociados a ninguna empresa y pertenecen al mismo grupo
+        $resultado = EstudiantesGrupos::select(
+                'estudiante.idEstudiante',
+                'estudiante.nombreEstudiante',
+                'estudiante.primerApellido',
+                'estudiante.segundoApellido'
+            )
+            ->join('estudiante', 'estudiantesgrupos.idEstudiante', '=', 'estudiante.idEstudiante') // Relación con la tabla de estudiantes
+            ->leftJoin('estudiantesempresas AS ee', 'ee.idEstudiante', '=', 'estudiante.idEstudiante') // Relación con empresas
+            ->where('estudiantesgrupos.idGrupo', $grupo->idGrupo) // Filtrar por el mismo grupo
+            ->whereNull('ee.idEmpresa') // Asegurar que no tienen empresa
+            ->where('estudiante.idEstudiante', '<>', $idEstudiante) // Excluir al estudiante proporcionado
             ->orderBy('estudiante.nombreEstudiante')
             ->get();
-
+    
         return response()->json($resultado, 200);
     }
+    
 
 
 
