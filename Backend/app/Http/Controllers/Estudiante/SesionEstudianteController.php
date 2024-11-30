@@ -31,11 +31,18 @@ class SesionEstudianteController extends Controller
         // Obtener la empresa asociada al estudiante
         $empresa = $estudiante->empresas()->first();  // Usamos la relación de Estudiante con Empresas
         $idEmpresa = $empresa ? $empresa->idEmpresa : -1;
+        $empresaPublicada = $empresa ? $empresa->publicada : -1;
     
         // Obtener el grupo asociado al estudiante
         $grupo = $estudiante->grupos()->first();  // Usamos la relación de Estudiante con Grupos
         $idGrupo = $grupo ? $grupo->idGrupo : -1;
-    
+        $fechaIniGestion = $grupo ? $grupo->fechaIniGestion : '1';
+        $fechaLimiteEntregaEmpresa = $grupo ? $grupo->fechaLimiteEntregaEmpresa : '1';
+        $fechaLimiteEntregaPlanificacion = $grupo ? $grupo->fechaLimiteEntregaPlanificacion : '1';
+        $fechaFinPlanificacion = $grupo ? $grupo->fechaFinPlanificacion : '1';
+        $fechaFinGestion = $grupo ? $grupo->fechaFinGestion : '1';
+        $gestion = $grupo? trim("Gestion: {$grupo->gestionGrupo}, Grupo:{$grupo->numGrupo}"): '';
+
         // Obtener la planificación aceptada y publicada a través de la empresa asociada
         $planificacion = Planificacion::where('idEmpresa', $idEmpresa)->first();
         $idPlanificacion = $planificacion ? $planificacion->idPlanificacion : -1;
@@ -57,6 +64,7 @@ class SesionEstudianteController extends Controller
         $semana = Semana::where('idPlanificacion', $idPlanificacion)
                         ->whereDate('fechaIni', '<=', $now)
                         ->whereDate('fechaFin', '>=', $now)
+                        ->where('idPlanificacion', $idPlanificacion)
                         ->first();
         if ($semana) {
             $idSemana = $semana->idSemana;
@@ -66,12 +74,19 @@ class SesionEstudianteController extends Controller
             "idEstudiante" => $idEstudiante,
             'nombreCompleto' => $nombreCompleto,
             'idEmpresa' => $idEmpresa,
+            'empresaPublicada' =>$empresaPublicada,
             'idPlanificacion' => $idPlanificacion,
             'aceptada' => $aceptada,
             'publicada' => $publicada,
             'idSprint' => $idSprint,
             'idSemana' => $idSemana,
-            'idGrupo' => $idGrupo
+            'idGrupo' => $idGrupo,    
+            'fechaIniGestion' => $fechaIniGestion,
+            'fechaLimiteEntregaEmpresa' => $fechaLimiteEntregaEmpresa,
+            'fechaLimiteEntregaPlanificacion' => $fechaLimiteEntregaPlanificacion,
+            'fechaFinPlanificacion' => $fechaFinPlanificacion,
+            'fechaFinGestion' => $fechaFinGestion,
+            'gestion' => $gestion
         ], 200);
     }
     

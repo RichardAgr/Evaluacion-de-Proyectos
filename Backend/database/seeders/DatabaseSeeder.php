@@ -57,5 +57,7 @@ class DatabaseSeeder extends Seeder
 
         // * Poblar clase ComentarioTareaSeeder
         $this->call(ComentarioTareaSeeder::class);
+
+        $this->call(AdministradorSeeder::class);
     }
 }

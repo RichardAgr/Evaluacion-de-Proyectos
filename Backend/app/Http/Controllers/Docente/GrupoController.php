@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Grupo;
 use App\Http\Controllers\Controller;
 use function Laravel\Prompts\select;
+use App\Http\Controllers\Docente\SesionDocenteController as SesionDocente;
+
 
 class GrupoController extends Controller
 {
@@ -34,25 +36,38 @@ class GrupoController extends Controller
 
     public function obtenerEstudiantesPorGrupo(Request $request)
     {
-        //
-        $idGrupo = $request->input('idGrupo');
+        $sesiondocente = new SesionDocente();
+        $idDocente = session('docente.id');
+        if (!$idDocente) {
+            return response()->json(['message' => 'No se ha encontrado al docente en la sesión.'], 400);
+        }
+    
+        $response = $sesiondocente->getGrupoSesion();
+        $idGrupo = $response->getData()->idGrupo;
+        //$gestionGrupo = $request->input('gestionGrupo');
         // Consulta para obtener todos los estudiantes y el docente del grupo
-        $datosGrupo = DB::table('estudiantesgrupos')
-            ->join('grupo', 'estudiantesgrupos.idGrupo', '=', 'grupo.idGrupo')
-            ->join('estudiante', 'estudiantesgrupos.idEstudiante', '=', 'estudiante.idEstudiante')
-            ->join('docente', 'grupo.idDocente', '=', 'docente.idDocente')
-            ->leftjoin('estudiantesempresas AS ee', 'estudiantesgrupos.idEstudiante', '=', 'ee.idEstudiante')
+        $datosGrupo = DB::table('estudiantesgrupos as eg')
+            ->join('grupo as g', 'eg.idGrupo', '=', 'g.idGrupo')
+            ->join('estudiante as e', 'eg.idEstudiante', '=', 'e.idEstudiante')
+            ->join('docente as d', 'g.idDocente', '=', 'd.idDocente')
+            ->leftjoin('estudiantesempresas AS ee', 'eg.idEstudiante', '=', 'ee.idEstudiante')
             ->leftjoin('empresa AS emp', 'ee.idEmpresa', '=', 'emp.idEmpresa')
-            ->where('grupo.idGrupo',"=",   $idGrupo)
+            ->where('g.idGrupo',"=",   $idGrupo)
+            //->where('grupo.gestionGrupo',$gestionGrupo) REEMPLAZAMOS
+            ->whereRaw('CURDATE() >= g.fechaIniGestion') // Usamos whereRaw para CURDATE()
+            ->whereRaw('CURDATE() <= g.fechaFinGestion') // Usamos whereRaw para CURDATE()
             ->select(
-                'grupo.numGrupo',
-                'estudiante.idEstudiante as id',
-                'estudiante.nombreEstudiante as nombreEstudiante',
-                'estudiante.primerApellido as apellidoPaternoEstudiante',
-                'estudiante.segundoApellido as apellidoMaternoEstudiante',
+                'g.numGrupo',
+                'e.idEstudiante as id',
+                'e.nombreEstudiante as nombreEstudiante',
+                'e.primerApellido as apellidoPaternoEstudiante',
+                'e.segundoApellido as apellidoMaternoEstudiante',
                 'emp.nombreEmpresa'
+                /*'docente.nombreDocente as nombreDocente', 
+                'docente.primerApellido as apellidoPaternoDocente', 
+                'docente.segundoApellido as apellidoMaternoDocente'*/
             )
-            ->orderBy('estudiante.nombreEstudiante')
+            ->orderBy('e.nombreEstudiante')
             ->get();
 
     // Si no se encuentran resultados
@@ -66,15 +81,13 @@ class GrupoController extends Controller
 
 public function obtenerEmpresasPorGrupoYDocente()
     {
-        // $idDocente = session()->get('docente.id');
-        // Ejecutar la consulta
         $resultados = DB::table('estudiantesgrupos AS eg')
             ->join('grupo AS g', 'eg.idGrupo', '=', 'g.idGrupo')
             ->join('docente AS d', 'g.idDocente', '=', 'd.idDocente')
             ->join('estudiantesempresas AS ee', 'eg.idEstudiante', '=', 'ee.idEstudiante')
             ->join('empresa AS emp', 'ee.idEmpresa', '=', 'emp.idEmpresa')
             ->join('estudiante AS e', 'eg.idEstudiante', '=', 'e.idEstudiante')
-            ->select('emp.idEmpresa','emp.nombreEmpresa', 'emp.nombreLargo', 'emp.idEmpresa as id', 'g.gestionGrupo', DB::raw('count(eg.idEstudiante) as totalEstudiantes'), 'g.numGrupo')
+            ->select('emp.idEmpresa as id','emp.nombreEmpresa', 'emp.nombreLargo', 'g.gestionGrupo', DB::raw('count(eg.idEstudiante) as totalEstudiantes'), 'g.numGrupo')
             ->where('d.idDocente', session('docente.id'))
             // ->where('g.idGrupo', $request->idGrupo)
             //->where('g.gestionGrupo', $request->gestionGrupo)

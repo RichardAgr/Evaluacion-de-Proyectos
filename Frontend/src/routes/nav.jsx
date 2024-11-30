@@ -5,10 +5,14 @@ import VisualizarSprint from "../pages/VisualizacionCompartida/HU37_visualizarSp
 import ModificarPlanificacion from "../pages/Estudiante/HU4_editarPlanificacion/editarPlanificacion.jsx";
 import PublicarPlanificacion from "../pages/Estudiante/publicarPlanificacion/publicarPlanificacion.jsx";
 import IniciarSesion from "../pages/Home/iniciarSesion.jsx";
+import CrearCuentaDocente from '../pages/Home/crearCuentaDocente.jsx';
+import CrearCuentaEstudiante from '../pages/Home/crearCuentaEstudiante.jsx';
 
 function Nav() {
   return (
     <Routes>
+      <Route path="/crearCuentaEstudiante" element={<CrearCuentaEstudiante />} />
+      <Route path="/crearCuentaDocente" element={<CrearCuentaDocente />} />
       {/** Ruta compartidas*/}
       <Route path="/" element={<IniciarSesion />} />
 
