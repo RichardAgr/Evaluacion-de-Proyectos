@@ -12,6 +12,7 @@ import Cookies from 'js-cookie';
 import { useState, lazy, Suspense } from 'react';
 import { decrypt } from '../../../api/decrypt';
 const HamburgesaDocente = lazy(() => import('../../Hamburgesa/hamburgesaDocente'));
+const HamburgesaEstudiante = lazy(() => import('../../Hamburgesa/hamburgesaEstudiante'));
 
 function Header() {
   const [auth] = useState(true);
@@ -111,8 +112,10 @@ function Header() {
       <Suspense >
         {role==='docente'?
           <HamburgesaDocente open={open} toggleDrawer={toggleDrawer} />
+          :role==='estudiante'?
+          <HamburgesaEstudiante open={open} toggleDrawer={toggleDrawer} />
           :
-          <HamburgesaDocente open={open} toggleDrawer={toggleDrawer} />
+          <></>
         }
       </Suspense>
     </Box>
