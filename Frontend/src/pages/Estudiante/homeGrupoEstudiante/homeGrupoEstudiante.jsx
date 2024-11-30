@@ -12,7 +12,7 @@ import CardTareas from '../../../components/cardsHome/cardEstudiante/cardTareas.
 import { useNavigate} from "react-router-dom";
 import Loading from '../../../components/loading/loading.jsx' 
 function HomeEstudiante() {
-  const [isLoaded, setIsLoaded] = useState(true);
+  const [isLoaded, setIsLoaded] = useState(false);
   const navigate =useNavigate()
   useEffect(()=>{
     const getOrigin = async() =>{
@@ -54,11 +54,11 @@ function HomeEstudiante() {
             localStorage.setItem("fechaFinPlanificacion", response.fechaFinPlanificacion);//fechafinplani hasta aqui terminan todos los sprints
             localStorage.setItem("fechaFinGestion", response.fechaFinGestion);//fecha fin gestion  
           }
+          setIsLoaded(true);
         })
         .catch((error) => {
           console.log("Fetch error: ", error);
         });
-        setIsLoaded(true);
     }
     getOrigin()
   },[])
