@@ -27,6 +27,7 @@ function Home() {
             console.log(response)
             localStorage.setItem('idGrupo', response.idGrupo)
             localStorage.setItem('nombreCompleto', response.nombreCompleto)
+            localStorage.setItem('gestion', response.gestion)
 
             localStorage.setItem("fechaIniGestion", response.fechaIniGestion);//desde aqui pueden crear empresas pero nada mas
             localStorage.setItem("fechaLimiteEntregaEmpresa", response.fechaLimiteEntregaEmpresa);//hasta esta fecha que entrega de empresas y fecha ini de entrega de plani
@@ -47,6 +48,7 @@ function Home() {
     <Fragment>
       <Header />
       <Title variant="h5" sx={{marginTop:'5rem', textAlign:'center'}}>Bienvenid@, Ing. {localStorage.getItem('nombreCompleto')}</Title>
+      <Title variant="h6" sx={{textAlign:'center'}}>{localStorage.getItem('gestion')}</Title>
       <Container>
         <CardResumen></CardResumen>
         <CardPlanificacion></CardPlanificacion>

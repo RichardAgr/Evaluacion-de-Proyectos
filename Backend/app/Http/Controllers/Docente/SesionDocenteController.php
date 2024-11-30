@@ -21,7 +21,8 @@ class SesionDocenteController extends Controller
                 ->whereRaw('CURDATE() >= g.fechaIniGestion')
                 ->whereRaw('CURDATE() <= g.fechaFinGestion')
                 ->select('g.idGrupo', 'g.fechaIniGestion', 'g.fechaLimiteEntregaEmpresa', 
-                         'g.fechaLimiteEntregaPlanificacion', 'g.fechaFinPlanificacion', 'g.fechaFinGestion') 
+                         'g.fechaLimiteEntregaPlanificacion', 'g.fechaFinPlanificacion', 
+                         'g.fechaFinGestion', 'g.gestionGrupo', 'g.numGrupo') 
                 ->first();
     
             if ($grupo) {
@@ -46,7 +47,8 @@ class SesionDocenteController extends Controller
                     'fechaFinGestion' => $grupo->fechaFinGestion,
                     'nombreCompleto' => $nombreCompleto,
                     'numEstudiantes' => $numEstudiantes,
-                    'numEmpresas' => $numEmpresas
+                    'numEmpresas' => $numEmpresas,
+                    'gestion' => trim("Gestión: {$grupo->gestionGrupo}, Grupo: {$grupo->numGrupo}")
                 ], 200);
             } else {
                 return response()->json(['idGrupo' => '-1'], 200);

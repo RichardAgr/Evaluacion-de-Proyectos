@@ -43,6 +43,7 @@ function HomeEstudiante() {
             localStorage.setItem("idSprint", response.idSprint);
             localStorage.setItem("idSemana", response.idSemana);
             localStorage.setItem("idGrupo", response.idGrupo);
+            localStorage.setItem('gestion', response.gestion);
             
             localStorage.setItem("empresaPublicada", response.empresaPublicada);
             localStorage.setItem("fechaIniGestion", response.fechaIniGestion);//desde aqui pueden crear empresas pero nada mas
@@ -66,6 +67,7 @@ function HomeEstudiante() {
     <Fragment>
       <Header />
       <Title variant="h5" sx={{marginTop:'5rem', textAlign:'center'}}>Bienvenid@, {nombreCompleto}</Title>
+      <Title variant="h6" sx={{textAlign:'center'}}>{localStorage.getItem('gestion')}</Title>
       <Container>
         {aceptada&&<CardProgreso></CardProgreso>}
         <CardGrupoEmpresa></CardGrupoEmpresa>        

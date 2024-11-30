@@ -41,6 +41,8 @@ class SesionEstudianteController extends Controller
         $fechaLimiteEntregaPlanificacion = $grupo ? $grupo->fechaLimiteEntregaPlanificacion : '1';
         $fechaFinPlanificacion = $grupo ? $grupo->fechaFinPlanificacion : '1';
         $fechaFinGestion = $grupo ? $grupo->fechaFinGestion : '1';
+        $gestion = $grupo? trim("Gestion: {$grupo->gestionGrupo}, Grupo:{$grupo->numGrupo}"): '';
+
         // Obtener la planificación aceptada y publicada a través de la empresa asociada
         $planificacion = Planificacion::where('idEmpresa', $idEmpresa)->first();
         $idPlanificacion = $planificacion ? $planificacion->idPlanificacion : -1;
@@ -83,7 +85,8 @@ class SesionEstudianteController extends Controller
             'fechaLimiteEntregaEmpresa' => $fechaLimiteEntregaEmpresa,
             'fechaLimiteEntregaPlanificacion' => $fechaLimiteEntregaPlanificacion,
             'fechaFinPlanificacion' => $fechaFinPlanificacion,
-            'fechaFinGestion' => $fechaFinGestion
+            'fechaFinGestion' => $fechaFinGestion,
+            'gestion' => $gestion
         ], 200);
     }
     
