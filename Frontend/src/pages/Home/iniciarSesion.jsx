@@ -7,15 +7,23 @@ import {
     Paper,
     Divider,
   } from "@mui/material";
-  import { Formik, Field, Form } from "formik";
-  import * as Yup from "yup";
-  import myImage from '../../assets/img/inicio.jpg';
-  import CryptoJS from 'crypto-js';
-  import Cookies from 'js-cookie';
-  
+import { Formik, Field, Form } from "formik";
+import * as Yup from "yup";
+import myImage from '../../assets/img/inicio.jpg';
+import CryptoJS from 'crypto-js';
+import Cookies from 'js-cookie';
+import { useNavigate} from "react-router-dom";
+import InfoSnackbar from '../../components/infoSnackbar/infoSnackbar'
+import { useState } from "react";
   function IniciarSesion() {
-
+    const navigate = useNavigate();
+    const [snackbar, setSnackbar] = useState({
+      open: false,
+      message: "",
+      severity: "info",
+    });
     const login = async (nombreCuenta, contrasena) => {
+      
         console.log(nombreCuenta)
         console.log(contrasena)
       try {
@@ -33,9 +41,13 @@ import {
         });
   
         if (!response.ok) {
+          setSnackbar({
+            open: true,
+            message: "La contraseña o el nombreCuenta es incorrecto",
+            severity: "info",
+          });
           throw new Error('Error en el inicio de sesión');
         }
-  
         const data = await response.json();
         const sessionCookie = Cookies.get('laravel_session');
         console.log(sessionCookie)
@@ -158,12 +170,17 @@ import {
                 </Form>
               )}
             </Formik>
-  
             <Typography variant="body2" align="center" sx={{ marginTop: "20px" }}>
-              No tienes cuenta? <span style={{ color: "blue", cursor: "pointer" }}>Crear Cuenta</span>
+              No tienes cuenta? <Button onClick={()=>navigate(`/crearCuentaEstudiante`)} style={{ color: "blue", cursor: "pointer", fontWeight:'600'}}>Crear Cuenta</Button>
             </Typography>
           </Box>
         </Paper>
+        <InfoSnackbar
+            openSnackbar={snackbar.open}
+            setOpenSnackbar={(open) => setSnackbar({ ...snackbar, open })}
+            message={snackbar.message}
+            severity={snackbar.severity}
+          />
       </Container>
     );
   }

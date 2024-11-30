@@ -7,11 +7,13 @@ import {
   Box,
   Grid,
   Container,
-  Divider
+  Divider,
+  IconButton
 } from "@mui/material";
 import { Formik, Field, Form } from "formik";
 import * as Yup from "yup";
-
+import { useNavigate } from "react-router-dom";
+import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
 const validationSchema = Yup.object({
   nombre: Yup.string()
     .trim()
@@ -43,7 +45,7 @@ const CrearCuentaEstudiante = () => {
     console.log("Formulario enviado:", values);
     alert("Formulario enviado con éxito");
   };
-
+  const navigate = useNavigate()
   return (
     <Box
       sx={{
@@ -52,17 +54,27 @@ const CrearCuentaEstudiante = () => {
         justifyContent: "center",
         minHeight: "100vh",
         background: "#114093",
-        padding: 2,
       }}
     >
-      <Container maxWidth="sm" sx={{ maxWidth: "200px" }}>
+      <Box
+        sx={{
+          display: { xs: 'none', sm: 'flex' }, // Oculta en pantallas xs y muestra en sm en adelante
+          alignContent: 'center',
+        }}
+      >
+        <IconButton color="white" onClick={() => navigate('/')}>
+          <ArrowCircleLeftIcon sx={{color:'white'}} fontSize='large'>
+          </ArrowCircleLeftIcon>
+        </IconButton>
+      </Box>        
         <Box
           sx={{
             backgroundColor: "#fff",
-            padding: 6,
+            padding: 'calc(1vw + 2rem)',
             borderRadius: 3,
             boxShadow: 4,
             textAlign: "center",
+            maxWidth:'calc(20vw + 10rem)'
           }}
         >
           <Typography
@@ -256,7 +268,7 @@ const CrearCuentaEstudiante = () => {
                       color: "primary.main",
                       cursor: "pointer",
                     }}
-                    onClick={() => alert("Redirigir al inicio de sesión")}
+                    onClick={() => navigate('/')}
                   >
                     Inicia Sesión
                   </Typography>
@@ -265,7 +277,6 @@ const CrearCuentaEstudiante = () => {
             )}
           </Formik>
         </Box>
-      </Container>
     </Box>
   );
 };
