@@ -14,8 +14,6 @@ function Home() {
   const [isLoaded, setIsLoaded] = useState(false);
   useEffect(() => {
     const getOriginDocente = async () => {
-      const idGrupo = localStorage.getItem('idGrupo');
-      if (!idGrupo) {
         const url = "http://localhost:8000/api/docente/getGrupo";
         const bodyFetch = {
           method: "GET",
@@ -27,11 +25,11 @@ function Home() {
 
         try {
           const res = await fetch(url, bodyFetch);
-          const response = await res.json();  
+          const response = await res.json();
+          console.log(response)  
           localStorage.setItem('idGrupo', response.idGrupo);
           localStorage.setItem('nombreCompleto', response.nombreCompleto);
           localStorage.setItem('gestion', response.gestion);
-          
           localStorage.setItem("fechaIniGestion", response.fechaIniGestion);
           localStorage.setItem("fechaLimiteEntregaEmpresa", response.fechaLimiteEntregaEmpresa);
           localStorage.setItem("fechaLimiteEntregaPlanificacion", response.fechaLimiteEntregaPlanificacion);
@@ -39,11 +37,11 @@ function Home() {
           localStorage.setItem("fechaFinGestion", response.fechaFinGestion);
           localStorage.setItem('numEstudiantes', response.numEstudiantes);
           localStorage.setItem('numEmpresas', response.numEmpresas);
+          setIsLoaded(true);
         } catch (error) {
           console.error("Error:", error);
         }
-      }
-      setIsLoaded(true);
+      
     };
 
     getOriginDocente();
