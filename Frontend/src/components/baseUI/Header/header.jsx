@@ -1,4 +1,3 @@
-import * as React from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -10,12 +9,15 @@ import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import Cookies from 'js-cookie';
-import HamburgesaDocente from '../../Hamburgesa/hamburgesaDocente';
+import { useState, lazy, Suspense } from 'react';
+import { decrypt } from '../../../api/decrypt';
+const HamburgesaDocente = lazy(() => import('../../Hamburgesa/hamburgesaDocente'));
+
 function Header() {
-  const [auth] = React.useState(true);
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [grupo] = React.useState(true);
-  const [open, setOpen] = React.useState(false);
+  const [auth] = useState(true);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [grupo] = useState(true);
+  const [open, setOpen] = useState(false);
   const toggleDrawer = (open) => {
     setOpen(open);
   };
@@ -44,7 +46,8 @@ function Header() {
   const handleClose = () => {
     setAnchorEl(null);
   };
-
+  const random = Cookies.get('random');
+  const role = decrypt(random);
   return (
     <Box >
       <AppBar position="fixed">
@@ -105,7 +108,13 @@ function Header() {
           ) : null}
         </Toolbar>
       </AppBar>
-      <HamburgesaDocente open={open} toggleDrawer={toggleDrawer} />
+      <Suspense >
+        {role==='docente'?
+          <HamburgesaDocente open={open} toggleDrawer={toggleDrawer} />
+          :
+          <HamburgesaDocente open={open} toggleDrawer={toggleDrawer} />
+        }
+      </Suspense>
     </Box>
   );
 }

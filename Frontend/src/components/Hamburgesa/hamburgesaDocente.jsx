@@ -1,7 +1,4 @@
-
-import * as React from 'react';
 import { Drawer, Box, Typography, List, ListItem, ListItemText, ListItemIcon } from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import PeopleIcon from '@mui/icons-material/People';
@@ -9,6 +6,7 @@ import GroupIcon from '@mui/icons-material/Group';
 import StarIcon from '@mui/icons-material/Star';
 import ReportIcon from '@mui/icons-material/Report';
 
+// eslint-disable-next-line react/prop-types
 function HamburgesaDocente({ open, toggleDrawer }) {
   return (
     <Drawer
@@ -18,7 +16,7 @@ function HamburgesaDocente({ open, toggleDrawer }) {
     >
       <Box sx={{ width: 250 }}>
 
-        <Typography variant="h6" sx={{ padding: '16px', backgroundColor: '#1976d2', color: 'white' }}>
+        <Typography variant="h6" sx={{ padding: '16px', backgroundColor: '#114093', color: 'white' }}>
           Herramientas
         </Typography>
 
