@@ -16,7 +16,7 @@ class AuthController extends Controller
         $credentials = $request->only('nombreCuenta', 'contrasena');
         $userE = Estudiante::where('nombreCuenta', $credentials['nombreCuenta'])->first();
         $userD = Docente::where('nombreCuenta', $credentials['nombreCuenta'])->first();
-        $userA = Administrador::where('nombreCuenta', $credentials['nombreCuenta'])->first();
+       
         if ($userE) {
             if (Hash::check($credentials['contrasena'], $userE->contrasena)) {
                 // Almacenamos los datos del estudiante en la sesión manualmente
@@ -55,27 +55,33 @@ class AuthController extends Controller
                 return response()->json(['error' => 'Credenciales incorrectas D'], 401);
             }
         
-        } elseif($userA) {
-                if (Hash::check($credentials['contrasena'], $userA->contrasena)) {
-                    session()->put('administrador', [
-                        'id' => $userA->idAdministrador,
-                        'role' => 'administrador'
-                    ]);
-    
-                    return response()->json([
-                        'mensaje' => 'Login exitoso',
-                        'usuario' => session('administrador'),
-                        'role' => 'administrador'
-                    ]);
-            }else{
-                return response()->json(['error' => 'Credenciales incorrectas A'], 401);
-            }
-        
-        }else{
+        }
+        else{
                 return response()->json(['error' => 'Usuario no encontrado'], 401);
             }
 
-    }   
+    }
+    
+    public function loginAdmin(Request $request){
+        $credentials = $request->only('nombreCuenta', 'contrasena');
+
+        $userA = Administrador::where('nombreCuenta', $credentials['nombreCuenta'])->first();
+        if($userA) {
+            if (Hash::check($credentials['contrasena'], $userA->contrasena)) {
+                session()->put('administrador', [
+                    'id' => $userA->idAdministrador,
+                    'role' => 'administrador'
+                ]);
+
+                return response()->json([
+                    'mensaje' => 'Login exitoso',
+                    'usuario' => session('administrador'),
+                    'role' => 'administrador'
+                ]);
+            }}else{
+                return response()->json(['error' => 'Usuario no encontrado'], 401);
+            }
+    }
     public function isSessionActiveEstudiante()
     {
         if (session()->has('estudiante')) {
