@@ -5,6 +5,8 @@ import SchoolIcon from "@mui/icons-material/School";
 import GroupIcon from "@mui/icons-material/Group";
 import { useNavigate } from "react-router-dom";
 function CardResumen() {
+  const numEstudiantes = localStorage.getItem('numEstudiantes')
+  const numEmpresas = localStorage.getItem('numEmpresas')
   const navigate = useNavigate();
   return (
     <CardGeneral
@@ -13,12 +15,12 @@ function CardResumen() {
         <Box sx={{display:'flex'}}>    
                 <SchoolIcon style={{ marginRight: "0.5rem" }} />
                 <IconText>Estudiantes Inscritos</IconText>
-                <Typography>25</Typography>
+                <Typography>{numEstudiantes}</Typography>
         </Box>
         <Box sx={{display:'flex'}} >
             <GroupIcon style={{ marginRight: "0.5rem" }} />
             <IconText>Grupo Empresas</IconText>
-            <Typography>5</Typography>
+            <Typography>{numEmpresas}</Typography>
         </Box>
         </>}
         buttons={<> 

@@ -26,6 +26,15 @@ function Home() {
           res.json().then((response)=>{
             console.log(response)
             localStorage.setItem('idGrupo', response.idGrupo)
+            localStorage.setItem('nombreCompleto', response.nombreCompleto)
+
+            localStorage.setItem("fechaIniGestion", response.fechaIniGestion);//desde aqui pueden crear empresas pero nada mas
+            localStorage.setItem("fechaLimiteEntregaEmpresa", response.fechaLimiteEntregaEmpresa);//hasta esta fecha que entrega de empresas y fecha ini de entrega de plani
+            localStorage.setItem("fechaLimiteEntregaPlanificacion", response.fechaLimiteEntregaPlanificacion);//fecha limite de entrega plani, y ini de los sprint
+            localStorage.setItem("fechaFinPlanificacion", response.fechaFinPlanificacion);//fechafinplani hasta aqui terminan todos los sprints
+            localStorage.setItem("fechaFinGestion", response.fechaFinGestion);//fecha fin gestion  
+            localStorage.setItem('numEstudiantes', response.numEstudiantes)
+            localStorage.setItem('numEmpresas', response.numEmpresas)
           })
         })
         .catch((error) => {
@@ -33,11 +42,11 @@ function Home() {
         })
     }
     getOriginDocente()
-  },[])
+  },[]) 
   return (
     <Fragment>
       <Header />
-      <Title variant="h5" sx={{marginTop:'5rem', textAlign:'center'}}>Bienvenid@, Ing. Blanco Coca Leticia</Title>
+      <Title variant="h5" sx={{marginTop:'5rem', textAlign:'center'}}>Bienvenid@, Ing. {localStorage.getItem('nombreCompleto')}</Title>
       <Container>
         <CardResumen></CardResumen>
         <CardPlanificacion></CardPlanificacion>

@@ -3,16 +3,31 @@ import CardGeneral from '../cardGeneral'
 import { useNavigate } from "react-router-dom";
 function CardResumen() {
   const navigate = useNavigate();
+  const fechaLimiteEntregaPlani = new Date(localStorage.getItem("fechaLimiteEntregaPlanificacion"))
+  const paso = fechaLimiteEntregaPlani < new Date()
   return (
     <CardGeneral
         titulo = "Lista y Datos"
         info = {<>
         </>}
         buttons={<>
-        <Button variant="outlined" color="primary" fullWidth onClick={() => navigate("/homeDocente/listaEmpresaCalificaciones")}>
+        {!paso&&<p>Se habilitara cuando pase la fecha de entrega planificacion: {fechaLimiteEntregaPlani.toLocaleDateString()}</p>}
+        <Button 
+          variant="outlined" 
+          color="primary" 
+          fullWidth 
+          onClick={() => navigate("/homeDocente/listaEmpresaCalificaciones")}
+          disabled={!paso}
+        >
             18_RECUPERAR CALIFICACIONES SPRINTS PREVIOS
         </Button>
-        <Button variant="contained" color="primary" fullWidth onClick={() => navigate("/homeDocente/listaEmpresaVerCalificacionesSemanal")}>
+        <Button 
+          variant="contained" 
+          color="primary" 
+          fullWidth 
+          onClick={() => navigate("/homeDocente/listaEmpresaVerCalificacionesSemanal")}
+          disabled={!paso}
+        >
             77_RECUPERAR SEGUIMIENTO SEMANALES PREVIOS
         </Button>
         </>}
