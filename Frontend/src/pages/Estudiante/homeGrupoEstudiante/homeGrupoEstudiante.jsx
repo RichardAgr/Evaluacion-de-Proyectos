@@ -2,15 +2,17 @@ import Footer from "../../../components/baseUI/Footer/footer.jsx";
 import Header from "../../../components/baseUI/Header/header.jsx";
 import { styled } from "@mui/material/styles";
 import { Box, Typography} from "@mui/material";
-import { Fragment, useEffect} from "react";
+import { Fragment, useEffect, useState} from "react";
 import CardProgreso from '../../../components/cardsHome/cardEstudiante/cardProgreso.jsx'
 import CardPlanificacion from '../../../components/cardsHome/cardEstudiante/cardPlanificacion.jsx'
 import CardListas from '../../../components/cardsHome/cardEstudiante/cardListas.jsx'
 import CardGrupoEmpresa from '../../../components/cardsHome/cardEstudiante/cardGrupoEmpresa.jsx'
 import CardEvaluacion from '../../../components/cardsHome/cardEstudiante/cardEvaluacion.jsx'
 import CardTareas from '../../../components/cardsHome/cardEstudiante/cardTareas.jsx'
-import { useNavigate } from "react-router-dom";
+import { useNavigate} from "react-router-dom";
+import Loading from '../../../components/loading/loading.jsx' 
 function HomeEstudiante() {
+  const [isLoaded, setIsLoaded] = useState(true);
   const navigate =useNavigate()
   useEffect(()=>{
     const getOrigin = async() =>{
@@ -56,13 +58,22 @@ function HomeEstudiante() {
         .catch((error) => {
           console.log("Fetch error: ", error);
         });
-
+        setIsLoaded(true);
     }
     getOrigin()
   },[])
   const nombreCompleto = localStorage.getItem("nombreCompleto")
   const aceptada =localStorage.getItem("aceptada");
   const empresaPublicada = localStorage.getItem("empresaPublicada")
+  if (!isLoaded) {
+    return (
+      <>
+        <Header />
+        <Loading></Loading>
+        <Footer />
+      </>
+    )
+  }
   return (
     <Fragment>
       <Header />
