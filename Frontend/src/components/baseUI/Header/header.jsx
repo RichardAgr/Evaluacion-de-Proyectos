@@ -11,7 +11,7 @@ import Menu from '@mui/material/Menu';
 import Cookies from 'js-cookie';
 import { useState, lazy, Suspense } from 'react';
 import { decrypt } from '../../../api/decrypt';
-const HamburgesaDocente = lazy(() => import('../../Hamburgesa/hamburgesaDocente'));
+const HamburgesaDocente = lazy(() => import('../Hamburgesa/hamburgesaDocente'));
 
 function Header() {
   const [auth] = useState(true);
