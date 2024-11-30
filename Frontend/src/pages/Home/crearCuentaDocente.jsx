@@ -37,9 +37,28 @@ const validationSchema = Yup.object({
 });
 
 const CrearCuentaDocente = () => {
-  const handleSubmit = (values) => {
-    console.log("Formulario enviado:", values);
-    alert("Formulario enviado con éxito");
+  const handleSubmit = async (values, { setSubmitting, resetForm }) => {
+    try {
+      const response = await fetch("http://127.0.0.1:8000/api/crearCuentaDocente", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(values),
+      });
+
+      const result = await response.json();
+      if (response.ok) {
+        alert("Docente registrado exitosamente");
+        resetForm();
+      } else {
+        alert(`Error: ${result.error || result.message}`);
+      }
+    } catch (error) {
+      alert("Ocurrió un error inesperado al registrar el docente.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -243,32 +262,13 @@ const CrearCuentaDocente = () => {
                     REGISTRARSE
                   </Button>
                 </Box>
-
-                <Typography
-                  sx={{ marginTop: 3, fontSize: "14px", color: "#888" }}
-                >
-                  ¿Ya tienes cuenta?{" "}
-                  <Typography
-                    component="span"
-                    sx={{
-                      fontSize: "14px",
-                      fontWeight: "bold",
-                      color: "primary.main",
-                      cursor: "pointer",
-                    }}
-                    onClick={() => alert("Redirigir al inicio de sesión")}
-                  >
-                    Inicia Sesión
-                  </Typography>
-                </Typography>
               </Form>
             )}
           </Formik>
         </Box>
-        </Container>
+      </Container>
     </Box>
   );
 };
 
 export default CrearCuentaDocente;
-
