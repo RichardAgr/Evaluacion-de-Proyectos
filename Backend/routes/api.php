@@ -187,6 +187,8 @@ Route::get('/estudiante/getGrupo', [SesionEstudianteController::class, 'getGrupo
 // ============================         SESIONES COMPARTIDAS    ==================================
 
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/loginAdmin', [AuthController::class, 'loginAdmin']);
+
 Route::get('/logout', [AuthController::class, 'logout']);
 
 Route::get('/session/active/admin', [AuthController::class, 'isSessionActiveAdmin']);
