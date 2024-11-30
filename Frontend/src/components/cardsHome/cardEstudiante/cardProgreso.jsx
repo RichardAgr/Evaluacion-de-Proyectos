@@ -13,9 +13,9 @@ function CardResumen() {
         titulo = "Progreso del Proyecto"
         info = {<></>}
         buttons={<> 
-        {!paso && inicio&&<Button variant="contained" color="primary" fullWidth >
+        {!paso && inicio?<Button variant="contained" color="primary" fullWidth >
           SUBIR ENTREGABLES SPRINTS
-        </Button>}
+        </Button>:<></>}
         <Button variant="outlined" color="primary" fullWidth >
           VISUALIZAR SPRINTS
         </Button>

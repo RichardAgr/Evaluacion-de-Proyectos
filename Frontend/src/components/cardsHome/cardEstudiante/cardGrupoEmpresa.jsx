@@ -5,29 +5,29 @@ function CardResumen() {
   const navigate = useNavigate()
   const fechaLimiteEntregaEmpresa = new Date(localStorage.getItem("fechaLimiteEntregaEmpresa"))
   const paso = fechaLimiteEntregaEmpresa < new Date()
-  const idEmpresa = localStorage.getItem("idEmpresa")
-  const empresaPublicada = localStorage.getItem("empresaPublicada")
+  const idEmpresa = Number(localStorage.getItem("idEmpresa"))
+  const empresaPublicada = Number(localStorage.getItem("empresaPublicada"))
   return (
     <CardGeneral
         titulo = "Grupo Empresa"
         info = {<>
         </>}
         buttons={<> 
-        {!paso&&idEmpresa!==-1&&<Button variant="contained" color="primary" fullWidth
+        {!paso&&idEmpresa!==-1?<Button variant="contained" color="primary" fullWidth
           onClick = { () => navigate("/homeEstu/CrearGrupoEmpresa")}
         >
             03_REGISTRAR GRUPO EMPRESA
-        </Button>}
-        {!paso&&empresaPublicada&&<Button variant="outlined" color="primary" fullWidth
+        </Button>:<></>}
+        {!paso&&empresaPublicada?<Button variant="outlined" color="primary" fullWidth
           onClick= {() => navigate("/homeEstu/ModificarGrupoEmpresa")}
         >
             69_MODIFICAR GRUPO EMPRESA
-        </Button>}
-        {idEmpresa!==-1&&<Button variant="outlined" color="primary" fullWidth
+        </Button>:<></>}
+        {idEmpresa!==-1?<Button variant="outlined" color="primary" fullWidth
           onClick= {() => navigate("/homeEstu/PublicarGrupoEmpresa")}
         >
             71_PUBLICAR GRUPO EMPRESA
-        </Button>}
+        </Button>:<></>}
         </>}
     />
   );

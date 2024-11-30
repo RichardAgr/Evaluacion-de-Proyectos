@@ -12,7 +12,7 @@ import CardTareas from '../../../components/cardsHome/cardEstudiante/cardTareas.
 import { useNavigate} from "react-router-dom";
 import Loading from '../../../components/loading/loading.jsx' 
 function HomeEstudiante() {
-  const [isLoaded, setIsLoaded] = useState(true);
+  const [isLoaded, setIsLoaded] = useState(false);
   const navigate =useNavigate()
   useEffect(()=>{
     const getOrigin = async() =>{
@@ -54,17 +54,15 @@ function HomeEstudiante() {
             localStorage.setItem("fechaFinPlanificacion", response.fechaFinPlanificacion);//fechafinplani hasta aqui terminan todos los sprints
             localStorage.setItem("fechaFinGestion", response.fechaFinGestion);//fecha fin gestion  
           }
+          setIsLoaded(true);
         })
         .catch((error) => {
           console.log("Fetch error: ", error);
         });
-        setIsLoaded(true);
     }
     getOrigin()
   },[])
-  const nombreCompleto = localStorage.getItem("nombreCompleto")
-  const aceptada =localStorage.getItem("aceptada");
-  const empresaPublicada = localStorage.getItem("empresaPublicada")
+
   if (!isLoaded) {
     return (
       <>
@@ -74,16 +72,19 @@ function HomeEstudiante() {
       </>
     )
   }
+  const nombreCompleto = localStorage.getItem("nombreCompleto")
+  const aceptada = Number(localStorage.getItem("aceptada"));
+  const empresaPublicada = Number(localStorage.getItem("empresaPublicada"));
   return (
     <Fragment>
       <Header />
       <Title variant="h5" sx={{marginTop:'5rem', textAlign:'center'}}>Bienvenid@, {nombreCompleto}</Title>
       <Title variant="h6" sx={{textAlign:'center'}}>{localStorage.getItem('gestion')}</Title>
       <Container>
-        {aceptada&&<CardProgreso></CardProgreso>}
+        {(aceptada!==0)&&<CardProgreso></CardProgreso>} 
         <CardGrupoEmpresa></CardGrupoEmpresa>        
         {empresaPublicada&&<CardPlanificacion></CardPlanificacion>}
-        {aceptada&&<CardTareas></CardTareas>}
+        {(aceptada!==0)&&<CardTareas></CardTareas>}
         <CardEvaluacion></CardEvaluacion>
         <CardListas></CardListas>
       </Container>
