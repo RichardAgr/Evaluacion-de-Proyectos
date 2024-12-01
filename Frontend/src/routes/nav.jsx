@@ -15,7 +15,6 @@ function Nav() {
       <Route path="/crearCuentaEstudiante" element={<CrearCuentaEstudiante />} />
       <Route path="/" element={<IniciarSesion />} />
       <Route path="/estoTieneQueSerUnLinkRandomSuperLargo" element={<IniciarSesionAdmin />} />  
-      <Route path="/estoTieneQueSerUnLinkRandomSuperLargo" element={<IniciarSesionAdmin />} />
       <Route path='/RecuperarContraseña'element={<RecuperarContraseña />}/>
       {/** Visualizar Planificacion*/}
       <Route
