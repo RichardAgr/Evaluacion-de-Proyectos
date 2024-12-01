@@ -11,13 +11,19 @@ import Menu from '@mui/material/Menu';
 import Cookies from 'js-cookie';
 import { useState, lazy, Suspense } from 'react';
 import { decrypt } from '../../../api/decrypt';
+
 const HamburgesaDocente = lazy(() => import('../Hamburgesa/hamburgesaDocente'));
+const UserModal= lazy(() => import('../userModal/userModal'));
 
 function Header() {
-  const [auth] = useState(true);
   const [anchorEl, setAnchorEl] = useState(null);
-  const [grupo] = useState(true);
+  const grupo = Number(localStorage.getItem('idGrupo'))!== -1
   const [open, setOpen] = useState(false);
+  const [openPerfil, setOpenPerfil] = useState(false);
+  const cerrarPerfil = (openPerfil) => {
+    setOpenPerfil(openPerfil);
+    handleClose();
+  };
   const toggleDrawer = (open) => {
     setOpen(open);
   };
@@ -67,7 +73,6 @@ function Header() {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             <h5>WEB TIS</h5>
           </Typography>
-          {auth ? (
             <div>
               <IconButton
                 size="large"
@@ -101,11 +106,10 @@ function Header() {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
               >
-                <MenuItem onClick={handleClose}>Profile</MenuItem>
+                <MenuItem onClick={()=> cerrarPerfil(true)}>Profile</MenuItem>
                 <MenuItem onClick={logout}>Cerrar Sesión</MenuItem>
               </Menu>
             </div>
-          ) : null}
         </Toolbar>
       </AppBar>
       <Suspense >
@@ -114,6 +118,9 @@ function Header() {
           :
           <HamburgesaDocente open={open} toggleDrawer={toggleDrawer} />
         }
+      </Suspense>
+      <Suspense >
+        <UserModal openPerfil={openPerfil} cerrarPerfil={cerrarPerfil} role={role}></UserModal>
       </Suspense>
     </Box>
   );
