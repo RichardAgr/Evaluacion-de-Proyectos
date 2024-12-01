@@ -11,7 +11,7 @@ import Menu from '@mui/material/Menu';
 import Cookies from 'js-cookie';
 import { useState, lazy, Suspense } from 'react';
 import { decrypt } from '../../../api/decrypt';
-
+import { logout } from '../../../api/sesionesApi';
 const HamburgesaDocente = lazy(() => import('../Hamburgesa/hamburgesaDocente'));
 const UserModal= lazy(() => import('../userModal/userModal'));
 
@@ -28,19 +28,10 @@ function Header() {
     setOpen(open);
   };
   
-  const logout = async () => {
+  const logoutHeader = async () => {
       try {
-          await fetch('http://localhost:8000/api/logout', {
-              method: 'POST',
-              headers: {
-                  'Authorization': true,
-              },
-              credentials: 'include'
-          });
-          Cookies.remove('random', { path: '/' });
-          Cookies.remove('laravel_sesion', { path: '/' });
-          localStorage.clear();
-        window.location.reload();  
+          await logout()
+          window.location.reload();  
       } catch (error) {
           console.error('Error al cerrar sesión:', error);
       }
@@ -107,7 +98,7 @@ function Header() {
                 onClose={handleClose}
               >
                 <MenuItem onClick={()=> cerrarPerfil(true)}>Profile</MenuItem>
-                <MenuItem onClick={logout}>Cerrar Sesión</MenuItem>
+                <MenuItem onClick={logoutHeader}>Cerrar Sesión</MenuItem>
               </Menu>
             </div>
         </Toolbar>
