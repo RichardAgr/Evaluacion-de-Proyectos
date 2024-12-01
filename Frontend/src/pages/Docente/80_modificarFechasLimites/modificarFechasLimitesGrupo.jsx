@@ -250,7 +250,7 @@ const FormularioFechas = () => {
                                     <Box display={'flex'}>
                                         <TextField
                                             fullWidth
-                                            label="Fecha ini de Entrega de Empresas"
+                                            label="Fecha inicial de Entrega de Empresas"
                                             type="date"
                                             value={values.fechaIniGestion}
                                             onBlur={handleBlur}
@@ -274,7 +274,7 @@ const FormularioFechas = () => {
                                     <Box display={'flex'} marginTop={'1rem'}>
                                         <TextField
                                             fullWidth
-                                            label="Fecha ini de Entrega de plani"
+                                            label="Fecha inicial de Entrega de planificacion"
                                             type="date"
                                             value={values.fechaLimiteEntregaEmpresa}
                                             onBlur={handleBlur}
@@ -298,7 +298,7 @@ const FormularioFechas = () => {
                                     <Box display={'flex'} marginTop={'1rem'}>  
                                         <TextField
                                             fullWidth
-                                            label="Fecha ini de planificacion"
+                                            label="Fecha Inicial de planificacion"
                                             type="date"
                                             value={values.fechaLimiteEntregaPlanificacion}
                                             onBlur={handleBlur}
