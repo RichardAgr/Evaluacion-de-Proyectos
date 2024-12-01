@@ -21,7 +21,6 @@ import { getOriginDocente } from '../../../api/getDatosLogin';
 import InfoSnackbar from '../../../components/infoSnackbar/infoSnackbar';
 import { fechasSubmit } from '../../../api/subirFechas';
 
-// Estilos del cuadro de diálogo
 const StyledDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialogContent-root': {
         padding: theme.spacing(3),
@@ -39,8 +38,6 @@ const StyledDialogTitle = styled(Box)(({ theme }) => ({
     alignItems: 'center',
     padding: theme.spacing(2),
 }));
-
-// Componente de Cuadro de Diálogo
 const CuadroDialogo = ({ open, onClose, title, description, onSubmit }) => {
     return (
         <StyledDialog
@@ -84,7 +81,6 @@ const CuadroDialogo = ({ open, onClose, title, description, onSubmit }) => {
     );
 };
 
-// Componente principal
 const FormularioFechas = () => {
     const [snackbar, setSnackbar] = useState({
         open: false,
@@ -103,7 +99,6 @@ const FormularioFechas = () => {
     const [isLoaded, setIsLoaded] = useState(false);
     const [err, setErr] = useState(false);
 
-    // Obtener fechas desde el almacenamiento local o una API
     const obtenerFechas = async () => {
         try {
             await getOriginDocente();
@@ -128,7 +123,6 @@ const FormularioFechas = () => {
         obtenerFechas();
     }, []);
 
-    // Validaciones con Yup
     const esquemaValidacion = Yup.object().shape({
         fechaIniGestion: Yup.date().required('Requerido'),
         fechaLimiteEntregaEmpresa: Yup.date()
@@ -146,7 +140,6 @@ const FormularioFechas = () => {
             .min(Yup.ref('fechaFinPlanificacion'), 'Debe ser mayor o igual a la fecha final de planificación.'),
     });
 
-    // Envío de datos
     const manejarSubmit = async (valores) => {
         if (!verificarFechasCambiadas(valores)) {
             setSnackbar({
@@ -182,7 +175,7 @@ const FormularioFechas = () => {
         }
     };
     
-    // Función para verificar si las fechas fueron modificadas
+
     const verificarFechasCambiadas = (valores) => {
         const fechasModificadas = Object.keys(valores).some((key) => valores[key] !== fechasIniciales[key]);
         return fechasModificadas;
@@ -235,6 +228,9 @@ const FormularioFechas = () => {
                             <Typography variant="h4" align="center" gutterBottom>
                                 Gestión de Fechas
                             </Typography>
+                            <Typography  align="center" gutterBottom sx={{color:'blue'}}>
+                                *La hora de todas las fechas es 23:59
+                            </Typography>
                             <Grid container spacing={2}>
                                 <Grid item xs={12}>
                                     <TextField
@@ -250,48 +246,80 @@ const FormularioFechas = () => {
                                         helperText={touched.fechaIniGestion && errors.fechaIniGestion}
                                     />
                                 </Grid>
-                                <Grid item xs={12}>
-                                    <TextField
-                                        fullWidth
-                                        label="Fecha Límite de Entrega de Empresas"
-                                        type="date"
-                                        name="fechaLimiteEntregaEmpresa"
-                                        value={values.fechaLimiteEntregaEmpresa}
-                                        onChange={handleChange}
-                                        onBlur={handleBlur}
-                                        InputLabelProps={{ shrink: true }}
-                                        error={touched.fechaLimiteEntregaEmpresa && Boolean(errors.fechaLimiteEntregaEmpresa)}
-                                        helperText={touched.fechaLimiteEntregaEmpresa && errors.fechaLimiteEntregaEmpresa}
-                                    />
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <TextField
-                                        fullWidth
-                                        label="Fecha Límite de Entrega de Planificación"
-                                        type="date"
-                                        name="fechaLimiteEntregaPlanificacion"
-                                        value={values.fechaLimiteEntregaPlanificacion}
-                                        onChange={handleChange}
-                                        onBlur={handleBlur}
-                                        InputLabelProps={{ shrink: true }}
-                                        error={touched.fechaLimiteEntregaPlanificacion && Boolean(errors.fechaLimiteEntregaPlanificacion)}
-                                        helperText={touched.fechaLimiteEntregaPlanificacion && errors.fechaLimiteEntregaPlanificacion}
-                                    />
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <TextField
-                                        fullWidth
-                                        label="Fecha Final de Planificación"
-                                        type="date"
-                                        name="fechaFinPlanificacion"
-                                        value={values.fechaFinPlanificacion}
-                                        onChange={handleChange}
-                                        onBlur={handleBlur}
-                                        InputLabelProps={{ shrink: true }}
-                                        error={touched.fechaFinPlanificacion && Boolean(errors.fechaFinPlanificacion)}
-                                        helperText={touched.fechaFinPlanificacion && errors.fechaFinPlanificacion}
-                                    />
-                                </Grid>
+                                <Box marginLeft={'1rem'} marginTop={'1rem'} width={'100%'}>
+                                    <Box display={'flex'}>
+                                        <TextField
+                                            fullWidth
+                                            label="Fecha ini de Entrega de Empresas"
+                                            type="date"
+                                            value={values.fechaIniGestion}
+                                            onBlur={handleBlur}
+                                            disabled
+                                            sx={{flexGrow:'1',}}
+                                        />
+                                        <TextField
+                                            fullWidth
+                                            label="Fecha Límite de Entrega de Empresas"
+                                            type="date"
+                                            name="fechaLimiteEntregaEmpresa"
+                                            value={values.fechaLimiteEntregaEmpresa}
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            InputLabelProps={{ shrink: true }}
+                                            error={touched.fechaLimiteEntregaEmpresa && Boolean(errors.fechaLimiteEntregaEmpresa)}
+                                            helperText={touched.fechaLimiteEntregaEmpresa && errors.fechaLimiteEntregaEmpresa}
+                                            sx={{flexGrow:'1'}}
+                                        />
+                                    </Box>
+                                    <Box display={'flex'} marginTop={'1rem'}>
+                                        <TextField
+                                            fullWidth
+                                            label="Fecha ini de Entrega de plani"
+                                            type="date"
+                                            value={values.fechaLimiteEntregaEmpresa}
+                                            onBlur={handleBlur}
+                                            disabled
+                                            sx={{flexGrow:'1'}}
+                                        />
+                                        <TextField
+                                            fullWidth
+                                            label="Fecha Límite de Entrega de Planificación"
+                                            type="date"
+                                            name="fechaLimiteEntregaPlanificacion"
+                                            value={values.fechaLimiteEntregaPlanificacion}
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            InputLabelProps={{ shrink: true }}
+                                            error={touched.fechaLimiteEntregaPlanificacion && Boolean(errors.fechaLimiteEntregaPlanificacion)}
+                                            helperText={touched.fechaLimiteEntregaPlanificacion && errors.fechaLimiteEntregaPlanificacion}
+                                            sx={{flexGrow:'1'}}
+                                        />        
+                                    </Box>
+                                    <Box display={'flex'} marginTop={'1rem'}>  
+                                        <TextField
+                                            fullWidth
+                                            label="Fecha ini de planificacion"
+                                            type="date"
+                                            value={values.fechaLimiteEntregaPlanificacion}
+                                            onBlur={handleBlur}
+                                            disabled
+                                            sx={{flexGrow:'1'}}
+                                        />                                    
+                                        <TextField
+                                            fullWidth
+                                            label="Fecha Final de Planificación"
+                                            type="date"
+                                            name="fechaFinPlanificacion"
+                                            value={values.fechaFinPlanificacion}
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            InputLabelProps={{ shrink: true }}
+                                            error={touched.fechaFinPlanificacion && Boolean(errors.fechaFinPlanificacion)}
+                                            helperText={touched.fechaFinPlanificacion && errors.fechaFinPlanificacion}
+                                            sx={{flexGrow:'1'}}
+                                        />
+                                    </Box>
+                                </Box>
                                 <Grid item xs={12}>
                                     <TextField
                                         fullWidth
