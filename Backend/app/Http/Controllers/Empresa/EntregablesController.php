@@ -108,7 +108,7 @@ class EntregablesController extends Controller
         try {
             DB::beginTransaction();
 
-            foreach ($validated['entregables'] as $entregable) {
+            foreach ($validated['entregables'] as $entregable)   {
                 Entregables::where('idEntregables', $entregable['idEntregable'])
                     ->update(['aceptado' => true]); // Cambia 'aceptado' a true
             }
