@@ -1,4 +1,4 @@
-import {Button} from "@mui/material";
+import {Button, Typography} from "@mui/material";
 import CardGeneral from '../cardGeneral'
 import { useNavigate } from "react-router-dom";
 function CardResumen() {
@@ -8,10 +8,13 @@ function CardResumen() {
   const fechaLimiteEntregaPlanificacion = new Date(localStorage.getItem("fechaLimiteEntregaPlanificacion"))
   const inicio = fechaLimiteEntregaPlanificacion < new Date()
   const navigate = useNavigate();
+  const fechaLimiteEntrega = new Date(localStorage.getItem('fechaLimiteSprint'))
   return (
     <CardGeneral
         titulo = "Progreso del Proyecto"
-        info = {<></>}
+        info = {<>
+          <Typography>El Sprint actual termina el: {fechaLimiteEntrega.toLocaleDateString()}</Typography>
+        </>}
         buttons={<> 
         {!paso && inicio?<Button variant="contained" color="primary" fullWidth >
           SUBIR ENTREGABLES SPRINTS

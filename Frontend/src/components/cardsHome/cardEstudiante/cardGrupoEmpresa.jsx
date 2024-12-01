@@ -1,4 +1,4 @@
-import { Button} from "@mui/material";
+import { Button, Typography} from "@mui/material";
 import CardGeneral from '../cardGeneral'
 import { useNavigate } from "react-router-dom";
 function CardResumen() {
@@ -11,6 +11,7 @@ function CardResumen() {
     <CardGeneral
         titulo = "Grupo Empresa"
         info = {<>
+            <Typography>Fecha limite de entrega de la Empresa: {fechaLimiteEntregaEmpresa.toLocaleDateString()}</Typography>
         </>}
         buttons={<> 
         {!paso&&idEmpresa!==-1?<Button variant="contained" color="primary" fullWidth

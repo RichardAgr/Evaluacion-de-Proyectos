@@ -1,4 +1,4 @@
-import { Button} from "@mui/material";
+import { Button, Typography} from "@mui/material";
 import CardGeneral from '../cardGeneral'
 function CardResumen() {
   const aceptada =Number(localStorage.getItem("aceptada"));
@@ -7,7 +7,9 @@ function CardResumen() {
   return (
     <CardGeneral
         titulo = "Planificacion"
-        info = {<></>}
+        info = {<>
+          <Typography>Fecha limite de entraga de la planificacion: {fechaLimiteEntregaPlani.toLocaleDateString()}</Typography>
+        </>}
         buttons={<> 
         {(!aceptada&&paso)?<Button variant="contained" color="primary" fullWidth>
           CREAR PLANIFICACION
