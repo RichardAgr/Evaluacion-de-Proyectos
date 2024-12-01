@@ -233,3 +233,5 @@ Route::get('/modificarTarea/{idEmpresa}/semanaActualTareas', [ComentarioTareaCon
 Route::get('/empresasSinSprintCalificado', [SprintController::class, 'empresasSinSprintCalificado']);//utilizado
 Route::get('/empresasSinSemanaCalificada', [SprintController::class, 'empresasSinSemanaCalificada']);//utilizado
 Route::get('/empresa/sprintConEntregables/{idSprint}', [SprintController::class, 'sprintConEntregables']);//utilizado
+
+Route::post('/grupo/actualizar', [GrupoController::class, 'actualizarGrupo']);//utilizado

@@ -1,4 +1,4 @@
-import { Button} from "@mui/material";
+import { Button, Typography} from "@mui/material";
 import CardGeneral from '../cardGeneral'
 import { useNavigate } from "react-router-dom";
 function CardResumen() {
@@ -9,6 +9,7 @@ function CardResumen() {
     <CardGeneral
         titulo = "Tareas"
         info = {<>
+          <Typography>Fecha limite de entrega del seguimiento: {localStorage.getItem('fechaLimiteSemana')} a las 23:59</Typography>
         </>}
         buttons={<> 
         {!paso?<Button variant="contained" color="primary" fullWidth

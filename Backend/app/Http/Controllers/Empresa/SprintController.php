@@ -142,16 +142,23 @@ class SprintController extends Controller
             $empresaValida = false; // Marca para incluir la empresa si alguna semana no cumple la condición
             if ($planificacion) {
                     $semanas = $planificacion->semanas()
-                        ->where('fechaIni', '<=', now())
-                        ->where('fechaFin', '>=', now())
-                        ->get();
+                    ->where(function ($query) {
+                        $query->where(function ($subquery) {
+                            $subquery->where('fechaIni', '<=', now())
+                                    ->where('fechaFin', '>=', now());
+                        })->orWhere('fechaFin', '<', now());
+                    })
+                    ->get();
+            
 
                     foreach ($semanas as $semana) {
                         // Obtener todos los comentarios de la semana
                         $comentariosTareas = $semana->comentarioTarea()->count();
+                        $tareas = $semana->tareas()->count();
+                        $numeroIncorrectoDeComentarios = $comentariosTareas !== $numEstudiantes;
+                        $sinTareas = $tareas === 0;
 
-                        // Verificar si los comentarios no coinciden con el número de estudiantes
-                        if ($comentariosTareas !== $numEstudiantes) {
+                        if ($numeroIncorrectoDeComentarios || $sinTareas) {
                             $empresaValida = true; // La empresa tiene al menos una semana que no cumple la condición
                             $data[] = [
                                 'id' => $planificacion->idPlanificacion,
@@ -159,7 +166,7 @@ class SprintController extends Controller
                                 'nombreEmpresa' => $empresa['nombreEmpresa'],
                                 'nombreLargo' => $empresa['nombreLargo'],
                             ];
-                            break 2; // Salir del loop de semanas y sprints
+                            break;
                         }
                     
                 }
