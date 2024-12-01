@@ -15,7 +15,9 @@ function ListaTareas() {
           const newData = data[0]
           console.log(newData)
           const semanaActual = newData?.semanas.filter((semana) => {
-              const a = new Date(semana.fechaIni) <= new Date(normalizeDate(dateNow)) && new Date(normalizeDate(dateNow)) <= new Date(semana.fechaFin);
+            console.log()
+            const a = semana.fechaIni <= normalizeDate(dateNow) && 
+                      normalizeDate(dateNow) <= semana.fechaFin;
             return a}
           ) || [];
           console.log(semanaActual);
@@ -31,8 +33,8 @@ function ListaTareas() {
       fetchSprints();
     }, []); 
     function normalizeDate(date) {
-      const array = (date.toLocaleDateString()).split('/')
-      const formatoDate =  ""+array[2]+"-"+array[1]+"-"+array[0]
+      const array = (date.toISOString()).split('T')
+      const formatoDate =  array[0]
       return formatoDate;
     }
   return (
@@ -46,7 +48,7 @@ function ListaTareas() {
     >
       <SprintSemanas 
           key={1} 
-          title={`Semana ${semana.numeroSemana}`} 
+          title={`Semana ${semana?.numeroSemana}`} 
           semana={semana} 
           idSprint={1} 
           navigateLink={`/homeEstu/listaTareas/modificarTarea`}

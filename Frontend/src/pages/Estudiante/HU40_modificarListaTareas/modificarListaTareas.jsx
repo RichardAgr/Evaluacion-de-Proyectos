@@ -232,14 +232,14 @@ export default function ModificarListaTareas() {
                 <CalendarTodayIcon sx={{ mr: 1 }} />
                 <Typography variant="body1">
                   <strong>Fecha de Inicio:</strong>{" "}
-                  {new Date(fechas?.fechaIni).toLocaleDateString()}
+                  {new Date(fechas?.fechaIni).toISOString().split('T')[0]} a las 00:00
                 </Typography>
               </Box>
               <Box display="flex" alignItems="center" m={2}>
                 <CalendarTodayIcon sx={{ mr: 1 }} />
                 <Typography variant="body1">
                   <strong>Fecha de Fin:</strong>{" "}
-                  {new Date(fechas?.fechaFin).toLocaleDateString()}
+                  {localStorage.getItem('fechaLimiteSemana')} a las 23:59
                 </Typography>
               </Box>
           </Box>

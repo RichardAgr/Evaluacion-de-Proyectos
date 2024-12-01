@@ -12,7 +12,7 @@ import * as Yup from "yup";
 import myImage from '../../assets/img/inicio.jpg';
 import CryptoJS from 'crypto-js';
 import Cookies from 'js-cookie';
-import { useNavigate} from "react-router-dom";
+import { Link, useNavigate} from "react-router-dom";
 import InfoSnackbar from '../../components/infoSnackbar/infoSnackbar'
 import { useState } from "react";
   function IniciarSesion() {
@@ -160,11 +160,12 @@ import { useState } from "react";
                     helperText={touched.contrasena && errors.contrasena ? errors.contrasena : " "} // Espacio en blanco para evitar cambios de tamaño
                   />
   
-                  <Typography variant="body2" color="primary" sx={{ cursor: "pointer", marginBottom: "20px" }}>
+                  <Link 
+                    to={`/RecuperarContraseña`}
+                  >
                     olvidaste tu contraseña?
-                  </Typography>
-  
-                  <Button type="submit" variant="contained" color="primary" fullWidth>
+                  </Link>
+                  <Button type="submit" variant="contained" color="primary" fullWidth sx={{marginTop:'1rem'}}>
                     Iniciar Sesion
                   </Button>
                 </Form>

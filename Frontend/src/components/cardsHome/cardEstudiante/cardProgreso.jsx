@@ -1,4 +1,4 @@
-import {Button} from "@mui/material";
+import {Button, Typography} from "@mui/material";
 import CardGeneral from '../cardGeneral'
 import { useNavigate } from "react-router-dom";
 function CardResumen() {
@@ -11,7 +11,9 @@ function CardResumen() {
   return (
     <CardGeneral
         titulo = "Progreso del Proyecto"
-        info = {<></>}
+        info = {<>
+          <Typography>El Sprint actual termina el: {localStorage.getItem('fechaLimiteSprint')} a las 23:59</Typography>
+        </>}
         buttons={<> 
         {!paso && inicio?<Button variant="contained" color="primary" fullWidth >
           SUBIR ENTREGABLES SPRINTS

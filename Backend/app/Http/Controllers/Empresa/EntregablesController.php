@@ -102,13 +102,13 @@ class EntregablesController extends Controller
     {
         $validated = $request->validate([
             'entregables' => 'required|array',
-            'entregables.*.idEntregable' => 'required|integer', // Aseguramos que el ID sea obligatorio y entero
+            'entregables.*.idEntregable' => 'required|integer'
         ]);
 
         try {
             DB::beginTransaction();
 
-            foreach ($validated['entregables'] as $entregable) {
+            foreach ($validated['entregables'] as $entregable)   {
                 Entregables::where('idEntregables', $entregable['idEntregable'])
                     ->update(['aceptado' => true]); // Cambia 'aceptado' a true
             }

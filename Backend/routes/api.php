@@ -187,6 +187,8 @@ Route::get('/estudiante/getGrupo', [SesionEstudianteController::class, 'getGrupo
 // ============================         SESIONES COMPARTIDAS    ==================================
 
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/loginAdmin', [AuthController::class, 'loginAdmin']);
+
 Route::get('/logout', [AuthController::class, 'logout']);
 
 Route::get('/session/active/admin', [AuthController::class, 'isSessionActiveAdmin']);
@@ -231,3 +233,5 @@ Route::get('/modificarTarea/{idEmpresa}/semanaActualTareas', [ComentarioTareaCon
 Route::get('/empresasSinSprintCalificado', [SprintController::class, 'empresasSinSprintCalificado']);//utilizado
 Route::get('/empresasSinSemanaCalificada', [SprintController::class, 'empresasSinSemanaCalificada']);//utilizado
 Route::get('/empresa/sprintConEntregables/{idSprint}', [SprintController::class, 'sprintConEntregables']);//utilizado
+
+Route::post('/grupo/actualizar', [GrupoController::class, 'actualizarGrupo']);//utilizado

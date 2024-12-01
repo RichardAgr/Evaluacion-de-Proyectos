@@ -52,6 +52,32 @@ export const actualizarSprint = async (idSprint, comentario, nota) => {
   }
 };
 
+export const aceptarEntregables = async (aceptados) => {
+  try {
+    const response = await fetch(
+      `http://127.0.0.1:8000/api/aceptarEntregables`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          entregables: aceptados
+        }),
+        credentials: 'include'
+      }
+    );
+    if (!response.ok) {
+      throw new Error("Error al actualizar el sprint");
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error en la solicitud:", error);
+    throw error;
+  }
+};
+
 export const getSprintSemanasTareas = async (idEmpresa) => {
   try {
     const response = await fetch(

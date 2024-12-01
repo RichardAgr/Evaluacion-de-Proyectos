@@ -5,7 +5,7 @@ function NavAdmin() {
   return (
     <Routes>
       <Route path="/" element={<HomeAdmin />} />
-      <Route path="/crearCuentaEstudiante" element={<CrearCuentaDocente />} />
+      <Route path="/crearCuentaDocente" element={<CrearCuentaDocente />} />
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   );

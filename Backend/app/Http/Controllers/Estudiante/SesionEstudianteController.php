@@ -55,8 +55,10 @@ class SesionEstudianteController extends Controller
                         ->whereDate('fechaIni', '<=', $now)
                         ->whereDate('fechaFin', '>=', $now)
                         ->first();
+        $fechaLimiteSprint = '';
         if ($sprint) {
             $idSprint = $sprint->idSprint;
+            $fechaLimiteSprint = $sprint->fechaFin;
         }
     
         // Validar semana
@@ -66,8 +68,10 @@ class SesionEstudianteController extends Controller
                         ->whereDate('fechaFin', '>=', $now)
                         ->where('idPlanificacion', $idPlanificacion)
                         ->first();
+        $fechaLimiteSemana = $semana->fechaFin;
         if ($semana) {
             $idSemana = $semana->idSemana;
+            $fechaLimiteSemana = $semana->fechaFin;
         }
     
         return response()->json([
@@ -86,7 +90,9 @@ class SesionEstudianteController extends Controller
             'fechaLimiteEntregaPlanificacion' => $fechaLimiteEntregaPlanificacion,
             'fechaFinPlanificacion' => $fechaFinPlanificacion,
             'fechaFinGestion' => $fechaFinGestion,
-            'gestion' => $gestion
+            'gestion' => $gestion,
+            'fechaLimiteSprint' => $fechaLimiteSprint,
+            'fechaLimiteSemana' => $fechaLimiteSemana
         ], 200);
     }
     
