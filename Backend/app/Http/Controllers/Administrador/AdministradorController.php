@@ -97,6 +97,17 @@ class AdministradorController extends Controller{
             ], 500);
         }
     }
+
+    public function obtenerDatosEstudiante(){
+
+
+
+    }
+
+    public function obtenerDatosDocente(){
+
+        
+    }
     
     
 }
