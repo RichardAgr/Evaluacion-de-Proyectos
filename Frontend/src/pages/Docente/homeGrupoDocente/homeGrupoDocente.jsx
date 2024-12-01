@@ -9,42 +9,21 @@ import CardSprint from '../../../components/cardsHome/cardDocente/cardSprint.jsx
 import CardSeguimientoSemanal from '../../../components/cardsHome/cardDocente/cardSeguimientoSemanal.jsx';
 import CardEvaluacion from '../../../components/cardsHome/cardDocente/cardEvaluacion.jsx';
 import CardListaYDatos from '../../../components/cardsHome/cardDocente/cardListaYDatos.jsx';
-import Loading from '../../../components/loading/loading.jsx'
+import Loading from '../../../components/loading/loading.jsx';
+import { getOriginDocente } from "../../../api/getDatosLogin.jsx";
 function Home() {
   const [isLoaded, setIsLoaded] = useState(false);
   useEffect(() => {
-    const getOriginDocente = async () => {
-        const url = "http://localhost:8000/api/docente/getGrupo";
-        const bodyFetch = {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-        };
-
+    const getDatosLogin = async () => {
         try {
-          const res = await fetch(url, bodyFetch);
-          const response = await res.json();
-          console.log(response)  
-          localStorage.setItem('idGrupo', response.idGrupo);
-          localStorage.setItem('nombreCompleto', response.nombreCompleto);
-          localStorage.setItem('gestion', response.gestion);
-          localStorage.setItem("fechaIniGestion", response.fechaIniGestion);
-          localStorage.setItem("fechaLimiteEntregaEmpresa", response.fechaLimiteEntregaEmpresa);
-          localStorage.setItem("fechaLimiteEntregaPlanificacion", response.fechaLimiteEntregaPlanificacion);
-          localStorage.setItem("fechaFinPlanificacion", response.fechaFinPlanificacion);
-          localStorage.setItem("fechaFinGestion", response.fechaFinGestion);
-          localStorage.setItem('numEstudiantes', response.numEstudiantes);
-          localStorage.setItem('numEmpresas', response.numEmpresas);
+          await getOriginDocente()
+
           setIsLoaded(true);
         } catch (error) {
           console.error("Error:", error);
         }
-      
     };
-
-    getOriginDocente();
+    getDatosLogin();
   }, []);
 
   if (!isLoaded) {

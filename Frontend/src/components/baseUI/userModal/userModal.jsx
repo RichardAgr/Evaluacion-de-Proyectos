@@ -11,6 +11,7 @@ import EditNoteRoundedIcon from "@mui/icons-material/EditNoteRounded";
 import { useState } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 // eslint-disable-next-line react/prop-types
 const UserProfileModal = ({ openPerfil, cerrarPerfil, role }) => {
@@ -92,7 +93,7 @@ const UserProfileModal = ({ openPerfil, cerrarPerfil, role }) => {
           }}
         >
           <Avatar
-            src="https://via.placeholder.com/150"
+            src={AccountCircleIcon}
             sx={{
               width: 80,
               height: 80,
