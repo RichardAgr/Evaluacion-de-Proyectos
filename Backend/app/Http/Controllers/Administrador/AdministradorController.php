@@ -99,7 +99,7 @@ class AdministradorController extends Controller{
     }
 
     public function obtenerDatosEstudiante(){
-        $idEstudiante = session('docente.id');
+        $idEstudiante = session('estudiante.id');
         $estudiante = Docente::find($idEstudiante);
         $datosEstudiante = [
             'nombreCuenta' => $estudiante->nombreCuenta,
@@ -125,6 +125,48 @@ class AdministradorController extends Controller{
             'segundoApellido' => $docente->segundoApellido,
         ];
         return response()->json($datosDocente, 200);
+    }
+
+    public function actualizarEstudiante(Request $request)
+    {
+        $request->validate([
+            'contrasena' => 'required|string',
+            'nombre' => 'sometimes|required|string',
+            'primerApellido' => 'sometimes|required|string',
+            'segundoApellido' => 'sometimes|required|string',
+            'email' => 'sometimes|required|email',
+        ]);
+        $estudiante = session('estudiante');
+
+        if (!$estudiante) {
+            return response()->json(['error' => 'No se encontraron datos del usuario en la sesión'], 401);
+        }
+        $userE = Estudiante::find($estudiante['id']);
+        
+        if (!$userE) {
+            return response()->json(['error' => 'Estudiante no encontrado en la base de datos'], 404);
+        }
+
+        if (!Hash::check($request->contrasena, $userE->contrasena)) {
+            return response()->json(['error' => 'Contraseña incorrecta'], 403);
+        }
+
+        $userE->nombreEstudiante = $request->nombre ?? $userE->nombreEstudiante;
+        $userE->primerApellido = $request->primerApellido ?? $userE->primerApellido;
+        $userE->segundoApellido = $request->segundoApellido ?? $userE->segundoApellido;
+        $userE->email = $request->email ?? $userE->email;
+
+        $userE->save();
+
+        session()->put('estudiante', [
+            'id' => $userE->idEstudiante,
+            'nombre' => $userE->nombreEstudiante,
+            'primerApellido' => $userE->primerApellido,
+            'segundoApellido' => $userE->segundoApellido,
+            'role' => 'estudiante',
+        ]);
+
+        return response()->json(['success' => 'Datos del estudiante actualizados correctamente']);
     }
     
     
