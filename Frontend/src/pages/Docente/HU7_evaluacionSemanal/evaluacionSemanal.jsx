@@ -24,10 +24,8 @@ const SeguimientoSemanal = () => {
 
   const [comentarios, setComentarios] = useState([])
   useEffect(() => {
-    setLoading(true)
     getNombreEmpresa();
     fetchData();
-    setLoading(false)
   }, [seSubio]);
   
   
@@ -40,6 +38,7 @@ const SeguimientoSemanal = () => {
       const newComentarios = data?.comentarios
       setComentarios(newComentarios)
       console.log(data)
+      setLoading(false)
     } catch (error) {
       console.error("Error en la solicitud:", error);
       setError(true);

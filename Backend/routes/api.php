@@ -230,6 +230,7 @@ Route::post('/seguimientoSemanal/actualizarComentarios',[ComentarioTareaControll
 Route::get('/seguimientoSemanal/{idEmpresa}/SprintHastaSemanalActualComentarios',[ComentarioTareaController::class, 'seguimientoSemanalHastaSemanaActualcomentarios']);
 Route::get('/modificarTarea/{idEmpresa}/semanaActualTareas', [ComentarioTareaController::class, 'getSemanaActualTareas']);
 
+Route::get('/empresasSinSprintCalificado', [SprintController::class, 'empresasSinSprintCalificado']);//utilizado
 Route::get('/empresasSinSemanaCalificada', [SprintController::class, 'empresasSinSemanaCalificada']);//utilizado
 Route::get('/empresa/sprintConEntregables/{idSprint}', [SprintController::class, 'sprintConEntregables']);//utilizado
 
