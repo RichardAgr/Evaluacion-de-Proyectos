@@ -99,15 +99,35 @@ class AdministradorController extends Controller{
     }
 
     public function obtenerDatosEstudiante(){
+        $idEstudiante = session('docente.id');
+        $estudiante = Docente::find($idEstudiante);
+        $datosEstudiante = [
+            'nombreCuenta' => $estudiante->nombreCuenta,
+            'nombre' => $estudiante->nombreEstudiante,
+            'primerApellido' => $estudiante->primerApellido,
+            'segundoApellido' => $estudiante->segundoApellido,
+            'email' => $estudiante->email,
+        ];
+        return response()->json($datosEstudiante, 200);
 
 
 
     }
 
     public function obtenerDatosDocente(){
-
-        
+        $idDocente = session('docente.id'); 
+        $docente = Docente::find($idDocente);
+        $datosDocente = [
+            'nombreCuenta' => $docente->nombreCuenta,
+            'email' => $docente->email,
+            'nombre' => $docente->nombreDocente,
+            'primerApellido' => $docente->primerApellido,
+            'segundoApellido' => $docente->segundoApellido,
+        ];
+        return response()->json($datosDocente, 200);
     }
+    
+    
     
     
 }

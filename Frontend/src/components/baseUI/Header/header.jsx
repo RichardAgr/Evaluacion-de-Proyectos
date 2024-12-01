@@ -11,8 +11,8 @@ import Menu from '@mui/material/Menu';
 import Cookies from 'js-cookie';
 import { useState, lazy, Suspense } from 'react';
 import { decrypt } from '../../../api/decrypt';
-const HamburgesaDocente = lazy(() => import('../../Hamburgesa/hamburgesaDocente'));
-const HamburgesaEstudiante = lazy(() => import('../../Hamburgesa/hamburgesaEstudiante'));
+const HamburgesaDocente = lazy(() => import('../Hamburgesa/hamburgesaDocente'));
+const HamburgesaEstudiante = lazy(() => import('../Hamburgesa/hamburgesaEstudiante'));
 const UserModal= lazy(() => import('../userModal/userModal'));
 
 function Header() {
