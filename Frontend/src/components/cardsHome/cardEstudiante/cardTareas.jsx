@@ -4,13 +4,12 @@ import { useNavigate } from "react-router-dom";
 function CardResumen() {
   const fechaFinPlanificacion = new Date(localStorage.getItem("fechaFinPlanificacion"))
   const paso = new Date() > fechaFinPlanificacion
-  const fechaLimiteEntrega = new Date(localStorage.getItem('fechaLimiteSemana'))
   const navigate = useNavigate()
   return (
     <CardGeneral
         titulo = "Tareas"
         info = {<>
-        <Typography>Fecha limite de entrega del seguimiento: {fechaLimiteEntrega.toLocaleDateString()}</Typography>
+          <Typography>Fecha limite de entrega del seguimiento: {localStorage.getItem('fechaLimiteSemana')} a las 23:59</Typography>
         </>}
         buttons={<> 
         {!paso?<Button variant="contained" color="primary" fullWidth

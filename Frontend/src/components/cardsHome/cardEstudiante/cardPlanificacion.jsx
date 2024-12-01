@@ -8,7 +8,9 @@ function CardResumen() {
     <CardGeneral
         titulo = "Planificacion"
         info = {<>
-          <Typography>Fecha limite de entraga de la planificacion: {fechaLimiteEntregaPlani.toLocaleDateString()}</Typography>
+          <Typography>
+            Fecha limite de entraga de la planificacion: {localStorage.getItem("fechaLimiteEntregaPlanificacion")} a las 23:59
+          </Typography>
         </>}
         buttons={<> 
         {(!aceptada&&paso)?<Button variant="contained" color="primary" fullWidth>

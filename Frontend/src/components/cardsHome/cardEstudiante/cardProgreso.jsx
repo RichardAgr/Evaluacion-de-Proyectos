@@ -8,12 +8,11 @@ function CardResumen() {
   const fechaLimiteEntregaPlanificacion = new Date(localStorage.getItem("fechaLimiteEntregaPlanificacion"))
   const inicio = fechaLimiteEntregaPlanificacion < new Date()
   const navigate = useNavigate();
-  const fechaLimiteEntrega = new Date(localStorage.getItem('fechaLimiteSprint'))
   return (
     <CardGeneral
         titulo = "Progreso del Proyecto"
         info = {<>
-          <Typography>El Sprint actual termina el: {fechaLimiteEntrega.toLocaleDateString()}</Typography>
+          <Typography>El Sprint actual termina el: {localStorage.getItem('fechaLimiteSprint')} a las 23:59</Typography>
         </>}
         buttons={<> 
         {!paso && inicio?<Button variant="contained" color="primary" fullWidth >

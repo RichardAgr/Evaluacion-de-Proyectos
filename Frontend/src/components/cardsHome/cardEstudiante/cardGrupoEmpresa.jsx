@@ -11,7 +11,9 @@ function CardResumen() {
     <CardGeneral
         titulo = "Grupo Empresa"
         info = {<>
-            <Typography>Fecha limite de entrega de la Empresa: {fechaLimiteEntregaEmpresa.toLocaleDateString()}</Typography>
+            <Typography>
+              Fecha limite de entrega de la Empresa: {localStorage.getItem("fechaLimiteEntregaEmpresa")} a las 23:59
+            </Typography>
         </>}
         buttons={<> 
         {!paso&&idEmpresa!==-1?<Button variant="contained" color="primary" fullWidth

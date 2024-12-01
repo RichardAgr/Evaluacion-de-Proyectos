@@ -17,7 +17,6 @@ function Home() {
     const getDatosLogin = async () => {
         try {
           await getOriginDocente()
-
           setIsLoaded(true);
         } catch (error) {
           console.error("Error:", error);
