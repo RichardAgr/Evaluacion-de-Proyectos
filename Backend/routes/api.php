@@ -2,7 +2,6 @@
 /*
 esto es un prueba de subir al git 2
 */
-
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Estudiante\TareaController;
 use App\Http\Controllers\Docente\GrupoController;
@@ -19,6 +18,9 @@ use App\Http\Controllers\ComentarioTareaController;
 use App\Http\Controllers\joaquinController;
 use App\Http\Controllers\Estudiante\SesionEstudianteController;
 use App\Http\Controllers\Docente\SesionDocenteController;
+use App\Http\Controllers\Administrador\AdministradorController;
+
+use App\Http\Controllers\RecuperarController;
 
 //============================= GET EMPRESA ================================
 
@@ -48,9 +50,9 @@ Route::get('/docente/listaEstudiantes', [GrupoController::class, 'obtenerEstudia
 //---Recibe las empresas del grupo del docente y del docente activo
 Route::get('/docente/obtenerEmpresasPorGrupoYDocente',[GrupoController::class, 'obtenerEmpresasPorGrupoYDocente']);
 //-- sprints con toda su informacion y los entragables
-Route::get('/empresa/{idEmpresa}/sprintsEntregables', [EmpresaController::class, 'getSprintsEntregables']);
+Route::get('/empresa/{idEmpresa}/sprintsEntregables', [EmpresaControll0er::class, 'getSprintsEntregables']);
 
-Route::get('/empresa/{idEmpresa}/sprintsSemanasTareas', [EmpresaController::class, 'getSprintsSemanasTareas']);
+Route::get('/empresa/{idEmpresa}/semanasTareas', [EmpresaController::class, 'getSemanasTareas']);
 
 //-- empresas de un grupo
 Route::get('/grupo/{idGrupo}/empresas', [GrupoController::class, 'getEmpresasPorGrupo']);
@@ -90,6 +92,8 @@ Route::get('/empresas/', [EmpresaController::class, 'getListaEmpresas']);
 Route::get('/planificacionesSinValidar', [PlanificacionController::class, 'planificacionesSinValidar']);
 // obtiene una lista de todas las empresas que no fueron publicadas
 Route::get('/planificacionesSinPublicar', [PlanificacionController::class, 'planificacionesSinPublicar']);
+// obtiene una lista de todas las empresas de las que se puede modificar su planificacion
+Route::get('/planificacionesParaModificar', [PlanificacionController::class, 'planificacionesParaModificar']);
 
 Route::get('/planificacion/notaComentario/{idPlanificacion}', [PlanificacionController::class, 'notaComentario']);
 Route::get('/planificacionAceptadas', [PlanificacionController::class, 'planificacionAceptadas']);
@@ -119,6 +123,10 @@ Route::put('/planificacion/publicarPlanificacion', [PlanificacionController::cla
 // ---añade los comentarios y la nota
 Route::post('/planificacion/addRevision', [PlanificacionController::class, 'addRevision']);
 
+Route::post('/aceptarEntregables', [EntregablesController::class, 'aceptarEntregables']);
+
+
+
 
 // ==================================   POST ESTUDIANTE     =====================================
 // ---Ruta para crear una tarea
@@ -130,10 +138,11 @@ Route::post('/estudiante/crearEmpresa', [EstudiantesEmpresasController::class, '
 
 // ===================================   POST EMPRESA       =======================================
 
-// ---Para crear la planificacion o modificarla
-Route::post('/planificacion/guardar2', [PlanificacionController::class, 'crearPlanificacion']);
-Route::post('/planificacion/guardar', [PlanificacionController::class, 'modificarPlanificacion']);
-Route::post('/planificacion/guardarSprints', [SprintController::class, 'modificarSprint']);
+// * Para Crear y modificar una Planificacion
+Route::post('/planificacion/guardarPlanificacion', [PlanificacionController::class, 'guardarPlanificacion']);
+// * Para Crear y modificar los Sprints
+Route::post('/planificacion/guardarSprints', [SprintController::class, 'guardarSprints']);
+// * Para Crear y modificar los Entregables
 Route::post('/planificacion/guardarEntregables', [EntregablesController::class, 'guardarEntregables']);
 
 // ===================================   POST DOCENTE       =======================================
@@ -153,7 +162,7 @@ Route::get('/docente/notasTarea/{idEmpresa}', [SprintController::class, 'getNota
 
 
 Route::get('/empresa/{idEmpresa}/sprint/{idSprint}/tareas', [SprintController::class, 'getSprintEvaluar']);
-Route::get('/empresa/{idEmpresa}/sprint/{idSprint}/semana/{idSemana}/tareas', [TareaController::class, 'getTareasSemana']);
+Route::get('/empresa/{idEmpresa}/semana/{idSemana}/tareas', [TareaController::class, 'getTareasSemana']);
 Route::get('/empresa/{idEmpresa}/sprintsEntregables', [EmpresaController::class, 'getSprintsEntregables']);
 
 
@@ -168,22 +177,31 @@ Route::post('/sprint/{idSprint}/actualizar', [SprintController::class, 'actualiz
 // ============================      SESIONES DOCENTE     ======================================
 
 Route::get('/session/active/docente', [AuthController::class, 'isSessionActiveDocente']);
-Route::get('/session/logeado/docente/{idDoc}', [AuthController::class, 'loginConIdDocente']);
-Route::get('/session/logout/docente/{idDoc}', [AuthController::class, 'logoutDocente']);
 Route::get('/docente/getGrupo', [SesionDocenteController::class, 'getGrupoSesion']);
 
 // ============================      SESIONES ESTUDIANTE  ====================================
 
 Route::get('/session/active/estudiante', [AuthController::class, 'isSessionActiveEstudiante']);
-Route::post('/session/logout/estudiante', [AuthController::class, 'logoutEstudiante']);
 Route::get('/estudiante/getEmpresa', [SesionEstudianteController::class, 'getEmpresaSesion']);
+Route::get('/estudiante/getDataEstudiante', [SesionEstudianteController::class, 'getDataEstudiante']);
 Route::get('/estudiante/getGrupo', [SesionEstudianteController::class, 'getGrupoSesion']);
 
 // ============================         SESIONES COMPARTIDAS    ==================================
 
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/loginAdmin', [AuthController::class, 'loginAdmin']);
+
 Route::get('/logout', [AuthController::class, 'logout']);
 
+Route::get('/session/active/admin', [AuthController::class, 'isSessionActiveAdmin']);
+Route::post('/crearCuentaEstudiante', [AdministradorController::class, 'crearEstudiante']);
+Route::post('/crearCuentaDocente', [AdministradorController::class, 'crearDocente']);
+
+
+Route::get('/obtenerDatosDocente', [AdministradorController::class, 'obtenerDatosDocente']);
+Route::get('/obtenerDatosEstudiante', [AdministradorController::class, 'obtenerDatosEstudiante']);
+Route::put('/modificarDatosEstudiante', [AdministradorController::class, 'actualizarEstudiante']);
+Route::put('/modificarDatosDocente', [AdministradorController::class, 'actualizarDocente']);
 
 
 
@@ -199,6 +217,9 @@ Route::post('/crearGrupoEmpresa/paso3/{idEstudiante}',[joaquinController::class,
 Route::get('/estaMatriculado/{idEstudiante}',[joaquinController::class, 'estaMatriculado']);
 
 Route::get('prueba/notaSprintV2/{idEmpresa}/{semana}', [joaquinController::class, 'notaSprintV2']);
+Route::get('/estaMatriculado',[joaquinController::class, 'estaMatriculado']);
+
+Route::get('prueba/notaSprintV2/{idEmpresa}/{semana}', [joaquinController::class, 'notaSprintV2']);
 
 Route::post('/estudiante/crearListaTareas',[TareaController::class, 'createOrUpdateTareas']);
 
@@ -209,8 +230,25 @@ Route::post('/estudiante/eliminarTareas',[TareaController::class, 'deleteTareas'
 
 
 // ============================  Funciones ComentarioTareaController  ====================================
-Route::get('/seguimientoSemanal/{idEmpresa}/SprintHastaSemanalActual', [ComentarioTareaController::class, 'seguimientoSemanalEmpresaHastaSemanaActual']);
+Route::get('/seguimientoSemanal/{idPlanificacion}/SprintHastaSemanalActual', [ComentarioTareaController::class, 'seguimientoSemanalEmpresaHastaSemanaActual']);//utilizado
+Route::get('/empresa/{idEmpresa}/seguimientoSemanal/semana/{idSemana}', [ComentarioTareaController::class, 'getSemanaSeguimiento']);//utilizado
+
 Route::get('/seguimientoSemanalComentarios/semanaElegida/{idSemana}', [ComentarioTareaController::class, 'seguimientoSemanaElegidaComentarios']);
 Route::post('/seguimientoSemanal/actualizarComentarios',[ComentarioTareaController::class, 'agregarComentarios']);
 Route::get('/seguimientoSemanal/{idEmpresa}/SprintHastaSemanalActualComentarios',[ComentarioTareaController::class, 'seguimientoSemanalHastaSemanaActualcomentarios']);
 Route::get('/modificarTarea/{idEmpresa}/semanaActualTareas', [ComentarioTareaController::class, 'getSemanaActualTareas']);
+
+Route::get('/empresasSinSprintCalificado', [SprintController::class, 'empresasSinSprintCalificado']);//utilizado
+Route::get('/empresasSinSemanaCalificada', [SprintController::class, 'empresasSinSemanaCalificada']);//utilizado
+Route::get('/empresa/sprintConEntregables/{idSprint}', [SprintController::class, 'sprintConEntregables']);//utilizado
+
+Route::post('/grupo/actualizar', [GrupoController::class, 'actualizarGrupo']);//utilizado
+
+
+//========================================== Cuentas  =======================================
+
+
+Route::post('/recuperarContrasena', [RecuperarController::class, 'recuperarContrasena']);
+
+Route::post('/cambiarContrasena', [RecuperarController::class, 'cambiarContrasena']);
+

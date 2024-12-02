@@ -1,4 +1,3 @@
-import * as React from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -10,27 +9,30 @@ import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import Cookies from 'js-cookie';
+import { useState, lazy, Suspense } from 'react';
+import { decrypt } from '../../../api/decrypt';
+import { logout } from '../../../api/sesionesApi';
+const HamburgesaDocente = lazy(() => import('../Hamburgesa/hamburgesaDocente'));
+const HamburgesaEstudiante = lazy(() => import('../Hamburgesa/hamburgesaEstudiante'));
+const UserModal= lazy(() => import('../userModal/userModal'));
+
 function Header() {
-  const [auth] = React.useState(true);
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [grupo] = React.useState(true);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const grupo = Number(localStorage.getItem('idGrupo'))!== -1
+  const [open, setOpen] = useState(false);
+  const [openPerfil, setOpenPerfil] = useState(false);
+  const cerrarPerfil = (openPerfil) => {
+    setOpenPerfil(openPerfil);
+    handleClose();
+  };
+  const toggleDrawer = (open) => {
+    setOpen(open);
+  };
   
-  const logout = async () => {
+  const logoutHeader = async () => {
       try {
-          await fetch('http://localhost:8000/api/logout', {
-              method: 'POST',
-              headers: {
-                  'Authorization': true,
-              },
-          });
-
-
-
-          localStorage.removeItem('role');
-          Cookies.remove('laravel_sesion', { path: '/' });
-          Cookies.remove('laravel_sesion', { path: '/', domain: 'yourdomain.com' });
-          localStorage.removeItem('role');
-        window.location.reload();  
+          await logout()
+          window.location.reload();  
       } catch (error) {
           console.error('Error al cerrar sesión:', error);
       }
@@ -42,7 +44,8 @@ function Header() {
   const handleClose = () => {
     setAnchorEl(null);
   };
-
+  const random = Cookies.get('random');
+  const role = decrypt(random);
   return (
     <Box >
       <AppBar position="fixed">
@@ -53,6 +56,7 @@ function Header() {
               edge="start"
               color="inherit"
               aria-label="menu"
+              onClick={() => toggleDrawer(true)}
               sx={{ mr: 2 }}
             >
               <MenuIcon />
@@ -61,7 +65,6 @@ function Header() {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             <h5>WEB TIS</h5>
           </Typography>
-          {auth ? (
             <div>
               <IconButton
                 size="large"
@@ -95,13 +98,25 @@ function Header() {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
               >
-                <MenuItem onClick={handleClose}>Profile</MenuItem>
-                <MenuItem onClick={logout}>Cerrar Sesión</MenuItem>
+                <MenuItem onClick={()=> cerrarPerfil(true)}>Profile</MenuItem>
+                <MenuItem onClick={logoutHeader}>Cerrar Sesión</MenuItem>
               </Menu>
             </div>
-          ) : null}
         </Toolbar>
       </AppBar>
+      <Suspense >
+        {open&&(role==='docente'?
+          <HamburgesaDocente open={open} toggleDrawer={toggleDrawer} />
+          :role==='estudiante'?
+          <HamburgesaEstudiante open={open} toggleDrawer={toggleDrawer} />
+          :
+          <></>
+        )}
+      </Suspense>
+      <Suspense fallback={<div>Loading...</div>}>
+        {openPerfil && <UserModal openPerfil={openPerfil} cerrarPerfil={cerrarPerfil} role={role} />}
+      </Suspense>
+
     </Box>
   );
 }

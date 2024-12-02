@@ -5,6 +5,7 @@ export const getTareaData = async (idTarea) => {
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: 'include'
     });
 
     if (!response.ok) {
@@ -32,6 +33,7 @@ export const calificarTarea = async (idTarea, nota, comentario_docente) => {
           nota,
           comentario_docente,
         }),
+        credentials: 'include'
       }
     );
 
@@ -68,6 +70,7 @@ export const updateTarea = async (idTarea, formData) => {
       {
         method: "POST",
         body: data,
+        credentials: 'include'
       }
     );
 
@@ -82,15 +85,16 @@ export const updateTarea = async (idTarea, formData) => {
   }
 };
 
-export const getTareasSemana = async (idEmpresa, idSprint, idSemana) => {
+export const getTareasSemana = async (idEmpresa, idSemana) => {
   try {
     const response = await fetch(
-      `http://127.0.0.1:8000/api/empresa/${idEmpresa}/sprint/${idSprint}/semana/${idSemana}/tareas`,
+      `http://127.0.0.1:8000/api/empresa/${idEmpresa}/semana/${idSemana}/tareas`,
       {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: 'include'
       }
     );
 
@@ -128,6 +132,7 @@ export const updateTareasSemana = async (
             fechaEntrega: task.fechaEntrega ?? null,
             deleted: task.deleted ?? false,
           })),
+          credentials: 'include'
         }),
       }
     );

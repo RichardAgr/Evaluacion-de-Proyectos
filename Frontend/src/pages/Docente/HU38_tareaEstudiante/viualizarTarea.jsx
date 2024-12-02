@@ -1,4 +1,3 @@
-import { useParams} from "react-router-dom";
 import { Fragment,useEffect,useState } from 'react';
 import { styled } from '@mui/material';
 import BaseUI from '../../../components/baseUI/baseUI';
@@ -9,8 +8,8 @@ function VisualizarTarea() {
     const [comentarioD, setComentario] = useState("");
     const [responsables, setResponsables] = useState([]);
     const [nombreTarea,setNombreTarea] = useState([]);
-    const { idTarea } = useParams();
-    const { idEmpresa, idGrupo } = useParams();
+    const idTarea = localStorage.getItem("idTarea")
+    const idEstudiante = localStorage.getItem("idEstudiante")
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState({
       error: false,
@@ -48,7 +47,7 @@ function VisualizarTarea() {
             titulo = {'VISUALIZAR TAREA'}
             ocultarAtras = {false}
             confirmarAtras = {false}
-            dirBack = {`/homeGrupo/${idGrupo}/empresasVerTareas/${idEmpresa}`}
+            dirBack = {idEstudiante===null?`/homeDocente/listaEmpresasVerTareas/sprints`:`/homeEstu/listaSprintsSemanasTareas`}
             loading={loading}
             error={error}
           >

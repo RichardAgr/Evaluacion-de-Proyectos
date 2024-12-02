@@ -53,10 +53,6 @@ function Home() {
 
   const sharedButtons = [
     {
-      label: "HU38_Visualizar tareas",
-      onClick: () => navigate(`/homeGrupo/1/empresasVerTareas`),
-    },
-    {
       label: "HU36_Ver Planificación",
       onClick: () => navigate("/visualizarPlanificacion"),
     },

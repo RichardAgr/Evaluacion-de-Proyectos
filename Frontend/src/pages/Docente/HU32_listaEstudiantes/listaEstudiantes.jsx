@@ -1,6 +1,5 @@
 import {useState, useEffect } from 'react';
 import ListaDefinitivaN from '../../../components/listaDefinitiva/listaDefinitivaN';
-import { useParams } from 'react-router-dom';
 const columns = [
   {
     field: 'nombreCompleto',
@@ -30,21 +29,25 @@ export default function DataTable() {
     errorMessage: "",
     errorDetails: "",
   });
-
-  const {idGrupo, gestionGrupo} = useParams()
-
+  const idGrupo = localStorage.getItem("idGrupo")
   const fetchEstudiantes = async () => {
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:8000/api/docente/listaEstudiantes', {
-        method: 'GET',  // El método de la solicitud, si es GET o POST, depende de tu API
-        credentials: 'include',  // Incluye las cookies de sesión si es necesario
-        // Si estás enviando parámetros de consulta:
-        // headers: {
-        //   'Content-Type': 'application/json',  // Dependiendo de tu API
-        // },
-        // body: JSON.stringify({idGrupo, gestionGrupo}),  // Si necesitas enviar datos en el cuerpo de la solicitud
-      });
+      const response = await fetch(`http://localhost:8000/api/docente/listaEstudiantes?` +
+        new URLSearchParams({
+          idGrupo,
+        }),{
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include"
+        }
+      );
+      if (!response.ok) {
+        throw new Error('Error de grupo');
+      }
+
       const data = await response.json();
       setEstudiantes(data); 
     } catch (err) {
@@ -71,7 +74,7 @@ export default function DataTable() {
       datosTabla={estudiantes}
       ocultarAtras={false}
       confirmarAtras={false}
-      dirBack="/"
+      dirBack="/homeDocente"
       dirForward=""
       mensajeSearch = "Buscar Estudiante o empresa"
       nombreContador = "Estudiantes"

@@ -9,61 +9,95 @@ import ListaTareas from "../pages/Estudiante/HU8_modificarTarea/listaTareas.jsx"
 import CalificacionesHitoEmpresa from "../pages/Estudiante/HU18_verCalificaciones/calificacionesHitoEmpresa.jsx";
 import CrearGrupoEmpresa from "../pages/Estudiante/HU3_HU71_HU69_grupoEmpresa/crearGrupoEmpresa.jsx";
 import PublicarGrupoEmpresa from "../pages/Estudiante/HU3_HU71_HU69_grupoEmpresa/publicarGrupoEmpresa.jsx";
-import SprintTareas2 from "../pages/Docente/HU38_tareaEstudiante/visualizarSprint.jsx";
+import RedirigirHome from '../pages/Estudiante/homeGrupoEstudiante/redirigirHomeEstu.jsx';
 
-function Nav() {
+//traido desde docnete
+import ListaSprintsVerTareas from '../pages/Docente/HU38_tareaEstudiante/visualizarSprint.jsx'
+import VerTarea from '../pages/Docente/HU38_tareaEstudiante/viualizarTarea.jsx'
+import ListaEstudiantes from '../pages/Docente/HU32_listaEstudiantes/listaEstudiantes.jsx'
+import ListaEmpresas from '../pages/Docente/HU31_listaEmpresas/listaEmpresaPorDocente.jsx'
+import ListaSprintsVerSeguimiento from '../pages/Docente/HU77_calificarEstudiante/listaSprintsVerCalificacionesSemanales.jsx'
+import VerSeguimientoSemanal from '../pages/Docente/HU77_calificarEstudiante/calificarEstSemana.jsx'
+
+function NavEstudiante() {
     return (
       <Routes>
-        <Route path="/" element={<HomeGrupoEstudiante />} />
-        {/** ROUTES JHON*/}
         <Route
-          path="/:idEstudiante/homeGrupoE/:idGrupo/Empresas/:idEmpresa"
+          path="/"
+          element={<RedirigirHome/>}
+        />
+        <Route path="/homeEstu" element={<HomeGrupoEstudiante />} />
+        {/** ROUTES JHON NUEVO FORMATO*/}
+        <Route
+          path="/homeEstu/modificarListaTareas"
+          element={<ModificarListaTareas />}
+        />
+        <Route
+          path="/homeEstu/listaTareas"
           element={<ListaTareas />}
         />
         <Route  
-          path="/:idEstudiante/homeGrupoE/:idGrupo/Empresa/:idEmpresa/sprintSemanaEditarTarea/:idTarea"
+          path="/homeEstu/listaTareas/modificarTarea"
           element={<ModificarTarea />}
         />
         <Route
-          path="/:idEstudiante/homeGrupoE/:idGrupo/empresa/calificaciones/:idEmpresa"
+          path="/homeEstu/VerCalificacionesSprints"
           element={<CalificacionesHitoEmpresa />}
         />
+        <Route
+          path="/homeEstu/listaEmpresasGrupo"
+          element={<ListaEmpresas/>}
+        />
+        <Route
+          path="/homeEstu/listaEstudiantesGrupo"
+          element={<ListaEstudiantes />}
+        />
+        {/** ROUTES JHON*/}
+        
         {/** ROUTES JOAQUIN*/}
         <Route
-          path="/prueba123/:idEmpresa"
-          element={<SprintTareas2 />}
+          path="/homeEstu/listaSprintsSemanasTareas"
+          element={<ListaSprintsVerTareas />}
+        />
+        <Route
+          path="/homeEstu/listaSprintsSemanasTareas/verTarea"
+          element={<VerTarea />}
+        />
+        <Route
+          path="/homeEstu/listaSprintsVerSeguimiento"
+          element={<ListaSprintsVerSeguimiento />}
+        />
+        <Route
+          path="/homeEstu/listaSprintsVerSeguimiento/verSeguimientoSemanal"
+          element={<VerSeguimientoSemanal />}
         />
         {/** ROUTES JHAIR /homeEstudiante/homeGrupoEstudiante/sprint/:idSprint"*/}
         
         
         <Route
-          path="/homeEstudiante/homeGrupoEstudiante/crearGrupo/:idEstudiante"
+          path="/homeEstu/CrearGrupoEmpresa"
           element={<CrearGrupoEmpresa />}
         />
         <Route
-          path="/homeEstudiante/homeGrupoEstudiante/modificarGrupo/:idEstudiante"
+          path="/homeEstu/ModificarGrupoEmpresa"
           element={<ModificarGrupoEmpresa />}
         />
+
         <Route
-        path="/homeEstudiante/homeGrupoEstudiante/publicarEmpresa/:idEstudiante"
-        element={<PublicarGrupoEmpresa />}
+          path="/homeEstu/PublicarGrupoEmpresa"
+          element={<PublicarGrupoEmpresa />}
         />
         <Route
-          path="/modificarListaTareas/empresa/:idEmpresa/sprint/:idSprint/semana/:idSemana"
-          element={<ModificarListaTareas />}
-        />
-        <Route
-          path="/homeEstudiante/gruposDisponibles/:idEstudiante"
+          path="/GruposDocente"
           element={<GruposDisponibles />}
         />
         <Route
-          path="/homeEstudiante/inscribirGrupo/:idEstudiante/:idGrupo"
+          path="/GruposDocente/incribirse"
           element={<InscribirGrupo />}
         />
         <Route path="*" element={<Navigate to="/" />} />
-
       </Routes>
     );
   }
   
-  export default Nav;
+  export default NavEstudiante;

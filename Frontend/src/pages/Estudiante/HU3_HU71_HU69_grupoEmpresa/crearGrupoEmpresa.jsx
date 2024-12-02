@@ -1,5 +1,4 @@
 import { Fragment, useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
 import BaseUI from "../../../components/baseUI/baseUI";
 import { styled } from "@mui/material";
 import { Snackbar, Alert } from "@mui/material";
@@ -10,7 +9,7 @@ import Loading from "../../../components/loading/loading";
 import Error from "../../../components/error/error";
 
 const CrearGrupoEmpresa = () => {
-  let { idEstudiante } = useParams();
+  let idEstudiante = localStorage.getItem("idEstudiante")
   const [nombreLargo, setNombreLargo] = useState("");
   const [nombreCorto, setNombreCorto] = useState("");
   const [intentoEnviar, setIntentoEnviar] = useState(false);
@@ -30,7 +29,7 @@ const CrearGrupoEmpresa = () => {
     const fetchEstudiante = async (idEstudiante) => {
       try {
         const response = await fetch(
-          `http://localhost:8000/api/estudiante/getDatosEst/${idEstudiante}`
+          `http://localhost:8000/api/estudiante/getDatosEst/${idEstudiante}`,{credentials: 'include'}
         );
         if (!response.ok) throw new Error("Error al recuperar estudiante");
         const data = await response.json();
@@ -69,6 +68,7 @@ const CrearGrupoEmpresa = () => {
               nombreCorto,
               estudiante: estudiante.idEstudiante,
             }),
+            credentials: 'include'
           }
         );
 
@@ -120,7 +120,7 @@ const CrearGrupoEmpresa = () => {
         titulo={`REGISTRAR GRUPO EMPRESA`}
         ocultarAtras={false}
         confirmarAtras={false}
-        dirBack={`/`}
+        dirBack={`/homeEstu`}
         loading={isLoading}
         error={error}
       >

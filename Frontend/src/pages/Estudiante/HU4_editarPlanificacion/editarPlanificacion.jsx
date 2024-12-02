@@ -78,7 +78,7 @@ function ModificarPlanificacion() {
             />
             {planificacionData?.aceptada ? (
               <Redirecting />
-            ) : planificacionData?.publicada==0 ? (
+            ) : (planificacionData?.publicada==0 || planificacionData?.publicada==null) ? (
               <>
                 <EditarPlanificacion
                   planificacionData={planificacionData}

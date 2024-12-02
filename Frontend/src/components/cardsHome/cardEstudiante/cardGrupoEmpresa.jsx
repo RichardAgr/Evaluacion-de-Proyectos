@@ -1,29 +1,36 @@
-import { Button} from "@mui/material";
+import { Button, Typography} from "@mui/material";
 import CardGeneral from '../cardGeneral'
 import { useNavigate } from "react-router-dom";
 function CardResumen() {
   const navigate = useNavigate()
+  const fechaLimiteEntregaEmpresa = new Date(localStorage.getItem("fechaLimiteEntregaEmpresa"))
+  const paso = fechaLimiteEntregaEmpresa < new Date()
+  const idEmpresa = Number(localStorage.getItem("idEmpresa"))
+  const empresaPublicada = Number(localStorage.getItem("empresaPublicada"))
   return (
     <CardGeneral
         titulo = "Grupo Empresa"
         info = {<>
+            <Typography>
+              Fecha limite de entrega de la Empresa: {localStorage.getItem("fechaLimiteEntregaEmpresa")} a las 23:59
+            </Typography>
         </>}
         buttons={<> 
-        <Button variant="contained" color="primary" fullWidth
-          onClick = { () => navigate("/homeEstudiante/homeGrupoEstudiante/crearGrupo/25")}
+        {!paso&&idEmpresa!==-1?<Button variant="contained" color="primary" fullWidth
+          onClick = { () => navigate("/homeEstu/CrearGrupoEmpresa")}
         >
             03_REGISTRAR GRUPO EMPRESA
-        </Button>
-        <Button variant="outlined" color="primary" fullWidth
-          onClick= {() => navigate("/homeEstudiante/homeGrupoEstudiante/modificarGrupo/25")}
+        </Button>:<></>}
+        {!paso&&empresaPublicada?<Button variant="outlined" color="primary" fullWidth
+          onClick= {() => navigate("/homeEstu/ModificarGrupoEmpresa")}
         >
             69_MODIFICAR GRUPO EMPRESA
-        </Button>
-        <Button variant="outlined" color="primary" fullWidth
-          onClick= {() => navigate("/homeEstudiante/homeGrupoEstudiante/publicarEmpresa/25")}
+        </Button>:<></>}
+        {idEmpresa!==-1?<Button variant="outlined" color="primary" fullWidth
+          onClick= {() => navigate("/homeEstu/PublicarGrupoEmpresa")}
         >
             71_PUBLICAR GRUPO EMPRESA
-        </Button>
+        </Button>:<></>}
         </>}
     />
   );

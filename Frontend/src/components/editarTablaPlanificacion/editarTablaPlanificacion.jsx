@@ -265,13 +265,14 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
       })),
     };
     const response = await fetch(
-      "http://localhost:8000/api/planificacion/guardar",
+      "http://localhost:8000/api/planificacion/guardarPlanificacion",
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(dataPlanificacion),
+        credentials: 'include'
       }
     );
     const responseData = await response.json();
@@ -292,9 +293,11 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
             "Content-Type": "application/json",
           },
           body: JSON.stringify(dataSprint),
+          credentials: 'include'
         }
       );
       const responseDataSprint = await responseSprint.json();
+      console.log(dataSprint);
       if (
         responseDataSprint.error !== undefined &&
         responseDataSprint.error !== null
@@ -354,6 +357,7 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
                 "Content-Type": "application/json",
               },
               body: JSON.stringify({ entregables: entregablesData }),
+              credentials: 'include'
             }
           );
 
@@ -544,7 +548,6 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
             Añadir fila
           </Button>
         )}
-+
         <DecisionButtons
           rejectButtonText="Descartar"
           validateButtonText="Guardar cambios"

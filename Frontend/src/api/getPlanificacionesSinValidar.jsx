@@ -6,6 +6,7 @@ export const getPlanificacionesSinValidar   = async () => {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include'
       });
       const responseData = await response.json();  
       return responseData;

@@ -1,30 +1,37 @@
-import { Button} from "@mui/material";
+import { Button, Typography} from "@mui/material";
 import CardGeneral from '../cardGeneral'
 import { useNavigate } from "react-router-dom";
 function CardResumen() {
+  const fechaFinPlanificacion = new Date(localStorage.getItem("fechaFinPlanificacion"))
+  const paso = new Date() > fechaFinPlanificacion
   const navigate = useNavigate()
   return (
     <CardGeneral
         titulo = "Tareas"
         info = {<>
+          <Typography>Fecha limite de entrega del seguimiento: {localStorage.getItem('fechaLimiteSemana')} a las 23:59</Typography>
         </>}
         buttons={<> 
-        <Button variant="contained" color="primary" fullWidth
-          onClick={()=>navigate("/modificarListaTareas/empresa/1/sprint/2/semana/2")}
+        {!paso?<Button variant="contained" color="primary" fullWidth
+          onClick={()=>navigate("/homeEstu/modificarListaTareas")}
         >
             40_MODIFICAR LISTA SEMANAL DE TAREAS
-        </Button>
+        </Button>:<></>}
         <Button 
           variant="outlined" 
           color="primary" 
-          fullWidth 
+          fullWidth
+          onClick={()=>navigate("/homeEstu/listaSprintsSemanasTareas")} 
         >
-            VISUALIZAR TAREAS
+            38_VISUALIZAR TAREAS
         </Button>
-        <Button variant="contained" color="primary" fullWidth
-          onClick={()=>navigate("/1/homeGrupoE/1/Empresas/1")}
+        {!paso?<Button variant="contained" color="primary" fullWidth
+          onClick={()=>navigate("/homeEstu/listaTareas")}
         >
             08_MODIFICAR TAREAS
+        </Button>:<></>}
+        <Button variant="outlined" color="primary" fullWidth onClick={() => navigate("/homeEstu/listaSprintsVerSeguimiento")} >
+            77_VISUALIZAR COMENTARIOS TAREAS SEMANA
         </Button>
         </>}
     />
