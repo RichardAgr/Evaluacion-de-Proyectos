@@ -52,6 +52,7 @@ export default function ModificarListaTareas() {
       const tareasV = tareas.tareas
       const newTextos = tareasV.map(()=>false)
       setErrorTexto(newTextos)
+      setLoading(false);
     } catch (error) {
       console.error("Error fetching tasks:", error);
       setError("Error al obtener las tareas de la semana");
@@ -60,9 +61,7 @@ export default function ModificarListaTareas() {
         message: "Error al cargar las tareas",
         severity: "error",
       });
-    } finally {
-      setLoading(false);
-    }
+    } 
   };
 
   useEffect(() => {
@@ -227,19 +226,19 @@ export default function ModificarListaTareas() {
           >
             SEMANA {numSemana}
           </Typography>
-          <Box display="flex" justifyContent="center">
+          <Box display="flex" justifyContent="center" flexWrap={'wrap'}>
               <Box display="flex" alignItems="center" m={2}>
                 <CalendarTodayIcon sx={{ mr: 1 }} />
                 <Typography variant="body1">
-                  <strong>Fecha de Inicio:</strong>{" "}
-                  {new Date(fechas?.fechaIni).toISOString().split('T')[0]} a las 00:00
+                  <strong>Fecha de Inicio:</strong>
+                  {fechas.fechaIni} a las 00:00
                 </Typography>
               </Box>
               <Box display="flex" alignItems="center" m={2}>
                 <CalendarTodayIcon sx={{ mr: 1 }} />
                 <Typography variant="body1">
                   <strong>Fecha de Fin:</strong>{" "}
-                  {localStorage.getItem('fechaLimiteSemana')} a las 23:59
+                  {fechas.fechaFin} a las 23:59
                 </Typography>
               </Box>
           </Box>
@@ -293,17 +292,17 @@ export default function ModificarListaTareas() {
                           error={errorTexto[index]}
                           helperText={errorTexto[index] && 'No tiene que ser un nombre similar'}
                         />
+                        
+                        <Button
+                          variant="contained"
+                          color="secondary"
+                          startIcon={<DeleteIcon />}
+                          onClick={() => handleDeleteTask(index)}
+                          sx={{ ml: 2, fontSize:'calc(1vw + 0.1rem)' }}
+                        >
+                          Eliminar
+                        </Button>
                       </Box>
-                      
-                      <Button
-                        variant="contained"
-                        color="secondary"
-                        startIcon={<DeleteIcon />}
-                        onClick={() => handleDeleteTask(index)}
-                        sx={{ ml: 2 }}
-                      >
-                        Eliminar
-                      </Button>
                     </ListItem>
                     </>
                   )

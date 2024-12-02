@@ -24,10 +24,8 @@ const SeguimientoSemanal = () => {
 
   const [comentarios, setComentarios] = useState([])
   useEffect(() => {
-    setLoading(true)
     getNombreEmpresa();
     fetchData();
-    setLoading(false)
   }, [seSubio]);
   
   
@@ -40,6 +38,7 @@ const SeguimientoSemanal = () => {
       const newComentarios = data?.comentarios
       setComentarios(newComentarios)
       console.log(data)
+      setLoading(false)
     } catch (error) {
       console.error("Error en la solicitud:", error);
       setError(true);
@@ -95,14 +94,14 @@ const SeguimientoSemanal = () => {
                   <CalendarTodayIcon sx={{ mr: 1 }} />
                   <Typography variant="body1">
                     <strong>Fecha de Inicio Semana:</strong>{" "}
-                    {new Date(data2?.fechaIni).toLocaleDateString()}
+                    {data2?.fechaIni} a las 00:00
                   </Typography>
                 </Box>
                 <Box display="flex" alignItems="center" m={2}>
                   <CalendarTodayIcon sx={{ mr: 1 }} />
                   <Typography variant="body1">
                     <strong>Fecha de Fin Semana:</strong>{" "}
-                    {new Date(data2?.fechaFin).toLocaleDateString()}
+                    {data2?.fechaFin} a las 23:59
                   </Typography>
                 </Box>
               </Box>

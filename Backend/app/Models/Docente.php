@@ -18,6 +18,8 @@ class Docente extends Model
         'contrasena',
         'email'
     ];
+    
+    public $timestamps = false;
 
     public function grupos()
     {

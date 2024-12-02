@@ -77,7 +77,7 @@ function GruposDocentes() {
   }, [idEstudiante]);
 
   const handleMatricularse = (grupo) => {
-    localStorage.setItem("idGrupo", grupo)
+    localStorage.setItem("idGrupo", grupo.idGrupo)
     const url = `/GruposDocente/incribirse`; 
     navigate(url); 
   };

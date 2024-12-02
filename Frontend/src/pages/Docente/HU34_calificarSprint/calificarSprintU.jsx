@@ -239,8 +239,31 @@ function CalificarSprintU() {
     })
     setAceptados(newAceptados)
   }
-  if (loading) return <Loading></Loading>;
-  if (error.error) return <Error></Error>;
+  if (loading) return (
+    <BaseUI
+      titulo={"CALIFICAR SPRINT"}
+      ocultarAtras={false}
+      confirmarAtras={true}
+      dirBack={`/homeDocente/listaEmpresaCalificarSprints/empresa`}
+      loading={loading}
+      error={error}
+    >
+      <Loading></Loading>  
+    </BaseUI>
+  )
+  if (error.error) return(
+    <BaseUI
+      titulo={"CALIFICAR SPRINT"}
+      ocultarAtras={false}
+      confirmarAtras={true}
+      dirBack={`/homeDocente/listaEmpresaCalificarSprints/empresa`}
+      loading={loading}
+      error={error}
+    >
+      <Error></Error>;
+    </BaseUI>
+  )
+  
   return (
     <BaseUI
       titulo={"CALIFICAR SPRINT"}
@@ -262,21 +285,21 @@ function CalificarSprintU() {
                 <CalendarTodayIcon sx={{ mr: 1 }} />
                 <Typography variant="body1">
                   <strong>Fecha de Inicio:</strong>{" "}
-                  {new Date(datosSprint?.fechaIni).toLocaleDateString()} a las 00:00                  
+                  {datosSprint?.fechaIni} a las 00:00                  
                 </Typography>
               </Box>
               <Box display="flex" alignItems="center" m={2}>
                 <CalendarTodayIcon sx={{ mr: 1 }} />
                 <Typography variant="body1">
                   <strong>Fecha de Fin:</strong>{" "}
-                  {new Date(datosSprint?.fechaFin).toLocaleDateString()} a las 23:59
+                  {datosSprint?.fechaFin} a las 23:59
                 </Typography>
               </Box>
               <Box display="flex" alignItems="center">
                 <CalendarTodayIcon sx={{ m: 2 }} />
                 <Typography variant="body1">
                   <strong>Fecha de Entrega precencial:</strong>{" "}
-                  {new Date(datosSprint?.fechaEntrega).toLocaleDateString()}
+                  {datosSprint?.fechaEntrega}
                 </Typography>
             </Box>
           </Box>
