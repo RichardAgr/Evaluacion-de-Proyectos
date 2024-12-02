@@ -123,37 +123,44 @@ class AdministradorController extends Controller{
         return response()->json($datosDocente, 200);
     }
 
-    public function actualizarEstudiante(Request $request)
-    {
+    public function actualizarEstudiante(Request $request){
         $request->validate([
             'contrasena' => 'required|string',
             'nombre' => 'sometimes|required|string',
             'primerApellido' => 'sometimes|required|string',
             'segundoApellido' => 'sometimes|required|string',
             'email' => 'sometimes|required|email',
+            'nuevaContrasena' => 'sometimes|required|string|min:8|confirmed', 
         ]);
+    
         $estudiante = session('estudiante');
-
+    
         if (!$estudiante) {
             return response()->json(['error' => 'No se encontraron datos del usuario en la sesión'], 401);
         }
+    
         $userE = Estudiante::find($estudiante['id']);
-        
+    
         if (!$userE) {
             return response()->json(['error' => 'Estudiante no encontrado en la base de datos'], 404);
         }
+    
 
         if (!Hash::check($request->contrasena, $userE->contrasena)) {
             return response()->json(['error' => 'Contraseña incorrecta'], 403);
         }
-
+    
+        if ($request->has('nuevaContrasena')) {
+            $userE->contrasena = Hash::make($request->nuevaContrasena); 
+        }
+    
         $userE->nombreEstudiante = $request->nombre ?? $userE->nombreEstudiante;
         $userE->primerApellido = $request->primerApellido ?? $userE->primerApellido;
         $userE->segundoApellido = $request->segundoApellido ?? $userE->segundoApellido;
         $userE->email = $request->email ?? $userE->email;
-
+    
         $userE->save();
-
+    
         session()->put('estudiante', [
             'id' => $userE->idEstudiante,
             'nombre' => $userE->nombreEstudiante,
@@ -161,9 +168,59 @@ class AdministradorController extends Controller{
             'segundoApellido' => $userE->segundoApellido,
             'role' => 'estudiante',
         ]);
-
+    
         return response()->json(['success' => 'Datos del estudiante actualizados correctamente']);
     }
+
+    public function actualizarDocente(Request $request){
+        $request->validate([
+            'contrasena' => 'required|string',
+            'nombre' => 'sometimes|required|string',
+            'primerApellido' => 'sometimes|required|string',
+            'segundoApellido' => 'sometimes|required|string',
+            'email' => 'sometimes|required|email',
+            'nuevaContrasena' => 'sometimes|required|string|min:8|confirmed', 
+        ]);
+
+        $docente = session('docente');
+
+        if (!$docente) {
+            return response()->json(['error' => 'No se encontraron datos del usuario en la sesión'], 401);
+        }
+
+        $userD = Docente::find($docente['id']);
+
+        if (!$userD) {
+            return response()->json(['error' => 'Docente no encontrado en la base de datos'], 404);
+        }
+
+        if (!Hash::check($request->contrasena, $userD->contrasena)) {
+            return response()->json(['error' => 'Contraseña incorrecta'], 403);
+        }
+
+        if ($request->has('nuevaContrasena')) {
+            $userD->contrasena = Hash::make($request->nuevaContrasena); 
+        }
+
+        $userD->nombreDocente = $request->nombre ?? $userD->nombreDocente;
+        $userD->primerApellido = $request->primerApellido ?? $userD->primerApellido;
+        $userD->segundoApellido = $request->segundoApellido ?? $userD->segundoApellido;
+        $userD->email = $request->email ?? $userD->email;
+
+        $userD->save();
+
+        session()->put('docente', [
+            'id' => $userD->idDocente,
+            'nombre' => $userD->nombreDocente,
+            'primerApellido' => $userD->primerApellido,
+            'segundoApellido' => $userD->segundoApellido,
+            'role' => 'docente',
+        ]);
+
+        return response()->json(['success' => 'Datos del docente actualizados correctamente']);
+    }
+
+    
     
     
     
