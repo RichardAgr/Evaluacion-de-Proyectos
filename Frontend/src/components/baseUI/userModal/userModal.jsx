@@ -1,3 +1,4 @@
+import InfoSnackbar from '../../infoSnackbar/infoSnackbar'
 import {
   Modal,
   Box,
@@ -14,13 +15,17 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import {
   obtenerDatosDocente,
   obtenerDatosEstudiante,
-  updatePerfil,
+  updateDatosDocente,
+  updateDatosEstudiante
 } from "../../../api/obtenerDatosParaModal";
-
 // eslint-disable-next-line react/prop-types
 const UserProfileModal = ({ openPerfil, cerrarPerfil, role }) => {
   const nombreCompleto = localStorage.getItem("nombreCompleto");
-
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "info",
+  });
   const [editableFields, setEditableFields] = useState({
     nombreCuenta: false,
     contrasena: false,
@@ -121,11 +126,25 @@ const UserProfileModal = ({ openPerfil, cerrarPerfil, role }) => {
   });
 
   const handleSubmit = async (values) => {
-    try {
-      console.log(values)
-      const response = await updatePerfil(values);
+    let metododElegido = () => {};
+    const payload = {
+      contrasena: values.verificarSiEsElUsuario,
+      nombre: values.nombre,
+      primerApellido: values.apellido,
+      segundoApellido: values.segundoApellido,
+      email: values.correo,
+      nuevaContrasena: values.contrasena
+    };
 
-      if (response.ok) {
+    if (role === "docente") {
+      metododElegido = updateDatosDocente;
+    } else {
+      metododElegido = updateDatosEstudiante;
+    }
+    try {
+      const response = await metododElegido(payload);
+  
+      if (response.mensaje === "success") {
         alert(response.message);
         setEditableFields({
           nombreCuenta: false,
@@ -137,14 +156,29 @@ const UserProfileModal = ({ openPerfil, cerrarPerfil, role }) => {
           segundoApellido: false,
           verificarSiEsElUsuario: true,
         });
+        setEditar(false);
+        setSnackbar({
+          open: true,
+          message: "Se actualizó el perfil correctamente",
+          severity: "success",
+        });
       } else {
-        alert("Contraseña es incorrecta");
+        setSnackbar({
+          open: true,
+          message: "La contraseña de verificación es incorrecta",
+          severity: "info",
+        });
       }
     } catch (error) {
-      console.error("Error en la verificación de contraseña:", error);
+      console.error(error);
+      setSnackbar({
+        open: true,
+        message: "Error al actualizar los datos de la cuenta",
+        severity: "error",
+      });
     }
   };
-
+  
   return (
     <Modal
       open={openPerfil}
@@ -170,7 +204,7 @@ const UserProfileModal = ({ openPerfil, cerrarPerfil, role }) => {
           left: "50%",
           transform: "translate(-50%, -50%)",
           maxHeight: "99vh",
-          width: "calc(10vw + 15rem)",
+          width: "calc(5vw + 20rem)",
           bgcolor: "white",
           boxShadow: 24,
           borderRadius: "16px",
@@ -351,6 +385,12 @@ const UserProfileModal = ({ openPerfil, cerrarPerfil, role }) => {
           )}
 
         </Formik>
+          <InfoSnackbar
+            openSnackbar={snackbar.open}
+            setOpenSnackbar={(open) => setSnackbar({ ...snackbar, open })}
+            message={snackbar.message}
+            severity={snackbar.severity}
+          />
       </Box>
     </Modal>
   );

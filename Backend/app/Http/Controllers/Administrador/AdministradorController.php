@@ -147,7 +147,7 @@ class AdministradorController extends Controller{
     
 
         if (!Hash::check($request->contrasena, $userE->contrasena)) {
-            return response()->json(['error' => 'Contraseña incorrecta'], 403);
+            return response()->json(['mensaje' => 'Contrasenaincorrecta'], 203);
         }
     
         if ($request->has('nuevaContrasena')) {
@@ -169,7 +169,7 @@ class AdministradorController extends Controller{
             'role' => 'estudiante',
         ]);
     
-        return response()->json(['success' => 'Datos del estudiante actualizados correctamente']);
+        return response()->json(['mensaje' => 'success'],200);
     }
 
     public function actualizarDocente(Request $request){
@@ -195,7 +195,7 @@ class AdministradorController extends Controller{
         }
 
         if (!Hash::check($request->contrasena, $userD->contrasena)) {
-            return response()->json(['error' => 'Contraseña incorrecta'], 403);
+            return response()->json(['mensaje' => 'Contraseña incorrecta'], 203);
         }
 
         if ($request->has('nuevaContrasena')) {
@@ -217,12 +217,6 @@ class AdministradorController extends Controller{
             'role' => 'docente',
         ]);
 
-        return response()->json(['success' => 'Datos del docente actualizados correctamente']);
+        return response()->json(['mensaje' => 'success'], 200);
     }
-
-    
-    
-    
-    
-    
 }
