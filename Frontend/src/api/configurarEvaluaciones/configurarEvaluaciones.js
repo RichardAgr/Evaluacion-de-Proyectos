@@ -19,7 +19,7 @@ export async function configurarEvaluacion(datosEvaluacion) {
     if (!response.ok) {
       const errorData = await response.json();
       throw new Error(
-        errorData.message || "Error al obtener los datos del sprint"
+        errorData.message || "Error al configurar la evaluación"
       );
     }
 

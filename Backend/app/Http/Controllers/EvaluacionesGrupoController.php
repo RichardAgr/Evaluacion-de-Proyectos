@@ -23,12 +23,19 @@ class EvaluacionesGrupoController extends Controller
 
         try {
             DB::beginTransaction();
-            
-            $evaluacionesGrupo = EvaluacionesGrupo::create([
-                'idGrupo' => $request->idGrupo,
-                'fechaEvaluacion' => Carbon::parse($request->fechaEvaluacion)->format('Y-m-d H:i:s'),
-            ]);
+            EvaluacionesGrupo::where('idGrupo', $request->idGrupo)->delete();
 
+            $evaluacionesGrupo = new EvaluacionesGrupo;
+            $evaluacionesGrupo->idGrupo = $request->idGrupo;
+            $evaluacionesGrupo->tipoEvaluacion = $request->tipoEvaluacion;
+            $evaluacionesGrupo->fechaEvaluacion = Carbon::parse($request->fechaEvaluacion)->format('Y-m-d H:i:s');
+            $evaluacionesGrupo->save();
+
+
+            // eliminar los criterios anteriores si es que existen
+            Criterio::where('idEvaluacionesGrupo', $evaluacionesGrupo->idEvaluacionesGrupo)->delete();
+
+            // añade nuevos criterios
             foreach ($request->criterios as $criterioData) {
                 Criterio::create([
                     'idEvaluacionesGrupo' => $evaluacionesGrupo->idEvaluacionesGrupo,
@@ -37,23 +44,7 @@ class EvaluacionesGrupoController extends Controller
                 ]);
             }
 
-            // Crear las evaluaciones individuales
-            /** 
-            $estudiantes = $evaluacionesGrupo->grupo->estudiantes;
 
-            foreach ($estudiantes as $estudiante) {
-                $evaluacion = $evaluacionesGrupo->evaluaciones()->create([
-                    'idEvaluadoEstudiante' => $estudiante->idEstudiante,
-                    'tipoEvaluacion' => $request->tipoEvaluacion,
-                    'horaEvaluacion' => now(),
-                ]);
-
-                if ($request->tipoEvaluacion === 'autoevaluacion') {
-                    $evaluacion->idEvaluadorEstudiante = $estudiante->idEstudiante;
-                    $evaluacion->save();
-                }
-            }
-             */
             DB::commit();
 
             return response()->json([

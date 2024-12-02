@@ -17,7 +17,7 @@ class CreateEvaluacionTable extends Migration
             $table->unsignedBigInteger('idEvaluadorEmpresa')->nullable();
             $table->unsignedBigInteger('idEvaluadorEstudiante')->nullable();
             $table->unsignedBigInteger('idEvaluadoEstudiante');
-            $table->enum('tipoEvaluacion', ['cruzada', 'autoevaluacion', 'pares']);
+            
             $table->time('horaEvaluacion');
 
             // * Llaves foráneas

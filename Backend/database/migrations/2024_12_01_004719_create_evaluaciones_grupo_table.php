@@ -15,7 +15,7 @@ class CreateEvaluacionesGrupoTable extends Migration
             $table->id('idEvaluacionesGrupo');
             $table->unsignedBigInteger('idGrupo');
             $table->date('fechaEvaluacion');
-
+            $table->enum('tipoEvaluacion', ['evaluacionCruzada', 'autoevaluacion', 'evaluacionPares']);
             // * Llave foranea
             $table->foreign('idGrupo')->references('idGrupo')->on('grupo');
         });
