@@ -1,31 +1,41 @@
-import { Button, Typography} from "@mui/material";
-import CardGeneral from '../cardGeneral'
-function CardResumen() {
-  const aceptada =Number(localStorage.getItem("aceptada"));
-  const fechaLimiteEntregaPlani = new Date(localStorage.getItem("fechaLimiteEntregaPlanificacion"))
-  const paso = fechaLimiteEntregaPlani > new Date()
+import { Button } from "@mui/material";
+import HomeCard, { InfoRow, ButtonsContainer } from "../homeCard";
+import { useNavigate } from "react-router-dom";
+function CardPlanificacion() {
+  const aceptada = Number(localStorage.getItem("aceptada"));
+  const fechaLimiteEntregaPlani = new Date(
+    localStorage.getItem("fechaLimiteEntregaPlanificacion")
+  );
+  const idPlanificacion =localStorage.getItem("idPlanificacion");
+  const tienePlanificacion = idPlanificacion!=="-1";
+  const aTiempo = new Date() < fechaLimiteEntregaPlani;
+  const navigate = useNavigate();
+  const empresa= localStorage.getItem("idEmpresa");
+  console.log("idplanificacion");
+  console.log(idPlanificacion);
+  console.log(tienePlanificacion);
   return (
-    <CardGeneral
-        titulo = "Planificacion"
-        info = {<>
-          <Typography>
-            Fecha limite de entraga de la planificacion: {localStorage.getItem("fechaLimiteEntregaPlanificacion")} a las 23:59
-          </Typography>
-        </>}
-        buttons={<> 
-        {(!aceptada&&paso)?<Button variant="contained" color="primary" fullWidth>
-          CREAR PLANIFICACION
-        </Button>:<></>}
-        <Button variant="outlined" color="primary" fullWidth>
-          VIZUALIZAR PLANIFICACIONES
-        </Button>
-        {(!aceptada&&paso)?<Button variant="contained" color="primary" fullWidth>
+    <HomeCard title="Planificacion">
+      <ButtonsContainer>
+        {(aceptada!==1 && aTiempo) && (
+          <Button variant="contained" color="primary" fullWidth onClick={()=>navigate(`/modificarPlanificacion/empresa/${empresa}`)}>
+            {tienePlanificacion ? "MODIFICAR PLANIFICACIÓN" : "CREAR PLANIFICACIÓN"}
+          </Button>
+        )}
+        {aceptada===1 &&(
+        <Button variant="outlined" color="primary" fullWidth onClick={()=>navigate(`/visualizarPlanificacion/empresa/${empresa}`)}>
+        VISUALIZAR PLANIFICACIONES
+      </Button>
+        )}
+
+        {((aceptada===0 || aceptada!==1) && aTiempo && tienePlanificacion) && (
+          <Button variant="contained" color="primary" fullWidth onClick={()=>navigate(`/publicarPlanificacion/empresa/${empresa}`)}>
             PUBLICAR PLANIFICACION
-        </Button>:<></>}
-        </>}
-    />
+          </Button>
+        )}
+      </ButtonsContainer>
+    </HomeCard>
   );
 }
 
-export default CardResumen;
-  
+export default CardPlanificacion;

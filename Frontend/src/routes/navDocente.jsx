@@ -12,11 +12,15 @@ import SeleccionarEmpresaPublicar from "../pages/Docente/AHUCompartidasDelEstudi
 import SeleccionarEmpresaVerSprints from "../pages/Docente/listas/seleccionarEmpresaVerSprints/seleccionarEmpresaVerSprints.jsx";
 import SeleccionarEmpresaSinValidar from "../pages/Docente/HU33_validarPlanificacion/seleccionarEmpresaSinValidar/seleccionarEmpresaSinValidar.jsx";
 import ValidarPlanificacion from "../pages/Docente/HU33_validarPlanificacion/validarPlanificacion.jsx";
+import ConfigurarEvaluacion from '../pages/Docente/configurarEvaluacion/configurarEvaluacion.jsx';
 //import ListaVerPlanificacion from "../pages/Docente/listas/seleccionarEmpresaVisualizar/seleccionarEmpresaVisualizar.jsx";
 import ListaEmpresaSprints from "../pages/Docente/HU34_calificarSprint/listaEmpresaSprints.jsx";
 import EvaluacionSemanalListaEmpresas from "../pages/Docente/HU7_evaluacionSemanal/EvaluacionSemanalListaEmpresas.jsx";
 import EvaluacionSemanalSprints from "../pages/Docente/HU7_evaluacionSemanal/EvaluacionSemanalSprints.jsx";
 //ACCIONES COMPARTIDAS
+import VerPlanificacionDeDesarollo from "../pages/VisualizacionCompartida/HU36_verPlanificacionDeDesarollo/VerPlanifacionDeDesarollo.jsx";
+import SeleccionarSprintVisualizar from '../pages/VisualizacionCompartida/HU37_visualizarSprint/seleccionarSprintVisualizar/seleccionarSprintVisualizar.jsx';
+import VisualizarSprint from '../pages/VisualizacionCompartida/HU37_visualizarSprint/visualizarSprint.jsx';
 import ListaCali from "../pages/Docente/AHUCompartidasDelEstudiante/HU18_listaVerCalificaciones/listaCalificaciones.jsx";
 import CalificacionesHitoEmpresa from "../pages/Estudiante/HU18_verCalificaciones/calificacionesHitoEmpresa.jsx";
 import EmpresasParaTareas from "../pages/Docente/HU38_tareaEstudiante/seleccionarEmpresaParaVisualizar.jsx";
@@ -119,41 +123,59 @@ function NavDocente() {
         element={<SeleccionarEmpresaVisualizar />}
       />
 
-      {/** Seleccione una Planificacion para Modificar */}
+      {/** Visualizar Planificacion*/}
       <Route
-        path="/modificarPlanificacion/"
-        element={<SeleccionarEmpresaModificar />}
+        path="/visualizarPlanificacion/Empresa/:idEmpresa"
+        element={<VerPlanificacionDeDesarollo />}
       />
-
-      {/** Seleccione una Planificacion para Publicar */}
-      <Route
-        path="/publicarPlanificacion/"
-        element={<SeleccionarEmpresaPublicar />}
-      />
-
       {/** Seleccione una empresa para ver sus sprints*/}
-
       <Route
         path="/visualizarSprint/"
         element={<SeleccionarEmpresaVerSprints />}
       />
-
+      {/** Seleccione un Sprint para  visualizar*/}
+      <Route
+        path="/visualizarSprint/Empresa/:idEmpresa"
+        element={<SeleccionarSprintVisualizar />}
+      />
+      {/** Visualizar Sprint*/}
+      <Route
+        path="/visualizarSprint/Empresa/:idEmpresa/Sprint/:idSprint"
+        element={<VisualizarSprint />}
+      />
       {/** Seleccionar una planificacion para validar*/}
       <Route
         path="/validarPlanificacion/"
         element={<SeleccionarEmpresaSinValidar />}
       />
-
       {/** Validar Planificacion */}
       <Route
         path="/validarPlanificacion/empresa/:idEmpresa"
         element={<ValidarPlanificacion />}
       />
 
+      {/** Configurar planilla de evaluacion*/}
       <Route
-        path="/validarPlanificacion/empresa/:idEmpresa"
-        element={<ValidarPlanificacion />}
+        path="/configurarEvaluacion"
+        element={<ConfigurarEvaluacion />}
       />
+
+
+
+      {/** Seleccione una Planificacion para Modificar */}
+      <Route
+        path="/modificarPlanificacion/"
+        element={<SeleccionarEmpresaModificar />}
+      />
+      {/** Seleccione una Planificacion para Publicar */}
+      <Route
+        path="/publicarPlanificacion/"
+        element={<SeleccionarEmpresaPublicar />}
+      />
+
+
+
+
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   );

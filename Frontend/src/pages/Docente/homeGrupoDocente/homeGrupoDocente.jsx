@@ -3,55 +3,107 @@ import Header from "../../../components/baseUI/Header/header.jsx";
 import { styled } from "@mui/material/styles";
 import { Box, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import CardResumen from '../../../components/cardsHome/cardDocente/cardResumen.jsx';
-import CardPlanificacion from '../../../components/cardsHome/cardDocente/cardPlanificacion.jsx';
-import CardSprint from '../../../components/cardsHome/cardDocente/cardSprint.jsx';
-import CardSeguimientoSemanal from '../../../components/cardsHome/cardDocente/cardSeguimientoSemanal.jsx';
-import CardEvaluacion from '../../../components/cardsHome/cardDocente/cardEvaluacion.jsx';
-import CardListaYDatos from '../../../components/cardsHome/cardDocente/cardListaYDatos.jsx';
-import Loading from '../../../components/loading/loading.jsx';
-import { getOriginDocente } from "../../../api/getDatosLogin.jsx";
+import { CardContainer, Title } from "../../../components/cardsHome/homeCard.jsx";
+import CardResumen from "../../../components/cardsHome/cardDocente/cardResumen.jsx";
+import CardPlanificacion from "../../../components/cardsHome/cardDocente/cardPlanificacion.jsx";
+import CardSprint from "../../../components/cardsHome/cardDocente/cardSprint.jsx";
+import CardSeguimientoSemanal from "../../../components/cardsHome/cardDocente/cardSeguimientoSemanal.jsx";
+import CardEvaluacion from "../../../components/cardsHome/cardDocente/cardEvaluacion.jsx";
+import CardListaYDatos from "../../../components/cardsHome/cardDocente/cardListaYDatos.jsx";
+import Loading from "../../../components/loading/loading.jsx";
+import Error from "../../../components/error/error.jsx";
+import { getDatosEvaluacion } from "../../../api/configurarEvaluaciones/configurarEvaluaciones.js";
 function Home() {
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState({
+    error: false,
+    errorMessage: "",
+    errorDetails: "",
+  });
   useEffect(() => {
-    const getDatosLogin = async () => {
-        try {
-          await getOriginDocente()
-          setIsLoaded(true);
-        } catch (error) {
-          console.error("Error:", error);
-        }
+    const getDatosLogin= async () => {
+      const url = "http://localhost:8000/api/docente/getGrupo";
+      const bodyFetch = {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      };
+
+      try {
+        const res = await fetch(url, bodyFetch);
+        const response = await res.json();
+        console.log(response);
+        localStorage.setItem("idGrupo", response.idGrupo);
+        localStorage.setItem("nombreCompleto", response.nombreCompleto);
+        localStorage.setItem("gestion", response.gestion);
+        localStorage.setItem("fechaIniGestion", response.fechaIniGestion);
+        localStorage.setItem(
+          "fechaLimiteEntregaEmpresa",
+          response.fechaLimiteEntregaEmpresa
+        );
+        localStorage.setItem(
+          "fechaLimiteEntregaPlanificacion",
+          response.fechaLimiteEntregaPlanificacion
+        );
+        localStorage.setItem(
+          "fechaFinPlanificacion",
+          response.fechaFinPlanificacion
+        );
+        localStorage.setItem("fechaFinGestion", response.fechaFinGestion);
+        localStorage.setItem("numEstudiantes", response.numEstudiantes);
+        localStorage.setItem("numEmpresas", response.numEmpresas);
+
+        setLoading(false);
+        setError({ error: false, errorMessage: "", errorDetails: "" });
+      } catch (error) {
+        console.log(error);
+        setError({
+          error: true,
+          errorMessage: "Ha ocurrido un error",
+          errorDetails: error.message, 
+        });
+      }
+      const idGrupo=localStorage.getItem("idGrupo");
+      const datosEvaluacion= await getDatosEvaluacion(idGrupo);
+      console.log(datosEvaluacion);
+      if(!datosEvaluacion.errorMessage){
+        localStorage.setItem("fechaEvaluacion", datosEvaluacion.fechaEvaluacion);
+        localStorage.setItem("tipoEvaluacion", datosEvaluacion.tipoEvaluacion);
+      }
     };
     getDatosLogin();
+    
+    
   }, []);
-
-  if (!isLoaded) {
-    return (
-      <>
-        <Header />
-        <Loading></Loading>
-        <Footer />
-      </>
-    )
-  }
 
   return (
     <>
       <Header />
-      <Title variant="h5" sx={{ marginTop: '5rem', textAlign: 'center' }}>
-        Bienvenid@, Ing. {localStorage.getItem('nombreCompleto')}
-      </Title>
-      <Title variant="h6" sx={{ textAlign: 'center' }}>
-        {localStorage.getItem('gestion')}
-      </Title>
-      <Container>
-        <CardResumen/>
-        <CardPlanificacion />
-        <CardSprint />
-        <CardSeguimientoSemanal />
-        <CardEvaluacion />
-        <CardListaYDatos />
-      </Container>
+      {loading ? (
+        <Loading />
+      ) : error.error===true ? (
+        <Error />
+      ) : (
+        <>
+          <Title variant="h5" sx={{ marginTop: "5rem", textAlign: "center" }}>
+            Bienvenid@, Ing. {localStorage.getItem("nombreCompleto")}
+          </Title>
+          <Title variant="h6" sx={{ textAlign: "center" }}>
+            {localStorage.getItem("gestion")}
+          </Title>
+          <CardContainer>
+            <CardResumen />
+            <CardPlanificacion />
+            <CardSprint />
+            <CardSeguimientoSemanal />
+            <CardEvaluacion />
+            <CardListaYDatos />
+          </CardContainer>
+        </>
+      )}
+
       <Footer />
     </>
   );
@@ -59,14 +111,4 @@ function Home() {
 
 export default Home;
 
-const Container = styled(Box)({
-  display: "flex",
-  minHeight: '72.9vh',
-  flexWrap: 'wrap',
-  alignItems: 'center',
-  justifyContent: 'center'
-});
-const Title = styled(Typography)({
-  marginBottom: "1rem",
-  fontWeight: "bold",
-});
+

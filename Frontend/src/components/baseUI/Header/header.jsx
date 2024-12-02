@@ -13,6 +13,7 @@ import { useState, lazy, Suspense } from 'react';
 import { decrypt } from '../../../api/decrypt';
 import { logout } from '../../../api/sesionesApi';
 const HamburgesaDocente = lazy(() => import('../Hamburgesa/hamburgesaDocente'));
+const HamburgesaEstudiante = lazy(() => import('../Hamburgesa/hamburgesaEstudiante'));
 const UserModal= lazy(() => import('../userModal/userModal'));
 
 function Header() {
@@ -106,8 +107,10 @@ function Header() {
       <Suspense >
         {role==='docente'?
           <HamburgesaDocente open={open} toggleDrawer={toggleDrawer} />
+          :role==='estudiante'?
+          <HamburgesaEstudiante open={open} toggleDrawer={toggleDrawer} />
           :
-          <HamburgesaDocente open={open} toggleDrawer={toggleDrawer} />
+          <></>
         }
       </Suspense>
       <Suspense >
