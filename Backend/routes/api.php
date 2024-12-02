@@ -20,6 +20,8 @@ use App\Http\Controllers\Estudiante\SesionEstudianteController;
 use App\Http\Controllers\Docente\SesionDocenteController;
 use App\Http\Controllers\Administrador\AdministradorController;
 
+use App\Http\Controllers\RecuperarController;
+
 //============================= GET EMPRESA ================================
 
 
@@ -241,3 +243,12 @@ Route::get('/empresasSinSemanaCalificada', [SprintController::class, 'empresasSi
 Route::get('/empresa/sprintConEntregables/{idSprint}', [SprintController::class, 'sprintConEntregables']);//utilizado
 
 Route::post('/grupo/actualizar', [GrupoController::class, 'actualizarGrupo']);//utilizado
+
+
+//========================================== Cuentas  =======================================
+
+
+Route::post('/recuperarContrasena', [RecuperarController::class, 'recuperarContrasena']);
+
+Route::post('/cambiarContrasena', [RecuperarController::class, 'cambiarContrasena']);
+
