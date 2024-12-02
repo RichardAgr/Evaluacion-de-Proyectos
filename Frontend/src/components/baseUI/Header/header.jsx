@@ -113,9 +113,10 @@ function Header() {
           <></>
         }
       </Suspense>
-      <Suspense >
-        <UserModal openPerfil={openPerfil} cerrarPerfil={cerrarPerfil} role={role}></UserModal>
+      <Suspense fallback={<div>Loading...</div>}>
+        {openPerfil && <UserModal openPerfil={openPerfil} cerrarPerfil={cerrarPerfil} role={role} />}
       </Suspense>
+
     </Box>
   );
 }
