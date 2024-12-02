@@ -43,20 +43,21 @@ class SesionEstudianteController extends Controller
         $fechaFinGestion = $grupo ? $grupo->fechaFinGestion : '1';
         $gestion = $grupo? trim("Gestion: {$grupo->gestionGrupo}, Grupo:{$grupo->numGrupo}"): 'No Tiene grupo';
 
-        // Obtener la planificación aceptada y publicada a través de la empresa asociada
+
         $planificacion = Planificacion::where('idEmpresa', $idEmpresa)->first();
         $idPlanificacion = $planificacion ? $planificacion->idPlanificacion : -1;
         $aceptada = $planificacion ? $planificacion->aceptada : 0;
         $publicada = $planificacion ? $planificacion->publicada : 0;
-    
-        // Validar sprint si hay planificación aceptada
+
         $idSprint = -1;
         $sprint = Sprint::where('idPlanificacion', $idPlanificacion)
                         ->whereDate('fechaIni', '<=', $now)
                         ->whereDate('fechaFin', '>=', $now)
                         ->first();
+        $fechaLimiteSprint = '';
         if ($sprint) {
             $idSprint = $sprint->idSprint;
+            $fechaLimiteSprint = $sprint->fechaFin;
         }
     
         // Validar semana
@@ -66,8 +67,10 @@ class SesionEstudianteController extends Controller
                         ->whereDate('fechaFin', '>=', $now)
                         ->where('idPlanificacion', $idPlanificacion)
                         ->first();
+        $fechaLimiteSemana = '';
         if ($semana) {
             $idSemana = $semana->idSemana;
+            $fechaLimiteSemana = $semana->fechaFin;
         }
     
         return response()->json([
@@ -86,7 +89,9 @@ class SesionEstudianteController extends Controller
             'fechaLimiteEntregaPlanificacion' => $fechaLimiteEntregaPlanificacion,
             'fechaFinPlanificacion' => $fechaFinPlanificacion,
             'fechaFinGestion' => $fechaFinGestion,
-            'gestion' => $gestion
+            'gestion' => $gestion,
+            'fechaLimiteSprint' => $fechaLimiteSprint,
+            'fechaLimiteSemana' => $fechaLimiteSemana
         ], 200);
     }
     

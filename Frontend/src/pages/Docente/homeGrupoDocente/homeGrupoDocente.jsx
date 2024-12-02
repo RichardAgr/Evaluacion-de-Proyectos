@@ -64,8 +64,7 @@ function Home() {
         });
       }
     };
-
-    getOriginDocente();
+    getDatosLogin();
   }, []);
 
   return (

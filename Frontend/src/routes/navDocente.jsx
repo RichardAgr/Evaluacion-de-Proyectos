@@ -29,10 +29,10 @@ import VisualizarSprintEst from "../pages/Docente/HU38_tareaEstudiante/visualiza
 import VerEvaluacionSemanalSprints from '../pages/Docente/HU77_calificarEstudiante/listaSprintsVerCalificacionesSemanales.jsx'
 import VerEvaluacionSemanalListaEmpresas from '../pages/Docente/HU77_calificarEstudiante/listaEmpresasVerCalificaciones.jsx'
 import RedirigirHome from '../pages/Docente/homeGrupoDocente/redirigirHome.jsx';
+import ModificarFechasLimiteGrupo from '../pages/Docente/80_modificarFechasLimites/modificarFechasLimitesGrupo.jsx'
 function NavDocente() {
   return (
     <Routes>
-
       <Route
         path="/"
         element={<RedirigirHome/>}
@@ -40,6 +40,10 @@ function NavDocente() {
       <Route
         path="/homeDocente"
         element={<HomeGrupoDocente />}
+      />
+      <Route
+        path="/modificarFechasLimitesGrupo"
+        element={<ModificarFechasLimiteGrupo />}
       />
       {/** ROUTES JHON NUEVOFORMATO*/}
       <Route

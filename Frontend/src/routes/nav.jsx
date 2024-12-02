@@ -7,20 +7,15 @@ import PublicarPlanificacion from "../pages/Estudiante/publicarPlanificacion/pub
 import IniciarSesion from "../pages/Home/iniciarSesion.jsx";
 import CrearCuentaEstudiante from '../pages/Home/crearCuentaEstudiante.jsx';
 import IniciarSesionAdmin from '../pages/Home/iniciarSesionAdmin.jsx';
+import RecuperarContraseña from '../pages/Home/recuperarContraseña.jsx'
 function Nav() {
   return (
     <Routes>
       
       <Route path="/crearCuentaEstudiante" element={<CrearCuentaEstudiante />} />
-      {/** Ruta compartidas*/}
       <Route path="/" element={<IniciarSesion />} />
       <Route path="/estoTieneQueSerUnLinkRandomSuperLargo" element={<IniciarSesionAdmin />} />  
-      {/** Seleccione un Sprint para  visualizar*/}
-      <Route
-        path="/visualizarSprint/Empresa/:idEmpresa"
-        element={<SeleccionarSprintVisualizar />}
-      />
-
+      <Route path='/RecuperarContraseña'element={<RecuperarContraseña />}/>
 
 
       <Route path="*" element={<Navigate to="/" />} />

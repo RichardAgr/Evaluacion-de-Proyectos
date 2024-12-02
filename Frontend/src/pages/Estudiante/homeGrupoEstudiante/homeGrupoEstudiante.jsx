@@ -54,6 +54,9 @@ function HomeEstudiante() {
             localStorage.setItem("fechaLimiteEntregaPlanificacion", response.fechaLimiteEntregaPlanificacion);//fecha limite de entrega plani, y ini de los sprint
             localStorage.setItem("fechaFinPlanificacion", response.fechaFinPlanificacion);//fechafinplani hasta aqui terminan todos los sprints
             localStorage.setItem("fechaFinGestion", response.fechaFinGestion);//fecha fin gestion  
+
+            localStorage.setItem("fechaLimiteSprint", response.fechaLimiteSprint)
+            localStorage.setItem('fechaLimiteSemana', response.fechaLimiteSemana)
           }
           setIsLoaded(true);
         })

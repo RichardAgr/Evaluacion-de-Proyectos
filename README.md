@@ -164,3 +164,46 @@ Instrucciones básicas sobre cómo ejecutar el proyecto.
 3. Abre tu navegador el siguiente link, `http://localhost:5173`  si no tienes otro proyecto vite corriendo 
 
 ## Cuentas
+DOCENTE:   
+   'nombreCuenta' = 'letiGod'
+   'contrasena' = 'Password1'
+   
+   'nombreCuenta' = 'corina123'
+   'contrasena' = 'Password2'
+   
+   'nombreCuenta' = 'griego123'
+   'contrasena' = 'Password3'
+
+Estudiante: 
+  ['agarcia', 'passAna1'],
+  ['lhernandez', 'passLuis2'],
+  ['jmendez', 'passJuan3'],
+  ['srodriguez', 'passSofia4'],
+  ['cdiaz', 'passCarlos5'],
+  ['lmorales', 'passLucia6'],
+  ['dcruz', 'passDavid7'],
+  ['emartinez', 'passElena8'],
+  ['jlopez', 'passJorge9'],
+  ['pperez', 'passPaula10'],
+  ['acastro', 'passAntonio11'],
+  ['mfernandez', 'passMaria12'],
+  ['rmolina', 'passRaquel13'],
+  ['fcarrasco', 'passFelipe14'],
+  ['scampos', 'passSara15'],
+  ['malonso', 'passMiguel16'],
+  ['cmoreno', 'passClaudia17'],
+  ['areyes', 'passAntonio18'],
+  ['ivega', 'passIsabel19'],
+  ['aflores', 'passAlberto20'],
+  ['rmontes', 'passRosa21'],
+  ['tvillar', 'passTomas22'],
+  ['squintana', 'passSandra23'],
+  ['hpena', 'passHugo24'],
+  ['vjoaco', 'passJoaco25'],
+  ['aricky', 'passRicky26'],
+  ['jsilva', 'passJuan27'],
+  ['cgomez', 'passClara28'],
+  ['dsantos', 'passDiego29'],
+  ['eperez', 'passElena30'],
+  ['framos', 'passFernando31'],
+  ['mlopez', 'passMaria32']

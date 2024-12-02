@@ -1,5 +1,5 @@
 import { Button } from "@mui/material";
-import HomeCard, { InfoRow, ButtonsContainer } from "../homeCard";
+import HomeCard, { ButtonsContainer } from "../homeCard";
 import { useNavigate } from "react-router-dom";
 function CardResumen() {
   const fechaFinPlanificacion = new Date(

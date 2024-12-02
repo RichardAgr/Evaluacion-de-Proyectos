@@ -52,6 +52,7 @@ export default function ModificarListaTareas() {
       const tareasV = tareas.tareas
       const newTextos = tareasV.map(()=>false)
       setErrorTexto(newTextos)
+      setLoading(false);
     } catch (error) {
       console.error("Error fetching tasks:", error);
       setError("Error al obtener las tareas de la semana");
@@ -60,9 +61,7 @@ export default function ModificarListaTareas() {
         message: "Error al cargar las tareas",
         severity: "error",
       });
-    } finally {
-      setLoading(false);
-    }
+    } 
   };
 
   useEffect(() => {
@@ -231,15 +230,15 @@ export default function ModificarListaTareas() {
               <Box display="flex" alignItems="center" m={2}>
                 <CalendarTodayIcon sx={{ mr: 1 }} />
                 <Typography variant="body1">
-                  <strong>Fecha de Inicio:</strong>{" "}
-                  {new Date(fechas?.fechaIni).toLocaleDateString()}
+                  <strong>Fecha de Inicio:</strong>
+                  {fechas.fechaIni} a las 23:59
                 </Typography>
               </Box>
               <Box display="flex" alignItems="center" m={2}>
                 <CalendarTodayIcon sx={{ mr: 1 }} />
                 <Typography variant="body1">
                   <strong>Fecha de Fin:</strong>{" "}
-                  {new Date(fechas?.fechaFin).toLocaleDateString()}
+                  {localStorage.getItem('fechaLimiteSemana')} a las 23:59
                 </Typography>
               </Box>
           </Box>

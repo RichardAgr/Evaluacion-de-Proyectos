@@ -22,7 +22,7 @@ import CuadroDialogo from "../../../components/cuadroDialogo/cuadroDialogo";
 import Loading from "../../../components/loading/loading";
 import Error from "../../../components/error/error";
 import { getSprintConEntregables } from "../../../api/getEmpresa";
-import { actualizarSprint } from "../../../api/sprintApi";
+import { actualizarSprint, aceptarEntregables } from "../../../api/sprintApi";
 
 const FileItem = styled(Box)(({ theme }) => ({
   display: "flex",
@@ -55,7 +55,7 @@ function CalificarSprintU() {
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",
-    severity: "info",
+    severity: "info", 
     autoHide: 6000,
   });
   const [cuadroDialogo, setCuadroDialogo] = useState({
@@ -76,9 +76,12 @@ function CalificarSprintU() {
       const sprintData = await getSprintConEntregables(idSprint)
       const newSprint = sprintData.sprints
       setDatosSprint(newSprint);
+      console.log(newSprint)
       const nota = newSprint.nota;
       const aceptadosResponse = newSprint.entregables.map((entregable)=> {
-        return entregable.aceptado})
+        const esAceptado = entregable.aceptado !== null? entregable.aceptado:false;
+        return esAceptado
+      })
       setAceptados(aceptadosResponse)
       setTieneNota(nota!==null);
       setNotaSprint(nota === null ? "" : nota);
@@ -109,6 +112,7 @@ function CalificarSprintU() {
   };
   const handleNotaChange = (event) => {
     const value = event.target.value;
+    setErrorNota(value === '')
     if (!isNaN(value) && Number(value) <= 100 && Number(value) >= 0) {
       setNotaSprint(value);
     }
@@ -131,35 +135,60 @@ function CalificarSprintU() {
       onConfirm: handleSubmit,
     });
   };
+  const [errorNota, setErrorNota] = useState(false);
   const handleSubmit = async () => {
     if (comentario === "" && comentario.length < 20) {
       setError(true);
       return;
     }
+    if (notaSprint === '') {
+      setErrorNota(true)
+      return;
+    }
     try {
       const response = await actualizarSprint(idSprint, comentario, notaSprint);
-      if (response) {
-        setSnackbar({
-          open: true,
-          message: "Se subió correctamente todo",
-          severity: "success",
-          autoHide: 6000,
-        });
-        fetchSprints();
-
-        
-        setCuadroDialogo({
-          open: false,
-          onConfirm: () => {},
-          title: "",
-          description: "",
-        });
-      }
+      console.log("subir nota y comentario"+response.ok)
     } catch (error) {
-      console.error("Error al actualizar la tarea:", error);
+      console.error("Error al actualizar calificar sprint:", error);
       setSnackbar({
         open: true,
-        message: `Hubo un error al momento de subir, error: ${error}`,
+        message: `Hubo un error al momento de subir las calificaciones, error: ${error}`,
+        severity: "error",
+        autoHide: 60000,
+      });
+    }
+    try {
+      const aceptadosNew = aceptados
+        .map((aceptado, index) => {
+          if (aceptado && datosSprint?.entregables[index]?.idEntregables) {
+            return { idEntregable: Number(datosSprint.entregables[index].idEntregables) };
+          }
+          return null;
+        })
+        .filter(item => item !== null);
+      console.log(aceptadosNew)
+      if(aceptadosNew.length > 0){
+        
+        const response = await aceptarEntregables(aceptadosNew);
+        console.log("check aceptados"+response.ok)
+      }
+      setSnackbar({
+        open: true,
+        message: "Se subió correctamente todo",
+        severity: "success",
+        autoHide: 6000,
+      });
+      fetchSprints();   
+      setCuadroDialogo({
+        open: false,
+        onConfirm: () => {},
+        title: "",
+        description: "",
+      });
+    } catch (error) {
+      setSnackbar({
+        open: true,
+        message: `Hubo un error al momento de subir chekeo entragables, error: ${error}`,
         severity: "error",
         autoHide: 60000,
       });
@@ -210,8 +239,31 @@ function CalificarSprintU() {
     })
     setAceptados(newAceptados)
   }
-  if (loading) return <Loading></Loading>;
-  if (error.error) return <Error></Error>;
+  if (loading) return (
+    <BaseUI
+      titulo={"CALIFICAR SPRINT"}
+      ocultarAtras={false}
+      confirmarAtras={true}
+      dirBack={`/homeDocente/listaEmpresaCalificarSprints/empresa`}
+      loading={loading}
+      error={error}
+    >
+      <Loading></Loading>  
+    </BaseUI>
+  )
+  if (error.error) return(
+    <BaseUI
+      titulo={"CALIFICAR SPRINT"}
+      ocultarAtras={false}
+      confirmarAtras={true}
+      dirBack={`/homeDocente/listaEmpresaCalificarSprints/empresa`}
+      loading={loading}
+      error={error}
+    >
+      <Error></Error>;
+    </BaseUI>
+  )
+  
   return (
     <BaseUI
       titulo={"CALIFICAR SPRINT"}
@@ -228,25 +280,25 @@ function CalificarSprintU() {
               SPRINT {datosSprint?.numeroSprint} 
             </Typography>
           </div>
-          <Box display="flex">
+          <Box display="flex" flexWrap={'wrap'}>
               <Box display="flex" alignItems="center" m={2}>
                 <CalendarTodayIcon sx={{ mr: 1 }} />
                 <Typography variant="body1">
                   <strong>Fecha de Inicio:</strong>{" "}
-                  {new Date(datosSprint?.fechaIni).toLocaleDateString()}
+                  {new Date(datosSprint?.fechaIni).toLocaleDateString()} a las 00:00                  
                 </Typography>
               </Box>
               <Box display="flex" alignItems="center" m={2}>
                 <CalendarTodayIcon sx={{ mr: 1 }} />
                 <Typography variant="body1">
                   <strong>Fecha de Fin:</strong>{" "}
-                  {new Date(datosSprint?.fechaFin).toLocaleDateString()}
+                  {new Date(datosSprint?.fechaFin).toLocaleDateString()} a las 23:59
                 </Typography>
               </Box>
               <Box display="flex" alignItems="center">
                 <CalendarTodayIcon sx={{ m: 2 }} />
                 <Typography variant="body1">
-                  <strong>Fecha de Entrega:</strong>{" "}
+                  <strong>Fecha de Entrega precencial:</strong>{" "}
                   {new Date(datosSprint?.fechaEntrega).toLocaleDateString()}
                 </Typography>
             </Box>
@@ -267,6 +319,7 @@ function CalificarSprintU() {
                   }}
                   checked={aceptados[index]}
                   onChange={()=>handleAceptado(index)}
+                  disabled={tieneNota}
                 />
                 <Typography>{entregable.descripcionEntregable}</Typography>
               </Box>
@@ -331,20 +384,26 @@ function CalificarSprintU() {
                 }
               />
               <Box className="notaField">
-                <Typography variant="h6" className="notaLabel">
-                  NOTA:
-                </Typography>
-                <TextField
-                  variant="outlined"
-                  size="small"
-                  value={notaSprint}
-                  onChange={handleNotaChange}
-                  inputProps={{
-                    type: "number",
-                  }}
-                  className="notaInput"
-                  disabled={tieneNota}
-                />
+                <Box display={'flex'}>
+                  <Typography variant="h6" className="notaLabel">
+                    NOTA:
+                  </Typography>
+                  <TextField
+                    variant="outlined"
+                    size="small"
+                    value={notaSprint}
+                    onChange={handleNotaChange}
+                    inputProps={{
+                      type: "number",
+                    }}
+                    className="notaInput"
+                    disabled={tieneNota}
+                    error={errorNota}
+                  />
+                </Box>
+                <div>
+                  <span style={{color:'red'}}>{ errorNota && "Es Obligatorio ingresar una nota"}</span>
+                </div>
               </Box>
               {!tieneNota && <DecisionButtons
                 rejectButtonText="Descartar"
@@ -429,8 +488,6 @@ const Container = styled("div")`
   }
 
   .notaField {
-    display: flex;
-    align-items: center;
     margin-top: 1rem;
 
     .notaLabel {

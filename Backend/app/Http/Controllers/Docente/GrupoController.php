@@ -11,7 +11,52 @@ use App\Http\Controllers\Docente\SesionDocenteController as SesionDocente;
 
 
 class GrupoController extends Controller
+{   
+    public function actualizarGrupo(Request $request)
 {
+    // Validar los datos recibidos
+    $request->validate([
+        'idGrupo' => 'required|exists:grupo,idGrupo', // Verificar que el grupo exista en la tabla
+        'fechaIniGestion' => 'nullable|date', // Se hace nullable para permitir no cambiar este campo si no se pasa en la solicitud
+        'fechaLimiteEntregaEmpresa' => 'nullable|date|after_or_equal:fechaIniGestion',
+        'fechaLimiteEntregaPlanificacion' => 'nullable|date|after_or_equal:fechaLimiteEntregaEmpresa',
+        'fechaFinPlanificacion' => 'nullable|date|after_or_equal:fechaLimiteEntregaPlanificacion',
+        'fechaFinGestion' => 'nullable|date|after_or_equal:fechaFinPlanificacion',
+    ]);
+
+    // Obtener los datos actuales del grupo
+    $grupo = Grupo::find($request->idGrupo);
+
+    // Filtrar los campos que están siendo enviados por la solicitud
+    $nuevosDatos = $request->only([
+        'fechaIniGestion',
+        'fechaLimiteEntregaEmpresa',
+        'fechaLimiteEntregaPlanificacion',
+        'fechaFinPlanificacion',
+        'fechaFinGestion',
+    ]);
+
+    // Filtrar solo los campos que han cambiado (es decir, los que están presentes en los datos actuales)
+    $actualizar = [];
+    foreach ($nuevosDatos as $campo => $valor) {
+        if ($grupo->$campo != $valor) {
+            $actualizar[$campo] = $valor;
+        }
+    }
+
+    // Si no hay campos para actualizar, devolver una respuesta con error
+    if (empty($actualizar)) {
+        return response()->json(['error' => 'No hay cambios para actualizar.'], 400);
+    }
+
+    // Actualizar solo los campos que han cambiado
+    $grupo->update($actualizar);
+
+    return response()->json(['message' => 'Grupo actualizado correctamente'], 200);
+}
+
+
+
     public function obtenerTodosLosGrupos()
     {
         // Consulta para obtener los datos de todos los grupos y los docentes asociados

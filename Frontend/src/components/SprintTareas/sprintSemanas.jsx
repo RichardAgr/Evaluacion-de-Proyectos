@@ -57,14 +57,14 @@ const SprintSemanas = ({ title, semana, idSprint, navigateLink, semanaTexto, isO
                             <CalendarTodayIcon sx={{ mr: 1 }} />
                             <Typography variant="body1">
                             <strong>Fecha de Inicio:</strong>{" "}
-                            {new Date(semana?.fechaIni).toLocaleDateString()}
+                            {new Date(semana?.fechaIni).toISOString().split('T')[0]} a las 00:00
                             </Typography>
                         </Box>
                         <Box display="flex" alignItems="center" m={2}>
                             <CalendarTodayIcon sx={{ mr: 1 }} />
                             <Typography variant="body1">
                             <strong>Fecha de Fin:</strong>{" "}
-                            {new Date(semana?.fechaFin).toLocaleDateString()}
+                            {localStorage.getItem('fechaLimiteSemana')} a las 23:59
                             </Typography>
                         </Box>
                     </Box>
@@ -73,8 +73,8 @@ const SprintSemanas = ({ title, semana, idSprint, navigateLink, semanaTexto, isO
 
             {(semanaTexto === true || isOpen) && (
                 <Box>
-                    {semana.tareas.length > 0 ? (
-                        semana.tareas.map((tarea) => (
+                    {semana?.tareas?.length > 0 ? (
+                        semana?.tareas?.map((tarea) => (
                             <Box 
                                 onClick={() => { clickBoton(tarea); }} 
                                 key={tarea.idTarea}
