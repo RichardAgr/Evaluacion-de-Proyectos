@@ -105,17 +105,18 @@ function Header() {
         </Toolbar>
       </AppBar>
       <Suspense >
-        {role==='docente'?
+        {open&&(role==='docente'?
           <HamburgesaDocente open={open} toggleDrawer={toggleDrawer} />
           :role==='estudiante'?
           <HamburgesaEstudiante open={open} toggleDrawer={toggleDrawer} />
           :
           <></>
-        }
+        )}
       </Suspense>
-      <Suspense >
-        <UserModal openPerfil={openPerfil} cerrarPerfil={cerrarPerfil} role={role}></UserModal>
+      <Suspense fallback={<div>Loading...</div>}>
+        {openPerfil && <UserModal openPerfil={openPerfil} cerrarPerfil={cerrarPerfil} role={role} />}
       </Suspense>
+
     </Box>
   );
 }

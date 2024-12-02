@@ -52,7 +52,7 @@ const SprintSemanas = ({ title, semana, idSprint, navigateLink, semanaTexto, isO
                 :
                 <>
                     <Typography variant='h4' sx={{marginLeft: 'calc(2vw + 0.5rem)', fontWeight:'600'}}>{title}</Typography> 
-                    <Box display="flex" sx={{marginLeft: 'calc(2vw + 0.5rem)'}}>
+                    <Box display="flex" flexWrap={'wrap'} sx={{marginLeft: 'calc(2vw + 0.5rem)'}}>
                         <Box display="flex" alignItems="center" m={2}>
                             <CalendarTodayIcon sx={{ mr: 1 }} />
                             <Typography variant="body1">
@@ -83,7 +83,7 @@ const SprintSemanas = ({ title, semana, idSprint, navigateLink, semanaTexto, isO
                                     height: 60,
                                     borderRadius: 0.6,
                                     margin: 0.7,
-                                    marginLeft: 'calc(5vw + 0.5rem)',
+                                    marginLeft: 'calc(5vw + 0.2rem)',
                                     pl: 2,
                                     fontSize: 'calc(1vw + 0.5rem)',
                                     bgcolor: '#d0d4e4', 
