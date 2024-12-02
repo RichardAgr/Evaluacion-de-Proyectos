@@ -177,11 +177,11 @@ import { useState } from "react";
           </Box>
         </Paper>
         <InfoSnackbar
-            openSnackbar={snackbar.open}
-            setOpenSnackbar={(open) => setSnackbar({ ...snackbar, open })}
-            message={snackbar.message}
-            severity={snackbar.severity}
-          />
+          openSnackbar={snackbar.open}
+          setOpenSnackbar={(open) => setSnackbar({ ...snackbar, open })}
+          message={snackbar.message}
+          severity={snackbar.severity}
+        />
       </Container>
     );
   }

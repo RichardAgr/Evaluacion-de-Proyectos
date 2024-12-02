@@ -1,44 +1,82 @@
+import InfoSnackbar from '../../infoSnackbar/infoSnackbar'
 import {
   Modal,
   Box,
-  Avatar,
   Typography,
   Button,
   TextField,
-  IconButton
+  IconButton,
 } from "@mui/material";
 import EditNoteRoundedIcon from "@mui/icons-material/EditNoteRounded";
 import { useState, useEffect } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import { obtenerDatosDocente, obtenerDatosEstudiante, updatePerfil } from "../../../api/obtenerDatosParaModal";
-
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import {
+  obtenerDatosDocente,
+  obtenerDatosEstudiante,
+  updateDatosDocente,
+  updateDatosEstudiante
+} from "../../../api/obtenerDatosParaModal";
 // eslint-disable-next-line react/prop-types
 const UserProfileModal = ({ openPerfil, cerrarPerfil, role }) => {
   const nombreCompleto = localStorage.getItem("nombreCompleto");
-
-  const [editar, setEditar] = useState(false);
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "info",
+  });
+  const [editableFields, setEditableFields] = useState({
+    nombreCuenta: false,
+    contrasena: false,
+    repetirContrasena: false,
+    correo: false,
+    nombre: false,
+    apellido: false,
+    segundoApellido: false,
+    verificarSiEsElUsuario: false,
+  });
+  const [editar, setEditar] = useState(false)
   const [initialValues, setInitialValues] = useState({
     nombreCuenta: "",
     contrasena: "",
+    repetirContrasena: "",
     correo: "",
     nombre: "",
     apellido: "",
     segundoApellido: "",
-    verificarSiEsElUsuario: ""
   });
 
+  const toggleFieldEdit = (field, setFieldValue) => {
+    setEditableFields((prev) => ({
+      ...prev,
+      [field]: !prev[field],
+    }));
+    if (editableFields[field]) {
+      setFieldValue(field, initialValues[field]);
+    }
+    if (field === "repetirContrasena" || field === "segundoApellido") {
+      const linkedField = field === "repetirContrasena" ? "contrasena" : "apellido";
+      setEditableFields((prev) => ({
+        ...prev,
+        [linkedField]: !prev[linkedField],
+      }));
+  
+      if (!editableFields[field]) {
+        setFieldValue(linkedField, initialValues[linkedField]);
+      }
+    }
+  };
+  
   const getDatosEstu = async () => {
     try {
       const datos = await obtenerDatosEstudiante();
       setInitialValues({
         ...datos,
         verificarSiEsElUsuario: "",
-        contrasena: "",
-        repetirContrasena: ""
+        contrasena: "Ejemplo1",
+        repetirContrasena: "Ejemplo1",
       });
-      console.log(datos)
     } catch (error) {
       console.error("Error al obtener datos del estudiante:", error);
     }
@@ -50,8 +88,8 @@ const UserProfileModal = ({ openPerfil, cerrarPerfil, role }) => {
       setInitialValues({
         ...datos,
         verificarSiEsElUsuario: "",
-        contrasena: "",
-        repetirContrasena: ""
+        contrasena: "Ejemplo1",
+        repetirContrasena: "Ejemplo1",
       });
     } catch (error) {
       console.error("Error al obtener datos del docente:", error);
@@ -59,13 +97,14 @@ const UserProfileModal = ({ openPerfil, cerrarPerfil, role }) => {
   };
 
   useEffect(() => {
-    if (role === "docente") {
-      getDatosDoc();
-    } else {
-      getDatosEstu();
+    if (openPerfil) {
+      if (role === "docente") {
+        getDatosDoc();
+      } else {
+        getDatosEstu();
+      }
     }
-  }, [role]);
-
+  }, [openPerfil, role]);
 
   const validationSchema = Yup.object({
     nombre: Yup.string().trim().required("El nombre es obligatorio"),
@@ -79,32 +118,85 @@ const UserProfileModal = ({ openPerfil, cerrarPerfil, role }) => {
       .min(8, "La contraseña debe tener al menos 8 caracteres")
       .matches(/[A-Z]/, "La contraseña debe tener al menos una letra mayúscula")
       .matches(/[0-9]/, "La contraseña debe tener al menos un número")
-      .required("La contraseña es obligatoria"),
+      .required("la contraseña es obligatorio"),
     repetirContrasena: Yup.string()
       .oneOf([Yup.ref("contrasena"), null], "Las contraseñas no coinciden")
-      .required("Debe confirmar su contraseña"),
-    verificarSiEsElUsuario: Yup.string()
-      .required("Debe confirmar su contraseña actual"),
+      .required("la contraseña es obligatorio"),
+    verificarSiEsElUsuario: Yup.string().required("Debe confirmar su contraseña actual"),
   });
 
   const handleSubmit = async (values) => {
-    try {
-      const response = await updatePerfil(values);
+    let metododElegido = () => {};
+    const payload = {
+      contrasena: values.verificarSiEsElUsuario,
+      nombre: values.nombre,
+      primerApellido: values.apellido,
+      segundoApellido: values.segundoApellido,
+      email: values.correo,
+      nuevaContrasena: values.contrasena
+    };
 
-      if (response.ok) {
+    if (role === "docente") {
+      metododElegido = updateDatosDocente;
+    } else {
+      metododElegido = updateDatosEstudiante;
+    }
+    try {
+      const response = await metododElegido(payload);
+  
+      if (response.mensaje === "success") {
         alert(response.message);
-        console.log("Datos enviados:", values);
+        setEditableFields({
+          nombreCuenta: false,
+          contrasena: false,
+          repetirContrasena: false,
+          correo: false,
+          nombre: false,
+          apellido: false,
+          segundoApellido: false,
+          verificarSiEsElUsuario: true,
+        });
         setEditar(false);
+        setSnackbar({
+          open: true,
+          message: "Se actualizó el perfil correctamente",
+          severity: "success",
+        });
       } else {
-        alert("Contraseña es incorrecta");
+        setSnackbar({
+          open: true,
+          message: "La contraseña de verificación es incorrecta",
+          severity: "info",
+        });
       }
     } catch (error) {
-      console.error("Error en la verificación de contraseña:", error);
+      console.error(error);
+      setSnackbar({
+        open: true,
+        message: "Error al actualizar los datos de la cuenta",
+        severity: "error",
+      });
     }
   };
-
+  
   return (
-    <Modal open={openPerfil} onClose={() => { cerrarPerfil(false); setEditar(false); }}>
+    <Modal
+      open={openPerfil}
+      onClose={() => {
+        cerrarPerfil(false);
+        setEditableFields({
+          nombreCuenta: false,
+          contrasena: false,
+          repetirContrasena: false,
+          correo: false,
+          nombre: false,
+          apellido: false,
+          segundoApellido: false,
+          verificarSiEsElUsuario: false,
+        });
+        setEditar(true)
+      }}
+    >
       <Box
         sx={{
           position: "absolute",
@@ -112,22 +204,11 @@ const UserProfileModal = ({ openPerfil, cerrarPerfil, role }) => {
           left: "50%",
           transform: "translate(-50%, -50%)",
           maxHeight: "99vh",
-          width: "calc(10vw + 15rem)",
+          width: "calc(5vw + 20rem)",
           bgcolor: "white",
           boxShadow: 24,
           borderRadius: "16px",
-          overflowX: "hidden",
           overflowY: "auto",
-          '&::-webkit-scrollbar': {
-            width: '8px',
-          },
-          '&::-webkit-scrollbar-thumb': {
-            backgroundColor: '#114093',
-            borderRadius: '10px',
-          },
-          '&::-webkit-scrollbar-track': {
-            backgroundColor: 'white',
-          }
         }}
       >
         <Box
@@ -135,23 +216,15 @@ const UserProfileModal = ({ openPerfil, cerrarPerfil, role }) => {
             backgroundColor: "#114093",
             color: "white",
             textAlign: "center",
-            padding: "16px",
+            padding: "10px",
             borderRadius: "16px 16px 0 0",
           }}
         >
-          <Avatar
-            src={AccountCircleIcon}
-            sx={{
-              width: 80,
-              height: 80,
-              margin: "0 auto",
-              border: "2px solid white",
-            }}
-          />
-          <Typography variant="h6" sx={{ marginTop: "8px" }}>
+          <AccountCircleIcon fontSize="large" />
+          <Typography variant="h6">
             {nombreCompleto}
           </Typography>
-          <Typography variant="body2">{role.toUpperCase()}</Typography>
+          <Typography variant="body2">{role.toString().toUpperCase()}</Typography>
         </Box>
         <Formik
           initialValues={initialValues}
@@ -159,27 +232,65 @@ const UserProfileModal = ({ openPerfil, cerrarPerfil, role }) => {
           enableReinitialize
           onSubmit={handleSubmit}
         >
-          {({ values, handleChange, errors, touched, resetForm }) => (
+          {({ values, handleChange, errors, touched, resetForm, setFieldValue }) => (
             <Form>
               <Box display={"flex"} alignContent={"center"} justifyContent={"center"}>
-                <Box sx={{ margin: "2rem", marginBottom: "0.5rem" }}>
-                  <Typography variant="h6">Datos cuenta:</Typography>
-                  <TextField
-                    name="nombreCuenta"
-                    disabled={!editar}
-                    sx={{ marginTop: "8px" }}
-                    value={values.nombreCuenta}
-                    onChange={handleChange}
-                    error={touched.nombreCuenta && Boolean(errors.nombreCuenta)}
-                    helperText={touched.nombreCuenta && errors.nombreCuenta}
-                    label="Nombre Cuenta"
-                    fullWidth
-                  />
-                  <Box display={"flex"} sx={{ marginTop: "10px" }}>
+                <Box sx={{ margin: "2rem", marginBottom: "0rem", marginTop: "0.5rem" }}>
+                  <Typography variant="h6" sx={{ marginBottom: "0.5rem" }}>Datos cuenta:</Typography>
+                  {[
+                    { name: "nombreCuenta", label: "Nombre Cuenta" },
+                    { name: "correo", label: "Correo" },
+                    { name: "nombre", label: "Nombre" },
+                  ].map((field) => (
+                    <Box display="flex" alignItems="center" key={field.name} sx={{ marginBottom: "0.5rem" }}>
+                      <TextField
+                        name={field.name}
+                        disabled={!editableFields[field.name]}
+                        value={values[field.name]}
+                        onChange={handleChange}
+                        error={touched[field.name] && Boolean(errors[field.name])}
+                        helperText={touched[field.name] && errors[field.name]}
+                        label={field.label}
+                        fullWidth
+                      />
+                      {editar && (
+                        <IconButton onClick={() => toggleFieldEdit(field.name, setFieldValue)} sx={{ marginLeft: "8px" }}>
+                          <EditNoteRoundedIcon />
+                        </IconButton>
+                      )}
+                    </Box>
+                  ))}
+                  <Box display={"flex"}>
+                    <TextField
+                      name={"apellido"}
+                      disabled={!editableFields["apellido"]}
+                      value={values["apellido"]}
+                      onChange={handleChange}
+                      error={touched["apellido"] && Boolean(errors["apellido"])}
+                      helperText={touched["apellido"] && errors["apellido"]}
+                      label={"Apellido"}
+                      fullWidth
+                    />
+                    <TextField
+                      name={"segundoApellido"}
+                      disabled={!editableFields["segundoApellido"]}
+                      value={values["segundoApellido"]}
+                      onChange={handleChange}
+                      error={touched["segundoApellido"] && Boolean(errors["segundoApellido"])}
+                      helperText={touched["segundoApellido"] && errors["segundoApellido"]}
+                      label={"Segundo Apellido"}
+                      fullWidth
+                    />
+                    {editar && (
+                      <IconButton onClick={() => toggleFieldEdit("segundoApellido", setFieldValue)} sx={{ marginLeft: "0.5rem" }}>
+                        <EditNoteRoundedIcon />
+                      </IconButton>
+                    )}
+                  </Box>
+                  <Box display={"flex"} sx={{ marginTop: "0.5rem" }}>
                     <TextField
                       name="contrasena"
-                      disabled={!editar}
-                      sx={{ marginRight: "0.1rem" }}
+                      disabled={!editableFields.contrasena}
                       value={values.contrasena}
                       onChange={handleChange}
                       error={touched.contrasena && Boolean(errors.contrasena)}
@@ -190,8 +301,7 @@ const UserProfileModal = ({ openPerfil, cerrarPerfil, role }) => {
                     />
                     <TextField
                       name="repetirContrasena"
-                      disabled={!editar}
-                      sx={{ marginLeft: "0.1rem" }}
+                      disabled={!editableFields.repetirContrasena}
                       value={values.repetirContrasena}
                       onChange={handleChange}
                       error={touched.repetirContrasena && Boolean(errors.repetirContrasena)}
@@ -200,64 +310,31 @@ const UserProfileModal = ({ openPerfil, cerrarPerfil, role }) => {
                       fullWidth
                       type="password"
                     />
+                    {editar && (
+                      <IconButton onClick={() => toggleFieldEdit("repetirContrasena", setFieldValue)} sx={{ marginLeft: "0.5rem" }}>
+                        <EditNoteRoundedIcon />
+                      </IconButton>
+                    )}
                   </Box>
-                  <TextField
-                    name="correo"
-                    disabled={!editar}
-                    sx={{ marginTop: "10px" }}
-                    value={values.correo}
-                    onChange={handleChange}
-                    error={touched.correo && Boolean(errors.correo)}
-                    helperText={touched.correo && errors.correo}
-                    label="Correo"
-                    fullWidth
-                  />
-                  <TextField
-                    name="nombre"
-                    disabled={!editar}
-                    sx={{ marginTop: "10px" }}
-                    value={values.nombre}
-                    onChange={handleChange}
-                    error={touched.nombre && Boolean(errors.nombre)}
-                    helperText={touched.nombre && errors.nombre}
-                    label="Nombre"
-                    fullWidth
-                  />
-                  <Box display={"flex"} sx={{ marginTop: "10px" }}>
-                    <TextField
-                      name="apellido"
-                      disabled={!editar}
-                      sx={{ marginRight: "0.1rem" }}
-                      value={values.apellido}
-                      onChange={handleChange}
-                      error={touched.apellido && Boolean(errors.apellido)}
-                      helperText={touched.apellido && errors.apellido}
-                      label="Apellido"
-                    />
-                    <TextField
-                      name="segundoApellido"
-                      disabled={!editar}
-                      sx={{ marginLeft: "0.1rem" }}
-                      value={values.segundoApellido}
-                      onChange={handleChange}
-                      error={touched.segundoApellido && Boolean(errors.segundoApellido)}
-                      helperText={touched.segundoApellido && errors.segundoApellido}
-                      label="Segundo Apellido"
-                    />
-                  </Box>
-                  <TextField
-                    name="verificarSiEsElUsuario"
-                    disabled={!editar}
-                    sx={{ marginTop: "1rem" }}
-                    value={values.verificarSiEsElUsuario}
-                    onChange={handleChange}
-                    error={touched.verificarSiEsElUsuario && Boolean(errors.verificarSiEsElUsuario)}
-                    helperText={touched.verificarSiEsElUsuario && errors.verificarSiEsElUsuario}
-                    label="Contraseña Actual"
-                    fullWidth
-                    type="password"
-                  />
                 </Box>
+              </Box>
+              <Box marginLeft={'2rem'} marginRight={'2rem'}>                
+                {editar && 
+                    <>
+                      <Typography variant="h6">Verificación:</Typography>
+                      <Box display="flex" sx={{ marginBottom: "1rem" }}>
+                        <TextField
+                          name="verificarSiEsElUsuario"
+                          value={values.verificarSiEsElUsuario}
+                          onChange={handleChange}
+                          error={touched.verificarSiEsElUsuario && Boolean(errors.verificarSiEsElUsuario)}
+                          helperText={touched.verificarSiEsElUsuario && errors.verificarSiEsElUsuario}
+                          fullWidth
+                          type="password"
+                        />
+                      </Box>
+                    </>
+                  }
               </Box>
               <Box margin={"2rem"} marginTop={"0.5rem"} marginBottom={"1rem"}>
                 <Box display={"flex"} justifyContent={"flex-end"}>
@@ -277,18 +354,28 @@ const UserProfileModal = ({ openPerfil, cerrarPerfil, role }) => {
                     </IconButton>
                   ) : (
                     <Box display={"flex"} sx={{ width: "100%" }}>
-                      <Button type="submit" variant="contained" sx={{ flexGrow: "1" }}>
-                        Confirmar
-                      </Button>
                       <Button
                         variant="outlined"
-                        sx={{ flexGrow: "1", marginLeft: "0.2rem" }}
+                        sx={{ flexGrow: "1" }}
                         onClick={() => {
-                          setEditar(false); 
+                          setEditar(false);
                           resetForm();
+                          setEditableFields({
+                            nombreCuenta: false,
+                            contrasena: false,
+                            repetirContrasena: false,
+                            correo: false,
+                            nombre: false,
+                            apellido: false,
+                            segundoApellido: false,
+                            verificarSiEsElUsuario: false,
+                          });
                         }}
                       >
                         Cancelar
+                      </Button>
+                      <Button type="submit" variant="contained" sx={{ flexGrow: "1", marginLeft: "0.2rem" }}>
+                        Confirmar
                       </Button>
                     </Box>
                   )}
@@ -296,7 +383,14 @@ const UserProfileModal = ({ openPerfil, cerrarPerfil, role }) => {
               </Box>
             </Form>
           )}
+
         </Formik>
+          <InfoSnackbar
+            openSnackbar={snackbar.open}
+            setOpenSnackbar={(open) => setSnackbar({ ...snackbar, open })}
+            message={snackbar.message}
+            severity={snackbar.severity}
+          />
       </Box>
     </Modal>
   );

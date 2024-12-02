@@ -65,19 +65,18 @@ function SeguimientoSemanalSprints () {
                 error={error}
             >
                 {semanas.map((semana, index) => {
-                    const formatoIni2 = (new Date(semana.fechaIni)).toLocaleDateString();
-                    const formatoFin2 = (new Date(semana.fechaFin)).toLocaleDateString();
+                    const formatoIni2 = semana.fechaIni+" a las 00:00"
+                    const formatoFin2 = semana.fechaFin+" a las 23:59"
                     return <Box 
                         key={`index${index}`}
                         onClick={()=> navigateSemana(semana.idSemana, index)}
                         sx={{
                             width: '90%',
-                            height: 60,
+                            minHeight:60,
                             borderRadius: 0.6,
                             margin: 0.7,
                             marginLeft: 'calc(2vw + 0.5rem)',
                             pl: 2,
-                            fontSize: '1.5rem',
                             bgcolor: semana.calificado? '#32cd32':'#d0d4e4', 
                             textTransform: 'uppercase',
                             display: 'flex', 
@@ -91,21 +90,25 @@ function SeguimientoSemanalSprints () {
                         }}            
                     >
                         <Box display="flex" alignItems="center">    
-                            <Typography sx={{ fontWeight: 'bolder' }} variant='h6'>SEMANA {semana.numSemana} </Typography>
-                            <Typography sx={{ color: semana.calificado? "black" : "red" }}>
-                                {semana.calificado?" (YA EVALUADO)" : " (NO EVALUADO)"}
+                            <Typography sx={{ fontWeight: 'bolder' }} variant='h6'>
+                                SEMANA {semana.numSemana} 
+                                <Typography sx={{ color: semana.calificado? "black" : "red" }}>
+                                    {semana.calificado?" (YA EVALUADO)" : " (NO EVALUADO)"}
+                                </Typography>
                             </Typography>
                         </Box>
-                        <Box sx={{ marginRight: '', transform: 'scale(0.7)' }}>
+                        <Box sx={{ marginRight: '', transform:'scale(0.9)'}}>
                             <div style={{ display: 'flex', alignItems: 'center' }}>
                                 <CalendarTodayIcon />
-                                <Typography sx={{ fontWeight: '600' }}>INICIO DEL SPRINT: </Typography>
-                                <Typography> {formatoIni2}</Typography>
+                                <Typography sx={{fontSize:{xs:'0.6rem', sm:'0.7rem'} }}>
+                                    <span style={{fontWeight: '600', }}>INICIO DEL SPRINT:</span> {formatoIni2}
+                                </Typography>
                             </div>
                             <div style={{ display: 'flex', alignItems: 'center' }}>
                                 <CalendarTodayIcon />
-                                <Typography sx={{ fontWeight: '600' }} variant="subtitle1">FIN DEL SPRINT: </Typography>
-                                <Typography> {formatoFin2}</Typography>
+                                <Typography sx={{ fontSize:{xs:'0.6rem', sm:'0.7rem'} }} variant="subtitle1">
+                                <span style={{fontWeight: '600', }}>FIN DEL SPRINT:</span> {formatoFin2}
+                                </Typography>
                             </div>
                         </Box>
                     </Box>

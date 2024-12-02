@@ -24,20 +24,56 @@ function RecuperarContrasena() {
     message: "",
     severity: "info",
   });
-
-  const sendRecoveryCode = (email) => {
+  const [cuenta, setCuenta] = useState(null) 
+  const sendRecoveryCode = async (email) => {
     const randomWord1 = Math.random().toString(36).substring(2, 8);
     const randomWord2 = Math.random().toString(36).substring(2, 8);
     const code = `${randomWord1}${randomWord2}`;
     const encryptedCode = encrypt(code);
-    console.log(`enviar: `+encryptedCode)
-    setGeneratedCode(code);
-    setSnackbar({
-      open: true,
-      message: `El código de recuperación fue enviado a ${email}`,
-      severity: "success",
-    });
-    setStep(2);
+    const url = "http://localhost:8000/api/recuperarContrasena";
+    const bodyFetch = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        correo: email,
+        codigo: encryptedCode
+      }),
+      credentials: "include",
+    };
+
+    try {
+      const res = await fetch(url, bodyFetch);
+      const response = await res.json()
+      console.log(response)
+      if(res.ok){
+        setSnackbar({
+          open: true,
+          message: `El código de recuperación fue enviado a ${email}`,
+          severity: "success",
+        });
+        setStep(2);
+        setGeneratedCode(code);
+        setCuenta({
+          id: response.id,
+          role: response.role
+        });
+      }else{
+        setSnackbar({
+          open: true,
+          message: `El correo ${email} no esta asociado a ninguna cuenta`,
+          severity: "info",
+        });
+      }
+    } catch (error) {
+      setSnackbar({
+        open: true,
+        message: `Hubo un error: ${error}`,
+        severity: "error",
+      });
+      console.error("Error:", error);
+    }
   };
 
   const verifyCode = (inputCode) => {
@@ -58,13 +94,51 @@ function RecuperarContrasena() {
     }
   };
 
-  const changePassword = (newPassword) => {
+  const changePassword = async(newPassword) => {
     console.log("Nueva contraseña:", newPassword);
-    setSnackbar({
-      open: true,
-      message: "Contraseña actualizada con éxito",
-      severity: "success",
-    });
+    const url = "http://localhost:8000/api/cambiarContrasena";
+    const bodyFetch = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        contrasena : newPassword, 
+        repetirContrasena : newPassword,
+        id : Number(cuenta.id),
+        role : cuenta.role
+      }),
+      credentials: "include",
+    };
+
+    try {
+      const res = await fetch(url, bodyFetch);
+      const response = res.json()
+      console.log(response)
+      if(res.ok){
+        setSnackbar({
+          open: true,
+          message: `Se cambio la contraseña`,
+          severity: "success",
+        });
+        setTimeout(() => {
+            navigate('/');
+        }, 1000); // 2000 ms = 2 segundos
+      }else{
+        setSnackbar({
+          open: true,
+          message: `no se pudo cambiar la contraseña`,
+          severity: "info",
+        });
+      }
+    } catch (error) {
+      setSnackbar({
+        open: true,
+        message: `Hubo un error: ${error.mensaje}`,
+        severity: "error",
+      });
+      console.error("Error:", error);
+    }
   };
 
   return (
