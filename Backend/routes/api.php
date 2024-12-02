@@ -198,6 +198,8 @@ Route::post('/crearCuentaDocente', [AdministradorController::class, 'crearDocent
 
 Route::get('/obtenerDatosDocente', [AdministradorController::class, 'obtenerDatosDocente']);
 Route::get('/obtenerDatosEstudiante', [AdministradorController::class, 'obtenerDatosEstudiante']);
+Route::put('/modificarDatosEstudiante', [AdministradorController::class, 'actualizarEstudiante']);
+Route::put('/modificarDatosDocente', [AdministradorController::class, 'actualizarDocente']);
 
 
 
