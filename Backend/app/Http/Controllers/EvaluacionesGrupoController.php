@@ -94,7 +94,7 @@ class EvaluacionesGrupoController extends Controller
             $evaluacionGrupo = EvaluacionesGrupo::where('idGrupo', $idGrupo)->first();
 
             if (!$evaluacionGrupo) {
-                return response()->json(['error' => 'No se encontró evaluación para este grupo'], 404);
+                return response()->json(['errorMessage' => 'No se encontró evaluación para este grupo'], 404);
             }
 
             $response = [
