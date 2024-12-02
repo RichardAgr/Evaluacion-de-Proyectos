@@ -5,7 +5,18 @@ function CardEvaluacion() {
   const navigate = useNavigate();
   const fechaEvaluacion = localStorage.getItem("fechaEvaluacion");
   const tipoEvaluacion = localStorage.getItem("tipoEvaluacion");
-  console.log(fechaEvaluacion, tipoEvaluacion);
+  const textoTipoEvaluacion = (tipo) => {
+    switch (tipo) {
+      case "evaluacionPares":
+        return "Evaluación a Pares";
+      case "evaluacionCruzada":
+        return "Evaluación Cruzada";
+      case "autoevaluacion":
+        return "Autoevaluación";
+      default:
+        return tipo;
+    }
+  };
   return (
     <HomeCard title="Evaluaciones">
       <InfoRow>
@@ -14,7 +25,7 @@ function CardEvaluacion() {
             <Typography>Fecha de evaluacion: {fechaEvaluacion}</Typography>
           )}
           {tipoEvaluacion !== "undefined" && tipoEvaluacion !== null && (
-            <Typography>tipo de evaluacion: {tipoEvaluacion}</Typography>
+            <Typography>Tipo de evaluacion: {textoTipoEvaluacion(tipoEvaluacion)}</Typography>
           )}
         </Box>
       </InfoRow>
