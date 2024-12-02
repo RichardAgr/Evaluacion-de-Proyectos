@@ -8,11 +8,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
 
+use Illuminate\Support\Facades\Validator;
+use Exception;
+
 class EvaluacionesGrupoController extends Controller
 {
     public function configurarEvaluacion(Request $request)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'criterios' => 'required|array',
             'criterios.*.descripcion' => 'required|string',
             'criterios.*.notaMaxima' => 'required|integer|min:1',
@@ -20,7 +23,12 @@ class EvaluacionesGrupoController extends Controller
             'idGrupo' => 'required|exists:grupo,idGrupo',
             'fechaEvaluacion' => 'required|date',
         ]);
-
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Los datos proporcionados no son válidos.',
+                'errors' => $validator->errors()
+            ], 422);
+        }
         try {
             DB::beginTransaction();
             EvaluacionesGrupo::where('idGrupo', $request->idGrupo)->delete();
@@ -53,6 +61,50 @@ class EvaluacionesGrupoController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json(['error' => 'Error al crear la evaluación de grupo: ' . $e->getMessage()], 500);
+        }
+    }
+
+    public function getEvaluacionesGrupo($idGrupo)
+    {
+        try {
+            $evaluacionGrupo = EvaluacionesGrupo::where('idGrupo', $idGrupo)->first();
+
+            if (!$evaluacionGrupo) {
+                return response()->json(['errorMessage' => 'No se encontró evaluación para este grupo'], 404);
+            }
+
+            $criterios = Criterio::where('idEvaluacionesGrupo', $evaluacionGrupo->idEvaluacionesGrupo)
+                ->select('descripcion', 'rangoMaximo')
+                ->get();
+
+            $response = [
+                'tipoEvaluacion' => $evaluacionGrupo->tipoEvaluacion,
+                'fechaEvaluacion' => $evaluacionGrupo->fechaEvaluacion,
+                'criterios' => $criterios
+            ];
+
+            return response()->json($response, 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error al obtener la evaluación del grupo: ' . $e->getMessage()], 500);
+        }
+    }
+    public function getDatosEvaluacion($idGrupo)
+    {
+        try {
+            $evaluacionGrupo = EvaluacionesGrupo::where('idGrupo', $idGrupo)->first();
+
+            if (!$evaluacionGrupo) {
+                return response()->json(['error' => 'No se encontró evaluación para este grupo'], 404);
+            }
+
+            $response = [
+                'tipoEvaluacion' => $evaluacionGrupo->tipoEvaluacion,
+                'fechaEvaluacion' => $evaluacionGrupo->fechaEvaluacion,
+            ];
+
+            return response()->json($response, 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error al obtener la evaluación del grupo: ' . $e->getMessage()], 500);
         }
     }
     public function testConfigurarEvaluacion()

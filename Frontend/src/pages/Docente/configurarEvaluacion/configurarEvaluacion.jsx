@@ -22,8 +22,12 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import BaseUI from "../../../components/baseUI/baseUI";
-import { configurarEvaluacion } from "../../../api/configurarEvaluaciones/configurarEvaluaciones";
-
+import {
+  configurarEvaluacion,
+  getEvaluacionesGrupo,
+} from "../../../api/configurarEvaluaciones/configurarEvaluaciones";
+import InfoSnackbar from "../../../components/infoSnackbar/infoSnackbar";
+import CuadroDialogo from "../../../components/cuadroDialogo/cuadroDialogo";
 const ConfigurarEvaluacion = () => {
   const [criterios, setCriterios] = useState([
     { descripcion: "", notaMaxima: 0 },
@@ -31,12 +35,46 @@ const ConfigurarEvaluacion = () => {
   const [tipoEvaluacion, setTipoEvaluacion] = useState("");
   const [totalNota, setTotalNota] = useState(0);
   const [fechaEvaluacion, setFechaEvaluacion] = useState("");
-
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState({
+    error: false,
+    errorMessage: "",
+    errorDetails: "",
+  });
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "info",
+  });
   const tiposEvaluacion = [
     { id: "autoevaluacion", nombre: "Autoevaluación" },
     { id: "evaluacionCruzada", nombre: "Evaluación Cruzada" },
     { id: "evaluacionPares", nombre: "Evaluación de Pares" },
   ];
+
+  useEffect(() => {
+    const fetchInitialData = async () => {
+        const idGrupo = localStorage.getItem("idGrupo");
+        const response = await getEvaluacionesGrupo(idGrupo);
+        if (!response.errorMessage) {
+          setCriterios(
+            response.criterios.map((criterio) => ({
+              descripcion: criterio.descripcion,
+              notaMaxima: criterio.rangoMaximo,
+            }))
+          );
+          setTipoEvaluacion(response.tipoEvaluacion);
+          setFechaEvaluacion(response.fechaEvaluacion);
+
+        }else{
+            console.log(error);
+        }
+        setLoading(false);
+
+    };
+
+    fetchInitialData();
+  }, []);
 
   useEffect(() => {
     const nuevoTotal = criterios.reduce(
@@ -80,20 +118,43 @@ const ConfigurarEvaluacion = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const idGrupo=localStorage.getItem("idGrupo");
+    const idGrupo = localStorage.getItem("idGrupo");
     const dataEvaluacion = {
-        idGrupo: Number(idGrupo),
-        criterios: criterios.map((criterio) => ({
-          descripcion: criterio.descripcion,
-          notaMaxima: Number(criterio.notaMaxima),
-        })),
-        tipoEvaluacion: tipoEvaluacion,
-        fechaEvaluacion: fechaEvaluacion,
-      };
-      console.log("Datos de Evaluación:", dataEvaluacion);
-      const respuesta= await configurarEvaluacion(dataEvaluacion);
-      console.log(respuesta);
-    // Aquí iría la lógica para enviar los datos al backend
+      idGrupo: Number(idGrupo),
+      criterios: criterios.map((criterio) => ({
+        descripcion: criterio.descripcion,
+        notaMaxima: Number(criterio.notaMaxima),
+      })),
+      tipoEvaluacion: tipoEvaluacion,
+      fechaEvaluacion: fechaEvaluacion,
+    };
+    const respuesta = await configurarEvaluacion(dataEvaluacion);
+    console.log(respuesta);
+    if(respuesta.error){
+        console.log(respuesta);
+        setSnackbar({
+            open: true,
+            message: `${respuesta.error}`,
+            severity: "error",
+            autoHide: 60000,
+          });
+    }else if(respuesta.errors){
+        console.log(respuesta);
+        setSnackbar({
+            open: true,
+            message: `${respuesta.message}`,
+            severity: "error",
+            autoHide: 60000,
+          });
+    }else{
+        setSnackbar({
+            open: true,
+            message: `${respuesta.message}`,
+            severity: "success",
+            autoHide: 60000,
+          });
+    }
+
   };
 
   return (
@@ -102,128 +163,127 @@ const ConfigurarEvaluacion = () => {
       ocultarAtras={false}
       confirmarAtras={true}
       dirBack={"/"}
-      loading={false}
-      error={{ error: false }}
+      loading={loading}
+      error={error.error}
     >
-      <Typography variant="h5" sx={{mt:3}} gutterBottom>
+      <Typography variant="h5" sx={{ mt: 3 }} gutterBottom>
         Criterios
       </Typography>
-        <TableContainer>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Criterio</TableCell>
-                <TableCell align="right">Nota Máxima</TableCell>
-                <TableCell align="right">Acciones</TableCell>
+      <TableContainer>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Criterio</TableCell>
+              <TableCell align="right">Nota Máxima</TableCell>
+              <TableCell align="right">Acciones</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {criterios.map((criterio, index) => (
+              <TableRow key={index}>
+                <TableCell>
+                  <TextField
+                    fullWidth
+                    value={criterio.descripcion}
+                    onChange={(e) =>
+                      handleCriterioChange(index, "descripcion", e.target.value)
+                    }
+                    placeholder={`Criterio ${index + 1}`}
+                  />
+                </TableCell>
+                <TableCell align="right">
+                  <TextField
+                    type="number"
+                    value={criterio.notaMaxima}
+                    onChange={(e) =>
+                      handleCriterioChange(index, "notaMaxima", e.target.value)
+                    }
+                    inputProps={{
+                      min: 0,
+                      max: 100 - (totalNota - criterio.notaMaxima),
+                    }}
+                  />
+                </TableCell>
+                <TableCell align="right">
+                  <IconButton
+                    onClick={() => handleDeleteCriterio(index)}
+                    disabled={criterios.length === 1}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </TableCell>
               </TableRow>
-            </TableHead>
-            <TableBody>
-              {criterios.map((criterio, index) => (
-                <TableRow key={index}>
-                  <TableCell>
-                    <TextField
-                      fullWidth
-                      value={criterio.descripcion}
-                      onChange={(e) =>
-                        handleCriterioChange(
-                          index,
-                          "descripcion",
-                          e.target.value
-                        )
-                      }
-                      placeholder={`Criterio ${index + 1}`}
-                    />
-                  </TableCell>
-                  <TableCell align="right">
-                    <TextField
-                      type="number"
-                      value={criterio.notaMaxima}
-                      onChange={(e) =>
-                        handleCriterioChange(
-                          index,
-                          "notaMaxima",
-                          e.target.value
-                        )
-                      }
-                      inputProps={{
-                        min: 0,
-                        max: 100 - (totalNota - criterio.notaMaxima),
-                      }}
-                    />
-                  </TableCell>
-                  <TableCell align="right">
-                    <IconButton
-                      onClick={() => handleDeleteCriterio(index)}
-                      disabled={criterios.length === 1}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleAddCriterio}
-          style={{ marginTop: "20px" }}
-          disabled={totalNota >= 100}
-        >
-          Agregar Criterio
-        </Button>
-        <Box mt={3}>
-          <Typography variant="h6">Nota Total: {totalNota}</Typography>
-        </Box>
-        <Box mt={3}>
-          <Typography variant="h6" gutterBottom>
-            Tipo de Evaluación
-          </Typography>
-          <List>
-            {tiposEvaluacion.map((tipo) => (
-              <ListItem key={tipo.id} disablePadding>
-                <ListItemButton
-                  onClick={() => handleTipoEvaluacionClick(tipo.id)}
-                >
-                  <ListItemIcon>
-                    <Radio
-                      checked={tipoEvaluacion === tipo.id}
-                      onChange={() => handleTipoEvaluacionClick(tipo.id)}
-                      value={tipo.id}
-                      name="tipo-evaluacion-radio"
-                      inputProps={{ "aria-label": tipo.nombre }}
-                    />
-                  </ListItemIcon>
-                  <ListItemText primary={tipo.nombre} />
-                </ListItemButton>
-              </ListItem>
             ))}
-          </List>
-        </Box>
-        <Box mt={3}>
-          <Typography variant="h6" gutterBottom>
-            Fecha de Evaluación
-          </Typography>
-          <TextField
-            type="date"
-            value={fechaEvaluacion}
-            onChange={handleFechaChange}
-            fullWidth
-            InputLabelProps={{
-              shrink: true,
-            }}
-          />
-        </Box>
-        <Button
-          onClick={handleSubmit}
-          variant="contained"
-          color="primary"
-          style={{ marginTop: "20px" }}
-        >
-          Guardar Configuración
-        </Button>
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={handleAddCriterio}
+        style={{ marginTop: "20px" }}
+        disabled={totalNota >= 100}
+      >
+        Agregar Criterio
+      </Button>
+      <Box mt={3}>
+        <Typography variant="h6">Nota Total: {totalNota}</Typography>
+      </Box>
+      <Box mt={3}>
+        <Typography variant="h6" gutterBottom>
+          Tipo de Evaluación
+        </Typography>
+        <List>
+          {tiposEvaluacion.map((tipo) => (
+            <ListItem key={tipo.id} disablePadding>
+              <ListItemButton
+                onClick={() => handleTipoEvaluacionClick(tipo.id)}
+              >
+                <ListItemIcon>
+                  <Radio
+                    checked={tipoEvaluacion === tipo.id}
+                    onChange={() => handleTipoEvaluacionClick(tipo.id)}
+                    value={tipo.id}
+                    name="tipo-evaluacion-radio"
+                    inputProps={{ "aria-label": tipo.nombre }}
+                  />
+                </ListItemIcon>
+                <ListItemText primary={tipo.nombre} />
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </List>
+      </Box>
+      <Box mt={3}>
+        <Typography variant="h6" gutterBottom>
+          Fecha de Evaluación
+        </Typography>
+        <TextField
+          type="date"
+          value={fechaEvaluacion}
+          onChange={handleFechaChange}
+          fullWidth
+          InputLabelProps={{
+            shrink: true,
+          }}
+        />
+      </Box>
+      <Button
+        onClick={handleSubmit}
+        variant="contained"
+        color="primary"
+        style={{ marginTop: "20px" }}
+      >
+        Guardar Configuración
+      </Button>
+      <InfoSnackbar
+        openSnackbar={snackbar.open}
+        setOpenSnackbar={(open) => setSnackbar({ ...snackbar, open })}
+        message={snackbar.message}
+        severity={snackbar.severity}
+      />
     </BaseUI>
+    
   );
 };
 

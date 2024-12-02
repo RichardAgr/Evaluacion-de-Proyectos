@@ -97,6 +97,9 @@ Route::get('/planificacionesParaModificar', [PlanificacionController::class, 'pl
 Route::get('/planificacion/notaComentario/{idPlanificacion}', [PlanificacionController::class, 'notaComentario']);
 Route::get('/planificacionAceptadas', [PlanificacionController::class, 'planificacionAceptadas']);
 Route::get('/planificacionRechazadas', [PlanificacionController::class, 'planificacionRechazadas']);
+Route::get('/getEvaluacionesGrupo/{idGrupo}', [EvaluacionesGrupoController::class, 'getEvaluacionesGrupo']);
+
+Route::get('/getDatosEvaluacion/{idGrupo}', [EvaluacionesGrupoController::class, 'getDatosEvaluacion']);
 
 // ===================== NO SE DONDE IRIA ESTO  {Checkar los creadores}===============
 //Route::get('/docente/empresa/{idEmpresa}', [PlanificacionController::class, 'obtenerDocentePorEmpresa']);

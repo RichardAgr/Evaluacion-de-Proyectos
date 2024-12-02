@@ -12,6 +12,7 @@ import CardEvaluacion from "../../../components/cardsHome/cardDocente/cardEvalua
 import CardListaYDatos from "../../../components/cardsHome/cardDocente/cardListaYDatos.jsx";
 import Loading from "../../../components/loading/loading.jsx";
 import Error from "../../../components/error/error.jsx";
+import { getDatosEvaluacion } from "../../../api/configurarEvaluaciones/configurarEvaluaciones.js";
 function Home() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState({
@@ -53,6 +54,7 @@ function Home() {
         localStorage.setItem("fechaFinGestion", response.fechaFinGestion);
         localStorage.setItem("numEstudiantes", response.numEstudiantes);
         localStorage.setItem("numEmpresas", response.numEmpresas);
+
         setLoading(false);
         setError({ error: false, errorMessage: "", errorDetails: "" });
       } catch (error) {
@@ -60,11 +62,20 @@ function Home() {
         setError({
           error: true,
           errorMessage: "Ha ocurrido un error",
-          errorDetails: error.message,
+          errorDetails: error.message, 
         });
+      }
+      const idGrupo=localStorage.getItem("idGrupo");
+      const datosEvaluacion= await getDatosEvaluacion(idGrupo);
+      console.log(datosEvaluacion);
+      if(!datosEvaluacion.errorMessage){
+        localStorage.setItem("fechaEvaluacion", datosEvaluacion.fechaEvaluacion);
+        localStorage.setItem("tipoEvaluacion", datosEvaluacion.tipoEvaluacion);
       }
     };
     getDatosLogin();
+    
+    
   }, []);
 
   return (

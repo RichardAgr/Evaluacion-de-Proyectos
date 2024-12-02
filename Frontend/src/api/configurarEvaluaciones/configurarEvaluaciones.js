@@ -2,11 +2,10 @@
 const BASE_URL = "http://localhost:8000/api";
 
 /**
- * Obtiene las planificaciones que no fueron publicadas
+ * modifica los datos para configurar una evaluacion final
  * @returns {Promise<Object>} Las planificaciones con su ID
  */
 export async function configurarEvaluacion(datosEvaluacion) {
-  try {
     const response = await fetch(`${BASE_URL}/configurarEvaluacion`, {
       method: "POST",
       headers: {
@@ -16,18 +15,40 @@ export async function configurarEvaluacion(datosEvaluacion) {
       credentials: "include",
     });
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(
-        errorData.message || "Error al configurar la evaluación"
-      );
-    }
 
     const data = await response.json();
-    console.log(data);
     return data;
-  } catch (error) {
-    console.error("Error al configurar las evaluaciones:", error);
-    throw error;
-  }
+
+}
+
+export async function getEvaluacionesGrupo(idGrupo) {
+    const response = await fetch(
+      `${BASE_URL}/getEvaluacionesGrupo/${idGrupo}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      }
+    );
+    const data = await response.json();
+    return data;
+
+}
+
+export async function getDatosEvaluacion(idGrupo) {
+    const response = await fetch(
+      `${BASE_URL}/getDatosEvaluacion/${idGrupo}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      }
+    );
+    const data = await response.json();
+    return data;
+
 }

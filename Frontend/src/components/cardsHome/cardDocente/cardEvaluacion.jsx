@@ -1,11 +1,16 @@
 import { Button } from "@mui/material";
-import HomeCard, { ButtonsContainer } from "../homeCard";
+import HomeCard, { ButtonsContainer, InfoRow, Title } from "../homeCard";
 import { useNavigate } from "react-router-dom";
 function CardEvaluacion() {
   const navigate = useNavigate();
   return (
     <HomeCard title="Evaluaciones">
       <ButtonsContainer>
+        <InfoRow>
+          <Title>
+
+          </Title>
+        </InfoRow>
         <Button variant="contained" color="primary" fullWidth onClick={()=>navigate("/configurarEvaluacion")}>
           CONFIGURAR EVALUACIONES
         </Button>
