@@ -239,8 +239,31 @@ function CalificarSprintU() {
     })
     setAceptados(newAceptados)
   }
-  if (loading) return <Loading></Loading>;
-  if (error.error) return <Error></Error>;
+  if (loading) return (
+    <BaseUI
+      titulo={"CALIFICAR SPRINT"}
+      ocultarAtras={false}
+      confirmarAtras={true}
+      dirBack={`/homeDocente/listaEmpresaCalificarSprints/empresa`}
+      loading={loading}
+      error={error}
+    >
+      <Loading></Loading>  
+    </BaseUI>
+  )
+  if (error.error) return(
+    <BaseUI
+      titulo={"CALIFICAR SPRINT"}
+      ocultarAtras={false}
+      confirmarAtras={true}
+      dirBack={`/homeDocente/listaEmpresaCalificarSprints/empresa`}
+      loading={loading}
+      error={error}
+    >
+      <Error></Error>;
+    </BaseUI>
+  )
+  
   return (
     <BaseUI
       titulo={"CALIFICAR SPRINT"}
