@@ -11,7 +11,8 @@ import CardEvaluacion from '../../../components/cardsHome/cardEstudiante/cardEva
 import CardTareas from '../../../components/cardsHome/cardEstudiante/cardTareas.jsx'
 import { useNavigate} from "react-router-dom";
 import { CardContainer } from "../../../components/cardsHome/homeCard.jsx";
-import Loading from '../../../components/loading/loading.jsx' 
+import Loading from '../../../components/loading/loading.jsx'; 
+import { getDatosEvaluacion } from "../../../api/configurarEvaluaciones/configurarEvaluaciones.js";
 function HomeEstudiante() {
   const [isLoaded, setIsLoaded] = useState(false);
   const navigate =useNavigate()
@@ -57,12 +58,20 @@ function HomeEstudiante() {
 
             localStorage.setItem("fechaLimiteSprint", response.fechaLimiteSprint)
             localStorage.setItem('fechaLimiteSemana', response.fechaLimiteSemana)
+            
           }
           setIsLoaded(true);
         })
         .catch((error) => {
           console.log("Fetch error: ", error);
         });
+        const idGrupo=localStorage.getItem("idGrupo");
+        const datosEvaluacion= await getDatosEvaluacion(idGrupo);
+        console.log(datosEvaluacion);
+        if(!datosEvaluacion.errorMessage){
+          localStorage.setItem("fechaEvaluacion", datosEvaluacion.fechaEvaluacion);
+          localStorage.setItem("tipoEvaluacion", datosEvaluacion.tipoEvaluacion);
+        }
     }
     getOrigin()
   },[])
