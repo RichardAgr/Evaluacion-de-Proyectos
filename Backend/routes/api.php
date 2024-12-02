@@ -196,6 +196,10 @@ Route::post('/crearCuentaEstudiante', [AdministradorController::class, 'crearEst
 Route::post('/crearCuentaDocente', [AdministradorController::class, 'crearDocente']);
 
 
+Route::get('/obtenerDatosDocente', [AdministradorController::class, 'obtenerDatosDocente']);
+Route::get('/obtenerDatosEstudiante', [AdministradorController::class, 'obtenerDatosEstudiante']);
+
+
 
 // ============================  Funciones Joaquin  ====================================
 
