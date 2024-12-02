@@ -15,33 +15,14 @@ function Nav() {
       {/** Ruta compartidas*/}
       <Route path="/" element={<IniciarSesion />} />
       <Route path="/estoTieneQueSerUnLinkRandomSuperLargo" element={<IniciarSesionAdmin />} />  
-      {/** Visualizar Planificacion*/}
-      <Route
-        path="/visualizarPlanificacion/Empresa/:idEmpresa"
-        element={<VerPlanificacionDeDesarollo />}
-      />
       {/** Seleccione un Sprint para  visualizar*/}
       <Route
         path="/visualizarSprint/Empresa/:idEmpresa"
         element={<SeleccionarSprintVisualizar />}
       />
-      {/** Visualizar Sprint*/}
-      <Route
-        path="/visualizarSprint/Empresa/:idEmpresa/Sprint/:idSprint"
-        element={<VisualizarSprint />}
-      />
 
-      {/** Modificar Planificacion */}
-      <Route
-        path="/modificarPlanificacion/Empresa/:idEmpresa"
-        element={<ModificarPlanificacion />}
-      />
 
-      {/** Publicar Planificacion */}
-      <Route
-        path="/publicarPlanificacion/Empresa/:idEmpresa"
-        element={<PublicarPlanificacion />}
-      />
+
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   );

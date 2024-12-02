@@ -1,0 +1,222 @@
+import React, { useState, useEffect } from "react";
+import {
+  Container,
+  Typography,
+  TextField,
+  Button,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Box,
+  IconButton,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Radio,
+} from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import BaseUI from "../../../components/baseUI/baseUI";
+
+const ConfigurarEvaluacion = () => {
+  const [criterios, setCriterios] = useState([
+    { descripcion: "", notaMaxima: 0 },
+  ]);
+  const [tipoEvaluacion, setTipoEvaluacion] = useState("");
+  const [totalNota, setTotalNota] = useState(0);
+  const [fechaEvaluacion, setFechaEvaluacion] = useState("");
+
+  const tiposEvaluacion = [
+    { id: "autoevaluacion", nombre: "Autoevaluación" },
+    { id: "evaluacionCruzada", nombre: "Evaluación Cruzada" },
+    { id: "evaluacionPares", nombre: "Evaluación de Pares" },
+  ];
+
+  useEffect(() => {
+    const nuevoTotal = criterios.reduce(
+      (total, criterio) => total + Number(criterio.notaMaxima),
+      0
+    );
+    setTotalNota(nuevoTotal);
+  }, [criterios]);
+
+  const handleAddCriterio = () => {
+    if (totalNota < 100) {
+      setCriterios([...criterios, { descripcion: "", notaMaxima: 0 }]);
+    }
+  };
+
+  const handleCriterioChange = (index, field, value) => {
+    const nuevosCriterios = [...criterios];
+    if (field === "notaMaxima") {
+      const nuevaNota = Number(value);
+      const notaAnterior = Number(nuevosCriterios[index].notaMaxima);
+      if (totalNota - notaAnterior + nuevaNota > 100) {
+        return; // No permitir el cambio si excede 100
+      }
+    }
+    nuevosCriterios[index][field] = value;
+    setCriterios(nuevosCriterios);
+  };
+
+  const handleDeleteCriterio = (index) => {
+    const nuevosCriterios = criterios.filter((_, i) => i !== index);
+    setCriterios(nuevosCriterios);
+  };
+
+  const handleTipoEvaluacionClick = (tipo) => {
+    setTipoEvaluacion(tipo);
+  };
+
+  const handleFechaChange = (event) => {
+    setFechaEvaluacion(event.target.value);
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    console.log("Criterios:", criterios);
+    console.log("Tipo de Evaluación:", tipoEvaluacion);
+    console.log("Total Nota:", totalNota);
+    console.log("Fecha de Evaluación:", fechaEvaluacion);
+    // Aquí iría la lógica para enviar los datos al backend
+  };
+
+  return (
+    <BaseUI
+      titulo={"CONFIGURAR EVALUACION"}
+      ocultarAtras={false}
+      confirmarAtras={true}
+      dirBack={"/"}
+      loading={false}
+      error={{ error: false }}
+    >
+      <Typography variant="h5" sx={{mt:3}} gutterBottom>
+        Criterios
+      </Typography>
+      <form onSubmit={handleSubmit}>
+        <TableContainer>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Criterio</TableCell>
+                <TableCell align="right">Nota Máxima</TableCell>
+                <TableCell align="right">Acciones</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {criterios.map((criterio, index) => (
+                <TableRow key={index}>
+                  <TableCell>
+                    <TextField
+                      fullWidth
+                      value={criterio.descripcion}
+                      onChange={(e) =>
+                        handleCriterioChange(
+                          index,
+                          "descripcion",
+                          e.target.value
+                        )
+                      }
+                      placeholder={`Criterio ${index + 1}`}
+                    />
+                  </TableCell>
+                  <TableCell align="right">
+                    <TextField
+                      type="number"
+                      value={criterio.notaMaxima}
+                      onChange={(e) =>
+                        handleCriterioChange(
+                          index,
+                          "notaMaxima",
+                          e.target.value
+                        )
+                      }
+                      inputProps={{
+                        min: 0,
+                        max: 100 - (totalNota - criterio.notaMaxima),
+                      }}
+                    />
+                  </TableCell>
+                  <TableCell align="right">
+                    <IconButton
+                      onClick={() => handleDeleteCriterio(index)}
+                      disabled={criterios.length === 1}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleAddCriterio}
+          style={{ marginTop: "20px" }}
+          disabled={totalNota >= 100}
+        >
+          Agregar Criterio
+        </Button>
+        <Box mt={3}>
+          <Typography variant="h6">Nota Total: {totalNota}</Typography>
+        </Box>
+        <Box mt={3}>
+          <Typography variant="h6" gutterBottom>
+            Tipo de Evaluación
+          </Typography>
+          <List>
+            {tiposEvaluacion.map((tipo) => (
+              <ListItem key={tipo.id} disablePadding>
+                <ListItemButton
+                  onClick={() => handleTipoEvaluacionClick(tipo.id)}
+                >
+                  <ListItemIcon>
+                    <Radio
+                      checked={tipoEvaluacion === tipo.id}
+                      onChange={() => handleTipoEvaluacionClick(tipo.id)}
+                      value={tipo.id}
+                      name="tipo-evaluacion-radio"
+                      inputProps={{ "aria-label": tipo.nombre }}
+                    />
+                  </ListItemIcon>
+                  <ListItemText primary={tipo.nombre} />
+                </ListItemButton>
+              </ListItem>
+            ))}
+          </List>
+        </Box>
+        <Box mt={3}>
+          <Typography variant="h6" gutterBottom>
+            Fecha de Evaluación
+          </Typography>
+          <TextField
+            type="date"
+            value={fechaEvaluacion}
+            onChange={handleFechaChange}
+            fullWidth
+            InputLabelProps={{
+              shrink: true,
+            }}
+          />
+        </Box>
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          style={{ marginTop: "20px" }}
+        >
+          Guardar Configuración
+        </Button>
+      </form>
+    </BaseUI>
+  );
+};
+
+export default ConfigurarEvaluacion;

@@ -1,21 +1,18 @@
-import { Button} from "@mui/material";
-import CardGeneral from '../cardGeneral'
+import { Button } from "@mui/material";
+import HomeCard, { ButtonsContainer } from "../homeCard";
 function CardResumen() {
   return (
-    <CardGeneral
-        titulo = "EVALUACION"
-        info = {<></>}
-        buttons={<> 
+    <HomeCard title="Evaluaciones">
+      <ButtonsContainer>
         <Button variant="contained" color="primary" fullWidth>
-            ENVIAR EVALUACIONES
+          CONFIGURAR EVALUACIONES
         </Button>
-        <Button variant="outlined" color="primary" fullWidth>
-            VISUALIZAR EVALUACIONES
+        <Button variant="contained" color="primary" fullWidth>
+          VISUALIZAR EVALUACIONES
         </Button>
-        </>}
-    />
+      </ButtonsContainer>
+    </HomeCard>
   );
 }
 
 export default CardResumen;
-  

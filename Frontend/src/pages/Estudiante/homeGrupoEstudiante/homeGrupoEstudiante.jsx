@@ -10,6 +10,7 @@ import CardGrupoEmpresa from '../../../components/cardsHome/cardEstudiante/cardG
 import CardEvaluacion from '../../../components/cardsHome/cardEstudiante/cardEvaluacion.jsx'
 import CardTareas from '../../../components/cardsHome/cardEstudiante/cardTareas.jsx'
 import { useNavigate} from "react-router-dom";
+import { CardContainer } from "../../../components/cardsHome/homeCard.jsx";
 import Loading from '../../../components/loading/loading.jsx' 
 function HomeEstudiante() {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -80,14 +81,14 @@ function HomeEstudiante() {
       <Header />
       <Title variant="h5" sx={{marginTop:'5rem', textAlign:'center'}}>Bienvenid@, {nombreCompleto}</Title>
       <Title variant="h6" sx={{textAlign:'center'}}>{localStorage.getItem('gestion')}</Title>
-      <Container>
+      <CardContainer>
         {(aceptada!==0)&&<CardProgreso></CardProgreso>} 
         <CardGrupoEmpresa></CardGrupoEmpresa>        
         {empresaPublicada&&<CardPlanificacion></CardPlanificacion>}
         {(aceptada!==0)&&<CardTareas></CardTareas>}
         <CardEvaluacion></CardEvaluacion>
         <CardListas></CardListas>
-      </Container>
+      </CardContainer>
       <Footer />
     </Fragment>
   );

@@ -17,6 +17,7 @@ class PlanificacionController extends Controller
 {
     public function planificacionAceptadas(): JsonResponse
     {
+        // todo: implementar la lógica para recuperar solo segun el id del docente
         // Obtener todas las empresas
         $empresas = Empresa::all();
 
@@ -49,6 +50,7 @@ class PlanificacionController extends Controller
     }
     public function planificacionesSinValidar(): JsonResponse
     {
+        // todo: implementar la lógica para recuperar solo segun el id del docente
         // Obtener todas las empresas, en el futuro debera filtrar las empresas por docente
         $empresas = Empresa::all();
         $data = [];
@@ -76,7 +78,7 @@ class PlanificacionController extends Controller
     }
     public function planificacionesParaModificar(): JsonResponse
     {
-        // Obtener todas las empresas, en el futuro deberá filtrar las empresas por docente
+        // ! ya no tiene valor porque la ing dijo  que no era necesario
         $empresas = Empresa::all();
         $data = [];
         foreach ($empresas as $empresa) {
@@ -116,6 +118,7 @@ class PlanificacionController extends Controller
     }
     public function planificacionesSinPublicar(): JsonResponse
     {
+        // ! ya no sirve, ya no es necesario
         // Obtener todas las empresas, en el futuro debera filtrar las empresas por docente
         $empresas = Empresa::all();
         $data = [];
@@ -144,6 +147,7 @@ class PlanificacionController extends Controller
 
     public function show($idEmpresa): JsonResponse
     {
+        // * Devuelve los datos necesarios de una empresa
         // Verificar si la empresa existe
         $empresa = Empresa::find($idEmpresa);
 
@@ -204,6 +208,7 @@ class PlanificacionController extends Controller
     }
     public function getComentario($idPlanificacion): JsonResponse
     {
+        // ! Creo que ya no sirve
         $planificacion = Planificacion::find($idPlanificacion);
 
         if (!$planificacion) {
@@ -223,6 +228,7 @@ class PlanificacionController extends Controller
     
     public function addRevision(Request $request)
     {
+        // * logica para añadir un comentario al rechazar una planificacion
         try {
             // validar datos
             $validator = Validator::make($request->all(), [
@@ -266,6 +272,7 @@ class PlanificacionController extends Controller
 
     public function validar(Request $request)
     {
+        // * Logica para aceptar una planificacion
         $validatedData = $request->validate([
             'idEmpresa' => 'required|integer',
         ]);
@@ -287,6 +294,7 @@ class PlanificacionController extends Controller
     
     public function rechazar(Request $request)
     {
+        // * Logica para rechazar una planificacion
         $validatedData = $request->validate([
             'idEmpresa' => 'required|integer',
         ]);
@@ -328,6 +336,9 @@ class PlanificacionController extends Controller
 
     public function guardarPlanificacion(Request $request): JsonResponse
     {
+        // * Logica para modificar los datos de una planificacion
+
+        // validar datos
         $validator = Validator::make($request->all(), [
             'aceptada' => 'required|boolean',
             'comentarioDocente' => 'string',
@@ -380,20 +391,5 @@ class PlanificacionController extends Controller
             ], 500);
         }
     }
-    public function testModificarPlanificacion()
-    {
-        // Simular una solicitud con datos de prueba
-        $requestData = [
-            'aceptada' => true,
-            'comentariopublico' => 'Comentario de prueba',
-            'idEmpresa' => 1, // Asegúrate de que este ID exista en tu base de datos
-        ];
 
-        // Crear una nueva instancia de Request con los datos de prueba
-        $request = new Request($requestData);
-
-        // Llamar a la función modificarPlanificacion
-        $response = $this->modificarPlanificacion($request);
-        return $response;
-    }
 }

@@ -177,7 +177,7 @@ class SprintController extends Controller
 
 
 
-    public function modificarSprint(Request $request): JsonResponse
+    public function guardarSprints(Request $request): JsonResponse
     {
         // * Validar todos los datos
         $today = Carbon::today()->toDateString();
@@ -337,20 +337,20 @@ class SprintController extends Controller
             'idEmpresa' => 1, // Asegúrate de que este ID exista en tu base de datos
             'sprints' => [
                 [
-                    'fechaIni' => Carbon::tomorrow()->addDays(3)->toDateString(),
-                    'fechaFin' => Carbon::tomorrow()->addDays(7)->toDateString(),
-                    'cobro' => 1000,
-                    'fechaEntrega' => Carbon::tomorrow()->addDays(8)->toDateString(),
-                    'entregables' => 'Entregable de prueba 1',
+                    'fechaIni' => Carbon::tomorrow()->addDays(1)->toDateString(),
+                    'fechaFin' => Carbon::tomorrow()->addDays(10)->toDateString(),
+                    'cobro' => 20,
+                    'fechaEntrega' => Carbon::tomorrow()->addDays(11)->toDateString(),
+                    'entregables' => [],
                     'notaSprint' => 'Nota de prueba 1',
                     'comentariodocente' => 'Comentario de prueba 1'
                 ],
                 [
-                    'fechaIni' => Carbon::tomorrow()->addDays(8)->toDateString(),
-                    'fechaFin' => Carbon::tomorrow()->addDays(15)->toDateString(),
-                    'cobro' => 1500,
-                    'fechaEntrega' => Carbon::tomorrow()->addDays(16)->toDateString(),
-                    'entregables' => 'Entregable de prueba 2',
+                    'fechaIni' => Carbon::tomorrow()->addDays(13)->toDateString(),
+                    'fechaFin' => Carbon::tomorrow()->addDays(25)->toDateString(),
+                    'cobro' => 80,
+                    'fechaEntrega' => Carbon::tomorrow()->addDays(26)->toDateString(),
+                    'entregables' => [],
                     'notaSprint' => 'Nota de prueba 2',
                     'comentariodocente' => 'Comentario de prueba 2'
                 ]
@@ -361,7 +361,7 @@ class SprintController extends Controller
         $request = new Request($requestData);
 
         // Llamar a la función modificarSprint
-        $response = $this->guardarSprints($request);
+        $response = $this->modificarSprint($request);
         return $response;
     }
 

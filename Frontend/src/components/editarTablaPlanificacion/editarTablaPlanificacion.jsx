@@ -264,6 +264,7 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
         entregables: row.entregables,
       })),
     };
+    console.log(dataSprint);
     const response = await fetch(
       "http://localhost:8000/api/planificacion/guardarPlanificacion",
       {
@@ -297,6 +298,7 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
         }
       );
       const responseDataSprint = await responseSprint.json();
+      console.log(responseDataSprint);
       console.log(dataSprint);
       if (
         responseDataSprint.error !== undefined &&
