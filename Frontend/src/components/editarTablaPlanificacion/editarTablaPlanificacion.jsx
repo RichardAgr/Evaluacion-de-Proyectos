@@ -293,8 +293,7 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(dataSprint),
-          credentials: 'include'
+          body: JSON.stringify(dataSprint)
         }
       );
       const responseDataSprint = await responseSprint.json();

@@ -19,6 +19,8 @@ use App\Http\Controllers\joaquinController;
 use App\Http\Controllers\Estudiante\SesionEstudianteController;
 use App\Http\Controllers\Docente\SesionDocenteController;
 use App\Http\Controllers\Administrador\AdministradorController;
+use App\Http\Controllers\EvaluacionesGrupoController;
+use App\Models\EvaluacionesGrupo;
 
 //============================= GET EMPRESA ================================
 
@@ -56,7 +58,6 @@ Route::get('/empresa/{idEmpresa}/semanasTareas', [EmpresaController::class, 'get
 Route::get('/grupo/{idGrupo}/empresas', [GrupoController::class, 'getEmpresasPorGrupo']);
 //-- sprints y estudiantes de una empresa
 Route::get('/empresa/{idEmpresa}/sprints-estudiantes', [EmpresaController::class, 'obtenerSprintsYEstudiantes']);
-
 
 
 //============================= PLANIFICACION ==============================
@@ -111,8 +112,15 @@ Route::get('/testGuardar', [SprintController::class, 'testModificarSprint']);
 Route::get('/testGuardarPlanificacion', [PlanificacionController::class, 'testModificarPlanificacion']);
 Route::get('/testGuardarEntregables', [EntregablesController::class, 'testGuardarEntregables']);
 
+Route::get('/testConfigurarEvaluacion', [EvaluacionesGrupoController::class, 'testConfigurarEvaluacion']);
+
 // ==================================   RUTAS POST =================================
 
+//============================= POST EVALUACION ==============================
+//configurar la evaluacion final
+Route::post('/configurarEvaluacion', [EvaluacionesGrupoController::class, 'configurarEvaluacion']);
+//realizar una evaluacion, calificarla
+Route::post('/realizarEvaluacion', [PlanificacionController::class, 'realizarEvaluacion']);
 // ==================================   POST PLANIFICACION    ==================================
 
 // ---Cambia la revision como valida---

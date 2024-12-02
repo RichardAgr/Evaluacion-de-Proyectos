@@ -20,7 +20,7 @@ function Home() {
     errorDetails: "",
   });
   useEffect(() => {
-    const getOriginDocente = async () => {
+    const getDatosLogin= async () => {
       const url = "http://localhost:8000/api/docente/getGrupo";
       const bodyFetch = {
         method: "GET",

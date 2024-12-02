@@ -13,7 +13,7 @@ class CreateEvaluacionTable extends Migration
     {
         Schema::create('evaluacion', function (Blueprint $table) {
             $table->id('idEvaluacion');
-            $table->unsignedBigInteger('idGrupo');
+            $table->unsignedBigInteger('idEvaluacionesGrupo');
             $table->unsignedBigInteger('idEvaluadorEmpresa')->nullable();
             $table->unsignedBigInteger('idEvaluadorEstudiante')->nullable();
             $table->unsignedBigInteger('idEvaluadoEstudiante');
@@ -21,7 +21,7 @@ class CreateEvaluacionTable extends Migration
             $table->time('horaEvaluacion');
 
             // * Llaves foráneas
-            $table->foreign('idGrupo')->references('idGrupo')->on('grupo');
+            $table->foreign('idEvaluacionesGrupo')->references('idEvaluacionesGrupo')->on('evaluacionesgrupo');
             $table->foreign('idEvaluadorEmpresa')->references('idEmpresa')->on('empresa');
             $table->foreign('idEvaluadorEstudiante')->references('idEstudiante')->on('estudiante');
             $table->foreign('idEvaluadoEstudiante')->references('idEstudiante')->on('estudiante');

@@ -22,6 +22,7 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import BaseUI from "../../../components/baseUI/baseUI";
+import { configurarEvaluacion } from "../../../api/configurarEvaluaciones/configurarEvaluaciones";
 
 const ConfigurarEvaluacion = () => {
   const [criterios, setCriterios] = useState([
@@ -77,12 +78,21 @@ const ConfigurarEvaluacion = () => {
     setFechaEvaluacion(event.target.value);
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log("Criterios:", criterios);
-    console.log("Tipo de Evaluación:", tipoEvaluacion);
-    console.log("Total Nota:", totalNota);
-    console.log("Fecha de Evaluación:", fechaEvaluacion);
+    const idGrupo=localStorage.getItem("idGrupo");
+    const dataEvaluacion = {
+        idGrupo: Number(idGrupo),
+        criterios: criterios.map((criterio) => ({
+          descripcion: criterio.descripcion,
+          notaMaxima: Number(criterio.notaMaxima),
+        })),
+        tipoEvaluacion: tipoEvaluacion,
+        fechaEvaluacion: fechaEvaluacion,
+      };
+      console.log("Datos de Evaluación:", dataEvaluacion);
+      const respuesta= await configurarEvaluacion(dataEvaluacion);
+      console.log(respuesta);
     // Aquí iría la lógica para enviar los datos al backend
   };
 
@@ -98,7 +108,6 @@ const ConfigurarEvaluacion = () => {
       <Typography variant="h5" sx={{mt:3}} gutterBottom>
         Criterios
       </Typography>
-      <form onSubmit={handleSubmit}>
         <TableContainer>
           <Table>
             <TableHead>
@@ -207,14 +216,13 @@ const ConfigurarEvaluacion = () => {
           />
         </Box>
         <Button
-          type="submit"
+          onClick={handleSubmit}
           variant="contained"
           color="primary"
           style={{ marginTop: "20px" }}
         >
           Guardar Configuración
         </Button>
-      </form>
     </BaseUI>
   );
 };

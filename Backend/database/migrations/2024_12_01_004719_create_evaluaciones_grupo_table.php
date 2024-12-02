@@ -14,7 +14,7 @@ class CreateEvaluacionesGrupoTable extends Migration
         Schema::create('evaluacionesgrupo', function (Blueprint $table) {
             $table->id('idEvaluacionesGrupo');
             $table->unsignedBigInteger('idGrupo');
-            $table->time('fechaEvaluacion');
+            $table->date('fechaEvaluacion');
 
             // * Llave foranea
             $table->foreign('idGrupo')->references('idGrupo')->on('grupo');

@@ -7,5 +7,18 @@ use Illuminate\Database\Eloquent\Model;
 
 class EvaluacionesGrupo extends Model
 {
-    use HasFactory;
+    protected $table = 'evaluacionesgrupo';
+    protected $primaryKey = 'idEvaluacionesGrupo';
+    public $timestamps = false;
+    protected $fillable = [
+        'idGrupo',
+        'fechaEvaluacion',
+    ];
+
+    // * Relación con la tabla grupo (pertenece a)
+    public function grupo()
+    {
+        return $this->belongsTo(Grupo::class, 'idGrupo', 'idGrupo');
+    }
+    
 }
