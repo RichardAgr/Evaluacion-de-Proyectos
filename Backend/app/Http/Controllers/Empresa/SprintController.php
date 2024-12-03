@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Empresa;
+
 use Illuminate\Http\Request;
 use App\Models\Planificacion;
 use App\Models\Sprint;
@@ -141,34 +142,33 @@ class SprintController extends Controller
                 ->first();
             $empresaValida = false; // Marca para incluir la empresa si alguna semana no cumple la condición
             if ($planificacion) {
-                    $semanas = $planificacion->semanas()
+                $semanas = $planificacion->semanas()
                     ->where(function ($query) {
                         $query->where(function ($subquery) {
                             $subquery->where('fechaIni', '<=', now())
-                                    ->where('fechaFin', '>=', now());
+                                ->where('fechaFin', '>=', now());
                         })->orWhere('fechaFin', '<', now());
                     })
                     ->get();
-            
 
-                    foreach ($semanas as $semana) {
-                        // Obtener todos los comentarios de la semana
-                        $comentariosTareas = $semana->comentarioTarea()->count();
-                        $tareas = $semana->tareas()->count();
-                        $numeroIncorrectoDeComentarios = $comentariosTareas !== $numEstudiantes;
-                        $sinTareas = $tareas === 0;
 
-                        if ($numeroIncorrectoDeComentarios || $sinTareas) {
-                            $empresaValida = true; // La empresa tiene al menos una semana que no cumple la condición
-                            $data[] = [
-                                'id' => $planificacion->idPlanificacion,
-                                'idEmpresa' => $empresa['idEmpresa'], // Usar idEmpresa del JSON
-                                'nombreEmpresa' => $empresa['nombreEmpresa'],
-                                'nombreLargo' => $empresa['nombreLargo'],
-                            ];
-                            break;
-                        }
-                    
+                foreach ($semanas as $semana) {
+                    // Obtener todos los comentarios de la semana
+                    $comentariosTareas = $semana->comentarioTarea()->count();
+                    $tareas = $semana->tareas()->count();
+                    $numeroIncorrectoDeComentarios = $comentariosTareas !== $numEstudiantes;
+                    $sinTareas = $tareas === 0;
+
+                    if ($numeroIncorrectoDeComentarios || $sinTareas) {
+                        $empresaValida = true; // La empresa tiene al menos una semana que no cumple la condición
+                        $data[] = [
+                            'id' => $planificacion->idPlanificacion,
+                            'idEmpresa' => $empresa['idEmpresa'], // Usar idEmpresa del JSON
+                            'nombreEmpresa' => $empresa['nombreEmpresa'],
+                            'nombreLargo' => $empresa['nombreLargo'],
+                        ];
+                        break;
+                    }
                 }
 
                 // Si todas las semanas cumplen la condición, no agregar la empresa
@@ -228,21 +228,21 @@ class SprintController extends Controller
             'sprints.*.cobro.between' => 'El cobro del sprint :sprint debe estar entre 0 y 100.',
             'sprints.*.cobro.regex' => 'El cobro del sprint :sprint debe tener máximo dos decimales.',
         ]);
-        
+
         $validator->after(function ($validator) use ($request) {
             $sprints = $request->input('sprints');
             $totalCobro = 0;
-        
+
             for ($i = 0; $i < count($sprints); $i++) {
                 $startDate = Carbon::parse($sprints[$i]['fechaIni']);
                 $endDate = Carbon::parse($sprints[$i]['fechaFin']);
                 $sprintNumber = $i + 1;
-        
+
                 // Verificar que la fecha de fin sea al menos 7 días después de la fecha de inicio
                 if ($endDate->diffInDays($startDate) < 7) {
                     $validator->errors()->add("sprint.{$i}.fechaFin", "La fecha de fin del sprint {$sprintNumber} debe ser al menos 7 días después de la fecha de inicio.");
                 }
-        
+
                 // Verificar que la fecha de inicio no sea anterior a la fecha fin del sprint anterior
                 if ($i > 0) {
                     $prevSprintEnd = Carbon::parse($sprints[$i - 1]['fechaFin']);
@@ -250,24 +250,24 @@ class SprintController extends Controller
                         $validator->errors()->add("sprints.{$i}.fechaIni", "La fecha de inicio del sprint {$sprintNumber} no puede ser anterior a la fecha de fin del sprint anterior.");
                     }
                 }
-        
+
                 // Sumar el cobro de cada sprint
                 $totalCobro += $sprints[$i]['cobro'];
             }
-        
+
             // Verificar que el total de cobro sea exactamente 100
             if ($totalCobro != 100) {
                 $validator->errors()->add('sprints', 'La suma total de los cobros de todos los sprints debe ser exactamente 100%.');
             }
         });
-        
+
         // Reemplazar :sprint con el número real del sprint en los mensajes de error
         $validator->setAttributeNames(array_reduce(range(0, count($request->sprints) - 1), function ($carry, $i) {
             $sprintNumber = $i + 1;
             $carry["sprints.{$i}"] = "Sprint {$sprintNumber}";
             return $carry;
         }, []));
-        
+
         // * devuelve todos los errores en un array error[]
         if ($validator->fails()) {
             return response()->json([
@@ -305,6 +305,25 @@ class SprintController extends Controller
                     'idSprint' => $sprint->idSprint,
                     'numeroSprint' => $sprint->numeroSprint
                 ];
+
+                // Create weeks for the sprint
+                $startDate = Carbon::parse($sprint->fechaIni);
+                $endDate = Carbon::parse($sprint->fechaFin);
+                $numeroSemana = 1;
+
+                while ($startDate->lte($endDate)) {
+                    $weekEndDate = (clone $startDate)->addDays(6)->min($endDate);
+
+                    $week = new Semana();
+                    $week->idPlanificacion = $idPlanificacion;
+                    $week->numeroSemana = $numeroSemana;
+                    $week->fechaIni = $startDate->toDateString();
+                    $week->fechaFin = $weekEndDate->toDateString();
+                    $week->save();
+
+                    $startDate->addDays(7);
+                    $numeroSemana++;
+                }
 
                 $numeroSprint++;
             }
