@@ -44,7 +44,10 @@ class SesionEstudianteController extends Controller
         $fechaFinGestion = $grupo ? $grupo->fechaFinGestion : '1';
         $gestion = $grupo? trim("Gestion: {$grupo->gestionGrupo}, Grupo:{$grupo->numGrupo}"): 'No Tiene grupo';
 
-        $evaluacionGrupo = EvaluacionesGrupo::where('idGrupo', $grupo -> $idGrupo)->first();
+        $evaluacionGrupo = null;
+        if ($idGrupo !== -1) { // Si el grupo existe
+            $evaluacionGrupo = EvaluacionesGrupo::where('idGrupo', $idGrupo)->first();
+        }
 
         $planificacion = Planificacion::where('idEmpresa', $idEmpresa)->first();
         $idPlanificacion = $planificacion ? $planificacion->idPlanificacion : -1;

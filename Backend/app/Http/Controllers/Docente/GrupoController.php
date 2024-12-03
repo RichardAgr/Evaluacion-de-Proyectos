@@ -81,16 +81,17 @@ class GrupoController extends Controller
 
     public function obtenerEstudiantesPorGrupo(Request $request)
     {
-        $sesiondocente = new SesionDocente();
-        $idDocente = session('docente.id');
-        if (!$idDocente) {
-            return response()->json(['message' => 'No se ha encontrado al docente en la sesión.'], 400);
-        }
+        // $sesiondocente = new SesionDocente();
+        // $idDocente = session('docente.id');
+        // if (!$idDocente) {
+        //     return response()->json(['message' => 'No se ha encontrado al docente en la sesión.'], 400);
+        // }
     
-        $response = $sesiondocente->getGrupoSesion();
-        $idGrupo = $response->getData()->idGrupo;
-        //$gestionGrupo = $request->input('gestionGrupo');
-        // Consulta para obtener todos los estudiantes y el docente del grupo
+        $idGrupo = $request->input('idGrupo');
+        if (!$idGrupo) {
+            return response()->json(['message' => 'El parámetro idGrupo no fue enviado.'], 400);
+        }
+        
         $datosGrupo = DB::table('estudiantesgrupos as eg')
             ->join('grupo as g', 'eg.idGrupo', '=', 'g.idGrupo')
             ->join('estudiante as e', 'eg.idEstudiante', '=', 'e.idEstudiante')
@@ -122,6 +123,7 @@ class GrupoController extends Controller
 
     return response()->json($datosGrupo, 200);
 }
+
 
 
 public function obtenerEmpresasPorGrupoYDocente()

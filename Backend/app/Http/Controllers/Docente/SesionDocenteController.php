@@ -38,7 +38,7 @@ class SesionDocenteController extends Controller
                     ->where('EstudiantesGrupos.idGrupo', $grupo->idGrupo)
                     ->distinct('EstudiantesEmpresas.idEmpresa')
                     ->count('EstudiantesEmpresas.idEmpresa');
-                $evaluacionGrupo = EvaluacionesGrupo::where('idGrupo', $$grupo -> $idGrupo)->first();
+                $evaluacionGrupo = EvaluacionesGrupo::where('idGrupo', $grupo -> idGrupo)->first();
     
                 return response()->json([
                     'idGrupo' => $grupo->idGrupo,
