@@ -1,41 +1,32 @@
-import { Button } from "@mui/material";
-import HomeCard, { ButtonsContainer } from "../homeCard";
+import {Button, Typography} from "@mui/material";
+import CardGeneral from '../cardGeneral'
 import { useNavigate } from "react-router-dom";
 function CardResumen() {
-  const fechaFinPlanificacion = new Date(
-    localStorage.getItem("fechaFinPlanificacion")
-  );
-  const paso = new Date() > fechaFinPlanificacion;
-
-  const fechaLimiteEntregaPlanificacion = new Date(
-    localStorage.getItem("fechaLimiteEntregaPlanificacion")
-  );
+  const fechaFinPlanificacion = new Date(localStorage.getItem("fechaFinPlanificacion"))
+  const paso = new Date()>fechaFinPlanificacion
   const empresa = localStorage.getItem("idEmpresa");
-  const inicio = fechaLimiteEntregaPlanificacion < new Date();
+  const fechaLimiteEntregaPlanificacion = new Date(localStorage.getItem("fechaLimiteEntregaPlanificacion"))
+  const inicio = fechaLimiteEntregaPlanificacion < new Date()
   const navigate = useNavigate();
   return (
-    <>
-      <HomeCard title="Progreso del Proyecto">
-        <ButtonsContainer>
-          {!paso && inicio ? (
-            <Button variant="contained" color="primary" fullWidth>
-              SUBIR ENTREGABLES SPRINTS
-            </Button>
-          ) : (
-            <></>
-          )}
-          <Button
-            variant="contained"
-            color="primary"
-            fullWidth
-            onClick={() => navigate(`/visualizarSprint/empresa/${empresa}`)}
-          >
-            VISUALIZAR SPRINTS
-          </Button>
-        </ButtonsContainer>
-      </HomeCard>
-    </>
+    <CardGeneral
+        titulo = "Progreso del Proyecto"
+        info = {<>
+          <Typography>El Sprint actual termina el: {localStorage.getItem('fechaLimiteSprint')} a las 23:59</Typography>
+        </>}
+        buttons={<> 
+        {!paso && inicio?<Button variant="contained" color="primary" fullWidth >
+          SUBIR ENTREGABLES SPRINTS
+        </Button>:<></>}
+        <Button variant="outlined" color="primary" fullWidth 
+          onClick={() => navigate(`/visualizarSprint/empresa/${empresa}`)}
+        >
+          VISUALIZAR SPRINTS
+        </Button>
+        </>}
+    />
   );
 }
 
 export default CardResumen;
+  

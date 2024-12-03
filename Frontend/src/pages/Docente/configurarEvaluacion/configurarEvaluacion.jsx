@@ -49,7 +49,7 @@ const ConfigurarEvaluacion = () => {
   const tiposEvaluacion = [
     { id: "autoevaluacion", nombre: "Autoevaluación" },
     { id: "evaluacionCruzada", nombre: "Evaluación Cruzada" },
-    { id: "evaluacionPares", nombre: "Evaluación de Pares" },
+    { id: "evaluacionPares", nombre: "Evaluación a Pares" },
   ];
 
   useEffect(() => {

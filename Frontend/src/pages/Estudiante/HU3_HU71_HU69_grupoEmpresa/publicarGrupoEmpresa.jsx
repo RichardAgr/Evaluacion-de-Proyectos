@@ -85,6 +85,17 @@ const PublicarGrupoEmpresa = () => {
     }, [idEstudiante]);
 
     const publicarIntegrantes = async () => {
+        console.log("hola");
+        if (integrantes.length < 2){
+            
+            setSnackbar({
+                open: true,
+                message: `Tiene que tener minimo 3 integrantes`,
+                severity: "warning",
+                autoHide: 6000,
+            });
+            return
+        }
         try {
             const response = await fetch(`http://localhost:8000/api/crearGrupoEmpresa/paso3/${idEstudiante}`, {
                 method: 'POST', 
@@ -100,7 +111,7 @@ const PublicarGrupoEmpresa = () => {
             }else{
                 setSnackbar({
                     open: true,
-                    message: `Se guardo los comentarios correctamente`,
+                    message: `Se creo correctamente`,
                     severity: "success",
                     autoHide: 6000,
                 });
