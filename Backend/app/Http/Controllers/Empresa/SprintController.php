@@ -288,9 +288,11 @@ class SprintController extends Controller
 
             // * buscar y eliminar los sprints anteriores
             Sprint::where('idPlanificacion', $idPlanificacion)->delete();
+            Semana::where('idPlanificacion', $idPlanificacion)->delete();
             $numeroSprint = 1; //contador para indicar el numero del Sprint en el que se encuentra
             $sprintsInfo = []; // guardar los datos de los  sprints para poder guardar sus entregables en ellos
             // * insertar los sprints actuales
+                $numeroSemana = 1;
             foreach ($validatedData['sprints'] as $sprintData) {
                 $sprint = new Sprint();
                 $sprint->idPlanificacion = $idPlanificacion;
@@ -309,7 +311,6 @@ class SprintController extends Controller
                 // Create weeks for the sprint
                 $startDate = Carbon::parse($sprint->fechaIni);
                 $endDate = Carbon::parse($sprint->fechaFin);
-                $numeroSemana = 1;
 
                 while ($startDate->lte($endDate)) {
                     $weekEndDate = (clone $startDate)->addDays(6)->min($endDate);
