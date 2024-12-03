@@ -1,41 +1,45 @@
-import { Button } from "@mui/material";
-import HomeCard, { InfoRow, ButtonsContainer } from "../homeCard";
+import { Button, Typography} from "@mui/material";
+import CardGeneral from '../cardGeneral'
 import { useNavigate } from "react-router-dom";
-function CardPlanificacion() {
-  const aceptada = Number(localStorage.getItem("aceptada"));
-  const fechaLimiteEntregaPlani = new Date(
-    localStorage.getItem("fechaLimiteEntregaPlanificacion")
-  );
+function CardResumen() {
+  const aceptada =Number(localStorage.getItem("aceptada"));
+  const fechaLimiteEntregaPlani = new Date(localStorage.getItem("fechaLimiteEntregaPlanificacion"))
+  const paso = fechaLimiteEntregaPlani > new Date()
   const idPlanificacion =localStorage.getItem("idPlanificacion");
   const tienePlanificacion = idPlanificacion!=="-1";
-  const aTiempo = new Date() < fechaLimiteEntregaPlani;
-  const navigate = useNavigate();
   const empresa= localStorage.getItem("idEmpresa");
-  console.log("idplanificacion");
-  console.log(idPlanificacion);
-  console.log(tienePlanificacion);
+  const navigate = useNavigate();
+
   return (
-    <HomeCard title="Planificacion">
-      <ButtonsContainer>
-        {(aceptada!==1 && aTiempo) && (
+    <CardGeneral
+        titulo = "Planificacion"
+        info = {<>
+          <Typography>
+            Fecha limite de entraga de la planificacion: {localStorage.getItem("fechaLimiteEntregaPlanificacion")} a las 23:59
+          </Typography>
+        </>}
+        buttons={<> 
+        {(aceptada!==1 && paso) ? (
           <Button variant="contained" color="primary" fullWidth onClick={()=>navigate(`/modificarPlanificacion/empresa/${empresa}`)}>
             {tienePlanificacion ? "MODIFICAR PLANIFICACIÓN" : "CREAR PLANIFICACIÓN"}
           </Button>
-        )}
-        {aceptada===1 &&(
-        <Button variant="outlined" color="primary" fullWidth onClick={()=>navigate(`/visualizarPlanificacion/empresa/${empresa}`)}>
-        VISUALIZAR PLANIFICACIONES
-      </Button>
-        )}
-
-        {((aceptada===0 || aceptada!==1) && aTiempo && tienePlanificacion) && (
-          <Button variant="contained" color="primary" fullWidth onClick={()=>navigate(`/publicarPlanificacion/empresa/${empresa}`)}>
+        ):<></>}
+        {tienePlanificacion && <Button variant="outlined" color="primary" fullWidth
+          onClick={()=>navigate(`/visualizarPlanificacion/empresa/${empresa}`)}
+        >
+          VIZUALIZAR PLANIFICACIONES
+        </Button>}
+        {((aceptada===0 || aceptada!==1) && paso && tienePlanificacion) ?
+        <Button variant="contained" color="primary" 
+          fullWidth
+          onClick={()=>navigate(`/publicarPlanificacion/empresa/${empresa}`)}
+        >
             PUBLICAR PLANIFICACION
-          </Button>
-        )}
-      </ButtonsContainer>
-    </HomeCard>
+        </Button>:<></>}
+        </>}
+    />
   );
 }
 
-export default CardPlanificacion;
+export default CardResumen;
+  
