@@ -26,7 +26,7 @@ export default card;
 const StyledCard = styled(Card)({
     width: "40vw",
     padding: "1rem",
-    marginBottom:'2rem',
+    margin:'1rem',
     borderRadius: "8px",
     boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
     ":hover":{

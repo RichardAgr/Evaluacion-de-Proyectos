@@ -56,6 +56,9 @@ function HomeEstudiante() {
 
             localStorage.setItem("fechaLimiteSprint", response.fechaLimiteSprint)
             localStorage.setItem('fechaLimiteSemana', response.fechaLimiteSemana)
+
+            localStorage.setItem("fechaEvaluacion", response.fechaEvaluacion);
+            localStorage.setItem("tipoEvaluacion", response.tipoEvaluacion);
           }
           setIsLoaded(true);
         })

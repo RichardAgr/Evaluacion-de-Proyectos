@@ -3,6 +3,7 @@ namespace App\Http\Controllers\Docente;
 use App\Http\Controllers\Controller;
 use App\Models\Estudiante;
 use App\Models\Docente;
+use App\Models\EvaluacionesGrupo;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -37,6 +38,7 @@ class SesionDocenteController extends Controller
                     ->where('EstudiantesGrupos.idGrupo', $grupo->idGrupo)
                     ->distinct('EstudiantesEmpresas.idEmpresa')
                     ->count('EstudiantesEmpresas.idEmpresa');
+                $evaluacionGrupo = EvaluacionesGrupo::where('idGrupo', $$grupo -> $idGrupo)->first();
     
                 return response()->json([
                     'idGrupo' => $grupo->idGrupo,
@@ -48,7 +50,9 @@ class SesionDocenteController extends Controller
                     'nombreCompleto' => $nombreCompleto,
                     'numEstudiantes' => $numEstudiantes,
                     'numEmpresas' => $numEmpresas,
-                    'gestion' => trim("Gestión: {$grupo->gestionGrupo}, Grupo: {$grupo->numGrupo}")
+                    'gestion' => trim("Gestión: {$grupo->gestionGrupo}, Grupo: {$grupo->numGrupo}"),            
+                    'tipoEvaluacion' => $evaluacionGrupo?$evaluacionGrupo->tipoEvaluacion:'1',
+                    'fechaEvaluacion' => $evaluacionGrupo?$evaluacionGrupo->fechaEvaluacion:'1',
                 ], 200);
             } else {
                 return response()->json(['idGrupo' => '-1'], 200);
