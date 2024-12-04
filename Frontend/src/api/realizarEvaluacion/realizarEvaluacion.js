@@ -1,0 +1,29 @@
+// definir la url inicial de la api
+const BASE_URL = "http://localhost:8000/api";
+
+/**
+ * modifica los datos para configurar una evaluacion final
+ * @returns {Promise<Object>} Las planificaciones con su ID
+ */
+export async function getDatosParaEvaluar(idEstudiante) {
+  try {
+    const response = await fetch(`${BASE_URL}/getDatosParaEvaluar/${idEstudiante}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
+
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error al obtener datos de la evaluacion:", error);
+    return {
+      error: true,
+      message: error.message || "Ocurrió un error inesperado",
+    };
+  }
+
+}

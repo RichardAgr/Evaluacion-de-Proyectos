@@ -15,12 +15,14 @@ import {
 } from "@mui/material";
 import InfoSnackbar from "../../../components/infoSnackbar/infoSnackbar";
 import BaseUI from "../../../components/baseUI/baseUI";
+import { getDatosParaEvaluar } from "../../../api/realizarEvaluacion/realizarEvaluacion";
 
 const RealizarEvaluacion = () => {
   const [evaluationData, setEvaluationData] = useState({
-    type: "",
-    evaluatee: "",
-    criteria: [],
+    tipoEvaluacion: "",
+    fechaEvaluacion: "",
+    evaluado: "",
+    criterios: [],
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState({
@@ -34,36 +36,46 @@ const RealizarEvaluacion = () => {
     severity: "info",
   });
   const [scores, setScores] = useState({});
+  console.log(evaluationData);
 
   useEffect(() => {
-    // Simulating data fetch from backend
     const fetchData = async () => {
-      // Replace this with actual API call
-      const data = {
-        type: "Peer Evaluation",
-        evaluatee: "John Doe",
-        criteria: [
-          { id: 1, description: "Communication Skills", maxScore: 25 },
-          { id: 2, description: "Technical Knowledge", maxScore: 30 },
-          { id: 3, description: "Teamwork", maxScore: 25 },
-          { id: 4, description: "Problem Solving", maxScore: 20 },
-        ],
-      };
-      setEvaluationData(data);
-      const initialScores = {};
-      data.criteria.forEach((criterion) => {
-        initialScores[criterion.id] = 0;
-      });
-      setScores(initialScores);
-      setLoading(false);
+      try {
+        const idEstudiante = localStorage.getItem("idEstudiante");
+        const response = await getDatosParaEvaluar(idEstudiante);
+
+        console.log(response); // Verifica que la respuesta es correcta
+
+        // Establece los datos de evaluación
+        setEvaluationData(response);
+
+        // Inicializa los scores con los criterios de la respuesta
+        const initialScores = {};
+        response.criterios.forEach((criterio) => {
+          initialScores[criterio.id] = 0;
+        });
+
+        setScores(initialScores);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error al obtener datos:", error);
+        setError({
+          error: true,
+          errorMessage: "Error al cargar los datos de evaluación",
+          errorDetails: error.message,
+        });
+        setLoading(false);
+      }
     };
+
     fetchData();
   }, []);
 
   const handleScoreChange = (id, value) => {
+    const criterio = evaluationData.criterios.find((c) => c.id === id);
     const newValue = Math.min(
-      Math.max(0, value),
-      evaluationData.criteria.find((c) => c.id === id).maxScore
+      Math.max(0, parseInt(value, 10) || 0),
+      criterio ? criterio.rangoMaximo : 0
     );
     setScores((prevScores) => ({
       ...prevScores,
@@ -72,18 +84,20 @@ const RealizarEvaluacion = () => {
   };
 
   const calculateTotalScore = () => {
-    return Object.values(scores).reduce((sum, score) => sum + Number(score), 0);
+    return evaluationData.criterios.reduce((sum, criterio) => 
+      sum + (scores[criterio.id] || 0), 0
+    );
   };
 
   const handleSubmit = () => {
     // Here you would typically send the scores to your backend
     console.log("Submitting scores:", scores);
     setSnackbar({
-        open: true,
-        message: `Evaluacion realizada correctamente.`,
-        severity: "success",
-        autoHide: 60000,
-      });
+      open: true,
+      message: `Evaluacion realizada correctamente.`,
+      severity: "success",
+      autoHide: 60000,
+    });
   };
 
   return (
@@ -97,10 +111,15 @@ const RealizarEvaluacion = () => {
     >
       <Paper elevation={3} style={{ padding: "20px", marginBottom: "20px" }}>
         <Typography variant="h6">
-          Tipo de Evaluacion: {evaluationData.type}
+          Tipo de Evaluacion:{" "}
+          {evaluationData.tipoEvaluacion === "autoevaluacion"
+            ? "Autoevaluación"
+            : evaluationData.tipoEvaluacion === "evaluacionCruzada"
+            ? "Evaluación Cruzada"
+            : "Evaluación de Pares"}
         </Typography>
         <Typography variant="h6">
-          Evaluando a: {evaluationData.evaluatee}
+          Evaluando a: {evaluationData.evaluado ? evaluationData.evaluado.nombre : ''}
         </Typography>
       </Paper>
       <TableContainer component={Paper}>
@@ -113,20 +132,20 @@ const RealizarEvaluacion = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {evaluationData.criteria.map((criterion) => (
-              <TableRow key={criterion.id}>
-                <TableCell>{criterion.description}</TableCell>
-                <TableCell align="right">{criterion.maxScore}</TableCell>
+            {evaluationData.criterios && evaluationData.criterios.map((criterio) => (
+              <TableRow key={criterio.id}>
+                <TableCell>{criterio.descripcion}</TableCell>
+                <TableCell align="right">{criterio.rangoMaximo}</TableCell>
                 <TableCell align="right">
                   <TextField
                     type="number"
-                    value={scores[criterion.id]}
+                    value={scores[criterio.id] || 0}
                     onChange={(e) =>
-                      handleScoreChange(criterion.id, e.target.value)
+                      handleScoreChange(criterio.id, e.target.value)
                     }
                     inputProps={{
                       min: 0,
-                      max: criterion.maxScore,
+                      max: criterio.rangoMaximo,
                     }}
                   />
                 </TableCell>

@@ -35,7 +35,9 @@ class EvaluacionController extends Controller
             $response = [
                 'tipoEvaluacion' => $tipoEvaluacion,
                 'fechaEvaluacion' => $fechaEvaluacion,
-                'evaluado' => $tipoEvaluacion === 'evaluacionCruzada' ? $evaluado->nombreEmpresa : $evaluado->nombre,
+                'evaluado' => $tipoEvaluacion === 'evaluacionCruzada'
+                    ? $evaluado->nombreEmpresa
+                    : $evaluado->nombreEstudiante . ' ' . $evaluado->primerApellido . ' ' . $evaluado->segundoApellido,
                 'criterios' => $criterios->map(function ($criterio) {
                     return [
                         'id' => $criterio->idCriterio,
