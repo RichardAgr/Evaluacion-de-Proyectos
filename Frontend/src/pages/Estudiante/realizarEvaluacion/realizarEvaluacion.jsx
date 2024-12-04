@@ -125,6 +125,9 @@ const RealizarEvaluacion = () => {
           severity: "success",
           autoHide: 60000,
         });
+        setTimeout(() => {
+            window.location.reload(); // Cambia el estado tras 5 segundos
+          }, 5000);
       }
     } catch (error) {
       console.error("Error al enviar la evaluación:", error);
