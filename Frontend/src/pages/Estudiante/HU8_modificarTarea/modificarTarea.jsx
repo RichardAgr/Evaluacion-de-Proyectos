@@ -47,7 +47,7 @@ function ModificarTarea() {
       try {
         const data = await getTareaData(idTarea, idEmpresa)
         setTitulo(data.nombreTarea)
-        setDescripcion(data.textotarea);
+        setDescripcion(data.textoTarea);
         setResponsables(data.estudiantes);
         console.log(data)
         console.log(data)
