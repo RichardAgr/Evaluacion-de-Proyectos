@@ -1,19 +1,7 @@
-import { Box, Button, styled, Typography } from "@mui/material";
-import CardGeneral from '../cardGeneral'
+import { Box, Button, Typography } from "@mui/material";
+import HomeCard, { ButtonsContainer, InfoRow, Title } from "../homeCard";
 import { useNavigate } from "react-router-dom";
-export const InfoRow = styled(Box)({
-  display: "block",
-  alignItems: "center",
-  marginBottom: "0.5rem",
-});
-
-export const ButtonsContainer = styled(Box)({
-  display: "flex",
-  flexDirection: "column",
-  gap: "0.5rem",
-  marginTop: "1rem",
-});
-function CardResumen() {
+function CardEvaluacion() {
   const navigate = useNavigate();
   const fechaEvaluacion = localStorage.getItem("fechaEvaluacion");
   const tipoEvaluacion = localStorage.getItem("tipoEvaluacion");
@@ -62,5 +50,4 @@ function CardResumen() {
   );
 }
 
-export default CardResumen;
-  
+export default CardEvaluacion;
