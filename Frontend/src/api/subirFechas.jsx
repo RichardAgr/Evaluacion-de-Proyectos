@@ -1,5 +1,5 @@
 export const fechasSubmit = async (valores) => {
-        const response = await fetch('http://127.0.0.1:8000/api/grupo/actualizar', {
+        const response = await fetch('http://localhost:8000/api/grupo/actualizar', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
