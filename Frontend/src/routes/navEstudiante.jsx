@@ -10,8 +10,12 @@ import CalificacionesHitoEmpresa from "../pages/Estudiante/HU18_verCalificacione
 import CrearGrupoEmpresa from "../pages/Estudiante/HU3_HU71_HU69_grupoEmpresa/crearGrupoEmpresa.jsx";
 import PublicarGrupoEmpresa from "../pages/Estudiante/HU3_HU71_HU69_grupoEmpresa/publicarGrupoEmpresa.jsx";
 import RedirigirHome from '../pages/Estudiante/homeGrupoEstudiante/redirigirHomeEstu.jsx';
-
+import VisualizarSprint from '../pages/VisualizacionCompartida/HU37_visualizarSprint/visualizarSprint.jsx';
+import SeleccionarSprintVisualizar from '../pages/VisualizacionCompartida/HU37_visualizarSprint/seleccionarSprintVisualizar/seleccionarSprintVisualizar.jsx';
 //traido desde docnete
+import ModificarPlanificacion from '../pages/Estudiante/HU4_editarPlanificacion/editarPlanificacion.jsx';
+import PublicarPlanificacion from '../pages/Estudiante/publicarPlanificacion/publicarPlanificacion.jsx';
+import VerPlanificacionDeDesarollo from "../pages/VisualizacionCompartida/HU36_verPlanificacionDeDesarollo/VerPlanifacionDeDesarollo.jsx";
 import ListaSprintsVerTareas from '../pages/Docente/HU38_tareaEstudiante/visualizarSprint.jsx'
 import VerTarea from '../pages/Docente/HU38_tareaEstudiante/viualizarTarea.jsx'
 import ListaEstudiantes from '../pages/Docente/HU32_listaEstudiantes/listaEstudiantes.jsx'
@@ -40,6 +44,16 @@ function NavEstudiante() {
           path="/homeEstu/listaTareas/modificarTarea"
           element={<ModificarTarea />}
         />
+              {/** Seleccione un Sprint para  visualizar*/}
+      <Route
+        path="/visualizarSprint/Empresa/:idEmpresa"
+        element={<SeleccionarSprintVisualizar />}
+      />
+      {/** Visualizar Sprint*/}
+              <Route
+        path="/visualizarSprint/Empresa/:idEmpresa/Sprint/:idSprint"
+        element={<VisualizarSprint />}
+      />
         <Route
           path="/homeEstu/VerCalificacionesSprints"
           element={<CalificacionesHitoEmpresa />}
@@ -71,9 +85,37 @@ function NavEstudiante() {
           path="/homeEstu/listaSprintsVerSeguimiento/verSeguimientoSemanal"
           element={<VerSeguimientoSemanal />}
         />
-        {/** ROUTES JHAIR /homeEstudiante/homeGrupoEstudiante/sprint/:idSprint"*/}
+        {/** ROUTES JHAIR */}
         
-        
+        {/** Visualizar Planificacion*/}
+        <Route
+          path="/visualizarPlanificacion/Empresa/:idEmpresa"
+          element={<VerPlanificacionDeDesarollo />}
+        />
+
+        {/** Seleccione un Sprint para  visualizar*/}
+        <Route
+          path="/visualizarSprint/Empresa/:idEmpresa"
+          element={<SeleccionarSprintVisualizar />}
+        />
+        {/** Visualizar Sprint*/}
+        <Route
+          path="/visualizarSprint/Empresa/:idEmpresa/Sprint/:idSprint"
+          element={<VisualizarSprint />}
+        />
+        {/** Modificar Planificacion */}
+        <Route
+          path="/modificarPlanificacion/Empresa/:idEmpresa"
+          element={<ModificarPlanificacion />}
+        />
+        {/** Publicar Planificacion */}
+        <Route
+          path="/publicarPlanificacion/Empresa/:idEmpresa"
+          element={<PublicarPlanificacion />}
+        />
+
+
+
         <Route
           path="/homeEstu/CrearGrupoEmpresa"
           element={<CrearGrupoEmpresa />}

@@ -16,12 +16,12 @@ function CardResumen() {
             </Typography>
         </>}
         buttons={<> 
-        {!paso&&idEmpresa!==-1?<Button variant="contained" color="primary" fullWidth
+        {!paso&&idEmpresa===-1?<Button variant="contained" color="primary" fullWidth
           onClick = { () => navigate("/homeEstu/CrearGrupoEmpresa")}
         >
             03_REGISTRAR GRUPO EMPRESA
         </Button>:<></>}
-        {!paso&&empresaPublicada?<Button variant="outlined" color="primary" fullWidth
+        {!paso&&(empresaPublicada!==1)&&idEmpresa!==-1?<Button variant="outlined" color="primary" fullWidth
           onClick= {() => navigate("/homeEstu/ModificarGrupoEmpresa")}
         >
             69_MODIFICAR GRUPO EMPRESA

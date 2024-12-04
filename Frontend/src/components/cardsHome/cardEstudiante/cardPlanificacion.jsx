@@ -1,9 +1,15 @@
 import { Button, Typography} from "@mui/material";
 import CardGeneral from '../cardGeneral'
+import { useNavigate } from "react-router-dom";
 function CardResumen() {
   const aceptada =Number(localStorage.getItem("aceptada"));
   const fechaLimiteEntregaPlani = new Date(localStorage.getItem("fechaLimiteEntregaPlanificacion"))
   const paso = fechaLimiteEntregaPlani > new Date()
+  const idPlanificacion =localStorage.getItem("idPlanificacion");
+  const tienePlanificacion = idPlanificacion!=="-1";
+  const empresa= localStorage.getItem("idEmpresa");
+  const navigate = useNavigate();
+
   return (
     <CardGeneral
         titulo = "Planificacion"
@@ -13,13 +19,21 @@ function CardResumen() {
           </Typography>
         </>}
         buttons={<> 
-        {(!aceptada&&paso)?<Button variant="contained" color="primary" fullWidth>
-          CREAR PLANIFICACION
-        </Button>:<></>}
-        <Button variant="outlined" color="primary" fullWidth>
+        {(aceptada!==1 && paso) ? (
+          <Button variant="contained" color="primary" fullWidth onClick={()=>navigate(`/modificarPlanificacion/empresa/${empresa}`)}>
+            {tienePlanificacion ? "MODIFICAR PLANIFICACIÓN" : "CREAR PLANIFICACIÓN"}
+          </Button>
+        ):<></>}
+        {tienePlanificacion && <Button variant="outlined" color="primary" fullWidth
+          onClick={()=>navigate(`/visualizarPlanificacion/empresa/${empresa}`)}
+        >
           VIZUALIZAR PLANIFICACIONES
-        </Button>
-        {(!aceptada&&paso)?<Button variant="contained" color="primary" fullWidth>
+        </Button>}
+        {((aceptada===0 || aceptada!==1) && paso && tienePlanificacion) ?
+        <Button variant="contained" color="primary" 
+          fullWidth
+          onClick={()=>navigate(`/publicarPlanificacion/empresa/${empresa}`)}
+        >
             PUBLICAR PLANIFICACION
         </Button>:<></>}
         </>}

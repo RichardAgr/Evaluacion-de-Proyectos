@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 function CardResumen() {
   const fechaFinPlanificacion = new Date(localStorage.getItem("fechaFinPlanificacion"))
   const paso = new Date()>fechaFinPlanificacion
-  
+  const empresa = localStorage.getItem("idEmpresa");
   const fechaLimiteEntregaPlanificacion = new Date(localStorage.getItem("fechaLimiteEntregaPlanificacion"))
   const inicio = fechaLimiteEntregaPlanificacion < new Date()
   const navigate = useNavigate();
@@ -18,7 +18,9 @@ function CardResumen() {
         {!paso && inicio?<Button variant="contained" color="primary" fullWidth >
           SUBIR ENTREGABLES SPRINTS
         </Button>:<></>}
-        <Button variant="outlined" color="primary" fullWidth >
+        <Button variant="outlined" color="primary" fullWidth 
+          onClick={() => navigate(`/visualizarSprint/empresa/${empresa}`)}
+        >
           VISUALIZAR SPRINTS
         </Button>
         </>}

@@ -20,6 +20,7 @@ class EmpresaSeeder extends Seeder
                 'nombreLargo' => 'Creative Harbor Innovations S.R.L',
                 'numerodefaltasempresa' => 0,
                 'notaproductofinal' => null,
+                'publicada' => 1.
             ],
             [
                 'idEmpresa' => 2,
@@ -27,6 +28,7 @@ class EmpresaSeeder extends Seeder
                 'nombreLargo' => 'SoftCraft Technology S.R.L.',
                 'numerodefaltasempresa' => 0,
                 'notaproductofinal' => 0,
+                'publicada' => 1.
             ],
             [
                 'idEmpresa' => 3,
@@ -34,6 +36,7 @@ class EmpresaSeeder extends Seeder
                 'nombreLargo' => 'BlueWave Software Development S.R.L.',
                 'numerodefaltasempresa' => 0,
                 'notaproductofinal' => 0,
+                'publicada' => 1.
             ],
             [
                 'idEmpresa' => 4,
@@ -41,6 +44,7 @@ class EmpresaSeeder extends Seeder
                 'nombreLargo' => 'LogicTree Digital Systems S.A.',
                 'numerodefaltasempresa' => 0,
                 'notaproductofinal' => 0,
+                'publicada' => 1.
             ],
             [
                 'idEmpresa' => 5,
@@ -48,6 +52,7 @@ class EmpresaSeeder extends Seeder
                 'nombreLargo' => 'PixelForge Software Development S.R.L.',
                 'numerodefaltasempresa' => null,
                 'notaproductofinal' => null,
+                'publicada' => 0.
             ],
             [
                 'idEmpresa' => 6,
@@ -55,6 +60,7 @@ class EmpresaSeeder extends Seeder
                 'nombreLargo' => 'CodeLovers Solutions S.R.L.',
                 'numerodefaltasempresa' => null,
                 'notaproductofinal' => null,
+                'publicada' => 0.
             ],
             [
                 'idEmpresa' => 7,
@@ -62,6 +68,7 @@ class EmpresaSeeder extends Seeder
                 'nombreLargo' => 'CodeNest Innovations S.R.L.',
                 'numerodefaltasempresa' => null,
                 'notaproductofinal' => null,
+                'publicada' => 0.
             ],
             
         ]);

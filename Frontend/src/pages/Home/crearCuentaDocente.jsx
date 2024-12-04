@@ -39,7 +39,7 @@ const validationSchema = Yup.object({
 const CrearCuentaDocente = () => {
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     try {
-      const response = await fetch("http://127.0.0.1:8000/api/crearCuentaDocente", {
+      const response = await fetch("http://localhost:8000/api/crearCuentaDocente", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -64,7 +64,7 @@ const SprintSemanas = ({ title, semana, idSprint, navigateLink, semanaTexto, isO
                             <CalendarTodayIcon sx={{ mr: 1 }} />
                             <Typography variant="body1">
                             <strong>Fecha de Fin:</strong>{" "}
-                            {localStorage.getItem('fechaLimiteSemana')} a las 23:59
+                            {new Date(semana?.fechaFin).toISOString().split('T')[0]} a las 23:59
                             </Typography>
                         </Box>
                     </Box>

@@ -81,16 +81,17 @@ class GrupoController extends Controller
 
     public function obtenerEstudiantesPorGrupo(Request $request)
     {
-        $sesiondocente = new SesionDocente();
-        $idDocente = session('docente.id');
-        if (!$idDocente) {
-            return response()->json(['message' => 'No se ha encontrado al docente en la sesión.'], 400);
-        }
+        // $sesiondocente = new SesionDocente();
+        // $idDocente = session('docente.id');
+        // if (!$idDocente) {
+        //     return response()->json(['message' => 'No se ha encontrado al docente en la sesión.'], 400);
+        // }
     
-        $response = $sesiondocente->getGrupoSesion();
-        $idGrupo = $response->getData()->idGrupo;
-        //$gestionGrupo = $request->input('gestionGrupo');
-        // Consulta para obtener todos los estudiantes y el docente del grupo
+        $idGrupo = $request->input('idGrupo');
+        if (!$idGrupo) {
+            return response()->json(['message' => 'El parámetro idGrupo no fue enviado.'], 400);
+        }
+        
         $datosGrupo = DB::table('estudiantesgrupos as eg')
             ->join('grupo as g', 'eg.idGrupo', '=', 'g.idGrupo')
             ->join('estudiante as e', 'eg.idEstudiante', '=', 'e.idEstudiante')
@@ -124,6 +125,7 @@ class GrupoController extends Controller
 }
 
 
+
 public function obtenerEmpresasPorGrupoYDocente()
     {
         $resultados = DB::table('estudiantesgrupos AS eg')
@@ -135,6 +137,37 @@ public function obtenerEmpresasPorGrupoYDocente()
             ->select('emp.idEmpresa as id','emp.nombreEmpresa', 'emp.nombreLargo', 'g.gestionGrupo', DB::raw('count(eg.idEstudiante) as totalEstudiantes'), 'g.numGrupo')
             ->where('d.idDocente', session('docente.id'))
             // ->where('g.idGrupo', $request->idGrupo)
+            //->where('g.gestionGrupo', $request->gestionGrupo)
+            ->whereRaw('CURDATE() >= g.fechaIniGestion') // Usamos whereRaw para CURDATE()
+            ->whereRaw('CURDATE() <= g.fechaFinGestion')
+            ->groupBy('emp.nombreEmpresa', 'emp.nombreLargo', 'emp.idEmpresa', 'g.gestionGrupo', 'g.numGrupo')
+            ->orderByDesc('g.gestionGrupo')
+            ->orderBy('emp.nombreEmpresa')
+            ->orderByDesc('e.nombreEstudiante')
+            ->get();
+
+
+        if ($resultados->isEmpty()) {
+            return response()->json([
+                'message' => 'No se encontraron registros para el grupo y/o gestión especificados.'
+            ], 404); // Puedes devolver un código 404 o cualquier otro código de estado
+        }
+
+        // Si hay resultados, retornarlos
+        return response()->json($resultados,200);
+    }
+
+    public function obtenerEmpresasPorGrupoYDocenteEstudiante(Request $request)
+    {
+        $resultados = DB::table('estudiantesgrupos AS eg')
+            ->join('grupo AS g', 'eg.idGrupo', '=', 'g.idGrupo')
+            ->join('docente AS d', 'g.idDocente', '=', 'd.idDocente')
+            ->join('estudiantesempresas AS ee', 'eg.idEstudiante', '=', 'ee.idEstudiante')
+            ->join('empresa AS emp', 'ee.idEmpresa', '=', 'emp.idEmpresa')
+            ->join('estudiante AS e', 'eg.idEstudiante', '=', 'e.idEstudiante')
+            ->select('emp.idEmpresa as id','emp.nombreEmpresa', 'emp.nombreLargo', 'g.gestionGrupo', DB::raw('count(eg.idEstudiante) as totalEstudiantes'), 'g.numGrupo')
+            //->where('g.idGrupo', 'ee.idGrupo')
+            ->where('g.idGrupo', $request ->idGrupo)
             //->where('g.gestionGrupo', $request->gestionGrupo)
             ->whereRaw('CURDATE() >= g.fechaIniGestion') // Usamos whereRaw para CURDATE()
             ->whereRaw('CURDATE() <= g.fechaFinGestion')
