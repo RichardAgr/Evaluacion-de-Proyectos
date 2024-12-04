@@ -31,7 +31,13 @@ class EvaluacionesGrupoController extends Controller
         }
         try {
             DB::beginTransaction();
-            EvaluacionesGrupo::where('idGrupo', $request->idGrupo)->delete();
+            $evaluacionesAnteriores = EvaluacionesGrupo::where('idGrupo', $request->idGrupo)->first();
+            if ($evaluacionesAnteriores) {
+                // Delete associated Evaluaciones
+                $evaluacionesAnteriores->evaluaciones()->delete();
+                // Delete the EvaluacionesGrupo itself
+                $evaluacionesAnteriores->delete();
+            }
 
             $evaluacionesGrupo = new EvaluacionesGrupo;
             $evaluacionesGrupo->idGrupo = $request->idGrupo;
@@ -52,6 +58,14 @@ class EvaluacionesGrupoController extends Controller
                 ]);
             }
 
+            // Asignar evaluadores según el tipo de evaluación
+            if ($request->tipoEvaluacion === 'autoevaluacion') {
+                $this->asignarAutoevaluacion($evaluacionesGrupo);
+            } elseif ($request->tipoEvaluacion === 'evaluacionCruzada') {
+                $this->asignarEvaluacionCruzada($evaluacionesGrupo);
+            } elseif ($request->tipoEvaluacion === 'evaluacionPares') {
+                $this->asignarEvaluacionPares($evaluacionesGrupo);
+            }
 
             DB::commit();
 
@@ -63,6 +77,73 @@ class EvaluacionesGrupoController extends Controller
             return response()->json(['error' => 'Error al crear la evaluación de grupo: ' . $e->getMessage()], 500);
         }
     }
+    // * metodos para asignar evaluadores y evaluado
+    private function asignarAutoevaluacion(EvaluacionesGrupo $evaluacionesGrupo)
+    {
+        $estudiantes = $evaluacionesGrupo->grupo->estudiantes;
+
+        foreach ($estudiantes as $estudiante) {
+            $evaluacionesGrupo->evaluaciones()->create([
+                'idEvaluadorEstudiante' => $estudiante->idEstudiante,
+                'idEvaluadoEstudiante' => $estudiante->idEstudiante,
+                'idEvaluadoEmpresa' => null,
+                'horaEvaluacion' => null,
+            ]);
+        }
+    }
+
+    private function asignarEvaluacionCruzada(EvaluacionesGrupo $evaluacionesGrupo)
+    {
+        $empresas = $evaluacionesGrupo->grupo->empresas;
+        $numEmpresas = $empresas->count();
+
+        if ($numEmpresas < 2) {
+            throw new \Exception("Se necesitan al menos dos empresas para la evaluación cruzada.");
+        }
+
+        foreach ($empresas as $index => $empresaEvaluadora) {
+            // obtiene los estudiantes de la empresa evaluadora
+            $estudiantesEvaluadores = $empresaEvaluadora->estudiantes;
+            // obtiene la empresa que va a ser evaluada
+            $empresaEvaluada = $empresas[($index + 1) % $numEmpresas];
+
+
+            foreach ($estudiantesEvaluadores as $estudiante) {
+                $evaluacionesGrupo->evaluaciones()->create([
+                    'idEvaluadorEstudiante' => $estudiante->idEstudiante,
+                    'idEvaluadoEstudiante' => null,
+                    'idEvaluadoEmpresa' => $empresaEvaluada->idEmpresa,
+                    'horaEvaluacion' => null,
+                ]);
+            }
+        }
+    }
+
+    private function asignarEvaluacionPares(EvaluacionesGrupo $evaluacionesGrupo)
+    {
+        $empresas = $evaluacionesGrupo->grupo->empresas;
+
+        foreach ($empresas as $empresa) {
+            $estudiantes = $empresa->estudiantes->shuffle();
+            $totalEstudiantes = $estudiantes->count();
+
+            if ($totalEstudiantes < 2) {
+                continue; // Skip companies with less than 2 students
+            }
+
+            for ($i = 0; $i < $totalEstudiantes; $i++) {
+                $evaluador = $estudiantes[$i];
+                $evaluado = $estudiantes[($i + 1) % $totalEstudiantes];
+
+                $evaluacionesGrupo->evaluaciones()->create([
+                    'idEvaluadorEstudiante' => $evaluador->idEstudiante,
+                    'idEvaluadoEstudiante' => $evaluado->idEstudiante,
+                    'idEvaluadoEmpresa' => null,
+                    'horaEvaluacion' => null,
+                ]);
+            }
+        }
+    }
 
     public function getEvaluacionesGrupo($idGrupo)
     {
@@ -70,7 +151,12 @@ class EvaluacionesGrupoController extends Controller
             $evaluacionGrupo = EvaluacionesGrupo::where('idGrupo', $idGrupo)->first();
 
             if (!$evaluacionGrupo) {
-                return response()->json(['errorMessage' => 'No se encontró evaluación para este grupo'], 404);
+                return response()->json([
+                    'message' => 'No se encontró evaluación para este grupo',
+                    'tipoEvaluacion' => null,
+                    'fechaEvaluacion' => null,
+                    'criterios' => [['descripcion' => 'Criterio de ejemplo', 'rangoMaximo' => 50]],
+                ]);
             }
 
             $criterios = Criterio::where('idEvaluacionesGrupo', $evaluacionGrupo->idEvaluacionesGrupo)
@@ -107,6 +193,7 @@ class EvaluacionesGrupoController extends Controller
             return response()->json(['error' => 'Error al obtener la evaluación del grupo: ' . $e->getMessage()], 500);
         }
     }
+
     public function testConfigurarEvaluacion()
     {
         // Simular una solicitud con datos de prueba

@@ -54,23 +54,27 @@ const ConfigurarEvaluacion = () => {
 
   useEffect(() => {
     const fetchInitialData = async () => {
-        const idGrupo = localStorage.getItem("idGrupo");
-        const response = await getEvaluacionesGrupo(idGrupo);
-        if (!response.errorMessage) {
-          setCriterios(
-            response.criterios.map((criterio) => ({
-              descripcion: criterio.descripcion,
-              notaMaxima: criterio.rangoMaximo,
-            }))
-          );
-          setTipoEvaluacion(response.tipoEvaluacion);
-          setFechaEvaluacion(response.fechaEvaluacion);
-
-        }else{
-            console.log(error);
-        }
-        setLoading(false);
-
+      const idGrupo = localStorage.getItem("idGrupo");
+      const response = await getEvaluacionesGrupo(idGrupo);
+      console.log(response);
+      if (!response.error) {
+        setCriterios(
+          response.criterios.map((criterio) => ({
+            descripcion: criterio.descripcion,
+            notaMaxima: criterio.rangoMaximo,
+          }))
+        );
+        setTipoEvaluacion(response.tipoEvaluacion);
+        setFechaEvaluacion(response.fechaEvaluacion);
+      } else {
+        setError({
+          error: true,
+          errorMessage: "Hubo un error",
+          errorDetails: response.error,
+        });
+      }
+      setLoading(false);
+      console.log(error);
     };
 
     fetchInitialData();
@@ -130,31 +134,30 @@ const ConfigurarEvaluacion = () => {
     };
     const respuesta = await configurarEvaluacion(dataEvaluacion);
     console.log(respuesta);
-    if(respuesta.error){
-        console.log(respuesta);
-        setSnackbar({
-            open: true,
-            message: `${respuesta.error}`,
-            severity: "error",
-            autoHide: 60000,
-          });
-    }else if(respuesta.errors){
-        console.log(respuesta);
-        setSnackbar({
-            open: true,
-            message: `${respuesta.message}`,
-            severity: "error",
-            autoHide: 60000,
-          });
-    }else{
-        setSnackbar({
-            open: true,
-            message: `${respuesta.message}`,
-            severity: "success",
-            autoHide: 60000,
-          });
+    if (respuesta.error) {
+      console.log(respuesta);
+      setSnackbar({
+        open: true,
+        message: `${respuesta.error}`,
+        severity: "error",
+        autoHide: 60000,
+      });
+    } else if (respuesta.errors) {
+      console.log(respuesta);
+      setSnackbar({
+        open: true,
+        message: `${respuesta.message}`,
+        severity: "error",
+        autoHide: 60000,
+      });
+    } else {
+      setSnackbar({
+        open: true,
+        message: `${respuesta.message}`,
+        severity: "success",
+        autoHide: 60000,
+      });
     }
-
   };
 
   return (
@@ -164,8 +167,9 @@ const ConfigurarEvaluacion = () => {
       confirmarAtras={true}
       dirBack={"/"}
       loading={loading}
-      error={error.error}
+      error={error}
     >
+      
       <Typography variant="h5" sx={{ mt: 3 }} gutterBottom>
         Criterios
       </Typography>
@@ -283,7 +287,6 @@ const ConfigurarEvaluacion = () => {
         severity={snackbar.severity}
       />
     </BaseUI>
-    
   );
 };
 

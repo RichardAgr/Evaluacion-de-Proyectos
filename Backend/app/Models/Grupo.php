@@ -39,4 +39,8 @@ class Grupo extends Model
     {
         return $this->belongsTo(Docente::class, 'idDocente');
     }
+    
+    public function empresas(){
+        return $this->hasMany(Empresa::class, 'idGrupo');
+    }
 }
