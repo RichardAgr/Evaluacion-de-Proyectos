@@ -6,8 +6,8 @@ function CardEvaluacion() {
   const fechaEvaluacion = localStorage.getItem("fechaEvaluacion");
   const tipoEvaluacion = localStorage.getItem("tipoEvaluacion");
   console.log(fechaEvaluacion);
-  const sePuedeEvaluar = fechaEvaluacion !== null && new Date() <= new Date(fechaEvaluacion);
-
+  const sePuedeEvaluar = fechaEvaluacion !== null && new Date() >= new Date(fechaEvaluacion);
+  console.log(sePuedeEvaluar);
   const textoTipoEvaluacion = (tipo) => {
     switch (tipo) {
       case "evaluacionPares":
