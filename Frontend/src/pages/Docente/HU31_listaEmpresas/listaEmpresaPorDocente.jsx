@@ -54,6 +54,8 @@ function EmpresasPorGrupo() {
         if(!result.ok){
           console.log(result);
           setData(result);
+          console.log('la data');
+          console.log(data);
         }else {
           const errorMessage = result.error;
           console.log(errorMessage);
