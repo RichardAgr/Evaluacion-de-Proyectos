@@ -50,6 +50,7 @@ class EvaluacionController extends Controller
                     ];
                 }),
                 'idEvaluacion' => $evaluacion->idEvaluacion,
+                'notaTotal' => $evaluacion->notaTotal,
             ];
             return response()->json($response);
         }

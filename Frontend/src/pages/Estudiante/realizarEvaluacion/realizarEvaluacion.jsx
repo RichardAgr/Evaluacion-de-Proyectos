@@ -57,13 +57,15 @@ const RealizarEvaluacion = () => {
           // Establece los datos de evaluación
           setEvaluationData(response);
 
-          // Inicializa las notas con los criterios de la respuesta
-          const initialScores = {};
-          response.criterios.forEach((criterio) => {
-            initialScores[criterio.id] = 0;
-          });
-
-          setNotas(initialScores);
+          // If notaTotal is present, we don't need to initialize the notas
+          if (response.notaTotal === undefined || typeof response.notaTotal !== 'number') {
+            // Inicializa las notas con los criterios de la respuesta
+            const initialScores = {};
+            response.criterios.forEach((criterio) => {
+              initialScores[criterio.id] = 0;
+            });
+            setNotas(initialScores);
+          }
           setLoading(false);
         }
       } catch (error) {
@@ -133,6 +135,7 @@ const RealizarEvaluacion = () => {
         autoHide: 60000,
       });
     }
+    
   };
   return (
     <BaseUI
@@ -143,6 +146,14 @@ const RealizarEvaluacion = () => {
       loading={loading}
       error={error}
     >
+    {evaluationData.notaTotal !== undefined && typeof evaluationData.notaTotal === 'number' ? (
+        <Paper elevation={3} style={{ padding: "20px", marginBottom: "20px" }}>
+          <Typography variant="h6">
+            Ya se realizó la evaluación
+          </Typography>
+        </Paper>
+      ) : (
+        <>
       <Paper elevation={3} style={{ padding: "20px", marginBottom: "20px" }}>
         <Typography variant="h6">
           Tipo de Evaluacion:{" "}
@@ -209,6 +220,8 @@ const RealizarEvaluacion = () => {
         message={snackbar.message}
         severity={snackbar.severity}
       />
+      </>
+      )}
     </BaseUI>
   );
 };
