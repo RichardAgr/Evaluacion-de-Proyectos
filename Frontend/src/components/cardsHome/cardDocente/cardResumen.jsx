@@ -25,13 +25,13 @@ function CardResumen() {
         </>}
         buttons={<> 
         <Button variant="contained" color="primary" fullWidth onClick={() => navigate("/homeDocente/listaEstudiantes")} >
-            32_LISTA DE ESTUDIANTES
+            LISTA DE ESTUDIANTES
         </Button>
         <Button variant="outlined" color="primary" fullWidth onClick={() => navigate("/homeDocente/listaEmpresas")}>
-            31_LISTA DE GRUPO-EMPRESAS
+            LISTA DE GRUPO-EMPRESAS
         </Button>
         <Button variant="outlined" color="primary" fullWidth onClick={() => navigate("/modificarFechasLimitesGrupo")}>
-            ?_MODIFICAR FECHAS LIMITES DEL GRUPO
+            MODIFICAR FECHAS LIMITES DEL GRUPO
         </Button>
         </>}
     />

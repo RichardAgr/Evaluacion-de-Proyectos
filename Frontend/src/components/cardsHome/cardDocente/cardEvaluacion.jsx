@@ -38,9 +38,9 @@ function CardEvaluacion() {
         >
           CONFIGURAR EVALUACIONES
         </Button>
-        <Button variant="contained" color="primary" fullWidth>
+       {/*  <Button variant="contained" color="primary" fullWidth>
           VISUALIZAR EVALUACIONES
-        </Button>
+        </Button> */}
       </ButtonsContainer>
     </HomeCard>
   );

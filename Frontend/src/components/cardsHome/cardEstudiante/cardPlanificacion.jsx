@@ -15,10 +15,10 @@ function CardResumen() {
         titulo = "Planificacion"
         info = {<>
           <Typography>
-            Fecha inical para la entraga de la planificacion: {localStorage.getItem("fechaLimiteEntregaEmpresa")} a las 00:00
+            Fecha inicial para la entrega de la planificacion: {localStorage.getItem("fechaLimiteEntregaEmpresa")} a las 00:00
           </Typography>
           <Typography>
-            Fecha limite de entraga de la planificacion: {localStorage.getItem("fechaLimiteEntregaPlanificacion")} a las 23:59
+            Fecha limite de entrega de la planificacion: {localStorage.getItem("fechaLimiteEntregaPlanificacion")} a las 23:59
           </Typography>
         </>}
         buttons={<> 
