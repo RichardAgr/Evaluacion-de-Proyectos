@@ -151,7 +151,12 @@ class EvaluacionesGrupoController extends Controller
             $evaluacionGrupo = EvaluacionesGrupo::where('idGrupo', $idGrupo)->first();
 
             if (!$evaluacionGrupo) {
-                return response()->json(['errorMessage' => 'No se encontró evaluación para este grupo'], 404);
+                return response()->json([
+                    'message' => 'No se encontró evaluación para este grupo',
+                    'tipoEvaluacion' => null,
+                    'fechaEvaluacion' => null,
+                    'criterios' => [['descripcion' => 'Criterio de ejemplo', 'rangoMaximo' => 50]],
+                ]);
             }
 
             $criterios = Criterio::where('idEvaluacionesGrupo', $evaluacionGrupo->idEvaluacionesGrupo)

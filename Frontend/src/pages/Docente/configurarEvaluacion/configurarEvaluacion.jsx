@@ -138,7 +138,7 @@ const ConfigurarEvaluacion = () => {
       console.log(respuesta);
       setSnackbar({
         open: true,
-        message: `${respuesta.message}`,
+        message: `${respuesta.error}`,
         severity: "error",
         autoHide: 60000,
       });

@@ -49,4 +49,8 @@ class EvaluacionController extends Controller
             return response()->json($response);
         }
     }
+    public function evaluar(Request $request){
+
+        
+    }
 }
