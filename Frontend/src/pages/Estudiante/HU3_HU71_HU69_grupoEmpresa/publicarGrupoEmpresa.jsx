@@ -63,7 +63,6 @@ const PublicarGrupoEmpresa = () => {
                         severity: "info",
                         autoHide: 6000,
                     });    
-                    setMensajeError(`La empresa "${nombreEmpresa}" ya ha sido publicada.`);
                     // setTimeout(() => {
                     //     irInicio();
                     // }, 2000); 
