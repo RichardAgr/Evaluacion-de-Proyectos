@@ -27,7 +27,7 @@ function CardResumen() {
             {tienePlanificacion ? "MODIFICAR PLANIFICACIÓN" : "CREAR PLANIFICACIÓN"}
           </Button>
         ):<></>}
-        {tienePlanificacion && pasoFechaLimite && <Button variant="outlined" color="primary" fullWidth
+        {tienePlanificacion && !pasoFechaLimite && <Button variant="outlined" color="primary" fullWidth
           onClick={()=>navigate(`/visualizarPlanificacion/empresa/${empresa}`)}
         >
           VIZUALIZAR PLANIFICACIONES
