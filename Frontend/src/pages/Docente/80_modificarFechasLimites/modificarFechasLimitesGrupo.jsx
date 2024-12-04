@@ -38,6 +38,7 @@ const StyledDialogTitle = styled(Box)(({ theme }) => ({
     alignItems: 'center',
     padding: theme.spacing(2),
 }));
+// eslint-disable-next-line react/prop-types
 const CuadroDialogo = ({ open, onClose, title, description, onSubmit }) => {
     return (
         <StyledDialog
@@ -157,13 +158,14 @@ const FormularioFechas = () => {
             };
             console.log('Valores enviados:', fechas);
             const response = await fechasSubmit(fechas);
+            console.log(response)
             setSnackbar({
                 open: true,
                 message: 'Fechas guardadas correctamente.',
                 severity: 'success',
                 autoHide: 6000,
             });
-
+            obtenerFechas()
         } catch (error) {
             setSnackbar({
                 open: true,
