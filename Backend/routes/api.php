@@ -45,13 +45,13 @@ Route::get('/tarea/{idTarea}', [TareaController::class, 'obtenerTarea']);
 Route::get('/estudiante/gruposDocente', [GrupoController::class, 'obtenerTodosLosGrupos']);
 Route::get('/estudiante/descripcionGrupo/{idGrupo}', [GrupoController::class, 'getDescripcion']);
 Route::get('/estudiante/sprint/semana/{idSprint}',[SprintController::class, 'sprintsSemanas']);
+Route::get('/estudiante/obtenerEmpresasPorGrupoYDocenteEstudiante',[GrupoController::class, 'obtenerEmpresasPorGrupoYDocenteEstudiante']);
 
 //============================= GET DOCENTE ================================
 //---Recibe la lista de estudiantes de un grupo especifico del docente activo
 Route::get('/docente/listaEstudiantes', [GrupoController::class, 'obtenerEstudiantesPorGrupo']);
 //---Recibe las empresas del grupo del docente y del docente activo
 Route::get('/docente/obtenerEmpresasPorGrupoYDocente',[GrupoController::class, 'obtenerEmpresasPorGrupoYDocente']);
-Route::get('/docente/obtenerEmpresasPorGrupoYDocenteEstudiante',[GrupoController::class, 'obtenerEmpresasPorGrupoYDocenteEstudiante']);
 
 
 //-- sprints con toda su informacion y los entragables
