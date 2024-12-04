@@ -2,9 +2,10 @@ import { Fragment, useState, useEffect } from "react";
 import BaseUI from "../../../components/baseUI/baseUI";
 import { styled } from "@mui/material"; 
 import { Grid2 } from "@mui/material";
-import Box from '@mui/material/Box';
+import Box from '@mui/material/Box';;
 import { Button } from '@mui/material';
 import InfoSnackbar from '../../../components/infoSnackbar/infoSnackbar'
+import { useNavigate } from "react-router-dom";
 const PublicarGrupoEmpresa = () => {
     let idEstudiante = localStorage.getItem("idEstudiante")
     const [empresa, setEmpresa] = useState([]);
@@ -18,6 +19,10 @@ const PublicarGrupoEmpresa = () => {
         message: "",
         severity: "info",
       });
+    const navigate = useNavigate();
+    const irInicio = () => {
+        navigate('/');  
+    };
     useEffect(() => {
         const fetchInformacion = async () => {
             try {
@@ -59,7 +64,11 @@ const PublicarGrupoEmpresa = () => {
                         autoHide: 6000,
                     });    
                     setMensajeError(`La empresa "${nombreEmpresa}" ya ha sido publicada.`);
-                    return; // No seguir con la carga de los datos si la empresa está publicada
+                    // setTimeout(() => {
+                    //     irInicio();
+                    // }, 2000); 
+                    return;
+                    
                 }
     
     
@@ -115,6 +124,9 @@ const PublicarGrupoEmpresa = () => {
                     severity: "success",
                     autoHide: 6000,
                 });
+                setTimeout(() => {
+                    irInicio();
+                }, 2000); 
             }
     
         } catch (error) {
