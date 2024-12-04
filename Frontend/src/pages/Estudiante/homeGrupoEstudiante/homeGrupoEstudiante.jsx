@@ -34,6 +34,7 @@ function HomeEstudiante() {
           const tieneGrupo = response.idGrupo;
           if (tieneGrupo === -1) {
             localStorage.setItem("idEstudiante", response.idEstudiante);
+            localStorage.setItem("idGrupo", response.idGrupo);
             navigate("/GruposDocente");
           } else {
             localStorage.setItem("idEstudiante", response.idEstudiante);
