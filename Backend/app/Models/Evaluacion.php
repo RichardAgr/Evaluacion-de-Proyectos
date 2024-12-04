@@ -34,9 +34,9 @@ class Evaluacion extends Model
      */
     protected $fillable = [
         'idEvaluacionesGrupo',
-        'idEvaluadorEmpresa',
         'idEvaluadorEstudiante',
         'idEvaluadoEstudiante',
+        'idEvaluadoEmpresa',
         'tipoEvaluacion',
         'horaEvaluacion',
     ];
@@ -60,14 +60,6 @@ class Evaluacion extends Model
     }
 
     /**
-     * Get the empresa evaluadora associated with the evaluacion.
-     */
-    public function evaluadorEmpresa()
-    {
-        return $this->belongsTo(Empresa::class, 'idEvaluadorEmpresa', 'idEmpresa');
-    }
-
-    /**
      * Get the estudiante evaluador associated with the evaluacion.
      */
     public function evaluadorEstudiante()
@@ -81,5 +73,13 @@ class Evaluacion extends Model
     public function evaluadoEstudiante()
     {
         return $this->belongsTo(Estudiante::class, 'idEvaluadoEstudiante', 'idEstudiante');
+    }
+    
+    /**
+     * Get the empresa evaluadora associated with the evaluacion.
+     */
+    public function evaluadoEmpresa()
+    {
+        return $this->belongsTo(Empresa::class, 'idEvaluadoEmpresa', 'idEmpresa');
     }
 }

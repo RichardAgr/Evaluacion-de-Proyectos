@@ -6,6 +6,7 @@ const BASE_URL = "http://localhost:8000/api";
  * @returns {Promise<Object>} Las planificaciones con su ID
  */
 export async function configurarEvaluacion(datosEvaluacion) {
+  try {
     const response = await fetch(`${BASE_URL}/configurarEvaluacion`, {
       method: "POST",
       headers: {
@@ -18,6 +19,13 @@ export async function configurarEvaluacion(datosEvaluacion) {
 
     const data = await response.json();
     return data;
+  } catch (error) {
+    console.error("Error al configurar la evaluación:", error);
+    return {
+      error: true,
+      message: error.message || "Ocurrió un error inesperado",
+    };
+  }
 
 }
 

@@ -17,6 +17,9 @@ function CardResumen() {
   const navigate = useNavigate();
   const fechaEvaluacion = localStorage.getItem("fechaEvaluacion");
   const tipoEvaluacion = localStorage.getItem("tipoEvaluacion");
+  console.log(fechaEvaluacion);
+  const sePuedeEvaluar = fechaEvaluacion !== null && new Date() >= new Date(fechaEvaluacion);
+  console.log(sePuedeEvaluar);
   const textoTipoEvaluacion = (tipo) => {
     switch (tipo) {
       case "evaluacionPares":
@@ -30,32 +33,32 @@ function CardResumen() {
     }
   };
   return (
-    <CardGeneral
-        titulo = "Evaluacion"
-        info = {<></>}
-        buttons={<> 
-        <InfoRow>
-          <Box>
-            {fechaEvaluacion !== "undefined" && fechaEvaluacion !== null && (
-              <Typography>Fecha de evaluacion: {fechaEvaluacion}</Typography>
-            )}
-            {tipoEvaluacion !== "undefined" && tipoEvaluacion !== null && (
-              <Typography>Tipo de evaluacion: {textoTipoEvaluacion(tipoEvaluacion)}</Typography>
-            )}
-          </Box>
-        </InfoRow>
-        <ButtonsContainer>
-          <Button
-            variant="contained"
-            color="primary"
-            fullWidth
-            onClick={() => navigate("/realizarEvaluacion")}
-          >
-            REALIZAR EVALUACION
-          </Button>
-        </ButtonsContainer>
-        </>}
-    />
+    <HomeCard title="Evaluaciones">
+      <InfoRow>
+        <Box>
+          {fechaEvaluacion !== "undefined" && fechaEvaluacion !== null && (
+            <Typography>Fecha de evaluacion: {fechaEvaluacion}</Typography>
+          )}
+          {tipoEvaluacion !== "undefined" && tipoEvaluacion !== null ? (
+            <Typography>Tipo de evaluacion: {textoTipoEvaluacion(tipoEvaluacion)}</Typography>
+          ): (
+            <Typography>El docente aún no definió la evaluación</Typography>
+          )}
+        </Box>
+      </InfoRow>
+      <ButtonsContainer>
+        <Button
+          variant="contained"
+          color="primary"
+          fullWidth
+          onClick={() => navigate("/realizarEvaluacion")}
+          disabled={!sePuedeEvaluar}
+        >
+          REALIZAR EVALUACION
+        </Button>
+
+      </ButtonsContainer>
+    </HomeCard>
   );
 }
 

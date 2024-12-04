@@ -22,6 +22,7 @@ import ListaEstudiantes from '../pages/Docente/HU32_listaEstudiantes/listaEstudi
 import ListaEmpresas from '../pages/Docente/HU31_listaEmpresas/listaEmpresaPorDocente.jsx'
 import ListaSprintsVerSeguimiento from '../pages/Docente/HU77_calificarEstudiante/listaSprintsVerCalificacionesSemanales.jsx'
 import VerSeguimientoSemanal from '../pages/Docente/HU77_calificarEstudiante/calificarEstSemana.jsx'
+import RealizarEvaluacion from '../pages/Estudiante/realizarEvaluacion/realizarEvaluacion.jsx';
 
 function NavEstudiante() {
     return (
@@ -113,7 +114,11 @@ function NavEstudiante() {
           path="/publicarPlanificacion/Empresa/:idEmpresa"
           element={<PublicarPlanificacion />}
         />
-
+        {/** Realizar Evaluacion */}
+        <Route
+          path="/realizarEvaluacion"
+          element={<RealizarEvaluacion />}
+        />
 
 
         <Route

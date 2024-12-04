@@ -14,17 +14,18 @@ class CreateEvaluacionTable extends Migration
         Schema::create('evaluacion', function (Blueprint $table) {
             $table->id('idEvaluacion');
             $table->unsignedBigInteger('idEvaluacionesGrupo');
-            $table->unsignedBigInteger('idEvaluadorEmpresa')->nullable();
             $table->unsignedBigInteger('idEvaluadorEstudiante')->nullable();
-            $table->unsignedBigInteger('idEvaluadoEstudiante');
+            $table->unsignedBigInteger('idEvaluadoEstudiante')->nullable();
+            $table->unsignedBigInteger('idEvaluadoEmpresa')->nullable();
             
-            $table->time('horaEvaluacion');
+            $table->time('horaEvaluacion')->nullable();
+            $table->integer('notaTotal')->nullable()->default(null);
 
             // * Llaves foráneas
             $table->foreign('idEvaluacionesGrupo')->references('idEvaluacionesGrupo')->on('evaluacionesgrupo');
-            $table->foreign('idEvaluadorEmpresa')->references('idEmpresa')->on('empresa');
             $table->foreign('idEvaluadorEstudiante')->references('idEstudiante')->on('estudiante');
             $table->foreign('idEvaluadoEstudiante')->references('idEstudiante')->on('estudiante');
+            $table->foreign('idEvaluadoEmpresa')->references('idEmpresa')->on('empresa');
         });
     }
 

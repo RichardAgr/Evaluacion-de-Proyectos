@@ -19,6 +19,7 @@ use App\Http\Controllers\joaquinController;
 use App\Http\Controllers\Estudiante\SesionEstudianteController;
 use App\Http\Controllers\Docente\SesionDocenteController;
 use App\Http\Controllers\Administrador\AdministradorController;
+use App\Http\Controllers\EvaluacionController;
 use App\Http\Controllers\EvaluacionesGrupoController;
 use App\Models\EvaluacionesGrupo;
 
@@ -121,14 +122,18 @@ Route::get('/testGuardarPlanificacion', [PlanificacionController::class, 'testMo
 Route::get('/testGuardarEntregables', [EntregablesController::class, 'testGuardarEntregables']);
 
 Route::get('/testConfigurarEvaluacion', [EvaluacionesGrupoController::class, 'testConfigurarEvaluacion']);
+Route::get('/testEvaluacion', [EvaluacionController::class, 'testEvaluacion']);
 
+//============================= EVALUACION ==============================
+
+Route::get('/getDatosParaEvaluar/{idEstudiante}', [EvaluacionController::class, 'getDatosParaEvaluar']);
 // ==================================   RUTAS POST =================================
 
 //============================= POST EVALUACION ==============================
 //configurar la evaluacion final
 Route::post('/configurarEvaluacion', [EvaluacionesGrupoController::class, 'configurarEvaluacion']);
 //realizar una evaluacion, calificarla
-Route::post('/realizarEvaluacion', [PlanificacionController::class, 'realizarEvaluacion']);
+Route::post('/evaluar', [EvaluacionController::class, 'evaluar']);
 // ==================================   POST PLANIFICACION    ==================================
 
 // ---Cambia la revision como valida---
