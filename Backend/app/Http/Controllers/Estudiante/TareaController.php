@@ -19,8 +19,11 @@ use App\Models\Empresa;
 use App\Models\Planificacion;
 class TareaController extends Controller
 {
-    public function obtenerTarea($idTarea)
+    public function obtenerTarea($idTarea, $idEmpresa)
     {
+        // Ensure $idEmpresa is an array
+        $idEmpresa = is_array($idEmpresa) ? $idEmpresa : [$idEmpresa];
+
         // Obtener la tarea
         $tarea = Tarea::find($idTarea);
 
@@ -35,37 +38,27 @@ class TareaController extends Controller
             ->where('tareasestudiantes.idTarea', $idTarea)
             ->get();
 
-        // Obtener el primer estudiante relacionado con la tarea (esto sería uno de los estudiantes que ya se ha recuperado)
-        $primerEstudiante = $estudiantes->first();
-
-        if ($primerEstudiante) {
-            // Obtener las empresas del primer estudiante
-            $empresasEstudiante = DB::table('estudiantesempresas')
-                ->where('idEstudiante', $primerEstudiante->idEstudiante)
-                ->pluck('idEmpresa');
-
-            // Obtener todos los estudiantes de las mismas empresas
-            $companerosDeEmpresa = DB::table('estudiante')
-                ->join('estudiantesempresas', 'estudiantesempresas.idEstudiante', '=', 'estudiante.idEstudiante')
-                ->whereIn('estudiantesempresas.idEmpresa', $empresasEstudiante)
-                ->where('estudiante.idEstudiante', '!=', $primerEstudiante->idEstudiante) // Excluir al primer estudiante
-                ->select('estudiante.idEstudiante', 'nombreEstudiante', 'primerApellido', 'segundoApellido')
-                ->get();
-        }
+        // Obtener todos los estudiantes de las mismas empresas
+        $companerosDeEmpresa = DB::table('estudiante')
+            ->join('estudiantesempresas', 'estudiantesempresas.idEstudiante', '=', 'estudiante.idEstudiante')
+            ->whereIn('estudiantesempresas.idEmpresa', $idEmpresa)
+            ->select('estudiante.idEstudiante', 'nombreEstudiante', 'primerApellido', 'segundoApellido')
+            ->get();
 
         // Formar la respuesta
         $respuesta = [
             'idSemana' => $tarea->idSemana,
             'nombreTarea' => $tarea->nombreTarea,
-            'comentario' => $tarea->comentario,
-            'textotarea' => $tarea->textoTarea,
-            'fechentregado' => $tarea->fechaEntrega,
+            'comentario' => $tarea->textoTarea,
+            'textoTarea' => $tarea->textoTarea,
+            'fechaEntrega' => $tarea->fechaEntrega,
             'estudiantes' => $estudiantes,
-            'integrantes' => $companerosDeEmpresa ?? [],
+            'integrantes' => $companerosDeEmpresa,
         ];
 
         return response()->json($respuesta);
     }
+
 
 
     //************************************ POSTS*************************** */

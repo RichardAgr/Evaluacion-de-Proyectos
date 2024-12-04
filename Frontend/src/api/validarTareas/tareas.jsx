@@ -1,6 +1,6 @@
-export const getTareaData = async (idTarea) => {
+export const getTareaData = async (idTarea, idEmpresa) => {
   try {
-    const response = await fetch(`http://localhost:8000/api/tarea/${idTarea}`, {
+    const response = await fetch(`http://localhost:8000/api/tarea/${idTarea}/${idEmpresa}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

@@ -79,7 +79,10 @@ class PlanificacionController extends Controller
                 DB::raw('(SELECT COUNT(*) FROM sprint WHERE sprint.idPlanificacion = p.idPlanificacion) as numeroSprints')
             )
             ->where('g.idDocente', '=', $docenteId)
-            ->where('p.aceptada', '=', null)
+            ->where(function ($query) {
+                $query->whereNull('p.aceptada')
+                      ->orWhere('p.aceptada', '=', 0);
+            })
             ->where('p.publicada', '=', 1)
             ->groupBy('e.idEmpresa', 'e.nombreEmpresa', 'e.nombreLargo', 'p.idPlanificacion', 'p.aceptada', 'p.publicada')
             ->get();
