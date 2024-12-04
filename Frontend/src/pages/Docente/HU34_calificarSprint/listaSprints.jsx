@@ -81,14 +81,14 @@ const ListaSprints = () => {
         >
             <DivLista>
                 {sprints.map((sprint, index) => {
-                    const formatoIni = (new Date(sprint.fechaIni)).toLocaleDateString();
-                    const formatoFin = (new Date(sprint.fechaFin)).toLocaleDateString();
+                    const formatoIni = (sprint.fechaIni)+" a las 00:00"
+                    const formatoFin = (sprint.fechaFin)+" a las 23:59"
                     return (new Date() > new Date(sprint.fechaFin) ? (
                         <Box
                             key={index}
                             onClick={() => clickBoton(sprint.idSprint)}
                             sx={{
-                                width: '85%', height: 60,
+                                width: '85%',minHeight:60,
                                 borderRadius: 0.6, margin: 0.7,
                                 marginLeft: 'calc(2vw + 1rem)', pl: 2,
                                 fontSize: '1.5rem',
@@ -104,21 +104,26 @@ const ListaSprints = () => {
                             }}
                         >
                             <div style={{ display: 'flex', alignItems: 'center' }}>
-                                <Typography sx={{ fontWeight: 'bolder' }} variant='h6'>Sprint {sprint.numeroSprint}</Typography>
-                                <Typography sx={{ color: sprint.nota === null ? "red" : "black" }}>
-                                    {sprint.nota === null ? " (NO EVALUADO)" : " (YA EVALUADO)"}
+                                <Typography sx={{ fontWeight: 'bolder' }} variant='h6'>
+                                    Sprint {sprint.numeroSprint}
+                                    <Typography sx={{ color: sprint.nota === null ? "red" : "black" }}>
+                                        {sprint.nota === null ? " (NO EVALUADO)" : " (YA EVALUADO)"}
+                                    </Typography>
                                 </Typography>
                             </div>
-                            <Box sx={{ marginRight: '', transform: 'scale(0.8)' }}>
+                            
+                            <Box sx={{ marginRight: '', transform:'scale(0.9)'}}>
                                 <div style={{ display: 'flex', alignItems: 'center' }}>
                                     <CalendarTodayIcon />
-                                    <Typography sx={{ fontWeight: '600' }}>INICIO DEL SPRINT: </Typography>
-                                    <Typography> {formatoIni}</Typography>
+                                    <Typography sx={{fontSize:{xs:'0.6rem', sm:'0.7rem'} }}>
+                                        <span style={{fontWeight: '600', }}>INICIO DEL SPRINT:</span> {formatoIni}
+                                    </Typography>
                                 </div>
                                 <div style={{ display: 'flex', alignItems: 'center' }}>
                                     <CalendarTodayIcon />
-                                    <Typography sx={{ fontWeight: '600' }} variant="subtitle1">FIN DEL SPRINT: </Typography>
-                                    <Typography> {formatoFin}</Typography>
+                                    <Typography sx={{ fontSize:{xs:'0.6rem', sm:'0.7rem'} }} variant="subtitle1">
+                                    <span style={{fontWeight: '600', }}>FIN DEL SPRINT:</span> {formatoFin}
+                                    </Typography>
                                 </div>
                             </Box>
 

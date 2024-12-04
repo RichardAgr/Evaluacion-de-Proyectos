@@ -1,6 +1,6 @@
-export const getTareaData = async (idTarea) => {
+export const getTareaData = async (idTarea, idEmpresa) => {
   try {
-    const response = await fetch(`http://127.0.0.1:8000/api/tarea/${idTarea}`, {
+    const response = await fetch(`http://localhost:8000/api/tarea/${idTarea}/${idEmpresa}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -23,7 +23,7 @@ export const getTareaData = async (idTarea) => {
 export const calificarTarea = async (idTarea, nota, comentario_docente) => {
   try {
     const response = await fetch(
-      `http://127.0.0.1:8000/api/tarea/${idTarea}/calificar`,
+      `http://localhost:8000/api/tarea/${idTarea}/calificar`,
       {
         method: "POST",
         headers: {
@@ -66,7 +66,7 @@ export const updateTarea = async (idTarea, formData) => {
 
     // Enviar solicitud con FormData
     const response = await fetch(
-      `http://127.0.0.1:8000/api/tarea/${idTarea}/guardar`,
+      `http://localhost:8000/api/tarea/${idTarea}/guardar`,
       {
         method: "POST",
         body: data,
@@ -88,7 +88,7 @@ export const updateTarea = async (idTarea, formData) => {
 export const getTareasSemana = async (idEmpresa, idSemana) => {
   try {
     const response = await fetch(
-      `http://127.0.0.1:8000/api/empresa/${idEmpresa}/semana/${idSemana}/tareas`,
+      `http://localhost:8000/api/empresa/${idEmpresa}/semana/${idSemana}/tareas`,
       {
         method: "GET",
         headers: {
@@ -118,7 +118,7 @@ export const updateTareasSemana = async (
 ) => {
   try {
     const response = await fetch(
-      `http://127.0.0.1:8000/api/empresa/${idEmpresa}/sprint/${idSprint}/semana/${idSemana}/tareas`,
+      `http://localhost:8000/api/empresa/${idEmpresa}/sprint/${idSprint}/semana/${idSemana}/tareas`,
       {
         method: "PUT",
         headers: {

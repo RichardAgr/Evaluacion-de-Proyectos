@@ -76,3 +76,24 @@ export const updateDatosDocente = async (values) => {
     }
 };
 
+export const updateDatosGenerico = async (url, values) => {
+  const bodyFetch = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(values),
+    credentials: "include",
+  };
+
+  try {
+    const res = await fetch(url, bodyFetch);
+    if (!res.ok) {
+      throw new Error(`Error en la petición: ${res.statusText}`);
+    }
+    return await res.json();
+  } catch (error) {
+    console.error("Error en la actualización:", error);
+    throw error;
+  }
+};

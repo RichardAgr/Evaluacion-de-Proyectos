@@ -15,8 +15,7 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import {
   obtenerDatosDocente,
   obtenerDatosEstudiante,
-  updateDatosDocente,
-  updateDatosEstudiante
+  updateDatosGenerico
 } from "../../../api/obtenerDatosParaModal";
 // eslint-disable-next-line react/prop-types
 const UserProfileModal = ({ openPerfil, cerrarPerfil, role }) => {
@@ -126,25 +125,26 @@ const UserProfileModal = ({ openPerfil, cerrarPerfil, role }) => {
   });
 
   const handleSubmit = async (values) => {
-    let metododElegido = () => {};
     const payload = {
       contrasena: values.verificarSiEsElUsuario,
       nombre: values.nombre,
       primerApellido: values.apellido,
       segundoApellido: values.segundoApellido,
       email: values.correo,
-      nuevaContrasena: values.contrasena
+      nuevaContrasena: values.contrasena,
     };
-
-    if (role === "docente") {
-      metododElegido = updateDatosDocente;
-    } else {
-      metododElegido = updateDatosEstudiante;
-    }
-    try {
-      const response = await metododElegido(payload);
   
-      if (response.mensaje === "success") {
+    console.log(payload);
+  
+    const url =
+      role === "docente"
+        ? "http://localhost:8000/api/modificarDatosDocente"
+        : "http://localhost:8000/api/modificarDatosEstudiante";
+  
+    try {
+      const response = await updateDatosGenerico(url, payload);
+  
+      if (response?.mensaje === "success") {
         alert(response.message);
         setEditableFields({
           nombreCuenta: false,
@@ -165,7 +165,7 @@ const UserProfileModal = ({ openPerfil, cerrarPerfil, role }) => {
       } else {
         setSnackbar({
           open: true,
-          message: "La contraseña de verificación es incorrecta",
+          message: response?.message || "La contraseña de verificación es incorrecta",
           severity: "info",
         });
       }
@@ -178,6 +178,7 @@ const UserProfileModal = ({ openPerfil, cerrarPerfil, role }) => {
       });
     }
   };
+  
   
   return (
     <Modal

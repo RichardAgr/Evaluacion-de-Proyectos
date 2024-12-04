@@ -5,7 +5,6 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
-import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import Cookies from 'js-cookie';
@@ -18,7 +17,7 @@ const UserModal= lazy(() => import('../userModal/userModal'));
 
 function Header() {
   const [anchorEl, setAnchorEl] = useState(null);
-  const grupo = Number(localStorage.getItem('idGrupo'))!== -1
+  const grupo = Number(localStorage.getItem('idGrupo')) !== -1
   const [open, setOpen] = useState(false);
   const [openPerfil, setOpenPerfil] = useState(false);
   const cerrarPerfil = (openPerfil) => {
@@ -68,13 +67,6 @@ function Header() {
             <div>
               <IconButton
                 size="large"
-                aria-label="notifications"
-                color="inherit"
-              >
-                <NotificationsNoneIcon />
-              </IconButton>
-              <IconButton
-                size="large"
                 aria-label="account of current user"
                 aria-controls="menu-appbar"
                 aria-haspopup="true"
@@ -105,13 +97,13 @@ function Header() {
         </Toolbar>
       </AppBar>
       <Suspense >
-        {role==='docente'?
+        {open&&(role==='docente'?
           <HamburgesaDocente open={open} toggleDrawer={toggleDrawer} />
           :role==='estudiante'?
           <HamburgesaEstudiante open={open} toggleDrawer={toggleDrawer} />
           :
           <></>
-        }
+        )}
       </Suspense>
       <Suspense fallback={<div>Loading...</div>}>
         {openPerfil && <UserModal openPerfil={openPerfil} cerrarPerfil={cerrarPerfil} role={role} />}

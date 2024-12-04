@@ -8,6 +8,7 @@ use App\Models\Grupo;
 use App\Models\Planificacion;
 use App\Models\Sprint;
 use App\Models\Semana;
+use App\Models\EvaluacionesGrupo;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -43,11 +44,15 @@ class SesionEstudianteController extends Controller
         $fechaFinGestion = $grupo ? $grupo->fechaFinGestion : '1';
         $gestion = $grupo? trim("Gestion: {$grupo->gestionGrupo}, Grupo:{$grupo->numGrupo}"): 'No Tiene grupo';
 
+        $evaluacionGrupo = null;
+        if ($idGrupo !== -1) { // Si el grupo existe
+            $evaluacionGrupo = EvaluacionesGrupo::where('idGrupo', $idGrupo)->first();
+        }
 
         $planificacion = Planificacion::where('idEmpresa', $idEmpresa)->first();
         $idPlanificacion = $planificacion ? $planificacion->idPlanificacion : -1;
-        $aceptada = $planificacion ? $planificacion->aceptada : 0;
-        $publicada = $planificacion ? $planificacion->publicada : 0;
+        $aceptada = $planificacion ? (($planificacion->aceptada)!==null? $planificacion->aceptada:0) : 0;
+        $publicada = $planificacion ? (($planificacion->publicada)!==null? $planificacion->publicada:0) : 0;
 
         $idSprint = -1;
         $sprint = Sprint::where('idPlanificacion', $idPlanificacion)
@@ -55,9 +60,11 @@ class SesionEstudianteController extends Controller
                         ->whereDate('fechaFin', '>=', $now)
                         ->first();
         $fechaLimiteSprint = '';
+        $fechaIniSprint = '';
         if ($sprint) {
             $idSprint = $sprint->idSprint;
             $fechaLimiteSprint = $sprint->fechaFin;
+            $fechaIniSprint = $sprint->fechaIni;
         }
     
         // Validar semana
@@ -68,9 +75,11 @@ class SesionEstudianteController extends Controller
                         ->where('idPlanificacion', $idPlanificacion)
                         ->first();
         $fechaLimiteSemana = '';
+        $fechaIniSemana = '';
         if ($semana) {
             $idSemana = $semana->idSemana;
             $fechaLimiteSemana = $semana->fechaFin;
+            $fechaIniSemana = $semana->fechaIni;
         }
     
         return response()->json([
@@ -90,8 +99,12 @@ class SesionEstudianteController extends Controller
             'fechaFinPlanificacion' => $fechaFinPlanificacion,
             'fechaFinGestion' => $fechaFinGestion,
             'gestion' => $gestion,
+            'fechaIniSprint' => $fechaIniSprint,
+            'fechaIniSemana' => $fechaIniSemana,
             'fechaLimiteSprint' => $fechaLimiteSprint,
-            'fechaLimiteSemana' => $fechaLimiteSemana
+            'fechaLimiteSemana' => $fechaLimiteSemana,
+            'tipoEvaluacion' => $evaluacionGrupo?$evaluacionGrupo->tipoEvaluacion:'1',
+            'fechaEvaluacion' => $evaluacionGrupo?$evaluacionGrupo->fechaEvaluacion:'1',
         ], 200);
     }
     

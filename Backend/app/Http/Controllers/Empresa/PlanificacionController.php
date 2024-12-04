@@ -9,74 +9,102 @@ use Illuminate\Http\JsonResponse; // Para las respuestas JSON
 use App\Models\Planificacion; // Importa tu modelo Planificacion
 use App\Models\Sprint; // Importa tu modelo Sprint
 use App\Models\Empresa; // Asegúrate de importar el modelo Empresa
+use App\Models\Semana; // Asegúrate de importar el modelo Empresa
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 use Exception;
+//use App\Http\Controllers\Docente\SesionDocenteController as docenteSesion;
 
 class PlanificacionController extends Controller
 {
     public function planificacionAceptadas(): JsonResponse
     {
-        // Obtener todas las empresas
-        $empresas = Empresa::all();
-
-        // Inicializar un array para almacenar los datos de planificación
-        $data = [];
-
-        foreach ($empresas as $empresa) {
-            // Obtener la planificación de la empresa
-            $planificacion = Planificacion::with('sprints')
-                ->orderBy('fechaEntrega', 'desc')
-                ->where('idEmpresa', $empresa->idEmpresa)
-                ->first();
-
-            // Verificar si la planificación existe y está aceptada
-            if ($planificacion && $planificacion->aceptada) {
-                // Si la planificación existe y está aceptada, devolver el número de sprints
-                $data[] = [
-                    'id' => $planificacion->idPlanificacion,
-                    'nombreEmpresa' => $empresa->nombreEmpresa,
-                    'nombreLargo' => $empresa->nombreLargo,
-                    'idEmpresa' => $planificacion->idEmpresa,
-                    'aceptada' => $planificacion->aceptada,
-                    'numeroSprints' => $planificacion->sprints->count(), // Contar el número de sprints
-                ];
-            }
-        }
-
-        // Retornar la respuesta JSON con los datos de empresas aceptadas
+        // Obtener el ID del docente desde la sesión
+        $idDocente = session('docente.id');
+    
+        // Consultar empresas y sus planificaciones aceptadas relacionadas con el docente
+        $empresas = DB::table('empresa as e')
+            ->join('estudiantesempresas as em', 'e.idEmpresa', '=', 'em.idEmpresa')
+            ->join('estudiante as est', 'est.idEstudiante', '=', 'em.idEstudiante')
+            ->join('estudiantesgrupos as eg', 'eg.idEstudiante', '=', 'est.idEstudiante')
+            ->join('grupo as g', 'g.idGrupo', '=', 'eg.idGrupo')
+            ->join('planificacion as p', 'e.idEmpresa', '=', 'p.idEmpresa')
+            ->select(
+                'e.idEmpresa',
+                'e.nombreEmpresa',
+                'e.nombreLargo',
+                'p.idPlanificacion',
+                'p.aceptada',
+                DB::raw('(SELECT COUNT(*) FROM sprint WHERE sprint.idPlanificacion = p.idPlanificacion) as numeroSprints')
+            )
+            ->where('g.idDocente', '=', $idDocente)
+            ->where('p.aceptada', '=', 1) // Filtrar solo planificaciones aceptadas
+            ->orderBy('p.fechaEntrega', 'desc') // Ordenar por fecha de entrega más reciente
+            ->groupBy('e.idEmpresa', 'e.nombreEmpresa', 'e.nombreLargo', 'p.idPlanificacion', 'p.aceptada')
+            ->get();
+    
+        // Formatear los resultados
+        $data = $empresas->map(function ($empresa) {
+            return [
+                'id' => $empresa->idEmpresa,
+                'nombreEmpresa' => $empresa->nombreEmpresa,
+                'nombreLargo' => $empresa->nombreLargo,
+                'aceptada' => $empresa->aceptada,
+                'numeroSprints' => $empresa->numeroSprints,
+            ];
+        });
+    
+        // Retornar los datos en formato JSON
         return response()->json($data);
     }
+    
     public function planificacionesSinValidar(): JsonResponse
     {
-        // Obtener todas las empresas, en el futuro debera filtrar las empresas por docente
-        $empresas = Empresa::all();
-        $data = [];
-        foreach ($empresas as $empresa) {
-            // Obtener la planificación de la empresa
-            $planificacion = Planificacion::where('idEmpresa', $empresa->idEmpresa)
-                ->first();
-
-            // Verificar si la planificación existe y si fue rechazada
-            if ($planificacion && $planificacion->aceptada === 0 && $planificacion->publicada=== 1) {
-                // Si la planificación existe y fue rechazada, guarda sus datos
-                $data[] = [
-                    'id' => $planificacion->idPlanificacion,
-                    'nombreEmpresa' => $empresa->nombreEmpresa,
-                    'nombreLargo' => $empresa->nombreLargo,
-                    'idEmpresa' => $planificacion->idEmpresa,
-                    'aceptada' => $planificacion->aceptada,
-                    'numeroSprints' => $planificacion->sprints->count(), // Contar el número de sprints, innecesario
-                ];
-            }
-        }
-
-        // Retornar la respuesta JSON con los datos de empresas aceptadas
+        $docenteId = session('docente.id'); // ID del docente en sesión
+    
+        // Obtener empresas con sus planificaciones no aceptadas y publicadas
+        $empresas = DB::table('empresa as e')
+            ->join('estudiantesempresas as em', 'e.idEmpresa', '=', 'em.idEmpresa')
+            ->join('estudiante as est', 'est.idEstudiante', '=', 'em.idEstudiante')
+            ->join('estudiantesgrupos as eg', 'eg.idEstudiante', '=', 'est.idEstudiante')
+            ->join('grupo as g', 'g.idGrupo', '=', 'eg.idGrupo')
+            ->join('planificacion as p', 'e.idEmpresa', '=', 'p.idEmpresa')
+            ->select(
+                'e.idEmpresa',
+                'e.nombreEmpresa',
+                'e.nombreLargo',
+                'p.idPlanificacion',
+                'p.aceptada',
+                'p.publicada',
+                DB::raw('(SELECT COUNT(*) FROM sprint WHERE sprint.idPlanificacion = p.idPlanificacion) as numeroSprints')
+            )
+            ->where('g.idDocente', '=', $docenteId)
+            ->where(function ($query) {
+                $query->whereNull('p.aceptada')
+                      ->orWhere('p.aceptada', '=', 0);
+            })
+            ->where('p.publicada', '=', 1)
+            ->groupBy('e.idEmpresa', 'e.nombreEmpresa', 'e.nombreLargo', 'p.idPlanificacion', 'p.aceptada', 'p.publicada')
+            ->get();
+    
+        // Formatear los datos para la respuesta
+        $data = $empresas->map(function ($empresa) {
+            return [
+                'id' => $empresa->idEmpresa,
+                'nombreEmpresa' => $empresa->nombreEmpresa,
+                'nombreLargo' => $empresa->nombreLargo,
+                'aceptada' => $empresa->aceptada,
+                'numeroSprints' => $empresa->numeroSprints,
+            ];
+        });
+    
+        // Retornar la respuesta JSON
         return response()->json($data);
     }
-    public function planificacionesParaModificar(): JsonResponse
+    
+    /*public function planificacionesParaModificar(): JsonResponse
     {
-        // Obtener todas las empresas, en el futuro deberá filtrar las empresas por docente
+        // ! ya no tiene valor porque la ing dijo  que no era necesario
         $empresas = Empresa::all();
         $data = [];
         foreach ($empresas as $empresa) {
@@ -113,9 +141,59 @@ class PlanificacionController extends Controller
     
         // Retornar la respuesta JSON con los datos de empresas
         return response()->json($data);
-    }
-    public function planificacionesSinPublicar(): JsonResponse
+    }*/
+    public function planificacionesParaModificar(): JsonResponse
     {
+    // Obtener todas las empresas junto con su planificación, si existe
+
+    $docenteId = session('docente.id'); // ID del docente en sesión
+    
+        // Obtener empresas con sus planificaciones no aceptadas y publicadas
+        $empresas = DB::table('empresa as e')
+            ->join('estudiantesempresas as em', 'e.idEmpresa', '=', 'em.idEmpresa')
+            ->join('estudiante as est', 'est.idEstudiante', '=', 'em.idEstudiante')
+            ->join('estudiantesgrupos as eg', 'eg.idEstudiante', '=', 'est.idEstudiante')
+            ->join('grupo as g', 'g.idGrupo', '=', 'eg.idGrupo')
+            ->join('planificacion as p', 'e.idEmpresa', '=', 'p.idEmpresa')
+            ->select(
+                'e.idEmpresa',
+                'e.nombreEmpresa',
+                'e.nombreLargo',
+                'p.idPlanificacion',
+                'p.aceptada',
+                'p.publicada',
+                DB::raw('(SELECT COUNT(*) FROM sprint WHERE sprint.idPlanificacion = p.idPlanificacion) as numeroSprints')
+            )
+            ->where('g.idDocente', '=', $docenteId)
+            ->where(function ($query) {
+            $query->where('p.publicada', '=', 0)
+                  ->where('p.aceptada', '!=', 1)
+                  ->orWhereNull('p.idPlanificacion');
+        })
+        ->groupBy('e.idEmpresa', 'e.nombreEmpresa', 'e.nombreLargo', 'p.idPlanificacion', 'p.aceptada', 'p.publicada')
+        ->get();
+
+    // Formatear los datos para la respuesta
+    $data = $empresas->map(function ($empresa) {
+        return [
+            'id' => $empresa->idEmpresa,
+            'nombreEmpresa' => $empresa->nombreEmpresa,
+            'nombreLargo' => $empresa->nombreLargo,
+            'idEmpresa' => $empresa->idEmpresa,
+            'aceptada' => $empresa->aceptada,
+            'numeroSprints' => $empresa->numeroSprints ?: 0, // Si no hay planificación, es 0
+            'tienePlanificacion' => $empresa->idPlanificacion !== null,
+        ];
+    });
+
+    // Retornar la respuesta JSON
+    return response()->json($data);
+}
+
+    
+   /* public function planificacionesSinPublicar(): JsonResponse
+    {
+        // ! ya no sirve, ya no es necesario
         // Obtener todas las empresas, en el futuro debera filtrar las empresas por docente
         $empresas = Empresa::all();
         $data = [];
@@ -140,10 +218,62 @@ class PlanificacionController extends Controller
 
         // Retornar la respuesta JSON con los datos de empresas aceptadas
         return response()->json($data);
+    }*/
+
+    public function planificacionesSinPublicar(): JsonResponse
+    {
+        // Obtener empresas con planificaciones no publicadas y no aceptadas
+        $docenteId = session('docente.id'); // ID del docente en sesión
+        
+        // Obtener empresas con sus planificaciones no aceptadas y publicadas
+        $empresas = DB::table('empresa as e')
+            ->join('estudiantesempresas as em', 'e.idEmpresa', '=', 'em.idEmpresa')
+            ->join('estudiante as est', 'est.idEstudiante', '=', 'em.idEstudiante')
+            ->join('estudiantesgrupos as eg', 'eg.idEstudiante', '=', 'est.idEstudiante')
+            ->join('grupo as g', 'g.idGrupo', '=', 'eg.idGrupo')
+            ->join('planificacion as p', 'e.idEmpresa', '=', 'p.idEmpresa')
+            ->select(
+                'e.idEmpresa',
+                'e.nombreEmpresa',
+                'e.nombreLargo',
+                'p.idPlanificacion',
+                'p.aceptada',
+                'p.publicada',
+                DB::raw('(SELECT COUNT(*) FROM sprint WHERE sprint.idPlanificacion = p.idPlanificacion) as numeroSprints')
+            )
+            ->where('g.idDocente', '=', $docenteId)
+            ->where('p.publicada', '=', 0)
+            ->where('p.aceptada', '!=', 1)
+            ->whereNotNull('p.idPlanificacion') // Filtramos solo las empresas con planificación
+            ->get();
+    
+        // Agrupar los datos por empresa
+        $data = $empresas->groupBy('idEmpresa')->map(function ($group) {
+            // Tomamos el primer elemento del grupo para los datos de la empresa
+            $empresa = $group->first();
+            
+            // Contamos el número de sprints (el número de sprints es el mismo para todas las planificaciones de una empresa)
+            $numeroSprints = $group->sum('numeroSprints');
+    
+            return [
+                'id' => $empresa->idPlanificacion,
+                'nombreEmpresa' => $empresa->nombreEmpresa,
+                'nombreLargo' => $empresa->nombreLargo,
+                'idEmpresa' => $empresa->idEmpresa,
+                'aceptada' => $empresa->aceptada,
+                'numeroSprints' => $numeroSprints ?: 0, // Si no hay sprints, es 0
+            ];
+        });
+    
+        // Retornar la respuesta JSON
+        return response()->json($data);
     }
+    
+
 
     public function show($idEmpresa): JsonResponse
     {
+        // * Devuelve los datos necesarios de una empresa
         // Verificar si la empresa existe
         $empresa = Empresa::find($idEmpresa);
 
@@ -204,6 +334,7 @@ class PlanificacionController extends Controller
     }
     public function getComentario($idPlanificacion): JsonResponse
     {
+        // ! Creo que ya no sirve
         $planificacion = Planificacion::find($idPlanificacion);
 
         if (!$planificacion) {
@@ -223,6 +354,7 @@ class PlanificacionController extends Controller
     
     public function addRevision(Request $request)
     {
+        // * logica para añadir un comentario al rechazar una planificacion
         try {
             // validar datos
             $validator = Validator::make($request->all(), [
@@ -266,27 +398,81 @@ class PlanificacionController extends Controller
 
     public function validar(Request $request)
     {
+        // Validar los datos de entrada
         $validatedData = $request->validate([
             'idEmpresa' => 'required|integer',
+            'fechaIni' => 'required|date',
+            'fechaFin' => 'required|date|after:fechaIni',
         ]);
 
+        // Buscar la planificación
         $planificacion = Planificacion::where('idEmpresa', $validatedData['idEmpresa'])->first();
 
         if ($planificacion === null) {
             return response()->json(['error' => 'Planificación no encontrada para esta empresa'], 404);
         } else {
+            // Actualizar el estado de la planificación
             $planificacion->aceptada = 1;
             $planificacion->publicada = 1;
             $planificacion->save();
+
+            
+            // Definir las fechas de inicio y fin
+            $fechaIni = Carbon::parse($validatedData['fechaIni']);
+            $fechaFin = Carbon::parse($validatedData['fechaFin']);
+            
+            // Calcular la duración en días y número de semanas
+            $duracionEnDias = $fechaIni->diffInDays($fechaFin);
+            $numeroSemanas = ceil($duracionEnDias / 7);
+            
+            // Inicializar el inicio de la primera semana
+            $semanaIni = $fechaIni->copy();
+            $numeroSemana = 1;
+
+            // Iterar para crear las semanas
+            for ($i = 1; $i <= $numeroSemanas; $i++) {
+                // Definir el inicio y fin de la semana
+                $inicioSemana = $semanaIni->copy();
+                $finSemana = $inicioSemana->copy()->endOfWeek(Carbon::SUNDAY);
+
+                // Evitar que la última semana exceda la fecha final
+                if ($finSemana->gt($fechaFin)) {
+                    $finSemana = $fechaFin;
+                }
+
+                // Si la fecha de inicio ya es mayor que la fecha final, salir del ciclo
+                if ($inicioSemana->gt($fechaFin)) {
+                    break;
+                }
+
+                // Crear la semana en la base de datos
+                Semana::create([
+                    'idPlanificacion' => $planificacion->idPlanificacion,
+                    'numeroSemana' => $numeroSemana,
+                    'fechaIni' => $inicioSemana->toDateString(),
+                    'fechaFin' => $finSemana->toDateString(),
+                ]);
+
+                // Aumentar el número de semana
+                $numeroSemana++;
+
+                // Establecer la fecha de inicio para la siguiente semana
+                $semanaIni = $finSemana->addDay(); // Comenzar el lunes siguiente
+            }
+        
+
+            // Responder con éxito
             return response()->json([
-                'message' => 'Planificación aceptada con éxito',
-                'planificacion' => $planificacion
+                'message' => 'Planificación aceptada con éxito y semanas generadas',
+                'planificacion' => $planificacion,
             ]);
         }
-    }
+}
+
     
     public function rechazar(Request $request)
     {
+        // * Logica para rechazar una planificacion
         $validatedData = $request->validate([
             'idEmpresa' => 'required|integer',
         ]);
@@ -328,6 +514,9 @@ class PlanificacionController extends Controller
 
     public function guardarPlanificacion(Request $request): JsonResponse
     {
+        // * Logica para modificar los datos de una planificacion
+
+        // validar datos
         $validator = Validator::make($request->all(), [
             'aceptada' => 'required|boolean',
             'comentarioDocente' => 'string',
@@ -380,20 +569,5 @@ class PlanificacionController extends Controller
             ], 500);
         }
     }
-    public function testModificarPlanificacion()
-    {
-        // Simular una solicitud con datos de prueba
-        $requestData = [
-            'aceptada' => true,
-            'comentariopublico' => 'Comentario de prueba',
-            'idEmpresa' => 1, // Asegúrate de que este ID exista en tu base de datos
-        ];
 
-        // Crear una nueva instancia de Request con los datos de prueba
-        $request = new Request($requestData);
-
-        // Llamar a la función modificarPlanificacion
-        $response = $this->modificarPlanificacion($request);
-        return $response;
-    }
 }

@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react';
 import ListaDefinitivaN from '../../../components/listaDefinitiva/listaDefinitivaN';
+import {fetchEmpresas} from '../../../api/listas/getEmpresas'
+import Cookies from 'js-cookie';
+import { decrypt } from '../../../api/decrypt';
 const columns = [
   {
     field: 'nombreEmpresa',
@@ -30,29 +33,36 @@ function EmpresasPorGrupo() {
     errorMessage: "",
     errorDetails: "",
   });
-  const idGrupo = localStorage.getItem("idGrupo")
+
   // Initial data fetch with GET request
   useEffect(() => {
     setLoading(true)
-    const fetchEmpresas = async () => {
+    const fetchEmpresasDatos = async () => {
       setLoading(true);
       try {
-        const response = await fetch(`http://localhost:8000/api/docente/obtenerEmpresasPorGrupoYDocente?` +
-          new URLSearchParams({
-            idGrupo
-          }),{
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            credentials: "include"
-         }
-        );
-
-        if (!response.ok) throw new Error('Error fetching data');
-
-        const result = await response.json();
-        setData(result);
+        const userRole = Cookies.get('random');
+        const decryptedRole = decrypt(userRole);
+        let url = '';
+        if(decryptedRole === 'docente'){
+            url = '/docente/obtenerEmpresasPorGrupoYDocente?'
+          }
+        else{ 
+            url = '/estudiante/obtenerEmpresasPorGrupoYDocenteEstudiante?'
+          }
+        console.log(url);
+        const result = await fetchEmpresas(url);
+        if(!result.ok){
+          console.log(result);
+          setData(result);
+        }else {
+          const errorMessage = result.error;
+          console.log(errorMessage);
+            setError({
+              error: true,
+              errorMessage: errorMessage,
+              errorDetails: errorMessage,
+            });
+          }
       } catch (err) {
         setError({
           error: true,
@@ -63,7 +73,7 @@ function EmpresasPorGrupo() {
         setLoading(false);
       }
     };
-    fetchEmpresas();
+    fetchEmpresasDatos();
   }, []);
   return (
     <ListaDefinitivaN

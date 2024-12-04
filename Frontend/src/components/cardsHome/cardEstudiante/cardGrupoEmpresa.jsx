@@ -3,8 +3,8 @@ import CardGeneral from '../cardGeneral'
 import { useNavigate } from "react-router-dom";
 function CardResumen() {
   const navigate = useNavigate()
-  const fechaLimiteEntregaEmpresa = new Date(localStorage.getItem("fechaLimiteEntregaEmpresa"))
-  const paso = fechaLimiteEntregaEmpresa < new Date()
+  const fechaLimiteEntregaEmpresa = new Date(`${localStorage.getItem("fechaLimiteEntregaEmpresa")}T23:59:58`);
+  const paso = fechaLimiteEntregaEmpresa > new Date()
   const idEmpresa = Number(localStorage.getItem("idEmpresa"))
   const empresaPublicada = Number(localStorage.getItem("empresaPublicada"))
   return (
@@ -16,12 +16,12 @@ function CardResumen() {
             </Typography>
         </>}
         buttons={<> 
-        {!paso&&idEmpresa!==-1?<Button variant="contained" color="primary" fullWidth
+        {paso&&idEmpresa===-1?<Button variant="contained" color="primary" fullWidth
           onClick = { () => navigate("/homeEstu/CrearGrupoEmpresa")}
         >
             03_REGISTRAR GRUPO EMPRESA
         </Button>:<></>}
-        {!paso&&empresaPublicada?<Button variant="outlined" color="primary" fullWidth
+        {paso&&(empresaPublicada!==1)&&idEmpresa!==-1?<Button variant="outlined" color="primary" fullWidth
           onClick= {() => navigate("/homeEstu/ModificarGrupoEmpresa")}
         >
             69_MODIFICAR GRUPO EMPRESA
@@ -29,7 +29,7 @@ function CardResumen() {
         {idEmpresa!==-1?<Button variant="outlined" color="primary" fullWidth
           onClick= {() => navigate("/homeEstu/PublicarGrupoEmpresa")}
         >
-            71_PUBLICAR GRUPO EMPRESA
+            {empresaPublicada? 'Ver Empresa':'pu71_PUBLICAR GRUPO EMPRESA'}
         </Button>:<></>}
         </>}
     />

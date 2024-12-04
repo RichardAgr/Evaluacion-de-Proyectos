@@ -39,26 +39,47 @@ import { useState } from "react";
             ),
             credentials: 'include',
         });
-  
-        if (!response.ok) {
+        
+        if (response.ok) {
           setSnackbar({
             open: true,
-            message: "La contraseña o el nombreCuenta es incorrecto",
-            severity: "info",
+            message: "Se logro iniciar sesion",
+            severity: "success",
+          });  
+          const data = await response.json();
+          const sessionCookie = Cookies.get('laravel_session');
+          console.log(sessionCookie)
+          const ENCRYPTION_KEY = 'mi_clave_super_segura';
+          const encryp = CryptoJS.AES.encrypt(data.role, ENCRYPTION_KEY).toString();
+          Cookies.set('random', encryp, {
+            path: '/',
+            secure: true,
+            sameSite: 'strict'
           });
-          throw new Error('Error en el inicio de sesión');
+          window.location.reload();
+        } else {
+          const errorData = await response.json();
+          const errorMessage = errorData.error;
+          if (errorMessage === 'Usuario no encontrado') {
+            setSnackbar({
+                open: true,
+                message: 'Usuario no encontrado. Verifica tus credenciales.',
+                severity: 'info',
+            });
+          } else if (errorMessage === 'Credenciales incorrectas E' || errorMessage === 'Credenciales incorrectas D') {
+            setSnackbar({
+                open: true,
+                message: 'Contraseña incorrecta.',
+                severity: 'warning',
+            });
+          }else {
+            setSnackbar({
+                open: true,
+                message: 'Hubo un problema con el servidor. Intenta nuevamente más tarde.',
+                severity: 'error',
+            });
+          }
         }
-        const data = await response.json();
-        const sessionCookie = Cookies.get('laravel_session');
-        console.log(sessionCookie)
-        const ENCRYPTION_KEY = 'mi_clave_super_segura';
-        const encryp = CryptoJS.AES.encrypt(data.role, ENCRYPTION_KEY).toString();
-        Cookies.set('random', encryp, {
-          path: '/',
-          secure: true,
-          sameSite: 'strict'
-        });
-        window.location.reload();
       } catch (error) {
         console.error('Error en el inicio de sesión:', error);
       }

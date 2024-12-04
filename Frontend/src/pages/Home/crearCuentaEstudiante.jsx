@@ -1,5 +1,5 @@
-// eslint-disable-next-line no-unused-vars
-import React from "react";
+
+import {useState} from "react";
 import {
   Button,
   Typography,
@@ -10,6 +10,7 @@ import {
   IconButton,
 } from "@mui/material";
 import { Formik, Field, Form } from "formik";
+import InfoSnackbar from "../../components/infoSnackbar/infoSnackbar";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 import ArrowCircleLeftIcon from "@mui/icons-material/ArrowCircleLeft";
@@ -40,10 +41,15 @@ const validationSchema = Yup.object({
 
 const CrearCuentaEstudiante = () => {
   const navigate = useNavigate();
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "success",
+  });
 
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
-      const response = await fetch("http://127.0.0.1:8000/api/crearCuentaEstudiante", {
+      const response = await fetch("http://localhost:8000/api/crearCuentaEstudiante", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -61,11 +67,21 @@ const CrearCuentaEstudiante = () => {
 
       if (response.ok) {
         const data = await response.json();
-        alert(data.message || "Estudiante registrado exitosamente.");
-        navigate("/"); // Redirige al usuario a la página principal
+        setSnackbar({
+          open: true,
+          message: data.message || "Estudiante registrado exitosamente.",
+          severity: "success",
+          autoHide: 6000,
+        });
+        // navigate("/"); 
       } else if (response.status === 400) {
         const errorData = await response.json();
-        alert(errorData.error || "Error al registrar el estudiante.");
+        setSnackbar({
+          open: true,
+          message: errorData.message || "Estudiante registrado exitosamente.",
+          severity: "error",
+          autoHide: 6000,
+        });
       } else {
         alert("Ocurrió un error inesperado. Intente nuevamente.");
       }
@@ -301,7 +317,14 @@ const CrearCuentaEstudiante = () => {
               </Typography>
             </Form>
           )}
+
         </Formik>
+        <InfoSnackbar
+          openSnackbar={snackbar.open}
+          setOpenSnackbar={(open) => setSnackbar({ ...snackbar, open })}
+          message={snackbar.message}
+          severity={snackbar.severity}
+      />
       </Box>
     </Box>
   );

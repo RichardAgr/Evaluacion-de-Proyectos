@@ -16,7 +16,12 @@ function CardResumen() {
         {!paso&&<>
           <p>Se habilitara cuando pase la fecha de entrega planificacion: {fecha.toISOString().split('T')[0]}</p>
         </>}
-        <Button variant="contained" color="primary" fullWidth disabled={!paso}>
+        <Button 
+        variant="contained" 
+        color="primary" 
+        fullWidth disabled={!paso}
+        onClick={()=>navigate("/visualizarSprint")}
+        >
             VISUALIZAR  SPRINT
         </Button>
         <Button 
