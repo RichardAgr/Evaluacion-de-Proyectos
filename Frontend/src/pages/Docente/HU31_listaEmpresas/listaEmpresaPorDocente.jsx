@@ -37,7 +37,7 @@ function EmpresasPorGrupo() {
     const fetchEmpresas = async () => {
       setLoading(true);
       try {
-        const response = await fetch(`http://localhost:8000/api/docente/obtenerEmpresasPorGrupoYDocenteEstudiante?` +
+        const response = await fetch(`http://localhost:8000/api/docente/obtenerEmpresasPorGrupoYDocente?` +
           new URLSearchParams({
             idGrupo
           }),{
