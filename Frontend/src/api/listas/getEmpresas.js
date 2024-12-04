@@ -1,7 +1,9 @@
+const apiHost = import.meta.env.VITE_HOST;
+console.log(apiHost);
 export const fetchEmpresas = async(url) => {
     const idGrupo = localStorage.getItem("idGrupo")
     try {
-        const response = await fetch('http://localhost:8000/api' + url +
+        const response = await fetch(apiHost + url +
             new URLSearchParams({
                 idGrupo
             }), {
