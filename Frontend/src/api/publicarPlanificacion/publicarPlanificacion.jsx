@@ -1,5 +1,5 @@
 export const publicarPlanificacion = async (idEmpresa) => {
-    const response = await fetch("http://127.0.0.1:8000/api/publicarPlanificacion", {
+    const response = await fetch("http://localhost:8000/api/publicarPlanificacion", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

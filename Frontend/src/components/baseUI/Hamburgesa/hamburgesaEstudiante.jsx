@@ -28,16 +28,18 @@ function HamburgesaEstudiante({ open, toggleDrawer }) {
     >
       <Box sx={{ width: 250 }}>
         <Typography variant="h6" 
-          sx={{borderBottom:'solid 0.01rem grey', borderRadius:'0.8rem', 
-            boxShadow: '0 4px 2px -2px rgba(0, 0, 0, 0.3)', // Sombra específicamente abajo
-          }}
+          sx={{ padding: '16px', backgroundColor: '#114093', color: 'white' }}
         >
           Herramientas
         </Typography>
 
         <List>
           {menuItems.map((item, index) => (
-            <ListItem button key={index} onClick={() => navigate(item.path)}>
+            <ListItem button key={index} onClick={() => navigate(item.path)}
+              sx={{borderBottom:'solid 0.01rem grey', borderRadius:'0.8rem', 
+                boxShadow: '0 4px 2px -2px rgba(0, 0, 0, 0.3)', // Sombra específicamente abajo
+              }}
+            >
               <ListItemIcon>{item.icon}</ListItemIcon>
               <ListItemText primary={item.text} />
             </ListItem>

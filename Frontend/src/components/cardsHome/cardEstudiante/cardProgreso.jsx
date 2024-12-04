@@ -12,7 +12,14 @@ function CardResumen() {
     <CardGeneral
         titulo = "Progreso del Proyecto"
         info = {<>
-          <Typography>El Sprint actual termina el: {localStorage.getItem('fechaLimiteSprint')} a las 23:59</Typography>
+        {inicio?
+          <>
+            <Typography>El Sprint Inicio el: {localStorage.getItem('fechaIniSprint')} a las 23:59.59</Typography>
+            <Typography>El Sprint actual termina el: {localStorage.getItem('fechaLimiteSprint')} a las 23:59</Typography>
+          </>
+          :
+          <Typography>El seguimiento iniciara: {localStorage.getItem('fechaLimiteEntregaPlanificacion')} a las 23:59</Typography>
+        }
         </>}
         buttons={<> 
         {!paso && inicio?<Button variant="contained" color="primary" fullWidth >

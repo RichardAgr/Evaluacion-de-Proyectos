@@ -17,7 +17,7 @@ const UserModal= lazy(() => import('../userModal/userModal'));
 
 function Header() {
   const [anchorEl, setAnchorEl] = useState(null);
-  const grupo = Number(localStorage.getItem('idGrupo'))!== -1
+  const grupo = Number(localStorage.getItem('idGrupo')) !== -1
   const [open, setOpen] = useState(false);
   const [openPerfil, setOpenPerfil] = useState(false);
   const cerrarPerfil = (openPerfil) => {

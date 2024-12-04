@@ -29,7 +29,7 @@ function CardResumen() {
         {idEmpresa!==-1?<Button variant="outlined" color="primary" fullWidth
           onClick= {() => navigate("/homeEstu/PublicarGrupoEmpresa")}
         >
-            71_PUBLICAR GRUPO EMPRESA
+            {empresaPublicada? 'Ver Empresa':'pu71_PUBLICAR GRUPO EMPRESA'}
         </Button>:<></>}
         </>}
     />
