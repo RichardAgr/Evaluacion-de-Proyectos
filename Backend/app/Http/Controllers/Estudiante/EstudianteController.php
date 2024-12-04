@@ -24,7 +24,6 @@ class EstudianteController extends Controller
         $existeRelacion = EstudiantesGrupos::where('idEstudiante', $request->idEstudiante)
                                             //->where('idGrupo', $request->idGrupo)
                                             ->exists();
-
         if ($existeRelacion) {
             return response()->json(['message' => 'Ya esta inscrito en un grupo.'], 400);
         }
@@ -41,7 +40,6 @@ class EstudianteController extends Controller
         }else{
             return response()->json(['message' => 'Password Incorrecta.'], status: 201 );
         }
-
     }
 
     public function obtenerEstudiantesPorGrupo(){
