@@ -44,7 +44,7 @@ const enviarClave = async (idGrupo, clave, idEstudiante) => {
 
 
 function GrupoDescripcion() {
-  const idGrupo = localStorage.getItem("idGrupo")
+  const idGrupo = localStorage.getItem("idGrupoQuieroInscribirme")
   const idEstudiante = localStorage.getItem("idEstudiante")
   const [codigo, setCodigo] = useState('');
   const [datos, setDatos] = useState(null); 
