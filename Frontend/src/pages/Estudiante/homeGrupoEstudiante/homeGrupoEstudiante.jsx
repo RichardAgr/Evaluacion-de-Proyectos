@@ -56,6 +56,8 @@ function HomeEstudiante() {
 
             localStorage.setItem("fechaLimiteSprint", response.fechaLimiteSprint)
             localStorage.setItem('fechaLimiteSemana', response.fechaLimiteSemana)
+            localStorage.setItem("fechaIniSprint", response.fechaIniSprint)
+            localStorage.setItem('fechaIniSemana', response.fechaIniSemana)
 
             localStorage.setItem("fechaEvaluacion", response.fechaEvaluacion);
             localStorage.setItem("tipoEvaluacion", response.tipoEvaluacion);
@@ -90,7 +92,7 @@ function HomeEstudiante() {
         {(aceptada!==0)?<CardProgreso></CardProgreso>:<></>} 
         <CardGrupoEmpresa></CardGrupoEmpresa>        
         {empresaPublicada?<CardPlanificacion></CardPlanificacion>:<></>}
-        {(aceptada!==0)?<CardTareas></CardTareas>:<></>}
+        {(aceptada!==0 )?<CardTareas></CardTareas>:<></>}
         <CardEvaluacion></CardEvaluacion>
         <CardListas></CardListas>
       </Container>
