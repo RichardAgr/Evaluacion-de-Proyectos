@@ -128,6 +128,7 @@ class joaquinController extends Controller{
         $empresa = Empresa::create([
             'nombreLargo'    => $request->nombreLargo,
             'nombreEmpresa'  => $request->nombreCorto,
+            'publicada'      => '0'
         ]);
 
         $empresa->estudiantes()->attach($request->estudiante);

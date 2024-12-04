@@ -317,7 +317,7 @@ export default function EditarPlanificacion({ planificacionData, idEmpresa }) {
           .map((key) => {
             const errors = responseDataSprint.errors[key];
             return errors
-              .map((error) => `${key}: ${translateError(error)}`)
+              .map((error) => `${translateError(error)} `)
               .join("\n");
           })
           .join("\n");

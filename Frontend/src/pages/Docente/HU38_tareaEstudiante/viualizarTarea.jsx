@@ -5,7 +5,6 @@ import {getTareaData} from "../../../api/validarTareas/tareas";// Ícono para ar
 
 function VisualizarTarea() {
     const [descripcion, setDescripcion] = useState("");
-    const [comentarioD, setComentario] = useState("");
     const [responsables, setResponsables] = useState([]);
     const [nombreTarea,setNombreTarea] = useState([]);
     const idTarea = localStorage.getItem("idTarea")
@@ -20,8 +19,7 @@ function VisualizarTarea() {
       const fetchTareaData = async () => {
         try {
           const data = await getTareaData(idTarea);
-          setDescripcion(data.textotarea);
-          setComentario(data.comentario);
+          setDescripcion(data.textoTarea);
           setResponsables(data.estudiantes);
           setNombreTarea(data.nombreTarea);
           setLoading(false);
@@ -70,13 +68,6 @@ function VisualizarTarea() {
             </div>
             <h3>Descripcion de la tarea</h3>
             <Rectangulo>{descripcion}</Rectangulo>
-
-            {comentarioD && ( // Condición para mostrar el comentario solo si existe
-              <>
-                <h3>Comentario del Docente</h3>
-                <Rectangulo>{comentarioD}</Rectangulo>
-              </>
-            )}
           </BaseUI> 
         </Fragment>
     );
