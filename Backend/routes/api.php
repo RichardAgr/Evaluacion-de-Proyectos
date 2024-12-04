@@ -51,6 +51,9 @@ Route::get('/estudiante/sprint/semana/{idSprint}',[SprintController::class, 'spr
 Route::get('/docente/listaEstudiantes', [GrupoController::class, 'obtenerEstudiantesPorGrupo']);
 //---Recibe las empresas del grupo del docente y del docente activo
 Route::get('/docente/obtenerEmpresasPorGrupoYDocente',[GrupoController::class, 'obtenerEmpresasPorGrupoYDocente']);
+Route::get('/docente/obtenerEmpresasPorGrupoYDocenteEstudiante',[GrupoController::class, 'obtenerEmpresasPorGrupoYDocenteEstudiante']);
+
+
 //-- sprints con toda su informacion y los entragables
 Route::get('/empresa/{idEmpresa}/sprintsEntregables', [EmpresaControll0er::class, 'getSprintsEntregables']);
 
