@@ -19,6 +19,7 @@ use App\Http\Controllers\joaquinController;
 use App\Http\Controllers\Estudiante\SesionEstudianteController;
 use App\Http\Controllers\Docente\SesionDocenteController;
 use App\Http\Controllers\Administrador\AdministradorController;
+use App\Http\Controllers\EvaluacionController;
 use App\Http\Controllers\EvaluacionesGrupoController;
 use App\Models\EvaluacionesGrupo;
 
@@ -119,6 +120,9 @@ Route::get('/testGuardarEntregables', [EntregablesController::class, 'testGuarda
 
 Route::get('/testConfigurarEvaluacion', [EvaluacionesGrupoController::class, 'testConfigurarEvaluacion']);
 
+//============================= EVALUACION ==============================
+
+Route::get('/getDatosParaEvaluar/{idEstudiante}', [EvaluacionController::class, 'getDatosParaEvaluar']);
 // ==================================   RUTAS POST =================================
 
 //============================= POST EVALUACION ==============================

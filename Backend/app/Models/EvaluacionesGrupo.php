@@ -25,4 +25,8 @@ class EvaluacionesGrupo extends Model
     {
         return $this->hasMany(Evaluacion::class, 'idEvaluacionesGrupo', 'idEvaluacionesGrupo');
     }
+    public function criterios()
+    {
+        return $this->hasMany(Criterio::class, 'idEvaluacionesGrupo', 'idEvaluacionesGrupo');
+    }
 }

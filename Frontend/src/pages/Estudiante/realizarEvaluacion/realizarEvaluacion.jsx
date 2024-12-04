@@ -21,7 +21,6 @@ const RealizarEvaluacion = () => {
     type: "",
     evaluatee: "",
     criteria: [],
-    maxScore: 0,
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState({
@@ -49,7 +48,6 @@ const RealizarEvaluacion = () => {
           { id: 3, description: "Teamwork", maxScore: 25 },
           { id: 4, description: "Problem Solving", maxScore: 20 },
         ],
-        maxScore: 100,
       };
       setEvaluationData(data);
       const initialScores = {};
@@ -80,7 +78,12 @@ const RealizarEvaluacion = () => {
   const handleSubmit = () => {
     // Here you would typically send the scores to your backend
     console.log("Submitting scores:", scores);
-    alert("Evaluation submitted successfully!");
+    setSnackbar({
+        open: true,
+        message: `Evaluacion realizada correctamente.`,
+        severity: "success",
+        autoHide: 60000,
+      });
   };
 
   return (
@@ -92,62 +95,69 @@ const RealizarEvaluacion = () => {
       loading={loading}
       error={error}
     >
-        <Paper elevation={3} style={{ padding: "20px", marginBottom: "20px" }}>
-          <Typography variant="h6">
-            Tipo de Evaluacion: {evaluationData.type}
-          </Typography>
-          <Typography variant="h6">
-            Evaluando a: {evaluationData.evaluatee}
-          </Typography>
-        </Paper>
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Criterios</TableCell>
-                <TableCell align="right">Nota Maxima</TableCell>
-                <TableCell align="right">Tu Calificacion</TableCell>
+      <Paper elevation={3} style={{ padding: "20px", marginBottom: "20px" }}>
+        <Typography variant="h6">
+          Tipo de Evaluacion: {evaluationData.type}
+        </Typography>
+        <Typography variant="h6">
+          Evaluando a: {evaluationData.evaluatee}
+        </Typography>
+      </Paper>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Criterios</TableCell>
+              <TableCell align="right">Nota Maxima</TableCell>
+              <TableCell align="right">Tu Calificacion</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {evaluationData.criteria.map((criterion) => (
+              <TableRow key={criterion.id}>
+                <TableCell>{criterion.description}</TableCell>
+                <TableCell align="right">{criterion.maxScore}</TableCell>
+                <TableCell align="right">
+                  <TextField
+                    type="number"
+                    value={scores[criterion.id]}
+                    onChange={(e) =>
+                      handleScoreChange(criterion.id, e.target.value)
+                    }
+                    inputProps={{
+                      min: 0,
+                      max: criterion.maxScore,
+                    }}
+                  />
+                </TableCell>
               </TableRow>
-            </TableHead>
-            <TableBody>
-              {evaluationData.criteria.map((criterion) => (
-                <TableRow key={criterion.id}>
-                  <TableCell>{criterion.description}</TableCell>
-                  <TableCell align="right">{criterion.maxScore}</TableCell>
-                  <TableCell align="right">
-                    <TextField
-                      type="number"
-                      value={scores[criterion.id]}
-                      onChange={(e) =>
-                        handleScoreChange(criterion.id, e.target.value)
-                      }
-                      inputProps={{
-                        min: 0,
-                        max: criterion.maxScore,
-                      }}
-                    />
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <Box
-          mt={3}
-          display="flex"
-          justifyContent="space-between"
-          alignItems="center"
-          sx={{mb:2}}
-        >
-          <Typography variant="h6">
-            Nota Total: {calculateTotalScore()} / {evaluationData.maxScore}
-          </Typography>
-          <Button variant="contained" color="primary" onClick={handleSubmit}>
-            Calificar Evaluacion
-          </Button>
-        </Box>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <Box
+        mt={3}
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        sx={{ mb: 2 }}
+      >
+        <Typography variant="h6">
+          Nota Total: {calculateTotalScore()} / 100
+        </Typography>
+        <Button variant="contained" color="primary" onClick={handleSubmit}>
+          Calificar Evaluacion
+        </Button>
+      </Box>
+      <InfoSnackbar
+        openSnackbar={snackbar.open}
+        setOpenSnackbar={(open) => setSnackbar({ ...snackbar, open })}
+        message={snackbar.message}
+        severity={snackbar.severity}
+      />
     </BaseUI>
   );
 };
 
 export default RealizarEvaluacion;
+

@@ -5,6 +5,7 @@ import Error from "../error/error";
 import ListaDefinitivaN from "../listaDefinitiva/listaDefinitivaN";
 import ListaConBuscador from "./listaConBuscador";
 import BaseUI from "../baseUI/baseUI";
+import { Typography } from "@mui/material";
 const columns = [
   {
     field: 'nombreEmpresa',
