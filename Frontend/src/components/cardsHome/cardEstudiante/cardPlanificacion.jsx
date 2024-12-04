@@ -22,7 +22,7 @@ function CardResumen() {
           </Typography>
         </>}
         buttons={<> 
-        {(aceptada !==1 && pasoFechaLimite) ? (
+        {(aceptada !==1 && !pasoFechaLimite) ? (
           <Button variant="contained" color="primary" fullWidth onClick={()=>navigate(`/modificarPlanificacion/empresa/${empresa}`)}>
             {tienePlanificacion ? "MODIFICAR PLANIFICACIÓN" : "CREAR PLANIFICACIÓN"}
           </Button>
@@ -32,7 +32,7 @@ function CardResumen() {
         >
           VIZUALIZAR PLANIFICACIONES
         </Button>}
-        {((aceptada===0 || aceptada!==1) && pasoFechaLimite && tienePlanificacion) ?
+        {((aceptada===0 || aceptada!==1) && !pasoFechaLimite && tienePlanificacion) ?
         <Button variant="contained" color="primary" 
           fullWidth
           onClick={()=>navigate(`/publicarPlanificacion/empresa/${empresa}`)}
