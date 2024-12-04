@@ -77,6 +77,9 @@ class EvaluacionController extends Controller
 
             $evaluacion = Evaluacion::findOrFail($validatedData['idEvaluacion']);
 
+            // Delete existing notaporcriterio rows for this evaluation
+            NotaPorCriterio::where('idEvaluacion', $validatedData['idEvaluacion'])->delete();
+
             //obtener todos los criterios
             $criterios = Criterio::where('idEvaluacionesGrupo', $evaluacion->idEvaluacionesGrupo)->get();
 
@@ -93,8 +96,8 @@ class EvaluacionController extends Controller
                 if ($nota > $criterio->rangoMaximo) {
                     throw new \Exception("La nota para el criterio '{$criterio->descripcion}' excede el rango máximo permitido.");
                 }
-            
-                // Update or create the nota for this criterio
+
+                // Create the nota for this criterio
                 $notaPorCriterio = new NotaPorCriterio();
                 $notaPorCriterio->idEvaluacion = $validatedData['idEvaluacion'];
                 $notaPorCriterio->idCriterio = $criterio->idCriterio;
@@ -104,11 +107,16 @@ class EvaluacionController extends Controller
                 $totalScore += $nota;
             }
 
+            // Update the total score for the evaluation
+            $evaluacion->notaTotal = $totalScore;
+            $evaluacion->save();
+
             // Commit the transaction
             DB::commit();
 
             return response()->json([
                 'message' => 'Evaluación realizada correctamente',
+                'notaTotal' => $totalScore
             ], 200);
         } catch (\Exception $e) {
             // If an error occurs, rollback the transaction

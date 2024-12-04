@@ -19,6 +19,7 @@ class CreateEvaluacionTable extends Migration
             $table->unsignedBigInteger('idEvaluadoEmpresa')->nullable();
             
             $table->time('horaEvaluacion')->nullable();
+            $table->integer('notaTotal')->nullable()->default(null);
 
             // * Llaves foráneas
             $table->foreign('idEvaluacionesGrupo')->references('idEvaluacionesGrupo')->on('evaluacionesgrupo');

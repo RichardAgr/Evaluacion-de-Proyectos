@@ -84,7 +84,7 @@ class EvaluacionesGrupoController extends Controller
 
         foreach ($estudiantes as $estudiante) {
             $evaluacionesGrupo->evaluaciones()->create([
-                'idEvaluadorEstudiante' => null,
+                'idEvaluadorEstudiante' => $estudiante->idEstudiante,
                 'idEvaluadoEstudiante' => $estudiante->idEstudiante,
                 'idEvaluadoEmpresa' => null,
                 'horaEvaluacion' => null,
