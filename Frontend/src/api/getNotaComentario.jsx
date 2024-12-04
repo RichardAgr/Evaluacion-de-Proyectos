@@ -1,7 +1,7 @@
 export const getNotaComentario = async (idPlanificacion) => {
   
     try {
-      const response = await fetch(`http://127.0.0.1:8000/api/planificacion/notaComentario/${idPlanificacion}`, {
+      const response = await fetch(`http://localhost:8000/api/planificacion/notaComentario/${idPlanificacion}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

@@ -168,7 +168,7 @@ function VisualizarSprint() {
                           <Box ml={1}>
                             {entregable.nombreArchivo ? (
                               <Link
-                                href={`http://127.0.0.1:8000/storage/archivos/${entregable.nombreArchivo}`}
+                                href={`http://localhost:8000/storage/archivos/${entregable.nombreArchivo}`}
                                 target="_blank"
                                 underline="hover"
                               >

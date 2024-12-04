@@ -1,6 +1,6 @@
 export const getSprintSemanasTareas = async (idSprint) => {
     try {
-        const response = await fetch(`http://127.0.0.1:8000/api/sprint/${idSprint}/semanas`, {
+        const response = await fetch(`http://localhost:8000/api/sprint/${idSprint}/semanas`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

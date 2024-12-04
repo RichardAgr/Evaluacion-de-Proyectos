@@ -10,7 +10,7 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 
 const getGrupoDescripcion = async (idGrupo) => {
   try {
-    const response = await fetch(`http://127.0.0.1:8000/api/estudiante/descripcionGrupo/${idGrupo}`, {credentials: 'include'});
+    const response = await fetch(`http://localhost:8000/api/estudiante/descripcionGrupo/${idGrupo}`, {credentials: 'include'});
     if (!response.ok) {
       throw new Error('Error al obtener la descripción');
     }
@@ -23,7 +23,7 @@ const getGrupoDescripcion = async (idGrupo) => {
 
 const enviarClave = async (idGrupo, clave, idEstudiante) => {
   try {
-    const response = await fetch(`http://127.0.0.1:8000/api/estudiante/asignarEstudiante`, {
+    const response = await fetch(`http://localhost:8000/api/estudiante/asignarEstudiante`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -44,7 +44,7 @@ const enviarClave = async (idGrupo, clave, idEstudiante) => {
 
 
 function GrupoDescripcion() {
-  const idGrupo = localStorage.getItem("idGrupo")
+  const idGrupo = localStorage.getItem("idGrupoQuieroInscribirme")
   const idEstudiante = localStorage.getItem("idEstudiante")
   const [codigo, setCodigo] = useState('');
   const [datos, setDatos] = useState(null); 

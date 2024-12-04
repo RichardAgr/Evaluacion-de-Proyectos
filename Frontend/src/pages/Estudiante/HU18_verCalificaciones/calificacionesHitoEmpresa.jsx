@@ -42,7 +42,7 @@ const NotaSprintTable = () => {
   const getNombreEmpresa = async (idEmpresa) => {
     setLoading(true);
     try {
-      const response = await fetch(`http://127.0.0.1:8000/api/nombreEmpresa/${idEmpresa}`,{credentials: 'include'});
+      const response = await fetch(`http://localhost:8000/api/nombreEmpresa/${idEmpresa}`,{credentials: 'include'});
       if (!response.ok) {
         throw new Error('Error al obtener los datos de la empresa');
       }
@@ -78,13 +78,11 @@ const NotaSprintTable = () => {
           <TableRow>
             <TableCell sx={{ width: 'calc(10vw + 5rem)'}}>Nombre Integrante</TableCell>
             {sprints.map((sprint) => {
-              const array = ((new Date()).toLocaleDateString()).split('/')
-              const formatoDate =  ""+array[2]+"-"+array[1]+"-"+array[0]
               const splitIni = (sprint.fechaIni).split('-')
               const splitFin = (sprint.fechaFin).split('-')
               const formatoIni = ""+splitIni[1]+"/"+splitIni[2]
               const formatoFin = ""+splitFin[1]+"/"+splitFin[2]
-              if(sprint.fechaFin <= formatoDate)
+              if(new Date(sprint.fechaFin) <= new Date())
               return <TableCell key={sprint.idSprint} align='center' sx={{ width: 'calc(5vw + 2rem)'}}>
                 Sprint {sprint.numeroSprint}
                 <div>
@@ -110,9 +108,7 @@ const NotaSprintTable = () => {
                 const nota = sprint.nota;
                 const notaText = nota === null ? 'N/A' : nota;
                 const notaColor = nota === null || nota >= 51 ? 'inherit' : 'red'; // Rojo si es menor a 51
-                const array = ((new Date()).toLocaleDateString()).split('/')
-                const formatoDate =  ""+array[2]+"-"+array[1]+"-"+array[0]
-                if(sprint.fechaFin <= formatoDate)
+                if(new Date(sprint.fechaFin) <= new Date())
                 return (
                   <TableCell 
                     key={sprint.idSprint} 

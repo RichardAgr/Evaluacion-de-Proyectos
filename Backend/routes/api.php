@@ -46,14 +46,17 @@ Route::get('/tarea/{idTarea}', [TareaController::class, 'obtenerTarea']);
 Route::get('/estudiante/gruposDocente', [GrupoController::class, 'obtenerTodosLosGrupos']);
 Route::get('/estudiante/descripcionGrupo/{idGrupo}', [GrupoController::class, 'getDescripcion']);
 Route::get('/estudiante/sprint/semana/{idSprint}',[SprintController::class, 'sprintsSemanas']);
+Route::get('/estudiante/obtenerEmpresasPorGrupoYDocenteEstudiante',[GrupoController::class, 'obtenerEmpresasPorGrupoYDocenteEstudiante']);
 
 //============================= GET DOCENTE ================================
 //---Recibe la lista de estudiantes de un grupo especifico del docente activo
 Route::get('/docente/listaEstudiantes', [GrupoController::class, 'obtenerEstudiantesPorGrupo']);
 //---Recibe las empresas del grupo del docente y del docente activo
 Route::get('/docente/obtenerEmpresasPorGrupoYDocente',[GrupoController::class, 'obtenerEmpresasPorGrupoYDocente']);
+
+
 //-- sprints con toda su informacion y los entragables
-Route::get('/empresa/{idEmpresa}/sprintsEntregables', [EmpresaControll0er::class, 'getSprintsEntregables']);
+Route::get('/empresa/{idEmpresa}/sprintsEntregables', [EmpresaController::class, 'getSprintsEntregables']);
 
 Route::get('/empresa/{idEmpresa}/semanasTareas', [EmpresaController::class, 'getSemanasTareas']);
 
@@ -217,7 +220,7 @@ Route::post('/crearCuentaDocente', [AdministradorController::class, 'crearDocent
 Route::get('/obtenerDatosDocente', [AdministradorController::class, 'obtenerDatosDocente']);
 Route::get('/obtenerDatosEstudiante', [AdministradorController::class, 'obtenerDatosEstudiante']);
 Route::put('/modificarDatosEstudiante', [AdministradorController::class, 'actualizarEstudiante']);
-Route::put('/modificarDatosDocente', [AdministradorController::class, 'actualizarDocente']);
+Route::post('/modificarDatosDocente', [AdministradorController::class, 'actualizarDocente']);
 
 
 

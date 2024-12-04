@@ -11,13 +11,16 @@ use Illuminate\Support\Facades\Hash;
 class RecuperarController extends Controller{
     public function recuperarContrasena(Request $request){
         try{   
+            //recibo los datos
             $validated = $request->validate([
                 'correo' => 'required|string|email',
                 'codigo' => 'required|string',
             ]);
+            //compruebo si existe algun usuario con ese correo
             $userE = Estudiante::where('email', $validated['correo'])->first();
             $userD = Docente::where('email', $validated['correo'])->first();
            if($userE){
+            //una vez verificado envio un email con el codigo
             Mail::raw('Usuario: '. $userE->nombreCuenta .', Su codigo de recuperacion es: '.$validated['codigo'], function ($message) use ($validated) {
                 $message->to($validated['correo'])
                         ->subject('Recuperar contraseña')  // Usamos el subject desde la entrada
@@ -41,6 +44,7 @@ class RecuperarController extends Controller{
             
             
         } catch (Exception $e) {
+            //en caso de error
             return response()->json([
                 'error' => 'Correo no enviado',
                 'mensaje' => $e->getMessage(),
@@ -49,12 +53,14 @@ class RecuperarController extends Controller{
     }
     public function cambiarContrasena(Request $request){
         try{
+            //recibo los datos
             $validated = $request->validate([
                 'contrasena' => 'required|string', 
                 'repetirContrasena' => 'required|string',
                 'id' => 'required|integer',
                 'role' => 'required|string'
             ]);
+            //compruebo la
             if ($validated['contrasena'] !== $validated['repetirContrasena']) {
                 return response()->json(['error' => 'Las contraseñas no coinciden.'], 400);
             }
