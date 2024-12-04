@@ -171,44 +171,69 @@ class AdministradorController extends Controller{
     
         return response()->json(['mensaje' => 'success'],200);
     }
-
-    public function actualizarDocente(Request $request){
+    public function actualizarDocente(Request $request)
+    {
+        // Validar los datos recibidos
         $request->validate([
             'contrasena' => 'required|string',
             'nombre' => 'sometimes|required|string',
             'primerApellido' => 'sometimes|required|string',
             'segundoApellido' => 'sometimes|required|string',
-            'email' => 'sometimes|required|email',
-            'nuevaContrasena' => 'sometimes|required|string|min:8|confirmed', 
+            'email' => 'sometimes|required|email|unique:docentes,email,' . session('docente.id'),
+            'nuevaContrasena' => 'sometimes|required|string|min:8',
+        ], [
+            'required' => 'El campo :attribute es obligatorio.',
+            'email' => 'El campo :attribute debe ser una dirección de correo válida.',
+            'unique' => 'El correo electrónico ya está registrado.',
         ]);
-
+    
         $docente = session('docente');
-
+    
         if (!$docente) {
             return response()->json(['error' => 'No se encontraron datos del usuario en la sesión'], 401);
         }
-
+    
         $userD = Docente::find($docente['id']);
-
+    
         if (!$userD) {
             return response()->json(['error' => 'Docente no encontrado en la base de datos'], 404);
         }
-
+    
         if (!Hash::check($request->contrasena, $userD->contrasena)) {
-            return response()->json(['mensaje' => 'Contraseña incorrecta'], 203);
+            return response()->json(['mensaje' => 'Contraseña incorrecta'], 401);
         }
-
-        if ($request->has('nuevaContrasena')) {
-            $userD->contrasena = Hash::make($request->nuevaContrasena); 
+    
+        // Filtrar los campos que están siendo enviados por la solicitud
+        $nuevosDatos = $request->only([
+            'nombre',
+            'primerApellido',
+            'segundoApellido',
+            'email',
+            'nuevaContrasena',
+        ]);
+    
+        // Filtrar solo los campos que han cambiado
+        $actualizar = [];
+        foreach ($nuevosDatos as $campo => $valor) {
+            if ($campo === 'nuevaContrasena') {
+                // Si la nueva contraseña es diferente, agregarla al campo de actualización
+                $userD->contrasena = Hash::make($valor);
+            } else {
+                if ($userD->$campo != $valor) {
+                    $actualizar[$campo] = $valor;
+                }
+            }
         }
-
-        $userD->nombreDocente = $request->nombre ?? $userD->nombreDocente;
-        $userD->primerApellido = $request->primerApellido ?? $userD->primerApellido;
-        $userD->segundoApellido = $request->segundoApellido ?? $userD->segundoApellido;
-        $userD->email = $request->email ?? $userD->email;
-
-        $userD->save();
-
+    
+        // Si no hay campos para actualizar, devolver una respuesta con error
+        if (empty($actualizar) && !isset($userD->contrasena)) {
+            return response()->json(['error' => 'No hay cambios para actualizar.'], 400);
+        }
+    
+        // Actualizar solo los campos que han cambiado
+        $userD->update($actualizar);
+    
+        // Actualizar la sesión del docente
         session()->put('docente', [
             'id' => $userD->idDocente,
             'nombre' => $userD->nombreDocente,
@@ -216,7 +241,18 @@ class AdministradorController extends Controller{
             'segundoApellido' => $userD->segundoApellido,
             'role' => 'docente',
         ]);
-
-        return response()->json(['mensaje' => 'success'], 200);
+    
+        return response()->json([
+            'mensaje' => 'Datos actualizados correctamente',
+            'docente' => [
+                'id' => $userD->idDocente,
+                'nombre' => $userD->nombreDocente,
+                'primerApellido' => $userD->primerApellido,
+                'segundoApellido' => $userD->segundoApellido,
+                'email' => $userD->email,
+            ],
+        ], 200);
     }
+    
+
 }

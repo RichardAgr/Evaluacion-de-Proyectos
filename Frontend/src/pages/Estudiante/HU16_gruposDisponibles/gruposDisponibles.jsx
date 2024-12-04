@@ -6,7 +6,7 @@ import { Box, styled } from "@mui/material";
 
 const getGruposDocentes = async () => {
   try {
-    const response = await fetch("http://127.0.0.1:8000/api/estudiante/gruposDocente", {
+    const response = await fetch("http://localhost:8000/api/estudiante/gruposDocente", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -31,7 +31,7 @@ const getGruposDocentes = async () => {
 
 const estaMatriculado = async (idEstudiante) => {
   try {
-    const response = await fetch(`http://127.0.0.1:8000/api/estaMatriculado/${idEstudiante}`, {
+    const response = await fetch(`http://localhost:8000/api/estaMatriculado/${idEstudiante}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -77,7 +77,7 @@ function GruposDocentes() {
   }, [idEstudiante]);
 
   const handleMatricularse = (grupo) => {
-    localStorage.setItem("idGrupo", grupo.idGrupo)
+    localStorage.setItem("idGrupoQuieroInscribirme", grupo.idGrupo)
     const url = `/GruposDocente/incribirse`; 
     navigate(url); 
   };

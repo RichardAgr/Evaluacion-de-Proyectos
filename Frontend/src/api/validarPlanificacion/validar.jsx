@@ -4,7 +4,11 @@ export const validar = async (idEmpresa) => {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ idEmpresa }),
+    body: JSON.stringify({ 
+      idEmpresa:idEmpresa,
+      fechaIni:localStorage.getItem('fechaLimiteEntregaPlanificacion'),
+      fechaFin:localStorage.getItem('fechaFinPlanificacion')
+    }),
     credentials: 'include'
   });
 

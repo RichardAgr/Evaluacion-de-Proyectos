@@ -2,7 +2,7 @@
 export const getNombreEmpresa = async (idEmpresa) => {
   
     try {
-      const response = await fetch(`http://127.0.0.1:8000/api/nombreEmpresa/${idEmpresa}`, {
+      const response = await fetch(`http://localhost:8000/api/nombreEmpresa/${idEmpresa}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

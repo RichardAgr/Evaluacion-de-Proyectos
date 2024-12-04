@@ -43,7 +43,7 @@ const CrearCuentaEstudiante = () => {
 
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
-      const response = await fetch("http://127.0.0.1:8000/api/crearCuentaEstudiante", {
+      const response = await fetch("http://localhost:8000/api/crearCuentaEstudiante", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

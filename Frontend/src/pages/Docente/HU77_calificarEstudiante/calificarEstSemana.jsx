@@ -52,7 +52,7 @@ const SeguimientoSemanal = () => {
 
   const getNombreEmpresa = async () => {
     try {
-        const response = await fetch(`http://127.0.0.1:8000/api/empresa/${idEmpresa}`, {
+        const response = await fetch(`http://localhost:8000/api/empresa/${idEmpresa}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -93,14 +93,14 @@ const SeguimientoSemanal = () => {
                   <CalendarTodayIcon sx={{ mr: 1 }} />
                   <Typography variant="body1">
                     <strong>Fecha de Inicio Semana:</strong>{" "}
-                    {new Date(data2?.fechaIni).toLocaleDateString()} a las 00:00
+                    {data2?.fechaIni} a las 00:00
                   </Typography>
                 </Box>
                 <Box display="flex" alignItems="center" m={2}>
                   <CalendarTodayIcon sx={{ mr: 1 }} />
                   <Typography variant="body1">
                     <strong>Fecha de Fin Semana:</strong>{" "}
-                    {new Date(data2?.fechaFin).toLocaleDateString()} a las 23:59
+                    {data2?.fechaFin} a las 23:59
                   </Typography>
                 </Box>
               </Box>

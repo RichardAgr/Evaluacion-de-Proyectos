@@ -51,8 +51,8 @@ class SesionEstudianteController extends Controller
 
         $planificacion = Planificacion::where('idEmpresa', $idEmpresa)->first();
         $idPlanificacion = $planificacion ? $planificacion->idPlanificacion : -1;
-        $aceptada = $planificacion ? $planificacion->aceptada : 0;
-        $publicada = $planificacion ? $planificacion->publicada : 0;
+        $aceptada = $planificacion ? (($planificacion->aceptada)!==null? $planificacion->aceptada:0) : 0;
+        $publicada = $planificacion ? (($planificacion->publicada)!==null? $planificacion->publicada:0) : 0;
 
         $idSprint = -1;
         $sprint = Sprint::where('idPlanificacion', $idPlanificacion)
@@ -60,9 +60,11 @@ class SesionEstudianteController extends Controller
                         ->whereDate('fechaFin', '>=', $now)
                         ->first();
         $fechaLimiteSprint = '';
+        $fechaIniSprint = '';
         if ($sprint) {
             $idSprint = $sprint->idSprint;
             $fechaLimiteSprint = $sprint->fechaFin;
+            $fechaIniSprint = $sprint->fechaIni;
         }
     
         // Validar semana
@@ -73,9 +75,11 @@ class SesionEstudianteController extends Controller
                         ->where('idPlanificacion', $idPlanificacion)
                         ->first();
         $fechaLimiteSemana = '';
+        $fechaIniSemana = '';
         if ($semana) {
             $idSemana = $semana->idSemana;
             $fechaLimiteSemana = $semana->fechaFin;
+            $fechaIniSemana = $semana->fechaIni;
         }
     
         return response()->json([
@@ -95,6 +99,8 @@ class SesionEstudianteController extends Controller
             'fechaFinPlanificacion' => $fechaFinPlanificacion,
             'fechaFinGestion' => $fechaFinGestion,
             'gestion' => $gestion,
+            'fechaIniSprint' => $fechaIniSprint,
+            'fechaIniSemana' => $fechaIniSemana,
             'fechaLimiteSprint' => $fechaLimiteSprint,
             'fechaLimiteSemana' => $fechaLimiteSemana,
             'tipoEvaluacion' => $evaluacionGrupo?$evaluacionGrupo->tipoEvaluacion:'1',

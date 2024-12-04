@@ -1,7 +1,7 @@
 export const getSprintSemanas = async (idSprint) => {
   try {
     const response = await fetch(
-      `http://127.0.0.1:8000/api/estudiante/sprint/semana/${idSprint}`,
+      `http://localhost:8000/api/estudiante/sprint/semana/${idSprint}`,
       {
         method: "GET",
         headers: {
@@ -26,7 +26,7 @@ export const getSprintSemanas = async (idSprint) => {
 export const actualizarSprint = async (idSprint, comentario, nota) => {
   try {
     const response = await fetch(
-      `http://127.0.0.1:8000/api/sprint/${idSprint}/actualizar`,
+      `http://localhost:8000/api/sprint/${idSprint}/actualizar`,
       {
         method: "POST",
         headers: {
@@ -55,7 +55,7 @@ export const actualizarSprint = async (idSprint, comentario, nota) => {
 export const aceptarEntregables = async (aceptados) => {
   try {
     const response = await fetch(
-      `http://127.0.0.1:8000/api/aceptarEntregables`,
+      `http://localhost:8000/api/aceptarEntregables`,
       {
         method: "POST",
         headers: {
@@ -81,7 +81,7 @@ export const aceptarEntregables = async (aceptados) => {
 export const getSprintSemanasTareas = async (idEmpresa) => {
   try {
     const response = await fetch(
-      `http://127.0.0.1:8000/api/empresa/${idEmpresa}/sprintsSemanasTareas`,
+      `http://localhost:8000/api/empresa/${idEmpresa}/sprintsSemanasTareas`,
       {
         method: "GET",
         headers: {
