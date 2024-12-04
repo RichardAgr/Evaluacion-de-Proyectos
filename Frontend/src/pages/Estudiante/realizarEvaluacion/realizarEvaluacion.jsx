@@ -15,7 +15,10 @@ import {
 } from "@mui/material";
 import InfoSnackbar from "../../../components/infoSnackbar/infoSnackbar";
 import BaseUI from "../../../components/baseUI/baseUI";
-import { getDatosParaEvaluar } from "../../../api/realizarEvaluacion/realizarEvaluacion";
+import {
+  evaluar,
+  getDatosParaEvaluar,
+} from "../../../api/realizarEvaluacion/realizarEvaluacion";
 
 const RealizarEvaluacion = () => {
   const [evaluationData, setEvaluationData] = useState({
@@ -23,6 +26,7 @@ const RealizarEvaluacion = () => {
     fechaEvaluacion: "",
     evaluado: "",
     criterios: [],
+    idEvaluacion: null,
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState({
@@ -35,8 +39,7 @@ const RealizarEvaluacion = () => {
     message: "",
     severity: "info",
   });
-  const [scores, setScores] = useState({});
-  console.log(evaluationData);
+  const [notas, setNotas] = useState({});
 
   useEffect(() => {
     const fetchData = async () => {
@@ -44,7 +47,6 @@ const RealizarEvaluacion = () => {
         const idEstudiante = localStorage.getItem("idEstudiante");
         const response = await getDatosParaEvaluar(idEstudiante);
 
-        console.log(response); // Verifica que la respuesta es correcta
         if (response.error) {
           setError({
             error: true,
@@ -55,13 +57,13 @@ const RealizarEvaluacion = () => {
           // Establece los datos de evaluación
           setEvaluationData(response);
 
-          // Inicializa los scores con los criterios de la respuesta
+          // Inicializa las notas con los criterios de la respuesta
           const initialScores = {};
           response.criterios.forEach((criterio) => {
             initialScores[criterio.id] = 0;
           });
 
-          setScores(initialScores);
+          setNotas(initialScores);
           setLoading(false);
         }
       } catch (error) {
@@ -84,7 +86,7 @@ const RealizarEvaluacion = () => {
       Math.max(0, parseInt(value, 10) || 0),
       criterio ? criterio.rangoMaximo : 0
     );
-    setScores((prevScores) => ({
+    setNotas((prevScores) => ({
       ...prevScores,
       [id]: newValue,
     }));
@@ -92,22 +94,46 @@ const RealizarEvaluacion = () => {
 
   const calculateTotalScore = () => {
     return evaluationData.criterios.reduce(
-      (sum, criterio) => sum + (scores[criterio.id] || 0),
+      (sum, criterio) => sum + (notas[criterio.id] || 0),
       0
     );
   };
 
-  const handleSubmit = () => {
-    // Here you would typically send the scores to your backend
-    console.log("Submitting scores:", scores);
-    setSnackbar({
-      open: true,
-      message: `Evaluacion realizada correctamente.`,
-      severity: "success",
-      autoHide: 60000,
-    });
-  };
+  const handleSubmit = async () => {
+    const datosEvaluar = {
+      idEvaluacion: evaluationData.idEvaluacion,
+      notas: notas,
+    };
+    console.log("datos enviados:", datosEvaluar);
+    try {
+      const respuesta = await evaluar(datosEvaluar);
+      console.log("Respuesta de la evaluación:", respuesta);
 
+      if (respuesta.error) {
+        setSnackbar({
+          open: true,
+          message: respuesta.message || "Error al realizar la evaluación",
+          severity: "error",
+          autoHide: 60000,
+        });
+      } else {
+        setSnackbar({
+          open: true,
+          message: respuesta.message || "Evaluación realizada correctamente.",
+          severity: "success",
+          autoHide: 60000,
+        });
+      }
+    } catch (error) {
+      console.error("Error al enviar la evaluación:", error);
+      setSnackbar({
+        open: true,
+        message: error.message || "Error al realizar la evaluación",
+        severity: "error",
+        autoHide: 60000,
+      });
+    }
+  };
   return (
     <BaseUI
       titulo={"REALIZAR EVALUACION"}
@@ -148,7 +174,7 @@ const RealizarEvaluacion = () => {
                   <TableCell align="right">
                     <TextField
                       type="number"
-                      value={scores[criterio.id] || 0}
+                      value={notas[criterio.id] || 0}
                       onChange={(e) =>
                         handleScoreChange(criterio.id, e.target.value)
                       }
