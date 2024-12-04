@@ -460,7 +460,7 @@ class PlanificacionController extends Controller
 
             // Responder con éxito
             return response()->json([
-                'message' => 'Planificación aceptada con éxito y semanas generadas',
+                'message' => 'Planificación aceptada con éxito',
                 'planificacion' => $planificacion,
             ]);
         }
