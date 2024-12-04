@@ -5,7 +5,6 @@ import {getTareaData} from "../../../api/validarTareas/tareas";// Ícono para ar
 
 function VisualizarTarea() {
     const [descripcion, setDescripcion] = useState("");
-    const [comentarioD, setComentario] = useState("");
     const [responsables, setResponsables] = useState([]);
     const [nombreTarea,setNombreTarea] = useState([]);
     const idTarea = localStorage.getItem("idTarea")
@@ -21,7 +20,6 @@ function VisualizarTarea() {
         try {
           const data = await getTareaData(idTarea);
           setDescripcion(data.textoTarea);
-          setComentario(data.comentario);
           setResponsables(data.estudiantes);
           setNombreTarea(data.nombreTarea);
           setLoading(false);
