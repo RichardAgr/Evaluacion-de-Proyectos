@@ -166,6 +166,7 @@ const FormularioFechas = () => {
                 autoHide: 6000,
             });
             obtenerFechas()
+            setCuadroDialogo(false);
         } catch (error) {
             setSnackbar({
                 open: true,
