@@ -20,5 +20,9 @@ class EvaluacionesGrupo extends Model
     {
         return $this->belongsTo(Grupo::class, 'idGrupo', 'idGrupo');
     }
-    
+    // * Relacion con la tabla Evaluacion (tiene varios)
+    public function evaluaciones()
+    {
+        return $this->hasMany(Evaluacion::class, 'idEvaluacionesGrupo', 'idEvaluacionesGrupo');
+    }
 }

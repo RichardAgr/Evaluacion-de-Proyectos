@@ -34,9 +34,9 @@ class Evaluacion extends Model
      */
     protected $fillable = [
         'idEvaluacionesGrupo',
-        'idEvaluadorEmpresa',
         'idEvaluadorEstudiante',
         'idEvaluadoEstudiante',
+        'idEvaluadoEmpresa',
         'tipoEvaluacion',
         'horaEvaluacion',
     ];

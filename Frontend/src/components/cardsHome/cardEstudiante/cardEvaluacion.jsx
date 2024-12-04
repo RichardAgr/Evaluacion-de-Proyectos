@@ -5,6 +5,9 @@ function CardEvaluacion() {
   const navigate = useNavigate();
   const fechaEvaluacion = localStorage.getItem("fechaEvaluacion");
   const tipoEvaluacion = localStorage.getItem("tipoEvaluacion");
+  console.log(fechaEvaluacion);
+  const sePuedeEvaluar = fechaEvaluacion !== null && new Date() <= new Date(fechaEvaluacion);
+
   const textoTipoEvaluacion = (tipo) => {
     switch (tipo) {
       case "evaluacionPares":
@@ -24,8 +27,10 @@ function CardEvaluacion() {
           {fechaEvaluacion !== "undefined" && fechaEvaluacion !== null && (
             <Typography>Fecha de evaluacion: {fechaEvaluacion}</Typography>
           )}
-          {tipoEvaluacion !== "undefined" && tipoEvaluacion !== null && (
+          {tipoEvaluacion !== "undefined" && tipoEvaluacion !== null ? (
             <Typography>Tipo de evaluacion: {textoTipoEvaluacion(tipoEvaluacion)}</Typography>
+          ): (
+            <Typography>El docente aún no definió la evaluación</Typography>
           )}
         </Box>
       </InfoRow>
@@ -35,6 +40,7 @@ function CardEvaluacion() {
           color="primary"
           fullWidth
           onClick={() => navigate("/realizarEvaluacion")}
+          disabled={!sePuedeEvaluar}
         >
           REALIZAR EVALUACION
         </Button>
