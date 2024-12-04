@@ -125,21 +125,82 @@ const FormularioFechas = () => {
     }, []);
 
     const esquemaValidacion = Yup.object().shape({
-        fechaIniGestion: Yup.date().required('Requerido'),
+        fechaIniGestion: Yup.date()
+            .required('Requerido'),
         fechaLimiteEntregaEmpresa: Yup.date()
             .required('Requerido')
-            .min(Yup.ref('fechaIniGestion'), 'Debe ser mayor o igual a la fecha de inicio de gestión.'),
+            .min(
+                Yup.ref('fechaIniGestion'),
+                'Debe ser mayor o igual a la fecha de inicio de gestión.'
+            )
+            .test(
+                'intervalo-7-dias',
+                'Debe haber al menos 7 días entre la fecha de inicio de gestión y esta fecha.',
+                function (value) {
+                    const fechaIniGestion = this.resolve(Yup.ref('fechaIniGestion'));
+                    return (
+                        value && fechaIniGestion && 
+                        new Date(value).getTime() >= new Date(fechaIniGestion).getTime() + 7 * 24 * 60 * 60 * 1000
+                    );
+                }
+            ),
         fechaLimiteEntregaPlanificacion: Yup.date()
             .required('Requerido')
-            .min(Yup.ref('fechaLimiteEntregaEmpresa'), 'Debe ser mayor o igual a la fecha límite de entrega de empresas.'),
+            .min(
+                Yup.ref('fechaLimiteEntregaEmpresa'),
+                'Debe ser mayor o igual a la fecha límite de entrega de empresas.'
+            )
+            .test(
+                'intervalo-7-dias',
+                'Debe haber al menos 7 días entre la fecha límite de entrega de empresas y esta fecha.',
+                function (value) {
+                    const fechaLimiteEntregaEmpresa = this.resolve(Yup.ref('fechaLimiteEntregaEmpresa'));
+                    return (
+                        value && fechaLimiteEntregaEmpresa && 
+                        new Date(value).getTime() >= new Date(fechaLimiteEntregaEmpresa).getTime() + 7 * 24 * 60 * 60 * 1000
+                    );
+                }
+            ),
         fechaFinPlanificacion: Yup.date()
             .required('Requerido')
-            .min(Yup.ref('fechaLimiteEntregaPlanificacion'), 'Debe ser mayor o igual a la fecha límite de entrega de planificación.')
-            .max(Yup.ref('fechaFinGestion'), 'Debe ser menor o igual a la fecha final de gestión.'),
+            .min(
+                Yup.ref('fechaLimiteEntregaPlanificacion'),
+                'Debe ser mayor o igual a la fecha límite de entrega de planificación.'
+            )
+            .max(
+                Yup.ref('fechaFinGestion'),
+                'Debe ser menor o igual a la fecha final de gestión.'
+            )
+            .test(
+                'intervalo-7-dias',
+                'Debe haber al menos 7 días entre la fecha límite de entrega de planificación y esta fecha.',
+                function (value) {
+                    const fechaLimiteEntregaPlanificacion = this.resolve(Yup.ref('fechaLimiteEntregaPlanificacion'));
+                    return (
+                        value && fechaLimiteEntregaPlanificacion && 
+                        new Date(value).getTime() >= new Date(fechaLimiteEntregaPlanificacion).getTime() + 7 * 24 * 60 * 60 * 1000
+                    );
+                }
+            ),
         fechaFinGestion: Yup.date()
             .required('Requerido')
-            .min(Yup.ref('fechaFinPlanificacion'), 'Debe ser mayor o igual a la fecha final de planificación.'),
+            .min(
+                Yup.ref('fechaFinPlanificacion'),
+                'Debe ser mayor o igual a la fecha final de planificación.'
+            )
+            .test(
+                'intervalo-7-dias',
+                'Debe haber al menos 7 días entre la fecha final de planificación y esta fecha.',
+                function (value) {
+                    const fechaFinPlanificacion = this.resolve(Yup.ref('fechaFinPlanificacion'));
+                    return (
+                        value && fechaFinPlanificacion && 
+                        new Date(value).getTime() >= new Date(fechaFinPlanificacion).getTime() + 7 * 24 * 60 * 60 * 1000
+                    );
+                }
+            ),
     });
+    
 
     const manejarSubmit = async (valores) => {
         if (!verificarFechasCambiadas(valores)) {
