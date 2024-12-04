@@ -1,7 +1,7 @@
 export const getEmpresaData = async (idEmpresa) => {
   try {
     const response = await fetch(
-      `http://127.0.0.1:8000/api/empresa/${idEmpresa}`,
+      `http://localhost:8000/api/empresa/${idEmpresa}`,
       {
         method: "GET",
         headers: {
@@ -26,7 +26,7 @@ export const getEmpresaData = async (idEmpresa) => {
 export const getEmpresaCalificaciones = async (idEmpresa) => {
   try {
     const response = await fetch(
-      `http://127.0.0.1:8000/api/empresas/notasSprint/${idEmpresa}`,
+      `http://localhost:8000/api/empresas/notasSprint/${idEmpresa}`,
       {
         method: "GET",
         headers: {
@@ -51,7 +51,7 @@ export const getEmpresaCalificaciones = async (idEmpresa) => {
 export const getSprintsEntregables = async (idEmpresa) => {
   try {
     const response = await fetch(
-      `http://127.0.0.1:8000/api/empresa/${idEmpresa}/sprintsEntregables`,
+      `http://localhost:8000/api/empresa/${idEmpresa}/sprintsEntregables`,
       {
         method: "GET",
         headers: {
@@ -76,7 +76,7 @@ export const getSprintsEntregables = async (idEmpresa) => {
 export const getSprintConEntregables = async (idSprint) => {
   try {
     const response = await fetch(
-      `http://127.0.0.1:8000/api/empresa/sprintConEntregables/${idSprint}`,
+      `http://localhost:8000/api/empresa/sprintConEntregables/${idSprint}`,
       {
         method: "GET",
         headers: {
@@ -101,7 +101,7 @@ export const getSprintConEntregables = async (idSprint) => {
 export const getSemanasTareas = async (idEmpresa) => {
   try {
     const response = await fetch(
-      `http://127.0.0.1:8000/api/empresa/${idEmpresa}/semanasTareas`,
+      `http://localhost:8000/api/empresa/${idEmpresa}/semanasTareas`,
       {
         method: "GET",
         headers: {
@@ -128,7 +128,7 @@ export const getSemanasTareas = async (idEmpresa) => {
 export const getSemanaActualTareas= async (idEmpresa) => {
   try {
     const response = await fetch(
-      `http://127.0.0.1:8000/api/empresa/${idEmpresa}/sprintSemanaActualTareas`,
+      `http://localhost:8000/api/empresa/${idEmpresa}/sprintSemanaActualTareas`,
       {
         method: "GET",
         headers: {
@@ -155,7 +155,7 @@ export const getSemanaActualTareas= async (idEmpresa) => {
 export const getEmpresasPorGrupo = async (idGrupo) => {
   try {
     const response = await fetch(
-      `http://127.0.0.1:8000/api/grupo/${idGrupo}/empresas`,
+      `http://localhost:8000/api/grupo/${idGrupo}/empresas`,
       {
         method: "GET",
         headers: {
@@ -180,7 +180,7 @@ export const getEmpresasPorGrupo = async (idGrupo) => {
 export const getSprintsYEstudiantesPorEmpresa = async (idEmpresa) => {
   try {
     const response = await fetch(
-      `http://127.0.0.1:8000/api/empresa/${idEmpresa}/sprints-estudiantes`,
+      `http://localhost:8000/api/empresa/${idEmpresa}/sprints-estudiantes`,
       {
         method: "GET",
         headers: {

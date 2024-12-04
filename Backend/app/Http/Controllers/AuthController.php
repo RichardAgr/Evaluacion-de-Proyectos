@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Estudiante;
 use App\Models\Docente;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Administrador;
@@ -14,9 +13,8 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $credentials = $request->only('nombreCuenta', 'contrasena');
-        $userE = Estudiante::where('nombreCuenta', $credentials['nombreCuenta'])->first();
-        $userD = Docente::where('nombreCuenta', $credentials['nombreCuenta'])->first();
-       
+        $userE = Estudiante::whereRaw('BINARY nombreCuenta = ?', [$credentials['nombreCuenta']])->first();
+        $userD = Docente::whereRaw('BINARY nombreCuenta = ?', [$credentials['nombreCuenta']])->first();
         if ($userE) {
             if (Hash::check($credentials['contrasena'], $userE->contrasena)) {
                 // Almacenamos los datos del estudiante en la sesión manualmente
@@ -65,8 +63,8 @@ class AuthController extends Controller
     public function loginAdmin(Request $request){
         $credentials = $request->only('nombreCuenta', 'contrasena');
 
-        $userA = Administrador::where('nombreCuenta', $credentials['nombreCuenta'])->first();
-        if($userA) {
+        $userA = Administrador::whereRaw('BINARY nombreCuenta = ?', [$credentials['nombreCuenta']])->first();
+       if($userA) {
             if (Hash::check($credentials['contrasena'], $userA->contrasena)) {
                 session()->put('administrador', [
                     'id' => $userA->idAdministrador,
