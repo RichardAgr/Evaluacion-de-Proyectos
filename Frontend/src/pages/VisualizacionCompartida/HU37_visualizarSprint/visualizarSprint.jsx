@@ -205,25 +205,6 @@ function VisualizarSprint() {
               </Table>
             </TableContainer>
 
-            <Box sx={{ mt: 3, display: "flex", justifyContent: "left" }}>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={handleVerTareas}
-                sx={{
-                  fontWeight: "bold",
-                  px: 4,
-                  py: 1,
-                  borderRadius: 2,
-                  boxShadow: 2,
-                  "&:hover": {
-                    boxShadow: 4,
-                  },
-                }}
-              >
-                Ver Tareas
-              </Button>
-            </Box>
           </>
         )}
       </Container>
