@@ -45,18 +45,25 @@ const RealizarEvaluacion = () => {
         const response = await getDatosParaEvaluar(idEstudiante);
 
         console.log(response); // Verifica que la respuesta es correcta
+        if (response.error) {
+          setError({
+            error: true,
+            errorMessage: "Error al cargar los datos de evaluación",
+            errorDetails: response.error,
+          });
+        } else {
+          // Establece los datos de evaluación
+          setEvaluationData(response);
 
-        // Establece los datos de evaluación
-        setEvaluationData(response);
+          // Inicializa los scores con los criterios de la respuesta
+          const initialScores = {};
+          response.criterios.forEach((criterio) => {
+            initialScores[criterio.id] = 0;
+          });
 
-        // Inicializa los scores con los criterios de la respuesta
-        const initialScores = {};
-        response.criterios.forEach((criterio) => {
-          initialScores[criterio.id] = 0;
-        });
-
-        setScores(initialScores);
-        setLoading(false);
+          setScores(initialScores);
+          setLoading(false);
+        }
       } catch (error) {
         console.error("Error al obtener datos:", error);
         setError({
@@ -84,8 +91,9 @@ const RealizarEvaluacion = () => {
   };
 
   const calculateTotalScore = () => {
-    return evaluationData.criterios.reduce((sum, criterio) => 
-      sum + (scores[criterio.id] || 0), 0
+    return evaluationData.criterios.reduce(
+      (sum, criterio) => sum + (scores[criterio.id] || 0),
+      0
     );
   };
 
@@ -119,7 +127,7 @@ const RealizarEvaluacion = () => {
             : "Evaluación de Pares"}
         </Typography>
         <Typography variant="h6">
-          Evaluando a: {evaluationData.evaluado ? evaluationData.evaluado.nombre : ''}
+          Evaluando a: {evaluationData.evaluado ? evaluationData.evaluado : ""}
         </Typography>
       </Paper>
       <TableContainer component={Paper}>
@@ -132,25 +140,26 @@ const RealizarEvaluacion = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {evaluationData.criterios && evaluationData.criterios.map((criterio) => (
-              <TableRow key={criterio.id}>
-                <TableCell>{criterio.descripcion}</TableCell>
-                <TableCell align="right">{criterio.rangoMaximo}</TableCell>
-                <TableCell align="right">
-                  <TextField
-                    type="number"
-                    value={scores[criterio.id] || 0}
-                    onChange={(e) =>
-                      handleScoreChange(criterio.id, e.target.value)
-                    }
-                    inputProps={{
-                      min: 0,
-                      max: criterio.rangoMaximo,
-                    }}
-                  />
-                </TableCell>
-              </TableRow>
-            ))}
+            {evaluationData.criterios &&
+              evaluationData.criterios.map((criterio) => (
+                <TableRow key={criterio.id}>
+                  <TableCell>{criterio.descripcion}</TableCell>
+                  <TableCell align="right">{criterio.rangoMaximo}</TableCell>
+                  <TableCell align="right">
+                    <TextField
+                      type="number"
+                      value={scores[criterio.id] || 0}
+                      onChange={(e) =>
+                        handleScoreChange(criterio.id, e.target.value)
+                      }
+                      inputProps={{
+                        min: 0,
+                        max: criterio.rangoMaximo,
+                      }}
+                    />
+                  </TableCell>
+                </TableRow>
+              ))}
           </TableBody>
         </Table>
       </TableContainer>
@@ -179,4 +188,3 @@ const RealizarEvaluacion = () => {
 };
 
 export default RealizarEvaluacion;
-
