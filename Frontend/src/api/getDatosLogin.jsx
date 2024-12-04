@@ -22,6 +22,8 @@ export const getOriginDocente = async () => {
       localStorage.setItem("fechaFinGestion", response.fechaFinGestion);
       localStorage.setItem('numEstudiantes', response.numEstudiantes);
       localStorage.setItem('numEmpresas', response.numEmpresas);
+      localStorage.setItem("fechaEvaluacion", response.fechaEvaluacion);
+      localStorage.setItem("tipoEvaluacion", response.tipoEvaluacion);
     } catch (error) {
       console.error("Error:", error);
     }

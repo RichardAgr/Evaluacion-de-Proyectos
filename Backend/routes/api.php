@@ -19,6 +19,8 @@ use App\Http\Controllers\joaquinController;
 use App\Http\Controllers\Estudiante\SesionEstudianteController;
 use App\Http\Controllers\Docente\SesionDocenteController;
 use App\Http\Controllers\Administrador\AdministradorController;
+use App\Http\Controllers\EvaluacionesGrupoController;
+use App\Models\EvaluacionesGrupo;
 
 use App\Http\Controllers\RecuperarController;
 
@@ -60,7 +62,6 @@ Route::get('/grupo/{idGrupo}/empresas', [GrupoController::class, 'getEmpresasPor
 Route::get('/empresa/{idEmpresa}/sprints-estudiantes', [EmpresaController::class, 'obtenerSprintsYEstudiantes']);
 
 
-
 //============================= PLANIFICACION ==============================
 
 Route::get('/planificacion/{idEmpresa}', [PlanificacionController::class, 'show']);
@@ -98,6 +99,9 @@ Route::get('/planificacionesParaModificar', [PlanificacionController::class, 'pl
 Route::get('/planificacion/notaComentario/{idPlanificacion}', [PlanificacionController::class, 'notaComentario']);
 Route::get('/planificacionAceptadas', [PlanificacionController::class, 'planificacionAceptadas']);
 Route::get('/planificacionRechazadas', [PlanificacionController::class, 'planificacionRechazadas']);
+Route::get('/getEvaluacionesGrupo/{idGrupo}', [EvaluacionesGrupoController::class, 'getEvaluacionesGrupo']);
+
+Route::get('/getDatosEvaluacion/{idGrupo}', [EvaluacionesGrupoController::class, 'getDatosEvaluacion']);
 
 // ===================== NO SE DONDE IRIA ESTO  {Checkar los creadores}===============
 //Route::get('/docente/empresa/{idEmpresa}', [PlanificacionController::class, 'obtenerDocentePorEmpresa']);
@@ -113,8 +117,15 @@ Route::get('/testGuardar', [SprintController::class, 'testModificarSprint']);
 Route::get('/testGuardarPlanificacion', [PlanificacionController::class, 'testModificarPlanificacion']);
 Route::get('/testGuardarEntregables', [EntregablesController::class, 'testGuardarEntregables']);
 
+Route::get('/testConfigurarEvaluacion', [EvaluacionesGrupoController::class, 'testConfigurarEvaluacion']);
+
 // ==================================   RUTAS POST =================================
 
+//============================= POST EVALUACION ==============================
+//configurar la evaluacion final
+Route::post('/configurarEvaluacion', [EvaluacionesGrupoController::class, 'configurarEvaluacion']);
+//realizar una evaluacion, calificarla
+Route::post('/realizarEvaluacion', [PlanificacionController::class, 'realizarEvaluacion']);
 // ==================================   POST PLANIFICACION    ==================================
 
 // ---Cambia la revision como valida---
@@ -201,7 +212,7 @@ Route::post('/crearCuentaDocente', [AdministradorController::class, 'crearDocent
 Route::get('/obtenerDatosDocente', [AdministradorController::class, 'obtenerDatosDocente']);
 Route::get('/obtenerDatosEstudiante', [AdministradorController::class, 'obtenerDatosEstudiante']);
 Route::put('/modificarDatosEstudiante', [AdministradorController::class, 'actualizarEstudiante']);
-Route::put('/modificarDatosDocente', [AdministradorController::class, 'actualizarDocente']);
+Route::post('/modificarDatosDocente', [AdministradorController::class, 'actualizarDocente']);
 
 
 

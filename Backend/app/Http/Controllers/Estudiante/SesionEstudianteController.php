@@ -8,6 +8,7 @@ use App\Models\Grupo;
 use App\Models\Planificacion;
 use App\Models\Sprint;
 use App\Models\Semana;
+use App\Models\EvaluacionesGrupo;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -43,6 +44,10 @@ class SesionEstudianteController extends Controller
         $fechaFinGestion = $grupo ? $grupo->fechaFinGestion : '1';
         $gestion = $grupo? trim("Gestion: {$grupo->gestionGrupo}, Grupo:{$grupo->numGrupo}"): 'No Tiene grupo';
 
+        $evaluacionGrupo = null;
+        if ($idGrupo !== -1) { // Si el grupo existe
+            $evaluacionGrupo = EvaluacionesGrupo::where('idGrupo', $idGrupo)->first();
+        }
 
         $planificacion = Planificacion::where('idEmpresa', $idEmpresa)->first();
         $idPlanificacion = $planificacion ? $planificacion->idPlanificacion : -1;
@@ -91,7 +96,9 @@ class SesionEstudianteController extends Controller
             'fechaFinGestion' => $fechaFinGestion,
             'gestion' => $gestion,
             'fechaLimiteSprint' => $fechaLimiteSprint,
-            'fechaLimiteSemana' => $fechaLimiteSemana
+            'fechaLimiteSemana' => $fechaLimiteSemana,
+            'tipoEvaluacion' => $evaluacionGrupo?$evaluacionGrupo->tipoEvaluacion:'1',
+            'fechaEvaluacion' => $evaluacionGrupo?$evaluacionGrupo->fechaEvaluacion:'1',
         ], 200);
     }
     
