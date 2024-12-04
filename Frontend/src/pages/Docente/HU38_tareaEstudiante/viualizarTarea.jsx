@@ -20,7 +20,7 @@ function VisualizarTarea() {
       const fetchTareaData = async () => {
         try {
           const data = await getTareaData(idTarea);
-          setDescripcion(data.textotarea);
+          setDescripcion(data.textoTarea);
           setComentario(data.comentario);
           setResponsables(data.estudiantes);
           setNombreTarea(data.nombreTarea);
@@ -70,13 +70,6 @@ function VisualizarTarea() {
             </div>
             <h3>Descripcion de la tarea</h3>
             <Rectangulo>{descripcion}</Rectangulo>
-
-            {comentarioD && ( // Condición para mostrar el comentario solo si existe
-              <>
-                <h3>Comentario del Docente</h3>
-                <Rectangulo>{comentarioD}</Rectangulo>
-              </>
-            )}
           </BaseUI> 
         </Fragment>
     );

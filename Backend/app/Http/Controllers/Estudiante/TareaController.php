@@ -49,7 +49,7 @@ class TareaController extends Controller
         $respuesta = [
             'idSemana' => $tarea->idSemana,
             'nombreTarea' => $tarea->nombreTarea,
-            'comentario' => $tarea->comentario,
+            'comentario' => $tarea->textoTarea,
             'textoTarea' => $tarea->textoTarea,
             'fechaEntrega' => $tarea->fechaEntrega,
             'estudiantes' => $estudiantes,
