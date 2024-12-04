@@ -3,7 +3,7 @@ import CardGeneral from '../cardGeneral'
 import { useNavigate } from "react-router-dom";
 function CardResumen() {
   const aceptada =Number(localStorage.getItem("aceptada"));
-  const fechaLimiteEntregaPlani = new Date(localStorage.getItem("fechaLimiteEntregaPlanificacion"))
+  const fechaLimiteEntregaPlani = new Date(`${localStorage.getItem("fechaLimiteEntregaPlanificacion")}T23:59:58`)
   const pasoFechaLimite = fechaLimiteEntregaPlani > new Date()
   const idPlanificacion =localStorage.getItem("idPlanificacion");
   const tienePlanificacion = idPlanificacion!=="-1";
@@ -15,7 +15,7 @@ function CardResumen() {
         titulo = "Planificacion"
         info = {<>
           <Typography>
-            Fecha inical para la entraga de la planificacion: {localStorage.getItem("fechaLimiteEntregaEmpresa")} a las 23:59
+            Fecha inical para la entraga de la planificacion: {localStorage.getItem("fechaLimiteEntregaEmpresa")} a las 00:00
           </Typography>
           <Typography>
             Fecha limite de entraga de la planificacion: {localStorage.getItem("fechaLimiteEntregaPlanificacion")} a las 23:59

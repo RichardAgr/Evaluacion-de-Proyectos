@@ -41,13 +41,13 @@ function ModificarTarea() {
     title: "",
     description: "",
   });
-
+  const idEmpresa = localStorage.getItem('idEmpresa')
   useEffect(() => {
     const fetchTareaData = async () => {
       try {
-        const data = await getTareaData(idTarea)
+        const data = await getTareaData(idTarea, idEmpresa)
         setTitulo(data.nombreTarea)
-        setDescripcion(data.textotarea);
+        setDescripcion(data.textoTarea);
         setResponsables(data.estudiantes);
         console.log(data)
         console.log(data)

@@ -41,7 +41,7 @@ Route::get('/empresas/notaSprint/{idEmpresa}/{semana}', [SprintController::class
 
 //============================= GET ESTUDIANTE =============================
 //---Recupera la tarea
-Route::get('/tarea/{idTarea}', [TareaController::class, 'obtenerTarea']);
+Route::get('/tarea/{idTarea}/{idEmpresa}', [TareaController::class, 'obtenerTarea']);
 Route::get('/estudiante/gruposDocente', [GrupoController::class, 'obtenerTodosLosGrupos']);
 Route::get('/estudiante/descripcionGrupo/{idGrupo}', [GrupoController::class, 'getDescripcion']);
 Route::get('/estudiante/sprint/semana/{idSprint}',[SprintController::class, 'sprintsSemanas']);
