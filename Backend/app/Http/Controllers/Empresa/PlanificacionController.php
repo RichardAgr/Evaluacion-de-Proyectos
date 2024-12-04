@@ -98,7 +98,7 @@ class PlanificacionController extends Controller
         return response()->json($data);
     }
     
-    public function planificacionesParaModificar(): JsonResponse
+    /*public function planificacionesParaModificar(): JsonResponse
     {
         // ! ya no tiene valor porque la ing dijo  que no era necesario
         $empresas = Empresa::all();
@@ -137,8 +137,57 @@ class PlanificacionController extends Controller
     
         // Retornar la respuesta JSON con los datos de empresas
         return response()->json($data);
-    }
-    public function planificacionesSinPublicar(): JsonResponse
+    }*/
+    public function planificacionesParaModificar(): JsonResponse
+    {
+    // Obtener todas las empresas junto con su planificación, si existe
+
+    $docenteId = session('docente.id'); // ID del docente en sesión
+    
+        // Obtener empresas con sus planificaciones no aceptadas y publicadas
+        $empresas = DB::table('empresa as e')
+            ->join('estudiantesempresas as em', 'e.idEmpresa', '=', 'em.idEmpresa')
+            ->join('estudiante as est', 'est.idEstudiante', '=', 'em.idEstudiante')
+            ->join('estudiantesgrupos as eg', 'eg.idEstudiante', '=', 'est.idEstudiante')
+            ->join('grupo as g', 'g.idGrupo', '=', 'eg.idGrupo')
+            ->join('planificacion as p', 'e.idEmpresa', '=', 'p.idEmpresa')
+            ->select(
+                'e.idEmpresa',
+                'e.nombreEmpresa',
+                'e.nombreLargo',
+                'p.idPlanificacion',
+                'p.aceptada',
+                'p.publicada',
+                DB::raw('(SELECT COUNT(*) FROM sprint WHERE sprint.idPlanificacion = p.idPlanificacion) as numeroSprints')
+            )
+            ->where('g.idDocente', '=', $docenteId)
+            ->where(function ($query) {
+            $query->where('p.publicada', '=', 0)
+                  ->where('p.aceptada', '!=', 1)
+                  ->orWhereNull('p.idPlanificacion');
+        })
+        ->groupBy('e.idEmpresa', 'e.nombreEmpresa', 'e.nombreLargo', 'p.idPlanificacion', 'p.aceptada', 'p.publicada')
+        ->get();
+
+    // Formatear los datos para la respuesta
+    $data = $empresas->map(function ($empresa) {
+        return [
+            'id' => $empresa->idEmpresa,
+            'nombreEmpresa' => $empresa->nombreEmpresa,
+            'nombreLargo' => $empresa->nombreLargo,
+            'idEmpresa' => $empresa->idEmpresa,
+            'aceptada' => $empresa->aceptada,
+            'numeroSprints' => $empresa->numeroSprints ?: 0, // Si no hay planificación, es 0
+            'tienePlanificacion' => $empresa->idPlanificacion !== null,
+        ];
+    });
+
+    // Retornar la respuesta JSON
+    return response()->json($data);
+}
+
+    
+   /* public function planificacionesSinPublicar(): JsonResponse
     {
         // ! ya no sirve, ya no es necesario
         // Obtener todas las empresas, en el futuro debera filtrar las empresas por docente
@@ -165,7 +214,58 @@ class PlanificacionController extends Controller
 
         // Retornar la respuesta JSON con los datos de empresas aceptadas
         return response()->json($data);
+    }*/
+
+    public function planificacionesSinPublicar(): JsonResponse
+    {
+        // Obtener empresas con planificaciones no publicadas y no aceptadas
+        $docenteId = session('docente.id'); // ID del docente en sesión
+        
+        // Obtener empresas con sus planificaciones no aceptadas y publicadas
+        $empresas = DB::table('empresa as e')
+            ->join('estudiantesempresas as em', 'e.idEmpresa', '=', 'em.idEmpresa')
+            ->join('estudiante as est', 'est.idEstudiante', '=', 'em.idEstudiante')
+            ->join('estudiantesgrupos as eg', 'eg.idEstudiante', '=', 'est.idEstudiante')
+            ->join('grupo as g', 'g.idGrupo', '=', 'eg.idGrupo')
+            ->join('planificacion as p', 'e.idEmpresa', '=', 'p.idEmpresa')
+            ->select(
+                'e.idEmpresa',
+                'e.nombreEmpresa',
+                'e.nombreLargo',
+                'p.idPlanificacion',
+                'p.aceptada',
+                'p.publicada',
+                DB::raw('(SELECT COUNT(*) FROM sprint WHERE sprint.idPlanificacion = p.idPlanificacion) as numeroSprints')
+            )
+            ->where('g.idDocente', '=', $docenteId)
+            ->where('p.publicada', '=', 0)
+            ->where('p.aceptada', '!=', 1)
+            ->whereNotNull('p.idPlanificacion') // Filtramos solo las empresas con planificación
+            ->get();
+    
+        // Agrupar los datos por empresa
+        $data = $empresas->groupBy('idEmpresa')->map(function ($group) {
+            // Tomamos el primer elemento del grupo para los datos de la empresa
+            $empresa = $group->first();
+            
+            // Contamos el número de sprints (el número de sprints es el mismo para todas las planificaciones de una empresa)
+            $numeroSprints = $group->sum('numeroSprints');
+    
+            return [
+                'id' => $empresa->idPlanificacion,
+                'nombreEmpresa' => $empresa->nombreEmpresa,
+                'nombreLargo' => $empresa->nombreLargo,
+                'idEmpresa' => $empresa->idEmpresa,
+                'aceptada' => $empresa->aceptada,
+                'numeroSprints' => $numeroSprints ?: 0, // Si no hay sprints, es 0
+            ];
+        });
+    
+        // Retornar la respuesta JSON
+        return response()->json($data);
     }
+    
+
 
     public function show($idEmpresa): JsonResponse
     {
