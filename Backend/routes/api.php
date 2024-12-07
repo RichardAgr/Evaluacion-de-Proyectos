@@ -19,8 +19,9 @@ use App\Http\Controllers\joaquinController;
 use App\Http\Controllers\Estudiante\SesionEstudianteController;
 use App\Http\Controllers\Docente\SesionDocenteController;
 use App\Http\Controllers\Administrador\AdministradorController;
+//use App\Http\Controllers\Estudiante\GestionController;
 use App\Http\Controllers\EvaluacionesGrupoController;
-use App\Models\EvaluacionesGrupo;
+use App\Http\Controllers\NuevaHUDeploy\GestionController;
 
 use App\Http\Controllers\RecuperarController;
 
@@ -265,4 +266,10 @@ Route::post('/grupo/actualizar', [GrupoController::class, 'actualizarGrupo']);//
 Route::post('/recuperarContrasena', [RecuperarController::class, 'recuperarContrasena']);
 
 Route::post('/cambiarContrasena', [RecuperarController::class, 'cambiarContrasena']);
+//========================================  Nuevas HU   =======================================
+Route::get('/estudiante/gestion/visualizarSemestres', [GestionController::class, 'visualizarSemestresEstudiante']);//utilizado
+
+Route::get('/docente/gestion/visualizarSemestres', [GestionController::class, 'visualizarSemestresDocente']);//utilizado
+
+Route::post('/docente/gestion/crearSemestre', [GestionController::class, 'crearSemestre']);
 
